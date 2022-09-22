@@ -1,0 +1,21 @@
+{
+  "name": "Personalizador del Checkout",
+  "headline": "Una forma sencilla de personalizar el checkout de su tienda por el administrador.",
+  "overview": "El app Checkout UI Custom es responsable por personalizar el Checkout de su tienda por la interfaz de administrador. Con algunos campos es posible cambiar la fuente y los colores, cambiar la visualización de los medios de pago y la apariencia de la fecha de entrega, y aún ofrecer posibilidades de personalización si es necesario. Toda la interfaz de usuario se diseñó primero en mobile-first.",
+  "features": [
+    "Cambio de exposición de métodos de pago",
+    "Fecha de envío simplificada",
+    "Mostrar precio unitario del producto",
+    "Mostrar campo 'notas'",
+    "Cambiar estilos de texto",
+    "Cambiar estilos de blocks",
+    "Cambiar colores",
+    "Área CSS avanzada",
+    "Área avanzada de JavaScript",
+    "Histórico de cambios"
+  ],
+  "websiteURL": "https://vtex.com/",
+  "support": {
+    "url": "https://support.vtex.com/hc/requests"
+  }
+}

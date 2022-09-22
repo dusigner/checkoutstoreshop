@@ -1,0 +1,13 @@
+{
+  "stack": "nodejs",
+  "memory": 1024,
+  "timeout": 40,
+  "minReplicas": 10,
+  "maxReplicas": 100,
+  "routes": {
+    "apiGetCountryRules": {
+      "path": "/rules/:countryCode",
+      "public": true
+    }
+  }
+}
