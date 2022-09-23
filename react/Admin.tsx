@@ -40,16 +40,16 @@ const messages = defineMessages({
 
 const defaultConfiguration = {
   colors: {
-    base: '#21364f',
+    base: '#ffffff',
     baseInverted: '#21364f',
     actionPrimary: '#2189FF',
     actionPrimaryDarken: '#1d63be',
     actionSecondary: '#f1f7ff',
     emphasis: '#000000',
     disabled: '#999999',
-    success: '#2fba2d',
-    successDarken: '#269e24',
-    successFaded: '#beffa5',
+    success: '#2189FF',
+    successDarken: '#006BEA',
+    successFaded: '#006BEA',
     danger: '#D62E2E',
     dangerFaded: '#ffe6e6',
     warning: '#ffb100',

@@ -6,10 +6,10 @@ window.vcustom = {
     type: 'vertical', // ["vertical" , "horizontal"]
     accordionPayments: true,
     deliveryDateFormat: false,
-    quantityPriceCart: false,
+    quantityPriceCart: true,
     showNoteField: false,
     customAddressForm: false,
-    hideEmailStep: true,
+    hideEmailStep: false,
   }),
   debug: new Debug({
     dbg: false,
