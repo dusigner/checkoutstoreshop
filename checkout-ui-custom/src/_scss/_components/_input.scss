@@ -7,7 +7,7 @@ input, select, button {
 %input-style {
 	font-size: 18px;
 	font-weight: 400;
-	padding: 0 0 8px;
+	padding: 8px 0;
 	margin-bottom: 8px;
 	box-shadow: none;
 	border: 0;
@@ -16,8 +16,13 @@ input, select, button {
 	background: #FFFFFF;
 	border-bottom: 1px solid #555555;
 
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+
 	&::placeholder {
 		color: #8F8F8F;
+		opacity: 0;
 	}
 
 	&.success:not([invalid="true"]) {
@@ -27,8 +32,9 @@ input, select, button {
 	&.error {
 		border-color: $danger;
 	}
-
+	
 	~ span.error {
+		// position: absolute;
 		margin-top: 0;
 		font-size: 12px;
 	}
