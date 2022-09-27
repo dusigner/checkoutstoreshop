@@ -141,56 +141,6 @@ class checkoutCustom {
     `)
   }
 
-  addStepsHeader() {
-    if ($('.checkout-steps').length > 0 || !this.lang) return false
-
-    const addStepsHeaderHtml = `
-      <div class="checkout-steps">
-        <div class="checkout-steps-wrap">
-          <span class="checkout-steps_bar">
-            <span class="checkout-steps_bar_inner"></span>
-            <span class="checkout-steps_bar_inner-active"></span>
-          </span>
-          <div class="checkout-steps_items">
-            <span class="checkout-steps_item checkout-steps_item_cart js-checkout-steps-item" data-url="/checkout/#/cart">
-              <span class="text">${
-                this.lang ? this.lang.checkoutStepsLabelCart : 'Cart'
-              }</span>
-            </span>
-            <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item" data-url="/checkout/#/profile">
-              <span class="text">${
-                this.lang
-                  ? this.lang.checkoutStepsLabelIdentification
-                  : 'Identification'
-              }</span>
-            </span>
-            <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item" data-url="/checkout/#/shipping">
-              <span class="text">${
-                this.lang ? this.lang.checkoutStepsLabelShipping : 'Shipping'
-              }</span>
-            </span>
-            <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item" data-url="/checkout/#/payment">
-              <span class="text">${
-                this.lang ? this.lang.checkoutStepsLabelPayment : 'Payment'
-              }</span>
-            </span>
-            <span class="checkout-steps_item checkout-steps_item_confirmation js-checkout-steps-item">
-              <span class="text">${
-                this.lang
-                  ? this.lang.checkoutStepsLabelConfirmation
-                  : 'Confirmation'
-              }</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    `
-
-    if ($('header.main-header').length) {
-      $('header.main-header .container').append(addStepsHeaderHtml)
-    }
-  }
-
   addAssemblies(orderForm) {
     try {
       $.each(orderForm.items, function (i) {
@@ -663,10 +613,7 @@ class checkoutCustom {
         const _item = this
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
 
-        if (
-          _item.quantity === 1 ||
-          _trElem.find('td.product-price').find('.best-price').length === 0
-        ) {
+        if (_trElem.find('td.product-price').find('.best-price').length === 0) {
           return
         }
 
@@ -676,9 +623,14 @@ class checkoutCustom {
             <span class="v-custom-quantity-price__list">
               ${
                 _item.listPrice > _item.sellingPrice
-                  ? `<span class="v-custom-quantity-price__list--list">${
-                      orderForm.storePreferencesData.currencySymbol
-                    } ${(_item.listPrice / 100).toFixed(2)}</span>`
+                  ? `<span class="v-custom-quantity-price__list--list">
+                    ${((_item.listPrice * _item.quantity) / 100).toLocaleString(
+                      'pt-BR',
+                      {
+                        style: 'currency',
+                        currency: 'BRL',
+                      }
+                    )}</span>`
                   : ''
               }
             </span>
@@ -686,29 +638,53 @@ class checkoutCustom {
         `
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
-        // _trElem.find("td.quantity-price").prepend(_eachprice);
+
         _trElem
           .find('td.product-price')
           .addClass('v-custom-quantity-price-active')
-          .prepend(_eachprice)
-          .append(
-            `<div class="v-custom-quantity-price vqc-ldelem"><span class="v-custom-quantity-price__best">${totalValue}</span></div>`
+          .prepend(
+            `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p></div>`
           )
+          .append(_eachprice)
         _trElem
           .find('td.product-price')
           .find('> .best-price')
-          .wrap(`<div class="v-custom-quantity-price__list--selling"></div>`)
+          .wrap(
+            `<div class="v-custom-quantity-price__list--selling" style="display: none"></div>`
+          )
         _trElem
           .find('td.product-price')
           .find('.v-custom-quantity-price__list--selling')
-          .append(
-            `<span class="vqc-ldelem"> ${
-              this.lang ? this.lang.eachLabel : 'each'
-            }</span>`
-          )
+          .append(`<span class="vqc-ldelem">cada</span>`)
       })
     } catch (e) {
       console.error('enchancementTotalPrice error:', e)
+    }
+  }
+
+  enchancementProductCart(orderForm) {
+    try {
+      $.each(orderForm.items, function (i) {
+        const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
+
+        if (
+          !orderForm.items[i].refId ||
+          _trElem.find('td.product-name').find('.more-info').length === 1
+        ) {
+          return
+        }
+
+        const refId = orderForm.items[i].refId || ''
+
+        _trElem.find('td.product-name').append(
+          `<div class="more-info">
+            <p class="ref-id" style="font-size: 12px">${refId}</p>
+            <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>
+          </div>`
+        )
+      })
+    } catch (e) {
+      console.error('enchancementProductName error:', e)
     }
   }
 
@@ -750,6 +726,7 @@ class checkoutCustom {
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
+    this.enchancementProductCart(orderForm)
     this.bundleItems(orderForm)
     this.buildMiniCart(orderForm)
     this.condensedTaxes(orderForm)
@@ -1094,7 +1071,6 @@ class checkoutCustom {
     if (_this.orderForm) {
       _this.updateLang(_this.orderForm)
       _this.update(_this.orderForm)
-      _this.addStepsHeader()
       _this.paymentBuilder(_this.orderForm)
     }
 

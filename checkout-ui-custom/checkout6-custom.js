@@ -61,7 +61,7 @@
         PickupDateText: 'Pronto até',
         eachLabel: 'cada',
         tomorrowLabel: 'Amanhã',
-        cartSubmitButton: 'Continuar pagamento',
+        cartSubmitButton: 'Fechar pedido',
         checkoutStepsLabelCart: 'Carrinho',
         checkoutStepsLabelIdentification: 'Identificação',
         checkoutStepsLabelShipping: 'Entrega',
@@ -876,21 +876,11 @@
       }
       addStepsHeader() {
         if ($('.checkout-steps').length > 0 || !this.lang) return !1
-        const e = `\n      <div class="checkout-steps">\n        <div class="checkout-steps-wrap">\n          <span class="checkout-steps_bar">\n            <span class="checkout-steps_bar_inner"></span>\n            <span class="checkout-steps_bar_inner-active"></span>\n          </span>\n          <div class="checkout-steps_items">\n            <span class="checkout-steps_item checkout-steps_item_cart js-checkout-steps-item" data-url="/checkout/#/cart">\n              <span class="text">${
-          this.lang ? this.lang.checkoutStepsLabelCart : 'Cart'
-        }</span>\n            </span>\n            <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item" data-url="/checkout/#/profile">\n              <span class="text">${
-          this.lang
-            ? this.lang.checkoutStepsLabelIdentification
-            : 'Identification'
-        }</span>\n            </span>\n            <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item" data-url="/checkout/#/shipping">\n              <span class="text">${
-          this.lang ? this.lang.checkoutStepsLabelShipping : 'Shipping'
-        }</span>\n            </span>\n            <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item" data-url="/checkout/#/payment">\n              <span class="text">${
-          this.lang ? this.lang.checkoutStepsLabelPayment : 'Payment'
-        }</span>\n            </span>\n            <span class="checkout-steps_item checkout-steps_item_confirmation js-checkout-steps-item">\n              <span class="text">${
-          this.lang ? this.lang.checkoutStepsLabelConfirmation : 'Confirmation'
-        }</span>\n            </span>\n          </div>\n        </div>\n      </div>\n    `
-        $('header.main-header').length &&
-          $('header.main-header .container').append(e)
+        this.lang && this.lang.checkoutStepsLabelCart,
+          this.lang && this.lang.checkoutStepsLabelIdentification,
+          this.lang && this.lang.checkoutStepsLabelShipping,
+          this.lang && this.lang.checkoutStepsLabelPayment,
+          this.lang && this.lang.checkoutStepsLabelConfirmation
       }
       addAssemblies(e) {
         try {
@@ -1251,47 +1241,62 @@
       enchancementTotalPrice(e) {
         if (this.quantityPriceCart)
           try {
-            $.each(e.items, function (o) {
-              const a = $(`.table.cart-items tbody tr.product-item:eq(${o})`)
-              if (
-                1 === this.quantity ||
-                0 === a.find('td.product-price').find('.best-price').length
-              )
+            $.each(e.items, function (e) {
+              const o = $(`.table.cart-items tbody tr.product-item:eq(${e})`)
+              if (0 === o.find('td.product-price').find('.best-price').length)
                 return
-              const n = a.find('.total-selling-price:eq(0)').text(),
-                t = `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
+              const a = o.find('.total-selling-price:eq(0)').text(),
+                n = `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
                   this.listPrice > this.sellingPrice
-                    ? `<span class="v-custom-quantity-price__list--list">${
-                        e.storePreferencesData.currencySymbol
-                      } ${(this.listPrice / 100).toFixed(2)}</span>`
+                    ? `<span class="v-custom-quantity-price__list--list">\n                    ${(
+                        (this.listPrice * this.quantity) /
+                        100
+                      ).toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })}</span>`
                     : ''
                 }\n            </span>\n          </div>\n        `
-              a.find('td.product-price').find('.vqc-ldelem').remove(),
-                a
+              o.find('td.product-price').find('.vqc-ldelem').remove(),
+                o
                   .find('td.product-price')
                   .addClass('v-custom-quantity-price-active')
-                  .prepend(t)
-                  .append(
-                    `<div class="v-custom-quantity-price vqc-ldelem"><span class="v-custom-quantity-price__best">${n}</span></div>`
-                  ),
-                a
+                  .prepend(
+                    `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${a}</p></div>`
+                  )
+                  .append(n),
+                o
                   .find('td.product-price')
                   .find('> .best-price')
                   .wrap(
-                    '<div class="v-custom-quantity-price__list--selling"></div>'
+                    '<div class="v-custom-quantity-price__list--selling" style="display: none"></div>'
                   ),
-                a
+                o
                   .find('td.product-price')
                   .find('.v-custom-quantity-price__list--selling')
-                  .append(
-                    `<span class="vqc-ldelem"> ${
-                      this.lang ? this.lang.eachLabel : 'each'
-                    }</span>`
-                  )
+                  .append('<span class="vqc-ldelem">cada</span>')
             })
           } catch (e) {
             console.error('enchancementTotalPrice error:', e)
           }
+      }
+      enchancementProductCart(e) {
+        try {
+          $.each(e.items, function (o) {
+            const a = $(`.table.cart-items tbody tr.product-item:eq(${o})`)
+            if (
+              !e.items[o].refId ||
+              1 === a.find('td.product-name').find('.more-info').length
+            )
+              return
+            const n = e.items[o].refId || ''
+            a.find('td.product-name').append(
+              `<div class="more-info">\n            <p class="ref-id" style="font-size: 12px">${n}</p>\n            <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>\n          </div>`
+            )
+          })
+        } catch (e) {
+          console.error('enchancementProductName error:', e)
+        }
       }
       condensedTaxes(e) {
         const o = e.totalizers.filter(e => 'CustomTax' === e.id)
@@ -1320,6 +1325,7 @@
         this.checkEmpty(e.items),
           this.addAssemblies(e),
           this.enchancementTotalPrice(e),
+          this.enchancementProductCart(e),
           this.bundleItems(e),
           this.buildMiniCart(e),
           this.condensedTaxes(e),
