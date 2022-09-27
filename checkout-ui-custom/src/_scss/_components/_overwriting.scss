@@ -9,7 +9,7 @@
   display: flex !important;
   align-items: stretch;
 
-  .btn, 
+  .btn,
   .add-on {
     height: $inputHeight;
     line-height:$inputHeight;
@@ -26,7 +26,11 @@
     max-width: 100px !important;
   }
 }
-  
+
+.full-cart .cart table tbody tr td .brand {
+  display: none;
+}
+
 .payment-discoints-table .number, .gift-card-provider-group .number, .payment-discoints-table .action, .gift-card-provider-group .action {
   text-align:right;
 }
@@ -37,6 +41,12 @@
     width:100% !important;
   }
 
+}
+
+@media (max-width: 490px) {
+  .full-cart .cart table tbody tr td.product-name .seller {
+    display: none;
+  }
 }
 
 //imported from io.vtex (just changing the @media width)
@@ -76,19 +86,12 @@
     padding: 10px 0;
     position: relative;
   }
-  .full-cart .cart table tbody tr .product-name a,
-  .full-cart .cart table tbody tr .product-name .seller {
+  .full-cart .cart table tbody tr .product-name a {
     overflow: hidden;
   }
   .full-cart .cart table tbody tr td {
     display: inline-block;
     padding: 4px 0;
-  }
-  .full-cart .cart table tbody tr td.product-name .seller {
-    display: block;
-    line-height: 120%;
-    font-size: 80%;
-    margin: 4px 0;
   }
   .full-cart .cart table tbody tr td.product-image,
   .full-cart .cart table tbody tr td.bundle-item-image {
@@ -106,10 +109,6 @@
     padding: 0 0 10px !important;
   }
   .full-cart .cart table tbody tr td.empty,
-  .full-cart .cart table tbody tr td.shipping-date,
-  .full-cart .cart table tbody tr td .brand {
-    display: none;
-  }
   .full-cart .cart table tbody tr td.product-name a,
   .full-cart .cart table tbody tr td.bundle-item-name span {
     display: block;

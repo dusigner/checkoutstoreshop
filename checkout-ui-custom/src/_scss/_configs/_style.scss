@@ -1,5 +1,32 @@
 // IMPORTED FROM STORE THEME
 
+@font-face {
+  font-family: SamsungOne;
+  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.eot);
+  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.eot#iefix) format("embedded-opentype"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.woff2) format("woff2"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.woff) format("woff"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal
+}
+
+@font-face {
+  font-family: SamsungOne;
+  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.eot);
+  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.eot#iefix) format("embedded-opentype"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.woff2) format("woff2"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.woff) format("woff"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.ttf) format("truetype");
+  font-weight: 700;
+  font-style: normal
+}
+
+@font-face {
+	font-family: 'SamsungSharpSans';
+	src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.eot);
+	src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.eot?#iefix)
+			format('embedded-opentype'),
+		url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.woff)
+			format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
 $base: #ffffff; // body bg...
 $baseInverted: #21364f; // general
 
@@ -22,11 +49,11 @@ $dangerFaded: #ffe6e6;
 $warning: #ffb100;
 $warningFaded: #fff6e0;
 
-$muted1: #323232; //titles & borders
-$muted2: #676767; //borders
+$muted1: #000000; //titles & borders
+$muted2: #000000; //borders
 $muted3: #999999; //borders
 $muted4: #cbcbcb; //borders
-$muted5: #eee; //borders
+$muted5: #00000033; //borders
 $muted6: #f3f3f3; //borders & bg
 
 // CHECKOUT VARS
@@ -42,7 +69,7 @@ $bordersContainers:none; // 2px solid $muted5
 
 //font
 
-$fontFamily: 'Roboto', sans-serif;
+$fontFamily: 'SamsungOne';
 
 
 // NOT included on admin -- kept for future (no change!)

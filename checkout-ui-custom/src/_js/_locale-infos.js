@@ -6,7 +6,7 @@ module.exports._locale = {
     PickupDateText: 'Pronto até',
     eachLabel: 'cada',
     tomorrowLabel: 'Amanhã',
-    cartSubmitButton: 'Continuar pagamento',
+    cartSubmitButton: 'Fechar pedido',
     checkoutStepsLabelCart: 'Carrinho',
     checkoutStepsLabelIdentification: 'Identificação',
     checkoutStepsLabelShipping: 'Entrega',
