@@ -5,6 +5,7 @@ input, select, button {
 //input
 
 %input-style {
+	font-family:$fontFamily;
 	font-size: 18px;
 	font-weight: 400;
 	padding: 8px 0;
@@ -14,12 +15,17 @@ input, select, button {
 	border: 0;
 	border-radius: 0;
 	color: #000000;
-	background: #FFFFFF;
-	border-bottom: 1px solid #555555;
+	background: none;
+	border-bottom: 1px solid #8F8F8F;
 
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+
+	&:focus,
+	p.filled & {
+		border-color: #555555;
+	}
 
 	&::placeholder {
 		color: #8F8F8F;
@@ -32,12 +38,17 @@ input, select, button {
 
 	&.error {
 		border-color: $danger;
+		border-width: 2px;
 	}
 	
 	~ span.error {
 		// position: absolute;
 		margin-top: 0;
 		font-size: 12px;
+	}
+
+	~ small {
+		margin-left: 0;
 	}
 }
 

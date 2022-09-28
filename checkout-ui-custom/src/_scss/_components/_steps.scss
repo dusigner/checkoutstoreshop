@@ -4,6 +4,7 @@
 
 
   %countingStepsNormal {
+    content: unset;
     background: #FFF;
     border:1px solid $muted1;
     color:$muted1;
@@ -16,6 +17,7 @@
   }
 
   %countingStepsActive {
+    content: unset;
     background:$actionPrimary;
     border-color:$actionPrimary;
     color:#FFF
@@ -47,11 +49,6 @@
       vertical-align: middle;
       margin-top: -2px;
     }
-
-    .client-pre-email h3.client-pre-email-h span:before { content: "1" }
-    .client-profile-data .accordion-toggle > span:before { content: "2" }
-    .shipping-data .accordion-toggle:before { content: "3" }
-    .payment-data .accordion-toggle > span:not(.payment-edit-link):before { content: "4" }
   }
 
 
