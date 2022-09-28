@@ -35,6 +35,9 @@
   text-align:right;
 }
 
+.product-item.unavailable.lookatme {
+  background-color: #fff;
+}
 
 @media (max-width: $mobileWidth) {
   .orderform-template-holder .client-profile-data input[type="text"] {

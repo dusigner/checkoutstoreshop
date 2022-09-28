@@ -75,6 +75,7 @@
         address2Placeholder: 'Complemento',
         requiredField: 'Este campo é obrigatório.',
         locale: 'pt-BR',
+        cartLabelShipping: 'Opções de Entrega',
       },
       CAN: {
         couponInactive: 'No discounts available. Check the conditions.',
@@ -778,8 +779,8 @@
   },
   function (e, o, a) {
     const { _locale: n } = a(0),
-      { debounce: t, formatCurrency: r } = a(5),
-      s = a(6)
+      { debounce: t, formatCurrency: r, formatCurrencyBRL: s } = a(5),
+      d = a(6)
     e.exports = class {
       constructor({
         type: e = 'vertical',
@@ -873,14 +874,6 @@
               !this.lang || this.lang.editLabel
             }">\n        <i class="icon-edit"></i>\n        <i class="icon-spinner icon-spin icon-3x"></i>\n      </a>\n    `
           )
-      }
-      addStepsHeader() {
-        if ($('.checkout-steps').length > 0 || !this.lang) return !1
-        this.lang && this.lang.checkoutStepsLabelCart,
-          this.lang && this.lang.checkoutStepsLabelIdentification,
-          this.lang && this.lang.checkoutStepsLabelShipping,
-          this.lang && this.lang.checkoutStepsLabelPayment,
-          this.lang && this.lang.checkoutStepsLabelConfirmation
       }
       addAssemblies(e) {
         try {
@@ -1246,17 +1239,15 @@
               if (0 === o.find('td.product-price').find('.best-price').length)
                 return
               const a = o.find('.total-selling-price:eq(0)').text(),
-                n = `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
-                  this.listPrice > this.sellingPrice
-                    ? `<span class="v-custom-quantity-price__list--list">\n                    ${(
-                        (this.listPrice * this.quantity) /
-                        100
-                      ).toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
-                      })}</span>`
-                    : ''
-                }\n            </span>\n          </div>\n        `
+                n =
+                  this.listPrice > this.price &&
+                  `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
+                    this.listPrice > this.sellingPrice
+                      ? `<span class="v-custom-quantity-price__list--list">\n                    ${s(
+                          this.listPrice * this.quantity
+                        )}</span>`
+                      : ''
+                  }\n            </span>\n          </div>\n        `
               o.find('td.product-price').find('.vqc-ldelem').remove(),
                 o
                   .find('td.product-price')
@@ -1284,10 +1275,7 @@
         try {
           $.each(e.items, function (o) {
             const a = $(`.table.cart-items tbody tr.product-item:eq(${o})`)
-            if (
-              !e.items[o].refId ||
-              1 === a.find('td.product-name').find('.more-info').length
-            )
+            if (1 === a.find('td.product-name').find('.more-info').length)
               return
             const n = e.items[o].refId || ''
             a.find('td.product-name').append(
@@ -1296,6 +1284,44 @@
           })
         } catch (e) {
           console.error('enchancementProductName error:', e)
+        }
+      }
+      enchancementSummaryCart(e) {
+        try {
+          const o = $('.summary-template-holder'),
+            a = e.totalizers.find(e => 'Items' === e.id).value || 0,
+            n = e.totalizers.find(e => 'Discounts' === e.id).value || 0,
+            t = a + (e.totalizers.find(e => 'Shipping' === e.id).value || 0),
+            r = `\n        <div class="cart-total" style="margin-bottom: 50px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${(
+              e.value / 100
+            ).toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}</p>\n          </div>\n          <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">\n            <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">\n              ${s(
+              t
+            )}\n            </p>\n            <p class="discount-total" style="color: #2189FF; font-weight: 700;">\n              ${
+              'economize ' + s(-n)
+            }\n            </p>\n          </div>\n        </div>\n      `
+          0 === o.find('.cart-total').length || o.find('.cart-total').remove(),
+            o.prepend(r)
+        } catch (e) {
+          console.error('enchancementSummaryCart error:', e)
+        }
+      }
+      enchancementUnavailableProduct() {
+        try {
+          const e = $('.table.cart-items tbody')
+          if (
+            e
+              .find('.product-item.unavailable.lookatme')
+              .find('.unavailable-info').length > 0
+          )
+            return
+          e.find('.product-item.unavailable.lookatme').append(
+            '<div class="unavailable-info" style="width: 100%; background: #FEF6F3">\n          <p class="unavailable-text" style="font-size: 12px; font-weight: 700; text-align: center; padding-block: 13px; color: #000; margin-bottom: 0;">\n            O produto não pode ser entregue para este endereço.\n          </p>\n        </div>'
+          )
+        } catch (e) {
+          console.error('enchancementUnavailableProduct error:', e)
         }
       }
       condensedTaxes(e) {
@@ -1326,6 +1352,8 @@
           this.addAssemblies(e),
           this.enchancementTotalPrice(e),
           this.enchancementProductCart(e),
+          this.enchancementSummaryCart(e),
+          this.enchancementUnavailableProduct(),
           this.bundleItems(e),
           this.buildMiniCart(e),
           this.condensedTaxes(e),
@@ -1360,6 +1388,7 @@
           (a.editLabel && $('.link-box-edit').attr('title', a.editLabel),
           a.cartSubmitButton &&
             $('#cart-to-orderform').text(a.cartSubmitButton),
+          a.cartLabelShipping && $('.srp-main-title').text(a.cartLabelShipping),
           a.cartNoteLabel && $('p.note-label label').text(a.cartNoteLabel),
           a.identifiedUserMessage &&
             $('.identified-user-modal-body p.identified-user-message').html(
@@ -1444,7 +1473,7 @@
             (e.customAddressForm = !1),
             !1
           )
-        e.customAddressForm && (e.customAddressForm = new s({}))
+        e.customAddressForm && (e.customAddressForm = new d({}))
       }
       goToShippingStep() {
         window.location.hash = '#/shipping'
@@ -1552,7 +1581,6 @@
           e.orderForm &&
             (e.updateLang(e.orderForm),
             e.update(e.orderForm),
-            e.addStepsHeader(),
             e.paymentBuilder(e.orderForm)),
           e.addEditButtoninLogin()
       }
@@ -1629,7 +1657,12 @@
           ),
           n
         )
-      })
+      }),
+      (e.exports.formatCurrencyBRL = e =>
+        (e / 100).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        }))
   },
   function (e, o, a) {
     const { _locale: n } = a(0),
