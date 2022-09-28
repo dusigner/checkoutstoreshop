@@ -2,7 +2,7 @@
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
 const { _locale } = require('./_locale-infos.js')
-const { debounce, formatCurrency } = require('./_utils.js')
+const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 
 class checkoutCustom {
@@ -618,18 +618,16 @@ class checkoutCustom {
         }
 
         const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
-        const _eachprice = `
+        const _eachprice =
+          _item.listPrice > _item.price &&
+          `
           <div class="v-custom-quantity-price vqc-ldelem">
             <span class="v-custom-quantity-price__list">
               ${
                 _item.listPrice > _item.sellingPrice
                   ? `<span class="v-custom-quantity-price__list--list">
-                    ${((_item.listPrice * _item.quantity) / 100).toLocaleString(
-                      'pt-BR',
-                      {
-                        style: 'currency',
-                        currency: 'BRL',
-                      }
+                    ${formatCurrencyBRL(
+                      _item.listPrice * _item.quantity
                     )}</span>`
                   : ''
               }
@@ -667,10 +665,7 @@ class checkoutCustom {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
 
-        if (
-          !orderForm.items[i].refId ||
-          _trElem.find('td.product-name').find('.more-info').length === 1
-        ) {
+        if (_trElem.find('td.product-name').find('.more-info').length === 1) {
           return
         }
 
@@ -685,6 +680,78 @@ class checkoutCustom {
       })
     } catch (e) {
       console.error('enchancementProductName error:', e)
+    }
+  }
+
+  enchancementSummaryCart(orderForm) {
+    try {
+      const _trElem = $(`.summary-template-holder`)
+
+      const totalItems =
+        orderForm.totalizers.find(item => item.id === 'Items').value || 0
+
+      const totalDiscount =
+        orderForm.totalizers.find(item => item.id === 'Discounts').value || 0
+
+      const totalShipping =
+        orderForm.totalizers.find(item => item.id === 'Shipping').value || 0
+
+      const totalGross = totalItems + totalShipping
+
+      const _component = `
+        <div class="cart-total" style="margin-bottom: 50px; color: #000">
+          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">
+            <p class="ref-id">Total</p>
+            <p class="estimate-shipping">${(
+              orderForm.value / 100
+            ).toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}</p>
+          </div>
+          <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">
+            <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">
+              ${formatCurrencyBRL(totalGross)}
+            </p>
+            <p class="discount-total" style="color: #2189FF; font-weight: 700;">
+              ${`economize ${formatCurrencyBRL(-totalDiscount)}`}
+            </p>
+          </div>
+        </div>
+      `
+
+      if (_trElem.find('.cart-total').length === 0) {
+        _trElem.prepend(_component)
+      } else {
+        _trElem.find('.cart-total').remove()
+        _trElem.prepend(_component)
+      }
+    } catch (e) {
+      console.error('enchancementSummaryCart error:', e)
+    }
+  }
+
+  enchancementUnavailableProduct() {
+    try {
+      const _trElem = $(`.table.cart-items tbody`)
+
+      if (
+        _trElem
+          .find('.product-item.unavailable.lookatme')
+          .find('.unavailable-info').length > 0
+      ) {
+        return
+      }
+
+      _trElem.find('.product-item.unavailable.lookatme').append(
+        `<div class="unavailable-info" style="width: 100%; background: #FEF6F3">
+          <p class="unavailable-text" style="font-size: 12px; font-weight: 700; text-align: center; padding-block: 13px; color: #000; margin-bottom: 0;">
+            O produto não pode ser entregue para este endereço.
+          </p>
+        </div>`
+      )
+    } catch (e) {
+      console.error('enchancementUnavailableProduct error:', e)
     }
   }
 
@@ -727,6 +794,8 @@ class checkoutCustom {
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
+    this.enchancementSummaryCart(orderForm)
+    this.enchancementUnavailableProduct()
     this.bundleItems(orderForm)
     this.buildMiniCart(orderForm)
     this.condensedTaxes(orderForm)
@@ -783,6 +852,10 @@ class checkoutCustom {
     if (_lang.editLabel) $('.link-box-edit').attr('title', _lang.editLabel)
     if (_lang.cartSubmitButton) {
       $('#cart-to-orderform').text(_lang.cartSubmitButton)
+    }
+
+    if (_lang.cartLabelShipping) {
+      $('.srp-main-title').text(_lang.cartLabelShipping)
     }
 
     if (_lang.cartNoteLabel) $('p.note-label label').text(_lang.cartNoteLabel)

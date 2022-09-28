@@ -29,21 +29,19 @@
 		}
 	}
 
-	.orderform-template-holder #client-profile-data form.client-pre-email .link-box-edit, 
-	.orderform-template-holder #client-profile-data .step.client-profile-data .link-box-edit, 
-	.orderform-template-holder #shipping-data .link-box-edit, 
+	.orderform-template-holder #client-profile-data form.client-pre-email .link-box-edit,
+	.orderform-template-holder #client-profile-data .step.client-profile-data .link-box-edit,
+	.orderform-template-holder #shipping-data .link-box-edit,
 	.orderform-template-holder #payment-data .link-box-edit {
     right: initial;
     left: 0;
 	}
 
-	.summary-template-holder tbody td.monetary,
-	.summary-template-holder tfoot tr td.monetary {
+	.summary-template-holder tbody td.monetary {
 			margin-right: auto;
 			margin-left: initial !important;
 			text-align: left !important;
 	}
-
 
 	.summary-template-holder {
 		.summary-coupon p.coupon-fields span {
@@ -51,7 +49,7 @@
 			input {
 				margin: 0 0 0 10px;
 			}
-		}	
+		}
 	}
 
 
@@ -70,10 +68,6 @@
 	.orderform-template .orderform-template-holder {
 			order: 2;
 			padding: 0 0 0 20px;
-	}
-
-	.orderform-template .cart-template.mini-cart .summary-totalizers tfoot tr td.monetary {
-			text-align: left !important;
 	}
 
 	br {
@@ -113,7 +107,7 @@
   .srp-delivery-current-many .flex {direction: rtl;text-align: right;}
 
 
-	//profile 
+	//profile
 
 	.step {
 		direction: rtl;
@@ -121,7 +115,7 @@
 
 	.step .accordion-toggle > span:before,
 	.step .accordion-toggle:before {
-		margin-right: 0 !important; 
+		margin-right: 0 !important;
 		margin-left: 10px !important;
 	}
 
@@ -167,7 +161,7 @@
 			width: 100%;
 	}
 
-	
+
 
 	//shipping
 
@@ -261,7 +255,7 @@
 		.vtexIdUI-page {
 			direction: rtl;
 		}
-	
+
 		.modal-header .close {
 				left: -1px;
 				right: initial;
@@ -298,14 +292,14 @@
 		}
 	}
 
-  
+
 
 	@media (max-width: 998px) {
     &.body-cart-vertical {
       .summary-template-holder {
         order: 2;
       }
-    } 
+    }
 	}
 
   @media (max-width: 768px) {
@@ -320,13 +314,13 @@
       margin-right: 0;
       margin-left: 20px;
     }
-    .full-cart .cart table tbody tr td.product-image, 
+    .full-cart .cart table tbody tr td.product-image,
     .full-cart .cart table tbody tr td.bundle-item-image {
       left:initial;
       right:0;
     }
 
-    .table.cart-items td.product-name, 
+    .table.cart-items td.product-name,
     .table.cart-items td.quantity {
       margin-left:0 !important;
       margin-right:90px !important;
@@ -336,7 +330,7 @@
       float: right;
     }
 
-    .full-cart .cart table tbody tr td.product-name a, 
+    .full-cart .cart table tbody tr td.product-name a,
     .full-cart .cart table tbody tr td.bundle-item-name span {
       padding: 0 0 0 20px;
     }

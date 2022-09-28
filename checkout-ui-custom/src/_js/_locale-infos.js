@@ -20,6 +20,7 @@ module.exports._locale = {
     address2Placeholder: 'Complemento',
     requiredField: 'Este campo é obrigatório.',
     locale: 'pt-BR',
+    cartLabelShipping: 'Opções de Entrega',
   },
   CAN: {
     couponInactive: 'No discounts available. Check the conditions.',

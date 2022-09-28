@@ -22,3 +22,12 @@ module.exports.formatCurrency = (_locale, _currency, _value) => {
 
   return price
 }
+
+module.exports.formatCurrencyBRL = _value => {
+  const price = (_value / 100).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
+
+  return price
+}
