@@ -48,21 +48,17 @@
   }
 }
 
-.orderform-template-holder{
-
-
-
+.orderform-template-holder {
 	#client-profile-data {width: 100%;}
-	#client-profile-data form.client-pre-email,
 	#client-profile-data .step.client-profile-data,
 	#shipping-data,
 	#payment-data {
-  	width:100% !important;
-  	padding:0;
-  	margin:0;
-  	box-sizing: border-box;
+		width:100% !important;
+		padding:0;
+		margin:0;
+		box-sizing: border-box;
 
-  	background:#FFF;
+		background:#FFF;
 		border-radius:$borderRadius;
 
 		margin-bottom:20px !important;
@@ -70,9 +66,7 @@
 
 		border:$bordersContainers;
 
-
-  	@if $countingSteps {
-			padding:30px;
+  		@if $countingSteps {
 			@media(max-width: 768px) {
 				padding:20px;
 			}
@@ -80,85 +74,80 @@
 			padding:4px 15px 15px 10px;
 		}
 
-		&.client-pre-email {display:block !important;padding-bottom: calc( #{$inputHeight} + 14px + 30px);}
-
 		.link-box-edit {
-	    background: none;
-	    box-shadow: none;
-	    border: none;
-	    color: $actionPrimary;
-	    outline: none;
+			background: none;
+			box-shadow: none;
+			border: none;
+			color: #000000;
+			outline: none;
 
-	    position: absolute;
-	    right: 0;
-	    top: 50%;
-	    padding: 1px;
-	    font-size: 14px;
-	    transform: translateY(-50%);
-	    opacity: 0.7;
+			position: absolute;
+			right: 0;
+			top: auto;
+			bottom: -30px;
+			padding: 1px;
+			font-size: 14px;
+			z-index: 10;
+			opacity: 1;
 
-	    transition: all ease 0.2s;
-
-
-	    &:hover {
-	    	opacity: 1;
-	    }
-
-	    i.icon-spinner {
-		    font-size: 17px;
-		    position: absolute;
-		    right: 0;
-		    display: none;
-		    top: -7px;
+			&::after {
+				content: "Editar";
+				text-decoration: underline;
+				color: #000000;
 			}
 
-			&.active {
-				i.icon-edit {display: none;}
-				i.icon-spinner { display: block; }
+			i {
+				display: none;
 			}
 		}
 
 		.accordion-toggle {
 			padding:0;
-    	@extend %steps-title;
-    	> i {display: none;}
-    	> span {
-    		line-height: 20px;
-    		display: block;
-    		vertical-align: middle;
-    		@if $countingSteps {
-    			line-height: initial;
+    		@extend %steps-title;
+
+			> i {display: none;}
+			
+			> span {
+				line-height: 20px;
+				display: block;
+				padding: 16px 0;
+
+				&:not(.accordion-toggle-active) {
+					border-bottom: 1px solid #9E9E9E;
+				}
+
+				@if $countingSteps {
+					line-height: initial;
+				}
     		}
     	}
-    }
 
 
-    .accordion-toggle,
-    .accordion-inner {
-    	padding: 0;
-    }
+		.accordion-toggle,
+		.accordion-inner {
+			padding: 0;
+		}
 
 
-    input[type=text],
-    input[type=tel],
-    input[type=email],
-    select  {
-    	&:not(.pac-target-input) {
-	    	@extend %input-style;
-	    	width: 100%;
-	    	max-width: 100%;
-	    	outline: initial;
-    	}
-    }
+		input[type=text],
+		input[type=tel],
+		input[type=email],
+		select  {
+			&:not(.pac-target-input) {
+				@extend %input-style;
+				width: 100%;
+				max-width: 100%;
+				outline: initial;
+			}
+		}
 
-    &.active {
+		&.active {
 
-	    @if $countingSteps {
+			@if $countingSteps {
 
-	    }
-    }
-
-  }
+			}
+		}
+  	}
 
 	#payment-data {
 
@@ -640,8 +629,11 @@
 					//&:not(.vtex-omnishipping-1-x-geolocation) {margin:0 0 20px 0;}
 					
 					&.vtex-omnishipping-1-x-addressFormPart1 {order: 1;}
-					&.vtex-omnishipping-1-x-addressForm { order: 2; }
-					&.vtex-omnishipping-1-x-deliveryGroup { order: 4; }
+					&.vtex-omnishipping-1-x-deliveryGroup { 
+						order: 2; 
+						margin-bottom: 16px;
+					}
+					&.vtex-omnishipping-1-x-addressForm { order: 4; }
 					&.vtex-omnishipping-1-x-submitPaymentButton { order: 100; }
 					&.btn-link.vtex-omnishipping-1-x-btnDelivery {
 						order: 5;
@@ -658,13 +650,81 @@
 
 			.vtex-omnishipping-1-x-address {
 				margin:0;
+				> div {
+					display: flex;
+					flex-wrap: wrap;
+				}
+			}
 
+			.vtex-omnishipping-1-x-shippingSectionTitle {
+				font-weight: bold;
+				font-size: 12px;
+				color: #000000;
+				margin-bottom: 16px;
+			}
+
+			.vtex-omnishipping-1-x-scheduledDeliveryList {
+				border: 1px solid #E5E5E5;
+				border-radius: 6px;
+			}
+			
+			.vtex-omnishipping-1-x-schedule {
+				color: #000000;
+				font-size: 14px;
+				min-height: 68px;
+				box-sizing: border-box;
+				padding-left: 18px;
 			}
 
 			.vtex-omnishipping-1-x-addressSummaryActive .address-summary {
 				background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='24' height='24'><path fill='%23999999' d='M15.998,5.951L4,16.237V30c0,0.552,0.448,1,1,1h8v-8h6v8h8c0.552,0,1-0.448,1-1V16.238L15.998,5.951z M19,19 h-6v-5h6V19z'></path> <polygon fill='%23999999' points='15.998,0.683 9,6.682 9,3 5,3 5,10.111 0.59,13.892 1.892,15.41 15.998,3.317 30.108,15.41 31.41,13.892 '></polygon></svg>") no-repeat;
-				background-position: 12px 9px;
-				border:1px solid $muted4;
+				background-position: 18px center;
+				border:1px solid #E5E5E5;
+				border-radius: 6px;
+
+				box-sizing: border-box;
+				position: relative;
+				min-height: 70px;
+				padding-left: 48px;
+				padding-right: 16px;
+
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+
+				br {
+					display: none;
+				}
+
+				span {
+					font-size: 12px;
+					color: #000000;
+
+					&.neighborhood-delimiter-after,
+					&.state-delimiter {
+						display: none;
+					}
+
+					&.neighborhood::after,
+					&.city::after {
+						content: ", ";
+						margin-right: 2px;
+					}
+				}
+
+				> span {
+					&:first-of-type {
+						display: flex;
+						max-width: 100%;
+						overflow: hidden;
+						.street {
+							min-width: 500px;
+						}
+					}
+					&:last-of-type {
+						display: none;
+					}
+				}
 			}
 
 			.vtex-omnishipping-1-x-SummaryItemGroup {}
@@ -710,7 +770,20 @@
   			align-items:center;
     	}
 
-			.vtex-omnishipping-1-x-linkEdit { text-decoration: underline; }
+		.vtex-omnishipping-1-x-linkEdit { 
+			text-decoration: underline; 
+			color: #000000;
+			font-weight: bold;
+			font-size: 14px;
+			position: absolute;
+			right: 16px;
+			top: 50%;
+			transform: translateY(-50%);
+			&::first-letter {
+				text-transform: uppercase;
+			}
+		}
+
     	.vtex-omnishipping-1-x-deliveryChannelsWrapper,
     	.vtex-omnishipping-1-x-deliveryChannelsToggle {border-radius: $borderRadius;}
     	.vtex-omnishipping-1-x-deliveryChannelsWrapper {
@@ -726,14 +799,40 @@
 			}
 
 			.vtex-omnishipping-1-x-leanShippingGroupList {
-				border-color:$muted5;
+				border: 0;
 				margin: 0;
 			}
 
 			.vtex-omnishipping-1-x-option:hover,
 			.vtex-omnishipping-1-x-leanShippingOptionActive,
 			.vtex-omnishipping-1-x-leanShippingOption {
-				background:#FFF !important;
+				background:#F5F7FE !important;
+			}
+
+			.vtex-omnishipping-1-x-leanShippingOption {
+				border: 0;
+				min-height: 70px;
+				box-sizing: border-box;
+				border-radius: 6px;
+				padding-left: 18px;
+				padding-right: 16px;
+				font-size: 14px;
+
+				.vtex-omnishipping-1-x-leanShippingText {
+					border: 0;
+				}
+
+				.vtex-omnishipping-1-x-leanShippingTextLabelSingle {
+					font-size: 14px;
+					color: #000000;
+				}
+
+				.vtex-omnishipping-1-x-optionPrice {
+					font-weight: bold;
+					color: #000000;
+					font-size: 14px;
+					text-align: right;
+				}
 			}
 
 			.vtex-pickup-points-modal-3-x-modalDetailsBackLnk svg path,
@@ -1333,4 +1432,58 @@
 	
 
 }
- 
+
+
+p.input {
+	width: 100%;
+	position: relative;
+	margin-top: 19px !important;
+	margin-bottom: 19px !important;
+
+	&.ship-postalCode {
+		margin-bottom: 13px;
+	}
+
+	&.required label {
+		&::after {
+			content: "*";
+		}
+	}
+	
+	&.filled:not(.ship-state),
+	&:focus-within:not(.ship-state) {
+		label {
+			top: -26px;
+			font-size: 14px;
+		}
+	}
+
+	label {
+		position: absolute;
+		top: -2px;
+		left: 0;
+		z-index: 10;
+		font-size: 18px;
+		cursor: initial;
+		transition: 0.2s;
+	}
+
+	&.ship-state {
+		label {
+			top: -26px;
+			font-size: 14px;
+		}
+	}
+
+	&.ship-number,
+	&.ship-complement,
+	&.ship-city,
+	&.ship-state {
+		width: calc(50% - 12px);
+	}
+
+	&.ship-complement,
+	&.ship-state {
+		margin-left: 24px !important;
+	}
+}
