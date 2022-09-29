@@ -1051,6 +1051,19 @@ class checkoutCustom {
     }
   }
 
+  fixLabels() {
+    $('p.input input').each(function (index, el) {
+      const $context = $(el).closest('p.input')
+      const isFilled = $(el).val()
+
+      if (isFilled) {
+        $context.addClass('filled')
+      } else {
+        $context.removeClass('filled')
+      }
+    })
+  }
+
   bind() {
     const _this = this
 
@@ -1128,6 +1141,17 @@ class checkoutCustom {
     $('body').on('click', '.show-more-items-button', function () {
       _this.general()
     })
+
+    $('body').on('blur', 'p.input input', function () {
+      const $context = $(this).closest('p.input')
+      const isFilled = $(this).val()
+
+      if (isFilled) {
+        $context.addClass('filled')
+      } else {
+        $context.removeClass('filled')
+      }
+    })
   }
 
   init() {
@@ -1148,6 +1172,7 @@ class checkoutCustom {
     }
 
     _this.addEditButtoninLogin()
+    _this.fixLabels()
   }
 
   start() {
@@ -1170,6 +1195,7 @@ class checkoutCustom {
         _this.updateStep()
         _this.changeShippingTimeInfoInit()
         _this.checkProfileFocus()
+        _this.fixLabels()
 
         if (_this.orderForm) {
           _this.buildMiniCart(_this.orderForm)
