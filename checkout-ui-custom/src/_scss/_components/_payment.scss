@@ -2,7 +2,7 @@
 @import '_card-flags.scss';
 
 %label {
-	margin:10px 0 5px 0;display:block;color:$muted3;
+	margin:0;display:block;color:#8F8F8F;
 }
 // loadin shhimer
 
@@ -37,6 +37,11 @@
 	svg.vtex-omnishipping-1-x-svg path,
 	svg.pkpmodal-pickup-point-best-marker-image path:not([fill="white"]) {
 	  fill: $actionPrimary;
+	}
+
+	svg.vtex-omnishipping-1-x-svg {
+		width: 20px;
+		height: 20px;
 	}
 
 // -- vertical checkout
@@ -126,19 +131,6 @@
 		.accordion-toggle,
 		.accordion-inner {
 			padding: 0;
-		}
-
-
-		input[type=text],
-		input[type=tel],
-		input[type=email],
-		select  {
-			&:not(.pac-target-input) {
-				@extend %input-style;
-				width: 100%;
-				max-width: 100%;
-				outline: initial;
-			}
 		}
 
 		&.active {
@@ -675,59 +667,6 @@
 				box-sizing: border-box;
 				padding-left: 18px;
 			}
-
-			.vtex-omnishipping-1-x-addressSummaryActive .address-summary {
-				background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='24' height='24'><path fill='%23999999' d='M15.998,5.951L4,16.237V30c0,0.552,0.448,1,1,1h8v-8h6v8h8c0.552,0,1-0.448,1-1V16.238L15.998,5.951z M19,19 h-6v-5h6V19z'></path> <polygon fill='%23999999' points='15.998,0.683 9,6.682 9,3 5,3 5,10.111 0.59,13.892 1.892,15.41 15.998,3.317 30.108,15.41 31.41,13.892 '></polygon></svg>") no-repeat;
-				background-position: 18px center;
-				border:1px solid #E5E5E5;
-				border-radius: 6px;
-
-				box-sizing: border-box;
-				position: relative;
-				min-height: 70px;
-				padding-left: 48px;
-				padding-right: 16px;
-
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-
-				br {
-					display: none;
-				}
-
-				span {
-					font-size: 12px;
-					color: #000000;
-
-					&.neighborhood-delimiter-after,
-					&.state-delimiter {
-						display: none;
-					}
-
-					&.neighborhood::after,
-					&.city::after {
-						content: ", ";
-						margin-right: 2px;
-					}
-				}
-
-				> span {
-					&:first-of-type {
-						display: flex;
-						max-width: 100%;
-						overflow: hidden;
-						.street {
-							min-width: 500px;
-						}
-					}
-					&:last-of-type {
-						display: none;
-					}
-				}
-			}
-
-			.vtex-omnishipping-1-x-SummaryItemGroup {}
 
     	.vtex-omnishipping-1-x-content {align-items: center;}
     	.vtex-omnishipping-1-x-deliveryChannelsOption {
@@ -1296,7 +1235,6 @@
 	}
 
 	span.help.error {
-		margin:0 !important;
 		display:none;
 	}
 
@@ -1419,58 +1357,4 @@
 
 
 
-}
-
-p.input {
-	width: 100%;
-	position: relative;
-	margin-top: 19px !important;
-	margin-bottom: 19px !important;
-
-	&.ship-postalCode {
-		margin-bottom: 13px;
-	}
-
-	&.required label {
-		&::after {
-			content: "*";
-		}
-	}
-
-	&.filled:not(.ship-state),
-	&:focus-within:not(.ship-state) {
-		label {
-			top: -26px;
-			font-size: 14px;
-		}
-	}
-
-	label {
-		position: absolute;
-		top: -2px;
-		left: 0;
-		z-index: 10;
-		font-size: 18px;
-		cursor: initial;
-		transition: 0.2s;
-	}
-
-	&.ship-state {
-		label {
-			top: -26px;
-			font-size: 14px;
-		}
-	}
-
-	&.ship-number,
-	&.ship-complement,
-	&.ship-city,
-	&.ship-state {
-		width: calc(50% - 12px);
-	}
-
-	&.ship-complement,
-	&.ship-state {
-		margin-left: 24px !important;
-	}
 }

@@ -1,0 +1,147 @@
+#shipping-data {
+    .vtex-omnishipping-1-x-toggleInner {
+        top: 2px;
+        margin: 0;
+        left: 2px;
+
+        &Active {
+            left: auto !important;
+            right: 2px;
+        }
+    }
+
+    .vtex-omnishipping-1-x-addressFormPart1 {
+        margin-bottom: 16px;
+
+        // Field
+        p.input {
+            @extend %field;
+
+            &.ship-postalCode {
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+            }
+        }
+    }
+
+    .vtex-omnishipping-1-x-deliveryGroup {
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
+    .vtex-omnishipping-1-x-addressForm {
+        margin-top: 16px;
+        margin-bottom: 32px;
+    }
+
+    .vtex-omnishipping-1-x-addressSummaryActive .address-summary {
+        background: url("data:image/svg+xml;base64,PHN2ZyBpZD0iSWNvbl8tX0JvbGRfLV9BY3Rpb25fLV9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC0gQm9sZCAtIEFjdGlvbiAtIExvY2F0aW9uIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cmVjdCBpZD0iQ29udGFpbmVyIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiLz4KICA8cGF0aCBpZD0iSWNvbl9Cb2xkX0FjdGlvbl9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC8gQm9sZCAvIEFjdGlvbiAvIExvY2F0aW9uIiBkPSJNOC41NSwyMi44MTNsLTYuNC03LjQ4OGE5LjUyNCw5LjUyNCwwLDAsMS0xLjYtMi43NTFBOC45ODQsOC45ODQsMCwwLDEsMCw5LjQ1NSw5LjQsOS40LDAsMCwxLDIuNzgzLDIuNzY5YTkuNTIxLDkuNTIxLDAsMCwxLDEzLjQzNCwwQTkuNCw5LjQsMCwwLDEsMTksOS40NTVhOC45ODQsOC45ODQsMCwwLDEtLjU0OSwzLjExOSw5LjUyMiw5LjUyMiwwLDAsMS0xLjYsMi43NTFsLS4wMTIuMDE1TDEwLjQ1LDIyLjgxM2ExLjI1LDEuMjUsMCwwLDEtMS45LDBaTTYuNTgsMi41ODZBNy41LDcuNSwwLDAsMCwyLjU4OSw2LjU1NCw3LjM2Nyw3LjM2NywwLDAsMCwyLDkuNDU1LDcuMDYyLDcuMDYyLDAsMCwwLDMuNjc5LDE0LjA0TDkuNSwyMC44NDZsNS44MDUtNi43ODguMDktLjExMUE3LjA2OSw3LjA2OSwwLDAsMCwxNyw5LjU5VjkuNDU1YTcuNDExLDcuNDExLDAsMCwwLTIuMi01LjI3MSw3LjU0NCw3LjU0NCwwLDAsMC04LjIyNC0xLjZaTTcuNDUxLDE0LjI3YTUuMjY1LDUuMjY1LDAsMSwxLDIuMDQzLjQxM0E1LjIzMSw1LjIzMSwwLDAsMSw3LjQ1MSwxNC4yN1pNNy4wMiw2Ljk1OEEzLjUsMy41LDAsMSwwLDkuNDk0LDUuOTMzLDMuNDc4LDMuNDc4LDAsMCwwLDcuMDIsNi45NThaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyLjUgMC4zNzUpIiBmaWxsPSIjMjE4OWZmIi8+Cjwvc3ZnPgo=") no-repeat;
+
+        background-position: 15px center;
+        border: 1px solid #E5E5E5;
+        border-radius: 6px;
+
+        box-sizing: border-box;
+        position: relative;
+        min-height: 70px;
+        padding-left: 48px;
+        padding-right: 16px;
+
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+
+        br {
+            display: none;
+        }
+
+        span {
+            font-size: 12px;
+            color: #000000;
+
+            &.neighborhood-delimiter-after,
+            &.state-delimiter {
+                display: none;
+            }
+
+            &.neighborhood::after,
+            &.city::after {
+                content: ", ";
+                margin-right: 2px;
+            }
+        }
+
+        > span {
+            &:first-of-type {
+                display: flex;
+                max-width: 100%;
+                overflow: hidden;
+
+                .street {
+                    min-width: 900px;
+                }
+            }
+
+            &:last-of-type {
+                display: none;
+            }
+        }
+    }
+
+    .vtex-omnishipping-1-x-addressForm {
+
+        // Fields
+        p.input {
+            @extend %field;
+
+            &.ship-state {
+                label {
+                    top: 0;
+                    font-size: 14px;
+                }
+            }
+
+            &.ship-street {
+                margin-top: 0 !important;
+            }
+
+            &.ship-number,
+            &.ship-complement,
+            &.ship-city,
+            &.ship-state {
+                width: calc(50% - 12px);
+            }
+
+            &.ship-complement,
+            &.ship-state {
+                margin-left: 24px !important;
+            }
+
+            &.ship-street {
+                margin-top: 0 !important;
+            }
+
+            &.ship-receiverName {
+                margin-bottom: 0 !important;
+            }
+
+            select#ship-state {
+                height: 34px !important;
+                padding: 0;
+            }
+        }
+
+        input[type=text],
+        input[type=tel],
+        input[type=email],
+        select {
+            &:not(.pac-target-input) {
+                @extend %input-style;
+            }
+        }
+    }
+
+    #btn-go-to-payment {
+        margin-left: 0;
+    }
+}
