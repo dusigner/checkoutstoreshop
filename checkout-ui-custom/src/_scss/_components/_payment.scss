@@ -2,7 +2,7 @@
 @import '_card-flags.scss';
 
 %label {
-	margin:10px 0 5px 0;display:block;color:$muted3;
+	margin:10px 0 5px 0;display:block;color:#8F8F8F;
 }
 // loadin shhimer
 
@@ -37,6 +37,11 @@
 	svg.vtex-omnishipping-1-x-svg path,
 	svg.pkpmodal-pickup-point-best-marker-image path:not([fill="white"]) {
 	  fill: $actionPrimary;
+	}
+
+	svg.vtex-omnishipping-1-x-svg {
+		width: 20px;
+		height: 20px;
 	}
 
 // -- vertical checkout
@@ -677,8 +682,9 @@
 			}
 
 			.vtex-omnishipping-1-x-addressSummaryActive .address-summary {
-				background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='24' height='24'><path fill='%23999999' d='M15.998,5.951L4,16.237V30c0,0.552,0.448,1,1,1h8v-8h6v8h8c0.552,0,1-0.448,1-1V16.238L15.998,5.951z M19,19 h-6v-5h6V19z'></path> <polygon fill='%23999999' points='15.998,0.683 9,6.682 9,3 5,3 5,10.111 0.59,13.892 1.892,15.41 15.998,3.317 30.108,15.41 31.41,13.892 '></polygon></svg>") no-repeat;
-				background-position: 18px center;
+				background: url("data:image/svg+xml;base64,PHN2ZyBpZD0iSWNvbl8tX0JvbGRfLV9BY3Rpb25fLV9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC0gQm9sZCAtIEFjdGlvbiAtIExvY2F0aW9uIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cmVjdCBpZD0iQ29udGFpbmVyIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiLz4KICA8cGF0aCBpZD0iSWNvbl9Cb2xkX0FjdGlvbl9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC8gQm9sZCAvIEFjdGlvbiAvIExvY2F0aW9uIiBkPSJNOC41NSwyMi44MTNsLTYuNC03LjQ4OGE5LjUyNCw5LjUyNCwwLDAsMS0xLjYtMi43NTFBOC45ODQsOC45ODQsMCwwLDEsMCw5LjQ1NSw5LjQsOS40LDAsMCwxLDIuNzgzLDIuNzY5YTkuNTIxLDkuNTIxLDAsMCwxLDEzLjQzNCwwQTkuNCw5LjQsMCwwLDEsMTksOS40NTVhOC45ODQsOC45ODQsMCwwLDEtLjU0OSwzLjExOSw5LjUyMiw5LjUyMiwwLDAsMS0xLjYsMi43NTFsLS4wMTIuMDE1TDEwLjQ1LDIyLjgxM2ExLjI1LDEuMjUsMCwwLDEtMS45LDBaTTYuNTgsMi41ODZBNy41LDcuNSwwLDAsMCwyLjU4OSw2LjU1NCw3LjM2Nyw3LjM2NywwLDAsMCwyLDkuNDU1LDcuMDYyLDcuMDYyLDAsMCwwLDMuNjc5LDE0LjA0TDkuNSwyMC44NDZsNS44MDUtNi43ODguMDktLjExMUE3LjA2OSw3LjA2OSwwLDAsMCwxNyw5LjU5VjkuNDU1YTcuNDExLDcuNDExLDAsMCwwLTIuMi01LjI3MSw3LjU0NCw3LjU0NCwwLDAsMC04LjIyNC0xLjZaTTcuNDUxLDE0LjI3YTUuMjY1LDUuMjY1LDAsMSwxLDIuMDQzLjQxM0E1LjIzMSw1LjIzMSwwLDAsMSw3LjQ1MSwxNC4yN1pNNy4wMiw2Ljk1OEEzLjUsMy41LDAsMSwwLDkuNDk0LDUuOTMzLDMuNDc4LDMuNDc4LDAsMCwwLDcuMDIsNi45NThaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyLjUgMC4zNzUpIiBmaWxsPSIjMjE4OWZmIi8+Cjwvc3ZnPgo=") no-repeat;
+				
+				background-position: 15px center;
 				border:1px solid #E5E5E5;
 				border-radius: 6px;
 
@@ -1451,8 +1457,8 @@ p.input {
 		left: 0;
 		z-index: 10;
 		font-size: 18px;
-		cursor: initial;
 		transition: 0.2s;
+		cursor: initial;
 	}
 
 	&.ship-state {
