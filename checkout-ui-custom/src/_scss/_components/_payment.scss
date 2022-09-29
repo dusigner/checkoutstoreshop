@@ -2,7 +2,7 @@
 @import '_card-flags.scss';
 
 %label {
-	margin:10px 0 5px 0;display:block;color:#8F8F8F;
+	margin:0;display:block;color:#8F8F8F;
 }
 // loadin shhimer
 
@@ -131,19 +131,6 @@
 		.accordion-toggle,
 		.accordion-inner {
 			padding: 0;
-		}
-
-
-		input[type=text],
-		input[type=tel],
-		input[type=email],
-		select  {
-			&:not(.pac-target-input) {
-				@extend %input-style;
-				width: 100%;
-				max-width: 100%;
-				outline: initial;
-			}
 		}
 
 		&.active {
@@ -680,60 +667,6 @@
 				box-sizing: border-box;
 				padding-left: 18px;
 			}
-
-			.vtex-omnishipping-1-x-addressSummaryActive .address-summary {
-				background: url("data:image/svg+xml;base64,PHN2ZyBpZD0iSWNvbl8tX0JvbGRfLV9BY3Rpb25fLV9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC0gQm9sZCAtIEFjdGlvbiAtIExvY2F0aW9uIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cmVjdCBpZD0iQ29udGFpbmVyIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiLz4KICA8cGF0aCBpZD0iSWNvbl9Cb2xkX0FjdGlvbl9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC8gQm9sZCAvIEFjdGlvbiAvIExvY2F0aW9uIiBkPSJNOC41NSwyMi44MTNsLTYuNC03LjQ4OGE5LjUyNCw5LjUyNCwwLDAsMS0xLjYtMi43NTFBOC45ODQsOC45ODQsMCwwLDEsMCw5LjQ1NSw5LjQsOS40LDAsMCwxLDIuNzgzLDIuNzY5YTkuNTIxLDkuNTIxLDAsMCwxLDEzLjQzNCwwQTkuNCw5LjQsMCwwLDEsMTksOS40NTVhOC45ODQsOC45ODQsMCwwLDEtLjU0OSwzLjExOSw5LjUyMiw5LjUyMiwwLDAsMS0xLjYsMi43NTFsLS4wMTIuMDE1TDEwLjQ1LDIyLjgxM2ExLjI1LDEuMjUsMCwwLDEtMS45LDBaTTYuNTgsMi41ODZBNy41LDcuNSwwLDAsMCwyLjU4OSw2LjU1NCw3LjM2Nyw3LjM2NywwLDAsMCwyLDkuNDU1LDcuMDYyLDcuMDYyLDAsMCwwLDMuNjc5LDE0LjA0TDkuNSwyMC44NDZsNS44MDUtNi43ODguMDktLjExMUE3LjA2OSw3LjA2OSwwLDAsMCwxNyw5LjU5VjkuNDU1YTcuNDExLDcuNDExLDAsMCwwLTIuMi01LjI3MSw3LjU0NCw3LjU0NCwwLDAsMC04LjIyNC0xLjZaTTcuNDUxLDE0LjI3YTUuMjY1LDUuMjY1LDAsMSwxLDIuMDQzLjQxM0E1LjIzMSw1LjIzMSwwLDAsMSw3LjQ1MSwxNC4yN1pNNy4wMiw2Ljk1OEEzLjUsMy41LDAsMSwwLDkuNDk0LDUuOTMzLDMuNDc4LDMuNDc4LDAsMCwwLDcuMDIsNi45NThaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyLjUgMC4zNzUpIiBmaWxsPSIjMjE4OWZmIi8+Cjwvc3ZnPgo=") no-repeat;
-				
-				background-position: 15px center;
-				border:1px solid #E5E5E5;
-				border-radius: 6px;
-
-				box-sizing: border-box;
-				position: relative;
-				min-height: 70px;
-				padding-left: 48px;
-				padding-right: 16px;
-
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-
-				br {
-					display: none;
-				}
-
-				span {
-					font-size: 12px;
-					color: #000000;
-
-					&.neighborhood-delimiter-after,
-					&.state-delimiter {
-						display: none;
-					}
-
-					&.neighborhood::after,
-					&.city::after {
-						content: ", ";
-						margin-right: 2px;
-					}
-				}
-
-				> span {
-					&:first-of-type {
-						display: flex;
-						max-width: 100%;
-						overflow: hidden;
-						.street {
-							min-width: 500px;
-						}
-					}
-					&:last-of-type {
-						display: none;
-					}
-				}
-			}
-
-			.vtex-omnishipping-1-x-SummaryItemGroup {}
 
     	.vtex-omnishipping-1-x-content {align-items: center;}
     	.vtex-omnishipping-1-x-deliveryChannelsOption {
@@ -1302,7 +1235,6 @@
 	}
 
 	span.help.error {
-		margin:0 !important;
 		display:none;
 	}
 
@@ -1425,58 +1357,4 @@
 
 
 
-}
-
-p.input {
-	width: 100%;
-	position: relative;
-	margin-top: 19px !important;
-	margin-bottom: 19px !important;
-
-	&.ship-postalCode {
-		margin-bottom: 13px;
-	}
-
-	&.required label {
-		&::after {
-			content: "*";
-		}
-	}
-
-	&.filled:not(.ship-state),
-	&:focus-within:not(.ship-state) {
-		label {
-			top: -26px;
-			font-size: 14px;
-		}
-	}
-
-	label {
-		position: absolute;
-		top: -2px;
-		left: 0;
-		z-index: 10;
-		font-size: 18px;
-		transition: 0.2s;
-		cursor: initial;
-	}
-
-	&.ship-state {
-		label {
-			top: -26px;
-			font-size: 14px;
-		}
-	}
-
-	&.ship-number,
-	&.ship-complement,
-	&.ship-city,
-	&.ship-state {
-		width: calc(50% - 12px);
-	}
-
-	&.ship-complement,
-	&.ship-state {
-		margin-left: 24px !important;
-	}
 }
