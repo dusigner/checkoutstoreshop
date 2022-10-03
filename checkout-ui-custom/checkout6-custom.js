@@ -1289,19 +1289,23 @@
       enchancementSummaryCart(e) {
         try {
           const o = $('.summary-template-holder'),
-            a = e.totalizers.find(e => 'Items' === e.id).value || 0,
-            n = e.totalizers.find(e => 'Discounts' === e.id).value || 0,
-            t = a + (e.totalizers.find(e => 'Shipping' === e.id).value || 0),
-            r = `\n        <div class="cart-total" style="margin-bottom: 50px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${(
+            a = e.totalizers.filter(e => 'Items' === e.id).value || 0,
+            n = e.totalizers.filter(e => 'Discounts' === e.id).value || 0,
+            t = a + (e.totalizers.filter(e => 'Shipping' === e.id).value || 0),
+            r = `\n        <div class="cart-total" style="margin-bottom: 35px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${(
               e.value / 100
             ).toLocaleString('pt-BR', {
               style: 'currency',
               currency: 'BRL',
-            })}</p>\n          </div>\n          <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">\n            <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">\n              ${s(
-              t
-            )}\n            </p>\n            <p class="discount-total" style="color: #2189FF; font-weight: 700;">\n              ${
-              'economize ' + s(-n)
-            }\n            </p>\n          </div>\n        </div>\n      `
+            })}</p>\n          </div>\n          ${
+              n
+                ? `\n                <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">\n                  <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">\n                    ${s(
+                    t
+                  )}\n                  </p>\n                  <p class="discount-total" style="color: #2189FF; font-weight: 700;">\n                    ${
+                    'economize ' + s(-n)
+                  }\n                  </p>\n                </div>\n              `
+                : ''
+            }\n        </div>\n      `
           0 === o.find('.cart-total').length || o.find('.cart-total').remove(),
             o.prepend(r)
         } catch (e) {
@@ -1322,6 +1326,46 @@
           )
         } catch (e) {
           console.error('enchancementUnavailableProduct error:', e)
+        }
+      }
+      createChoiceNewProducts() {
+        try {
+          const e = $('.cart-more-options')
+          if (
+            e
+              .find('#shipping-preview-container .srp-content')
+              .find('.choice-new-products').length > 0
+          )
+            return
+          e.find('#shipping-preview-container .srp-content').append(
+            '<div class="choice-new-products" style="width: 100%; margin-top: 27px; text-align: center;">\n          <a href="/" style="font-size: 14px; font-weight: 700; padding-block: 10px; color: #000; margin-bottom: 0; text-decoration: underline;">\n            Escolher mais produtos\n          </a>\n        </div>'
+          )
+        } catch (e) {
+          console.error('createChoiceNewProducts error:', e)
+        }
+      }
+      couponInfo() {
+        try {
+          const e = $('.summary-template-holder')
+          if (e.find('.coupon-fields').find('.div-coupon-info').length > 0)
+            return
+          e.find('.coupon-fields').append(
+            '<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">\n          <p style="font-size: 12px; padding-top: 5px; color: #555555;">\n            Digite o cupom de desconto\n          </p>\n        </div>'
+          )
+        } catch (e) {
+          console.error('couponInfo error:', e)
+        }
+      }
+      imgEmptyCart() {
+        try {
+          const e = $('.checkout-container')
+          if (e.find('.empty-cart-content').find('.img-empty-cart').length > 0)
+            return
+          e.find('.empty-cart-content').prepend(
+            '<img class="img-empty-cart" src="data:image/png;base64,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"/>'
+          )
+        } catch (e) {
+          console.error('imgEmptyCart error:', e)
         }
       }
       condensedTaxes(e) {
@@ -1354,6 +1398,9 @@
           this.enchancementProductCart(e),
           this.enchancementSummaryCart(e),
           this.enchancementUnavailableProduct(),
+          this.createChoiceNewProducts(),
+          this.couponInfo(),
+          this.imgEmptyCart(),
           this.bundleItems(e),
           this.buildMiniCart(e),
           this.condensedTaxes(e),
@@ -1507,6 +1554,12 @@
           'ar-IQ' !== window.vtex.i18n.getLocale()) ||
           $('body').addClass('RTL-checkout')
       }
+      fixLabels() {
+        $('p.input input').each(function (e, o) {
+          const a = $(o).closest('p.input')
+          $(o).val() ? a.addClass('filled') : a.removeClass('filled')
+        })
+      }
       bind() {
         const e = this
         $('body').on('click', '#v-custom-edit-login-data', function (o) {
@@ -1567,6 +1620,10 @@
           }),
           $('body').on('click', '.show-more-items-button', function () {
             e.general()
+          }),
+          $('body').on('blur', 'p.input input', function () {
+            const e = $(this).closest('p.input')
+            $(this).val() ? e.addClass('filled') : e.removeClass('filled')
           })
       }
       init() {
@@ -1582,7 +1639,8 @@
             (e.updateLang(e.orderForm),
             e.update(e.orderForm),
             e.paymentBuilder(e.orderForm)),
-          e.addEditButtoninLogin()
+          e.addEditButtoninLogin(),
+          e.fixLabels()
       }
       start() {
         const e = this
@@ -1598,6 +1656,7 @@
               e.updateStep(),
                 e.changeShippingTimeInfoInit(),
                 e.checkProfileFocus(),
+                e.fixLabels(),
                 e.orderForm &&
                   (e.buildMiniCart(e.orderForm),
                   e.indexedInItems(e.orderForm),

@@ -5,6 +5,29 @@
   box-sizing: border-box;
 }
 
+.empty-cart-content {
+  color: #000;
+  text-align: center;
+  .empty-cart-title {
+    font-size: 22px;
+    font-family: 'SamsungSharpSans';
+  }
+  .empty-cart-links{
+    a{
+      background: #000;
+      border: 0;
+      font-size: 0;
+      content: '';
+      padding-inline: 25px;
+      &::after {
+        content: 'Voltar para a página inicial';
+        font-size: 14px;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
 .input-append, .input-prepend {
   display: flex !important;
   align-items: stretch;
@@ -39,6 +62,34 @@
   background-color: #fff;
 }
 
+.vtex-shipping-preview-0-x-unavailableDeliveryAlert{
+  align-items: flex-start !important;
+  .shp-alert-shipping-unavailable {
+    width: 50%;
+  }
+  .vtex-shipping-preview-0-x-alertPickup{
+    border-radius: 12px;
+    background: #FEF6F3;
+    border: unset;
+    .shp-alert-content {
+      text-align: center;
+      color: #000;
+      .vtex-shipping-preview-0-x-alertIcon{
+        display: none;
+      }
+    }
+  }
+  #find-pickup-link{
+    width: auto;
+    border-radius: 20px;
+    border-width: 1px;
+    color: #000;
+    border-color: #000;
+    font-weight: 700;
+    padding-block: 10px;
+  }
+}
+
 @media (max-width: $mobileWidth) {
   .orderform-template-holder .client-profile-data input[type="text"] {
     width:100% !important;
@@ -50,10 +101,25 @@
   .full-cart .cart table tbody tr td.product-name .seller {
     display: none;
   }
+  .full-cart .cart table tbody tr td.product-image,
+  .full-cart .cart table tbody tr td.bundle-item-image {
+    left: unset;
+  }
+  .full-cart .cart table tbody tr td.item-remove {
+    position: unset;
+    top: unset;
+    right: unset;
+    width: unset;
+  }
 }
 
 //imported from io.vtex (just changing the @media width)
 @media (max-width: $mobileWidth) {
+  .vtex-shipping-preview-0-x-unavailableDeliveryAlert{
+    .shp-alert-shipping-unavailable {
+      width: 100%;
+    }
+  }
   .item-quantity-change {
     display: inline-block;
   }
@@ -98,12 +164,12 @@
   }
   .full-cart .cart table tbody tr td.product-image,
   .full-cart .cart table tbody tr td.bundle-item-image {
-    left: 0;
+    right: 0;
     position: absolute;
   }
   .full-cart .cart table tbody tr td.product-name {
     display: block;
-    margin-left: 60px;
+    margin-left: 0px;
     text-align: left;
     line-height: 140%;
     width: auto;
@@ -119,8 +185,8 @@
   }
   .full-cart .cart table tbody tr td.quantity {
     width: 81px;
+    margin-left: 0px;
     padding: 0px;
-    margin-left: 60px;
   }
   .full-cart .cart table tbody tr td.quantity input {
     float: left;
@@ -137,10 +203,8 @@
     display: none;
   }
   .full-cart .cart table tbody tr td.item-remove {
-    position: absolute;
-    top: 2px;
-    right: 0;
-    width: 24px;
+    margin-right: 20px;
+    margin-top: -8px;
   }
   .cart-links-bottom {
     float: none;
