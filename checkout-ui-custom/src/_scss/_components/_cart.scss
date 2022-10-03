@@ -658,6 +658,14 @@ h1#cart-title {display:none !important;}
 			}
 			button[type="submit"] {
 				@extend .btn-secondary;
+        line-height: 20px !important;
+        height: 40px !important;
+        border-radius: 20px;
+        width: fit-content;
+        padding-left: 24px;
+        padding-right: 24px;
+        border: 1px solid #000;
+        color: #000;
 			}
 
 			.coupon-data {
@@ -700,6 +708,7 @@ h1#cart-title {display:none !important;}
 				display: flex;
 				width: 100%;
 				position: relative;
+        align-items: center;
 				&.info {
 					align-items: center;
 					padding: 0;
@@ -711,6 +720,7 @@ h1#cart-title {display:none !important;}
 					}
 				}
 				input {
+          @extend %field;
 					width: 100%;
 					margin-right: 10px;
 				}
@@ -825,6 +835,7 @@ h1#cart-title {display:none !important;}
 				margin-left: auto;
 				float: right;
         font-weight: 700;
+        color: #000;
 			}
 		}
 	}

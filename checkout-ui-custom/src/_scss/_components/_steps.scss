@@ -1,5 +1,5 @@
 //steps
-  
+
   $numberStepSize:26px;
 
 
@@ -30,21 +30,21 @@
 
 
   //keep attention changing anything below
-  
+
   @if $countingSteps {
     .client-pre-email h3.client-pre-email-h span:before,
     .client-profile-data .accordion-toggle > span:before,
     .shipping-data .accordion-toggle:before,
     .payment-data .accordion-toggle > span:not(.payment-edit-link):before {
-      
+
       @extend %countingStepsNormal;
-      
+
       text-align: center;
       margin-right:10px;
       border-radius: 100%;
-      
+
       display: inline-block;
-      
+
       font-weight:bold;
       vertical-align: middle;
       margin-top: -2px;
@@ -57,15 +57,15 @@
     body {
       &:before {
         width: 0;
-        height: 4px; 
-        background:$actionPrimary; 
+        height: 4px;
+        background:$actionPrimary;
         display: block;
         content:"";
         position: fixed;
         top: 0;
         transition: all ease 0.3s;
         z-index: 999;
-      } 
+      }
       &.v-custom-step-email:before {width: 23%;}
       &.v-custom-step-profile:before {width: 46%;}
       &.v-custom-step-shipping:before {width: 69%;}
@@ -82,10 +82,28 @@
   }
 
   body {
+    .checkout-steps_items {
+      .checkout-steps_item {
+        .text {
+          width: fit-content;
+          white-space: nowrap;
+        }
+      }
+    }
+    .checkout-steps_item_cart,
+    .checkout-steps_item_confirmation {
+      display: none !important
+    }
+    .checkout-steps_item_payment {
+      max-width: fit-content !important;
+    }
     &.v-custom-step-cart .checkout-steps_item_cart {
       opacity: 1;
-      .text {@extend %checkout-steps-active;pointer-events: none;}
-      &:before {background: $actionPrimary;border-color: $actionPrimary;}
+      .text {
+        @extend %checkout-steps-active;
+        pointer-events: none;
+      }
+      &:before {background: #000;border-color: $actionPrimary;}
     }
     &.v-custom-step-email,
     &.v-custom-step-profile{
@@ -94,15 +112,17 @@
       .checkout-steps_item_cart,
       .checkout-steps_item_identification {
         opacity: 1;
-        .text {@extend %checkout-steps-active;}
-        &:before {background: $actionPrimary;border-color: $actionPrimary;}
+        .text {
+          @extend %checkout-steps-active;
+        }
+        &:before {background: #000 ;border-color: $actionPrimary;}
       }
       .checkout-steps_item_identification .text {pointer-events: none;}
 
       .client-pre-email h3.client-pre-email-h span:before {
         @extend %countingStepsActive;
       }
-    } 
+    }
 
     &.v-custom-step-shipping {
       .checkout-steps_bar_inner-active {width: 40%;}
@@ -110,11 +130,13 @@
       .checkout-steps_item_identification,
       .checkout-steps_item_shipping {
         opacity: 1;
-        .text {@extend %checkout-steps-active;}
-        &:before {background: $actionPrimary;border-color: $actionPrimary;}
+        .text {
+          @extend %checkout-steps-active;
+        }
+        &:before {background: #000;border-color: $actionPrimary;}
       }
       .checkout-steps_item_shipping .text {pointer-events: none;}
-    } 
+    }
 
     &.v-custom-step-payment {
       .checkout-steps_bar_inner-active {width: 60%;}
@@ -123,11 +145,13 @@
       .checkout-steps_item_shipping,
       .checkout-steps_item_payment {
         opacity: 1;
-        .text {@extend %checkout-steps-active;}
-        &:before {background: $actionPrimary;border-color: $actionPrimary;}
+        .text {
+          @extend %checkout-steps-active;
+        }
+        &:before {background: #000;border-color: $actionPrimary;}
       }
       .checkout-steps_item_payment .text {pointer-events: none;}
-    } 
+    }
 
     &.v-custom-step-profile {
       .client-pre-email h3.client-pre-email-h span:before {
@@ -191,7 +215,7 @@
 
     &_items {
       display:flex;
-      justify-content: space-between; 
+      justify-content: space-between;
     }
 
     &_item {
@@ -202,44 +226,56 @@
       align-items: center;
       justify-content: flex-start;
       opacity:0.6;
-      
+      font-weight: normal;
+
       &:after {
         content:"";
-        height:2px;
-        background: $actionPrimary;
+        height:1px;
+        background: #DDD;
         margin: 0px 5px;
         min-width: 10px;
-        
+
       }
-    
+
       .text {
         clear: both;
-        display: flex;
-        align-items: center;
-        color:$muted3;
+        display: block;
+        color: #000;
         font-weight: 500;
         cursor:pointer;
         pointer-events: none;
 
         &:before {
-          content:  "";
-          width: 7px;
-          height: 7px;
-          background: $actionPrimary;
-          border: 2px solid $actionPrimary;
-          display: inline-block;
-          border-radius:100%;
-          margin-right: 7px;
+          content: attr(data-before);
+          color: #FFF;
+          font-size: 14px;
+          display: flex !important;
+          justify-content: center;
+          align-items: center;
+          width: 24px;
+          height: 24px;
+          background: #000;
+          border-radius: 100%;
+          margin: 0 auto;
           transition: all ease 0.3s;
-        } 
+        }
+
+        &.current {
+          &:before {
+            background-color: #2189FF;
+          }
+        }
       }
 
       &_cart:after {width: calc(100% - 50px);}
       &_identification:after {width: calc(100% - 103px);}
       &_shipping:after {width: calc(100% - 77px);}
-      &_payment:after {width: calc(100% - 77px);}
+      &_payment:after {
+        width: calc(100% - 77px);
+        display: none !important;
+      }
       &_confirmation:after {display:none;}
-    }   
+    }
   }
 
 

@@ -6,7 +6,7 @@ body {
   padding: 0;
   background: $base;
   padding-bottom:40px !important;
- 
+
   min-height: 93vh;
   position: relative;
   font-size: $fontSize;
@@ -20,7 +20,7 @@ body {
     }
   }
 
-  @media(max-width: 768px) { 
+  @media(max-width: 768px) {
     padding-bottom:0px !important;
   }
 
@@ -48,15 +48,15 @@ body {
 
 .container-main {
 }
- 
+
 .loading.loading-bg {
-  background:$base; 
+  background:$base;
 }
 
 // containers
 
 .container {
-  max-width:$maxWrapper;
+  max-width: 1440px;
   width:calc(100% - 40px);
   @media(max-width: $mobileWidth) {
     width:calc(100% - 20px);
@@ -68,6 +68,8 @@ body {
 .checkout-container {
   overflow: initial !important;
   z-index: 2;
+  display: flex;
+  justify-content: center;
 
   @media(max-width: 768px) {
     margin-bottom: 30px;
@@ -79,6 +81,9 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     transition:position ease 0.8s, opacity ease 0.8s, margin ease 0.8s;
+    max-width: 1280px;
+    justify-content: center;
+
     &.inactive {
       max-height: 50vh;
       overflow:hidden;
@@ -131,13 +136,13 @@ body {
       list-style: none;
       padding: 0;
       margin: 0;
-      
+
       &__item {
         strong {
           &:after {content:":";}
         }
         span, strong {line-height: 14px;}
       }
-    } 
-     
+    }
+
   }

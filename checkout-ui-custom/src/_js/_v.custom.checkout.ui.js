@@ -141,6 +141,44 @@ class checkoutCustom {
     `)
   }
 
+  addStepsHeader() {
+    if ($('.checkout-steps').length > 0 || !this.lang) return false
+
+    const addStepsHeaderHtml = `
+        <div class="checkout-steps">
+          <div class="checkout-steps-wrap">
+            <span class="checkout-steps_bar">
+              <span class="checkout-steps_bar_inner"></span>
+              <span class="checkout-steps_bar_inner-active"></span>
+            </span>
+            <div class="checkout-steps_items">
+              <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item" data-url="/checkout/#/profile">
+                <span class="text" data-before="1">${
+                  this.lang
+                    ? this.lang.checkoutStepsLabelIdentification
+                    : 'Identification'
+                }</span>
+              </span>
+              <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item" data-url="/checkout/#/shipping">
+                <span class="text" data-before="2">${
+                  this.lang ? this.lang.checkoutStepsLabelShipping : 'Shipping'
+                }</span>
+              </span>
+              <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item" data-url="/checkout/#/payment">
+                <span class="text" data-before="3">${
+                  this.lang ? this.lang.checkoutStepsLabelPayment : 'Payment'
+                }</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      `
+
+    if ($('header.main-header').length) {
+      $('header.main-header .container').append(addStepsHeaderHtml)
+    }
+  }
+
   addAssemblies(orderForm) {
     try {
       $.each(orderForm.items, function (i) {
@@ -755,6 +793,63 @@ class checkoutCustom {
     }
   }
 
+  backToCart() {
+    try {
+      const _stepElem = $(`.checkout-steps`)
+      const _containerElem = $(`.main-header .container`)
+
+      if (_containerElem.find('#go-to-cart-button-custom').length > 0) {
+        return
+      }
+
+      _stepElem.before(`
+        <p id="go-to-cart-button-custom" class="link link-cart pull-right" data-bind="if: !window.router.sac.isActive()">
+          <small>
+            <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>
+          </small>
+        </p>
+      `)
+    } catch (e) {
+      console.error('backToCart error', e)
+    }
+  }
+
+  conditionalHeader() {
+    try {
+      /* eslint-disable-next-line no-restricted-globals */
+      addEventListener('hashchange', event => {
+        const { hash } = event.target.location
+        const _stepElem = $(`.checkout-steps`)
+        const _gotoCartElem = $(`#go-to-cart-button-custom`)
+        const _headerElem = $(`.main-header`)
+
+        const showHeader = ['#/payment', '#/shipping', '#/profile']
+
+        if (showHeader.includes(hash)) {
+          _stepElem.css('display', 'block')
+          _gotoCartElem.css('display', 'flex')
+          _headerElem.css('box-shadow', '0px 4px 10px #00000033')
+        } else {
+          _stepElem.css('display', 'none')
+          _gotoCartElem.css('display', 'none')
+          _headerElem.css('box-shadow', 'none')
+        }
+
+        // const _steps = $(`.checkout-steps_item.js-checkout-steps-item .text`)
+        // _steps.each((index, element) => {
+        //   const dataUrl = $(element).attr('data-url');
+        //   if(dataUrl === `${pathname}/${hash}`){
+        //       $(element).find('.text').addClass('current')
+        //   }else {
+        //       $(element).find('.text').removeClass('current')
+        //   }
+        // })
+      })
+    } catch (e) {
+      console.error('conditionalHeader error', e)
+    }
+  }
+
   condensedTaxes(orderForm) {
     const customtax = orderForm.totalizers.filter(val => val.id === 'CustomTax')
 
@@ -801,6 +896,8 @@ class checkoutCustom {
     this.condensedTaxes(orderForm)
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
+    this.backToCart()
+    this.conditionalHeader()
 
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
@@ -1168,6 +1265,7 @@ class checkoutCustom {
     if (_this.orderForm) {
       _this.updateLang(_this.orderForm)
       _this.update(_this.orderForm)
+      _this.addStepsHeader()
       _this.paymentBuilder(_this.orderForm)
     }
 

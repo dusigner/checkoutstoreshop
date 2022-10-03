@@ -72,15 +72,15 @@
 
 	&-secondary {
 		background: transparent;
-		border:1px solid $actionPrimary;
-		color:$actionPrimary;
+		border:1px solid #000;
+		color: #000;
 
 		&:hover,
 		&:focus,
 		&:active {
 			background:$actionSecondary;
-			border:1px solid $actionPrimaryDarken;
-			color:$actionPrimaryDarken;
+			border:1px solid #000;
+			color: #000;
 		}
 	}
 
