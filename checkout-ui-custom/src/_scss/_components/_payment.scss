@@ -48,7 +48,6 @@
 
 
 .container.container-main.container-order-form {
-  width: 1440px !important;
   max-width: 1440px !important;
   @media(max-width: 768px) {
   	width: calc(100% - 20px);
@@ -194,7 +193,14 @@
 		  margin:0;
       grid-area: payment-group;
       max-width: 330px;
+
+
+      @media screen and (max-width: 768px) {
+        max-width: none;
+      }
 		}
+
+
 
 		#iframe-placeholder-creditCardPaymentGroup {
 			padding-top: 32px;
@@ -399,6 +405,12 @@
 			min-height: initial;
       grid-area: steps;
 
+
+      @media screen and (max-width: 768px) {
+          max-width: none;
+          padding: 0;
+          padding-top: 32px;
+      }
 			iframe {
 				margin:0;
 			}
@@ -1255,6 +1267,25 @@
           'payment-group steps';
 		}
 
+    @media screen and (max-width: 1200px) {
+      .step.client-profile-data.active .box-step .form-step[style*="display: block"],
+      .step.shipping-data.active .accordion-inner.shipping-container,
+      #payment-data .box-step form.form-step {
+        grid-template-columns: 246px auto;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .step.client-profile-data.active .box-step .form-step[style*="display: block"],
+      .step.shipping-data.active .accordion-inner.shipping-container,
+      #payment-data .box-step form.form-step {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+        'gift'
+        'payment-group'
+        'steps';
+      }
+    }
 
 		.orderform-template-holder #shipping-data .shipping-summary-info,
 		.orderform-template-holder .step .accordion-body p.notification,
@@ -1406,6 +1437,10 @@
     }
     .payment-card-lash {
       display: none;
+    }
+
+    select.input-mini + span.error {
+      width: fit-content;
     }
   }
 

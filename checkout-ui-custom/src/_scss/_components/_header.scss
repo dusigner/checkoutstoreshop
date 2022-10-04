@@ -14,6 +14,10 @@ body {
         'steps steps';
       align-items: center;
       justify-content: space-between;
+
+      @media screen and (max-width: 768px) {
+          width: fit-content;
+      }
     }
 
     > .container {
