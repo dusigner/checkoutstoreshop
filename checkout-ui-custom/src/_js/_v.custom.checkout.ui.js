@@ -4,6 +4,7 @@
 const { _locale } = require('./_locale-infos.js')
 const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
+const CustomShippingData = require('./_shipping')
 
 class checkoutCustom {
   constructor({
@@ -1231,6 +1232,9 @@ class checkoutCustom {
 
   init() {
     const _this = this
+    const shipping = new CustomShippingData()
+
+    shipping.init()
 
     _this.orderForm = window.vtexjs.checkout.orderForm
       ? window.vtexjs.checkout.orderForm
