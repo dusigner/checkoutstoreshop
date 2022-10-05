@@ -10,6 +10,12 @@
         }
     }
 
+    .vtex-omnishipping-1-x-addressFormPart1,
+    .vtex-omnishipping-1-x-deliveryGroup,
+    .vtex-omnishipping-1-x-addressForm {
+        max-width: 448px;
+    }
+
     .vtex-omnishipping-1-x-addressFormPart1 {
         margin-bottom: 16px;
 
@@ -27,11 +33,6 @@
     .vtex-omnishipping-1-x-deliveryGroup {
         margin-top: 16px;
         margin-bottom: 16px;
-    }
-
-    .vtex-omnishipping-1-x-addressForm {
-        margin-top: 16px;
-        margin-bottom: 32px;
     }
 
     .vtex-omnishipping-1-x-addressSummaryActive .address-summary {
@@ -89,10 +90,16 @@
     }
 
     .vtex-omnishipping-1-x-addressForm {
+        margin-top: 16px;
+        margin-bottom: 32px;
 
         // Fields
         p.input {
             @extend %field;
+
+            &.ship-reference {
+                display: block !important;
+            }
 
             &.ship-state {
                 label {
@@ -115,6 +122,20 @@
             &.ship-complement,
             &.ship-state {
                 margin-left: 24px !important;
+            }
+
+            &.ship-complement label,
+            &.ship-reference label {
+                display: flex;
+                font-size: 0;
+            }
+
+            &.ship-complement label::after {
+                content: "Complemento";
+            }
+
+            &.ship-reference label::after {
+                content: "Ponto de Referência";
             }
 
             &.ship-street {
@@ -143,5 +164,74 @@
 
     #btn-go-to-payment {
         margin-left: 0;
+        font-size: 0;
+        display: flex;
+        justify-content: center;
+
+        &::after {
+            content: "Continuar para Pagamentos";
+            font-size: 14px;
+            font-weight: bold;
+        }
+    }
+
+    .invalid-postal-code-msg {
+        display: none;
+    
+        body.invalid-postal-code & {
+            display: block;
+        }
+    
+        &__label {
+            display: inline-block;
+            margin: 8px 0;
+            font-size: 12px;
+            color: #D62E2E;
+        }
+        &__message {
+            font-size: 14px;
+            background: #FEF6F3;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        &__link {
+            text-decoration: underline;
+            color: #000000;
+        }
+    }
+    
+    div[class$="deliveryGroup"],
+    div[class$="addressForm"],
+    p[class*="submitPaymentButton"] {
+        // display: none;
     }
 }
+
+body.invalid-postal-code {
+    #shipping-data {
+        // div[class$="deliveryGroup"],
+        // div[class$="addressForm"],
+        // p[class*="submitPaymentButton"] {
+        //     display: none;
+        // }
+    
+        // .accordion-inner.shipping-container {
+        //     min-height: 217px;
+        // }
+
+        // input[type='text']#ship-postalCode {
+        //     border-color: #EF3434;
+        // }
+    }
+}
+
+body.valid-postal-code {
+    #shipping-data {
+        div[class$="deliveryGroup"],
+        div[class$="addressForm"],
+        p[class$="submitPaymentButton"] {
+            display: block;
+        }
+    }
+}    

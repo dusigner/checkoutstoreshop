@@ -15,6 +15,11 @@
 		font-size: 18px;
 		transition: 0.2s;
 		cursor: initial;
+
+		&::after {
+			font-size: 18px;
+			transition: 0.2s;
+		}
 	}
 
     label[for="ship-state"] {
@@ -32,6 +37,9 @@
 		label {
 			top: 0;
 			font-size: 14px;
+			&::after {
+				font-size: 14px;
+			}
 		}
 	}
 }
