@@ -237,11 +237,20 @@
             color: #000000;
         }
     }
-    
-    div[class$="deliveryGroup"],
-    div[class$="addressForm"],
-    p[class*="submitPaymentButton"] {
-        // display: none;
+
+    .vtex-omnishipping-1-x-SummaryItemContent {
+        font-size: 14px;
+        font-weight: bold;
+        color: #555555;
+
+        .address-summary > span {
+            margin-bottom: 7px;
+            display: inline-block;
+        }
+    }
+
+    .vtex-omnishipping-1-x-SummaryItemAddress {
+        margin-bottom: 0;
     }
 }
 

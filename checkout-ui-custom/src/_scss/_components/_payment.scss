@@ -548,6 +548,17 @@
 			&[style*="display: block"] {
 				margin-top: 10px;
 			}
+
+			p {
+				font-size: 14px;
+				font-weight: bold;
+				color: #555555;
+			}
+
+			span.tel {
+				margin-top: 7px;
+				display: inline-block;
+			}
 		}
 
     .form-step {
