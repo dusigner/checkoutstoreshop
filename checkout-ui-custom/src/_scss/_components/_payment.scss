@@ -742,38 +742,6 @@
 				margin: 0;
 			}
 
-			.vtex-omnishipping-1-x-option:hover,
-			.vtex-omnishipping-1-x-leanShippingOptionActive,
-			.vtex-omnishipping-1-x-leanShippingOption {
-				background:#F5F7FE !important;
-			}
-
-			.vtex-omnishipping-1-x-leanShippingOption {
-				border: 0;
-				min-height: 70px;
-				box-sizing: border-box;
-				border-radius: 6px;
-				padding-left: 18px;
-				padding-right: 16px;
-				font-size: 14px;
-
-				.vtex-omnishipping-1-x-leanShippingText {
-					border: 0;
-				}
-
-				.vtex-omnishipping-1-x-leanShippingTextLabelSingle {
-					font-size: 14px;
-					color: #000000;
-				}
-
-				.vtex-omnishipping-1-x-optionPrice {
-					font-weight: bold;
-					color: #000000;
-					font-size: 14px;
-					text-align: right;
-				}
-			}
-
 			.vtex-pickup-points-modal-3-x-modalDetailsBackLnk svg path,
 			.vtex-pickup-points-modal-3-x-modalDetailsBackLnk {
 			    color: $muted2;
