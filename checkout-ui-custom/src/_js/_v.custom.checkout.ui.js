@@ -5,6 +5,7 @@ const { _locale } = require('./_locale-infos.js')
 const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const CustomShippingData = require('./_shipping')
+const { default: CustomHeader } = require('./_header.js')
 
 class checkoutCustom {
   constructor({
@@ -142,6 +143,44 @@ class checkoutCustom {
         <i class="icon-spinner icon-spin icon-3x"></i>
       </a>
     `)
+  }
+
+  addStepsHeader() {
+    if ($('.checkout-steps').length > 0 || !this.lang) return false
+
+    const addStepsHeaderHtml = `
+        <div class="checkout-steps">
+          <div class="checkout-steps-wrap">
+            <span class="checkout-steps_bar">
+              <span class="checkout-steps_bar_inner"></span>
+              <span class="checkout-steps_bar_inner-active"></span>
+            </span>
+            <div class="checkout-steps_items">
+              <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="/checkout/#/profile">
+                <span class="text" data-before="1">${
+                  this.lang
+                    ? this.lang.checkoutStepsLabelIdentification
+                    : 'Identification'
+                }</span>
+              </span>
+              <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="/checkout/#/shipping">
+                <span class="text" data-before="2">${
+                  this.lang ? this.lang.checkoutStepsLabelShipping : 'Shipping'
+                }</span>
+              </span>
+              <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="/checkout/#/payment">
+                <span class="text" data-before="3">${
+                  this.lang ? this.lang.checkoutStepsLabelPayment : 'Payment'
+                }</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      `
+
+    if ($('header.main-header').length) {
+      $('header.main-header .container').append(addStepsHeaderHtml)
+    }
   }
 
   addAssemblies(orderForm) {
@@ -892,6 +931,54 @@ class checkoutCustom {
     }
   }
 
+  summaryCustom() {
+    try {
+      const { items } = window.vtexjs.checkout.orderForm
+      const itemsQuantity = items.length
+      const { paymentSystem } =
+        window.vtexjs.checkout.orderForm.paymentData.payments[0]
+
+      const totalOnTerm =
+        window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
+          installment => installment.paymentSystem === paymentSystem
+        ).value
+
+      const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
+
+      if (!$('.on-term-price').length) {
+        const _onTermHTML = `
+          <div class="on-term-price">
+            <span class="text-description">Total a prazo</span>
+            <span class="text-bold-price">${formatCurrencyBRL(
+              totalOnTerm
+            )}</span>
+          </div>
+        `
+
+        const _summaryOrder = `
+          <div class="summaryOrder">
+            <h6>Resumo do pedido (${itemsQuantity} ${
+          itemsQuantity.length > 1 ? 'itens' : 'item'
+        })</h6>
+            <ul>
+              ${items.map(item => {
+                return `
+                    <li>${item.name || item.skuName}</li>
+                  `
+              })}
+
+            </ul>
+          </div>
+        `
+
+        _accordionElem.append(_onTermHTML)
+        _accordionElem.append(_summaryOrder)
+      }
+    } catch (e) {
+      console.error('summaryCustom error:', e)
+    }
+  }
+
   condensedTaxes(orderForm) {
     const customtax = orderForm.totalizers.filter(val => val.id === 'CustomTax')
 
@@ -942,6 +1029,8 @@ class checkoutCustom {
     this.condensedTaxes(orderForm)
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
+    new CustomHeader().init()
+    this.summaryCustom()
 
     _this.shipping.validadePostalCode(orderForm.shippingData.address)
 
@@ -1314,6 +1403,7 @@ class checkoutCustom {
     if (_this.orderForm) {
       _this.updateLang(_this.orderForm)
       _this.update(_this.orderForm)
+      _this.addStepsHeader()
       _this.paymentBuilder(_this.orderForm)
     }
 

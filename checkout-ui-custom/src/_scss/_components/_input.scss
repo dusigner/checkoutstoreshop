@@ -61,7 +61,7 @@ input#creditCardpayment-card-0Number,
 input#creditCardpayment-card-0Code,
 input#creditCardpayment-card-1Number,
 input#creditCardpayment-card-1Code{
-	font-size:18px;
+	font-size:14px;
 }
 
 //remove autofill from chrome
@@ -75,3 +75,4 @@ input:-webkit-autofill:active  {
 @keyframes input_background_autofill {
     100% { background-color: transparent }
 }
+

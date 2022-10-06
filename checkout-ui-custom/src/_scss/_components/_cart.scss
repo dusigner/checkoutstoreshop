@@ -642,7 +642,7 @@ h1#cart-title {display:none !important;}
 				color: $muted2;
 				label {
 					cursor: initial;
-					font-size: 13px;
+					font-size: 14px;
 				}
 			}
 
@@ -659,12 +659,15 @@ h1#cart-title {display:none !important;}
 
 			button[type="submit"] {
 				@extend .btn-secondary;
-        border: 1px solid $muted1;
-        color: $muted1;
+        line-height: 20px !important;
+        height: 40px !important;
+        border-radius: 20px;
+        width: fit-content;
+        padding-left: 24px;
+        padding-right: 24px;
+        border: 1px solid #000;
+        color: #000;
         font-size: 0;
-        padding-block: 9px;
-        padding-inline: 20px;
-        content: '';
         &::after {
           content: 'Aplicar';
           font-size: 14px;
@@ -710,6 +713,7 @@ h1#cart-title {display:none !important;}
 				display: flex;
 				width: 100%;
 				position: relative;
+        align-items: center;
 				&.info {
 					display: none;
 				}
@@ -717,6 +721,7 @@ h1#cart-title {display:none !important;}
           display: none;
         }
 				input {
+          @extend %field;
 					width: 100%;
 					margin-right: 10px;
 				}
@@ -820,6 +825,7 @@ h1#cart-title {display:none !important;}
 				margin-left: auto;
 				float: right;
         font-weight: 700;
+        color: #000;
 			}
 		}
 	}

@@ -1,16 +1,25 @@
 body {
   .main-header {
-    padding: 32px 16px;
     text-align: center;
     position:relative;
     background-color: #FFF;
     margin-bottom:40px;
     color: #000;
 
-    &, > .container {
-      display:flex;
+    .container {
+      display: grid;
+      grid-template-areas:
+        'logo secure'
+        'backtocart backtocart'
+        'steps steps';
       align-items: center;
       justify-content: space-between;
+
+      @media screen and (max-width: 768px) {
+        width: auto;
+        margin-left: 16px;
+        margin-right: 16px;
+      }
     }
 
     > .container {
@@ -20,11 +29,27 @@ body {
 
     .checkout-secure-buy {
       font-weight: bold;
+      text-align: right;
+      grid-area: secure;
     }
 
     @media (max-width: $mobileWidth) {
       padding: 15px 10px;
       margin-bottom: 15px;
+    }
+
+    a {
+      grid-area: logo;
+      display: flex;
+      min-height: 85px;
+    }
+
+    .checkout-steps {
+      display: none;
+      grid-area: steps;
+      max-width: 540px;
+      margin: 0 auto;
+      min-height: 104px;
     }
   }
 }
