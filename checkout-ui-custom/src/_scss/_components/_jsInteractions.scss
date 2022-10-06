@@ -12,7 +12,7 @@
 body.js-vcustom-showNoteField {
   .orderform-template {
     .payment-confirmation-wrap {
-      display:block !important;		
+      display:block !important;
       .payment-submit-wrap {display:none;}
     }
     .summary-note {display: block !important;}
@@ -28,13 +28,7 @@ body.js-vcustom-showNoteField {
 
 .summary-coupon fieldset.coupon-fieldset {
   .vcustom-showCustomMsgCoupon {
-    border: 1px dashed $warning;
-    padding: 1px;
-    font-size: 11px;
-    background: $warningFaded;
-    border-radius: $borderRadius;
-    margin-top:4px !important;
-    clear: both;
+    display: none;
   }
 }
 
@@ -142,18 +136,18 @@ body.js-vcustom-showNoteField {
       list-style: none;
       padding: 0;
       margin: 0;
-      
+
       &__item {
         strong {
           &:after {content:":";}
         }
         span, strong {line-height: 14px;}
       }
-    } 
-     
+    }
+
 	}
-	
-//js 
+
+//js
 
 
 body.v-custom-paymentBuilder-accordion .steps-view {display: none;}

@@ -930,40 +930,63 @@
           console.error('bundleItems error:', e)
         }
       }
+      ApplyCoupon(e) {
+        const o = null !== e.marketingData && !!e.marketingData.coupon
+        try {
+          if (o) {
+            const o = $('.summary-template-holder'),
+              a = $('.coupon-fields .info .delete a')
+            if (o.find('.totalizers-list').find('.coupon-applied').length > 0)
+              return
+            o
+              .find('.totalizers-list .Items')
+              .after(
+                `<tr class="coupon-applied" style="height: 23px;">\n            <td>Cupom</td>\n            <td>\n              <p class="using-coupon-text" style="font-weight: 700">\n                ${e.marketingData.coupon}\n              </p>\n            </td>\n          </tr>`
+              ),
+              o.find('.totalizers-list .using-coupon-text').append(a[1])
+          }
+        } catch (e) {
+          console.error('ApplyCoupon error:', e)
+        }
+      }
       showCustomMsgCoupon(e) {
-        const o = this,
-          a = e.marketingData.coupon,
-          n = e.items.reduce(function (e, o) {
+        const o =
+            null !== e.marketingData &&
+            !!e.marketingData.coupon &&
+            e.marketingData.coupon,
+          a =
+            null !== e.clientProfileData && null !== e.clientProfileData.email
+              ? 'Cupom inválido para essa compra.'
+              : 'Para usar o cupom, você precisa estar logado.',
+          n = $('.summary-template-holder'),
+          t = e.items.reduce(function (e, a) {
             return (
               e +
-              (o.priceTags.length
-                ? o.priceTags.filter(e =>
+              (a.priceTags.length
+                ? a.priceTags.filter(e =>
                     e.ratesAndBenefitsIdentifier
                       ? e.ratesAndBenefitsIdentifier.matchedParameters[
                           'couponCode@Marketing'
-                        ] === a
+                        ] === o
                       : 0
                   ).length
                 : 0)
             )
           }, 0)
-        if (!a || n > 0)
-          return (
-            $('fieldset.coupon-fieldset').removeClass(
-              'js-vcustom-showCustomMsgCoupon'
-            ),
-            $('.vcustom-showCustomMsgCoupon').remove(),
-            !1
-          )
-        0 === $('.vcustom-showCustomMsgCoupon').length &&
-          $('fieldset.coupon-fieldset')
-            .addClass('js-vcustom-showCustomMsgCoupon')
-            .append(
-              `<p class="vcustom-showCustomMsgCoupon">${o.lang.couponInactive}</div>`
+        if (!o || t > 0) return $('.coupon-applied-message').remove(), !1
+        0 === t &&
+          0 === $('.coupon-applied-message').length &&
+          n
+            .find('.totalizers-list .coupon-applied')
+            .after(
+              `<tr class="coupon-applied-message" style="height: 23px;">\n            <td>\n              <span style="color: #D62E2E; font-size: 12px;">${a}</span>\n            </td>\n        </tr>`
             )
       }
       addLabels(e) {
-        const o = e.marketingData.coupon,
+        const o =
+            null !== e.marketingData &&
+            !!e.marketingData.coupon &&
+            e.marketingData.coupon,
           a = []
         if (!o) return !1
         try {
@@ -1344,14 +1367,17 @@
           console.error('createChoiceNewProducts error:', e)
         }
       }
-      couponInfo() {
+      couponInfo(e) {
+        const o = null !== e.marketingData && !!e.marketingData.coupon
         try {
-          const e = $('.summary-template-holder')
-          if (e.find('.coupon-fields').find('.div-coupon-info').length > 0)
-            return
-          e.find('.coupon-fields').append(
-            '<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">\n          <p style="font-size: 12px; padding-top: 5px; color: #555555;">\n            Digite o cupom de desconto\n          </p>\n        </div>'
-          )
+          if (!o) {
+            const e = $('.summary-template-holder')
+            if (e.find('.coupon-fields').find('.div-coupon-info').length > 0)
+              return
+            e.find('.coupon-fields').append(
+              '<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">\n            <p style="font-size: 12px; padding-top: 5px; color: #555555;">\n              Digite o cupom de desconto\n            </p>\n          </div>'
+            )
+          }
         } catch (e) {
           console.error('couponInfo error:', e)
         }
@@ -1392,14 +1418,15 @@
       }
       update(e) {
         const o = this
-        this.checkEmpty(e.items),
+        this.ApplyCoupon(e),
+          this.checkEmpty(e.items),
           this.addAssemblies(e),
           this.enchancementTotalPrice(e),
           this.enchancementProductCart(e),
           this.enchancementSummaryCart(e),
           this.enchancementUnavailableProduct(),
           this.createChoiceNewProducts(),
-          this.couponInfo(),
+          this.couponInfo(e),
           this.imgEmptyCart(),
           this.bundleItems(e),
           this.buildMiniCart(e),
