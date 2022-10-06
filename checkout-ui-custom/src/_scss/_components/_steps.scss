@@ -256,6 +256,29 @@
   }
 
 
+//Custom color for step selected.
+.v-custom-step-shipping {
+  .v-custom-step-shipping.checkout-steps_item {
+    .text:before {
+      background-color: #2189FF;
+    }
+  }
+}
 
+.v-custom-step-profile {
+  .v-custom-step-profile.checkout-steps_item {
+    .text:before {
+      background-color: #2189FF;
+    }
+  }
+}
+
+.v-custom-step-payment {
+  .v-custom-step-payment.checkout-steps_item {
+    .text:before {
+      background-color: #2189FF;
+    }
+  }
+}
 
 //end steps
