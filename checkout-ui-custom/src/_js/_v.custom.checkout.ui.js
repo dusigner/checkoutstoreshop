@@ -27,6 +27,8 @@ class checkoutCustom {
     this.showNoteField = showNoteField
     this.customAddressForm = customAddressForm
     this.hideEmailStep = hideEmailStep
+
+    this.shipping = new CustomShippingData()
   }
 
   general() {
@@ -1232,9 +1234,9 @@ class checkoutCustom {
 
   init() {
     const _this = this
-    const shipping = new CustomShippingData()
 
-    shipping.init()
+    _this.shipping.bindEvents()
+    _this.shipping.toggleGoToPaymentDisabled()
 
     _this.orderForm = window.vtexjs.checkout.orderForm
       ? window.vtexjs.checkout.orderForm
@@ -1298,6 +1300,10 @@ class checkoutCustom {
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
         }
+
+        if ($('#postalCode-finished-loading + .mb5').length) {
+          _this.shipping.resetValidation()
+        }
       })
 
       $(window).load(function () {
@@ -1312,6 +1318,8 @@ class checkoutCustom {
             isCalculateBttnEnabled: false,
           })
         }
+
+        _this.shipping.validadePostalCodeOnLoad()
       })
 
       // eslint-disable-next-line no-console

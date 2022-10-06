@@ -64,6 +64,24 @@
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
             }
+
+            &.ship-postalCode > small {
+                display: block;
+                margin-top: 8px;
+            }
+            
+            &.ship-postalCode > small a {
+                font-size: 14px;
+                color: #000000;
+                text-decoration: underline;
+            }
+
+            input#ship-postalCode {
+                body.invalid-postal-code & {
+                    border-color: $danger;
+		            border-width: 2px;
+                }
+            }
         }
     }
 
@@ -212,6 +230,45 @@
         }
     }
 
+    .vtex-omnishipping-1-x-address {
+        margin-top: 16px;
+        margin-bottom: 0;
+        
+        > div {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        p {
+            clear:both;
+            float: none;
+            margin: 0;
+            &.input.ship-checkboxNumberLabel.text {
+                width: auto;
+                align-self: flex-end;
+                display: flex;
+                align-items: center;
+                margin-left: 10px !important;
+                height: $inputHeight;
+            }
+        }
+    }
+
+    .vtex-omnishipping-1-x-SummaryItemContent {
+        font-size: 14px;
+        font-weight: bold;
+        color: #555555;
+
+        .address-summary > span {
+            margin-bottom: 7px;
+            display: inline-block;
+        }
+    }
+
+    .vtex-omnishipping-1-x-SummaryItemAddress {
+        margin-bottom: 0;
+    }
+
     .invalid-postal-code-msg {
         display: none;
     
@@ -237,47 +294,4 @@
             color: #000000;
         }
     }
-
-    .vtex-omnishipping-1-x-SummaryItemContent {
-        font-size: 14px;
-        font-weight: bold;
-        color: #555555;
-
-        .address-summary > span {
-            margin-bottom: 7px;
-            display: inline-block;
-        }
-    }
-
-    .vtex-omnishipping-1-x-SummaryItemAddress {
-        margin-bottom: 0;
-    }
-}
-
-body.invalid-postal-code {
-    #shipping-data {
-        // div[class$="deliveryGroup"],
-        // div[class$="addressForm"],
-        // p[class*="submitPaymentButton"] {
-        //     display: none;
-        // }
-    
-        // .accordion-inner.shipping-container {
-        //     min-height: 217px;
-        // }
-
-        // input[type='text']#ship-postalCode {
-        //     border-color: #EF3434;
-        // }
-    }
-}
-
-body.valid-postal-code {
-    #shipping-data {
-        div[class$="deliveryGroup"],
-        div[class$="addressForm"],
-        p[class$="submitPaymentButton"] {
-            display: block;
-        }
-    }
-}    
+}  

@@ -651,14 +651,6 @@
 				}
 			}
 
-			.vtex-omnishipping-1-x-address {
-				margin:0;
-				> div {
-					display: flex;
-					flex-wrap: wrap;
-				}
-			}
-
 			.vtex-omnishipping-1-x-shippingSectionTitle {
 				font-weight: bold;
 				font-size: 12px;
@@ -767,22 +759,6 @@
 
 			.vtex-omnishipping-1-x-pickupPointChange {
 				border-color:$actionPrimary;
-			}
-
-			.vtex-omnishipping-1-x-address {
-				p {
-					clear:both;
-					float: none;
-					margin: 0;
-					&.input.ship-checkboxNumberLabel.text {
-						width: auto;
-						align-self: flex-end;
-						display: flex;
-						align-items: center;
-						margin-left: 10px !important;
-						height: $inputHeight;
-					}
-				}
 			}
 
 			input#ship-addressQuery {
