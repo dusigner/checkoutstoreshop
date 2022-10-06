@@ -53,7 +53,9 @@
 		}
 
 		&[disabled] {
-			background: $success;
+			color: #AAAAAA;
+			background: #DDDDDD;
+			border-color: #DDDDDD;
 		}
 	}
 

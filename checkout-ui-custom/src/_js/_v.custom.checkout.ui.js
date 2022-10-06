@@ -4,6 +4,7 @@
 const { _locale } = require('./_locale-infos.js')
 const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
+const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
 
 class checkoutCustom {
@@ -27,6 +28,8 @@ class checkoutCustom {
     this.showNoteField = showNoteField
     this.customAddressForm = customAddressForm
     this.hideEmailStep = hideEmailStep
+
+    this.shipping = new CustomShippingData()
   }
 
   general() {
@@ -1029,6 +1032,8 @@ class checkoutCustom {
     new CustomHeader().init()
     this.summaryCustom()
 
+    _this.shipping.validadePostalCode(orderForm.shippingData.address)
+
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
       if (orderForm.marketingData) {
@@ -1384,6 +1389,9 @@ class checkoutCustom {
   init() {
     const _this = this
 
+    _this.shipping.bindEvents()
+    _this.shipping.toggleGoToPaymentDisabled()
+
     _this.orderForm = window.vtexjs.checkout.orderForm
       ? window.vtexjs.checkout.orderForm
       : false
@@ -1446,6 +1454,10 @@ class checkoutCustom {
         _this.URLHasIncludePayment()
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
+        }
+
+        if ($('#postalCode-finished-loading + .mb5').length) {
+          _this.shipping.resetValidation()
         }
       })
 

@@ -10,6 +10,49 @@
         }
     }
 
+    .vtex-omnishipping-1-x-addressFormPart1,
+    .vtex-omnishipping-1-x-deliveryGroup,
+    .vtex-omnishipping-1-x-addressForm {
+        max-width: 448px;
+    }
+
+    .vtex-omnishipping-1-x-option:hover,
+    .vtex-omnishipping-1-x-leanShippingOptionActive {
+        background:#F5F7FE !important;
+    }
+
+    .vtex-omnishipping-1-x-leanShippingOption {
+        border: 0;
+        min-height: 70px;
+        box-sizing: border-box;
+        border-radius: 6px;
+        padding-left: 18px;
+        padding-right: 16px;
+        font-size: 14px;
+
+        .vtex-omnishipping-1-x-leanShippingTextLabel {
+            font-weight: bold;
+            font-size: 14px;
+            color: #006BEA;
+        }
+
+        .vtex-omnishipping-1-x-leanShippingText {
+            border: 0;
+        }
+
+        .vtex-omnishipping-1-x-leanShippingTextLabelSingle {
+            font-size: 14px;
+            color: #000000;
+        }
+
+        .vtex-omnishipping-1-x-optionPrice {
+            font-weight: bold;
+            color: #000000;
+            font-size: 14px;
+            text-align: right;
+        }
+    }
+
     .vtex-omnishipping-1-x-addressFormPart1 {
         margin-bottom: 16px;
 
@@ -21,17 +64,30 @@
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
             }
+
+            &.ship-postalCode > small {
+                display: block;
+                margin-top: 8px;
+            }
+            
+            &.ship-postalCode > small a {
+                font-size: 14px;
+                color: #000000;
+                text-decoration: underline;
+            }
+
+            input#ship-postalCode {
+                body.invalid-postal-code & {
+                    border-color: $danger;
+		            border-width: 2px;
+                }
+            }
         }
     }
 
     .vtex-omnishipping-1-x-deliveryGroup {
         margin-top: 16px;
         margin-bottom: 16px;
-    }
-
-    .vtex-omnishipping-1-x-addressForm {
-        margin-top: 16px;
-        margin-bottom: 32px;
     }
 
     .vtex-omnishipping-1-x-addressSummaryActive .address-summary {
@@ -89,10 +145,16 @@
     }
 
     .vtex-omnishipping-1-x-addressForm {
+        margin-top: 16px;
+        margin-bottom: 32px;
 
         // Fields
         p.input {
             @extend %field;
+
+            &.ship-reference {
+                display: block !important;
+            }
 
             &.ship-state {
                 label {
@@ -115,6 +177,20 @@
             &.ship-complement,
             &.ship-state {
                 margin-left: 24px !important;
+            }
+
+            &.ship-complement label,
+            &.ship-reference label {
+                display: flex;
+                font-size: 0;
+            }
+
+            &.ship-complement label::after {
+                content: "Complemento";
+            }
+
+            &.ship-reference label::after {
+                content: "Ponto de Referência";
             }
 
             &.ship-street {
@@ -143,5 +219,89 @@
 
     #btn-go-to-payment {
         margin-left: 0;
+        font-size: 0;
+        display: flex;
+        justify-content: center;
+
+        &::after {
+            content: "Continuar para Pagamentos";
+            font-size: 14px;
+            font-weight: bold;
+        }
+    }
+
+    .vtex-omnishipping-1-x-address {
+        margin-top: 16px;
+        margin-bottom: 0;
+        
+        > div {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        p {
+            clear:both;
+            float: none;
+            margin: 0;
+            &.input.ship-checkboxNumberLabel.text {
+                width: auto;
+                align-self: flex-end;
+                display: flex;
+                align-items: center;
+                margin-left: 10px !important;
+                height: $inputHeight;
+            }
+        }
+    }
+
+    .vtex-omnishipping-1-x-SummaryItemContent {
+        font-size: 14px;
+        font-weight: bold;
+        color: #555555;
+
+        .address-summary > span {
+            margin-bottom: 7px;
+            display: inline-block;
+        }
+    }
+
+    .vtex-omnishipping-1-x-SummaryItemAddress {
+        margin-bottom: 0;
+    }
+
+} 
+
+.invalid-postal-code-msg {
+    display: none;
+    max-width: 566px;
+
+    body.body-cart & {
+        margin-top: 16px;
+    }
+
+    body.invalid-postal-code & {
+        display: block;
+    }
+
+    &__label {
+        display: inline-block;
+        margin: 8px 0;
+        font-size: 12px;
+        color: #D62E2E;
+
+        body.body-cart & {
+            display: none;
+        }
+    }
+    &__message {
+        font-size: 14px;
+        background: #FEF6F3;
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+    &__link {
+        text-decoration: underline;
+        color: #000000;
     }
 }
