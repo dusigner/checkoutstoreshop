@@ -160,7 +160,6 @@
   .checkout-steps {
     display: none;
     position: relative;
-    min-width: 470px;
     width:100%;
     @if $showCheckoutSteps {
       display: block;

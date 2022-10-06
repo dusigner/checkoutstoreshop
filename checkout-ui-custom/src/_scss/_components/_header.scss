@@ -16,7 +16,9 @@ body {
       justify-content: space-between;
 
       @media screen and (max-width: 768px) {
-          width: fit-content;
+        width: auto;
+        margin-left: 16px;
+        margin-right: 16px;
       }
     }
 
