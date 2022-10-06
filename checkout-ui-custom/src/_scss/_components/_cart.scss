@@ -866,6 +866,46 @@ h1#cart-title {display:none !important;}
       font-size: 20px;
     }
 
+    .srp-items.f5.black-70 {
+      color: #000;
+      font-size: 14px;
+    }
+
+    #deliver-at-text a {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .srp-delivery-select-container {
+      border-radius: 6px;
+      background: #F5F7FE;
+      border: 0;
+      padding-block: 12px;
+      padding-inline: 16px;
+      width: 566px;
+      @media (max-width: $mobileWidth) {
+        width: 100%;
+      }
+      .srp-delivery-current-many{
+        padding: 0;
+        margin: 0;
+        .srp-delivery-current-many__name{
+          color: #006BEA;
+          font-weight: 700;
+          font-size: 14px;
+        }
+        .srp-delivery-current-many__sla{
+          font-size: 14px;
+          color: #000000;
+        }
+        .srp-delivery-current-many__price{
+          font-size: 14px;
+          color: #000000;
+          font-weight: 700;
+        }
+      }
+    }
+
     span.error {display:none;}
     .srp-toggle__wrapper {
       label {
@@ -948,10 +988,6 @@ h1#cart-title {display:none !important;}
   #shipping-preview-container {
     width: 100% !important;
   }
-
- /*  @media(max-width: $mobileWidth) {
-    #shipping-preview-container {display: none !important;}
-  } */
 
   .vtex-pickup-points-modal-3-x-pickupViewMode {
     .btn {

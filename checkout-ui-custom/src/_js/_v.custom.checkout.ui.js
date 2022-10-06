@@ -245,10 +245,60 @@ class checkoutCustom {
     }
   }
 
-  showCustomMsgCoupon(orderForm) {
-    const _this = this
-    const _coupon = orderForm.marketingData.coupon
+  ApplyCoupon(orderForm) {
+    const isThereCoupon =
+      orderForm.marketingData === null
+        ? false
+        : !!orderForm.marketingData.coupon
 
+    try {
+      if (isThereCoupon) {
+        const _trElem = $(`.summary-template-holder`)
+        const removeCouponElement = $(`.coupon-fields .info .delete a`)
+
+        if (
+          _trElem.find('.totalizers-list').find('.coupon-applied').length > 0
+        ) {
+          return
+        }
+
+        _trElem.find('.totalizers-list .Items').after(
+          `<tr class="coupon-applied" style="height: 23px;">
+            <td>Cupom</td>
+            <td>
+              <p class="using-coupon-text" style="font-weight: 700">
+                ${orderForm.marketingData.coupon}
+              </p>
+            </td>
+          </tr>`
+        )
+        _trElem
+          .find('.totalizers-list .using-coupon-text')
+          .append(removeCouponElement[1])
+      }
+    } catch (e) {
+      console.error('ApplyCoupon error:', e)
+    }
+  }
+
+  showCustomMsgCoupon(orderForm) {
+    const _thereIsCoupon =
+      orderForm.marketingData === null
+        ? false
+        : !!orderForm.marketingData.coupon
+
+    const _coupon = _thereIsCoupon && orderForm.marketingData.coupon
+
+    const _customer =
+      orderForm.clientProfileData === null
+        ? false
+        : orderForm.clientProfileData.email !== null
+
+    const _message = _customer
+      ? 'Cupom inválido para essa compra.'
+      : 'Para usar o cupom, você precisa estar logado.'
+
+    const _trElem = $(`.summary-template-holder`)
     const couponItemsCount = orderForm.items.reduce(function (
       accumulator,
       item
@@ -269,25 +319,30 @@ class checkoutCustom {
     0)
 
     if (!_coupon || couponItemsCount > 0) {
-      $('fieldset.coupon-fieldset').removeClass(
-        'js-vcustom-showCustomMsgCoupon'
-      )
-      $('.vcustom-showCustomMsgCoupon').remove()
+      $('.coupon-applied-message').remove()
 
       return false
     }
 
-    if ($('.vcustom-showCustomMsgCoupon').length === 0) {
-      $('fieldset.coupon-fieldset')
-        .addClass('js-vcustom-showCustomMsgCoupon')
-        .append(
-          `<p class="vcustom-showCustomMsgCoupon">${_this.lang.couponInactive}</div>`
-        )
+    if (couponItemsCount === 0 && $('.coupon-applied-message').length === 0) {
+      _trElem.find('.totalizers-list .coupon-applied').after(
+        `<tr class="coupon-applied-message" style="height: 23px;">
+            <td>
+              <span style="color: #D62E2E; font-size: 12px;">${_message}</span>
+            </td>
+        </tr>`
+      )
     }
   }
 
   addLabels(orderForm) {
-    const _coupon = orderForm.marketingData.coupon
+    const _coupon =
+      orderForm.marketingData === null
+        ? false
+        : orderForm.marketingData.coupon
+        ? orderForm.marketingData.coupon
+        : false
+
     const _couponItems = []
 
     if (!_coupon) return false
@@ -825,7 +880,10 @@ class checkoutCustom {
   }
 
   couponInfo(orderForm) {
-    const isThereCoupon = orderForm.marketingData.coupon || false
+    const isThereCoupon =
+      orderForm.marketingData === null
+        ? false
+        : !!orderForm.marketingData.coupon
 
     try {
       if (!isThereCoupon) {
@@ -867,50 +925,6 @@ class checkoutCustom {
         )
     } catch (e) {
       console.error('imgEmptyCart error:', e)
-    }
-  }
-
-  ApplyCoupon(orderForm) {
-    const isThereCoupon = orderForm.marketingData.coupon || false
-    const isThereCustomer = orderForm.clientProfileData.email || false
-    const message = isThereCustomer
-      ? 'Cupom inválido para essa compra.'
-      : 'Para usar o cupom, você precisa estar logado.'
-
-    try {
-      if (isThereCoupon) {
-        const _trElem = $(`.summary-template-holder`)
-        const removeCouponElement = $(`.coupon-fields .info .delete a`)
-
-        if (
-          _trElem.find('.totalizers-list').find('.coupon-applied').length > 0
-        ) {
-          return
-        }
-
-        _trElem.find('.totalizers-list .Items').after(
-          `<tr class="coupon-applied" style="height: 23px;">
-            <td>Cupom</td>
-            <td>
-              <p class="using-coupon-text" style="font-weight: 700">
-                ${orderForm.marketingData.coupon}
-              </p>
-            </td>
-          </tr>`
-        )
-        _trElem
-          .find('.totalizers-list .using-coupon-text')
-          .append(removeCouponElement[1])
-        _trElem.find('.totalizers-list .coupon-applied').after(
-          `<tr class="coupon-applied-message" style="height: 23px;">
-              <td>
-                <span style="color: #D62E2E; font-size: 12px;">${message}</span>
-              </td>
-          </tr>`
-        )
-      }
-    } catch (e) {
-      console.error('ApplyCoupon error:', e)
     }
   }
 
@@ -997,6 +1011,7 @@ class checkoutCustom {
   update(orderForm) {
     const _this = this
 
+    this.ApplyCoupon(orderForm)
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
@@ -1006,7 +1021,6 @@ class checkoutCustom {
     this.createChoiceNewProducts()
     this.couponInfo(orderForm)
     this.imgEmptyCart()
-    this.ApplyCoupon(orderForm)
     this.bundleItems(orderForm)
     this.buildMiniCart(orderForm)
     this.condensedTaxes(orderForm)
