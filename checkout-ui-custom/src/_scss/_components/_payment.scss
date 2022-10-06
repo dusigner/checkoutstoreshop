@@ -1279,6 +1279,31 @@
       display: none !important;
 		}
 	  .summary-template-holder {margin-top: 0;}
+
+    .on-term-price {
+      padding: 8px 0px;
+      border-bottom: 1px solid #cbcbcb;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #000;
+
+      .text-bold-price {
+        font-weight: bold;
+      }
+    }
+
+    .summaryOrder {
+      color: #000;
+
+      h6 {
+        font-size: 14px;
+      }
+
+      li {
+        font-size: 12px;
+      }
+    }
 	}
 
 }

@@ -914,6 +914,54 @@ class checkoutCustom {
     }
   }
 
+  summaryCustom() {
+    try {
+      const { items } = window.vtexjs.checkout.orderForm
+      const itemsQuantity = items.length
+      const { paymentSystem } =
+        window.vtexjs.checkout.orderForm.paymentData.payments[0]
+
+      const totalOnTerm =
+        window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
+          installment => installment.paymentSystem === paymentSystem
+        ).value
+
+      const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
+
+      if (!$('.on-term-price').length) {
+        const _onTermHTML = `
+          <div class="on-term-price">
+            <span class="text-description">Total a prazo</span>
+            <span class="text-bold-price">${formatCurrencyBRL(
+              totalOnTerm
+            )}</span>
+          </div>
+        `
+
+        const _summaryOrder = `
+          <div class="summaryOrder">
+            <h6>Resumo do pedido (${itemsQuantity} ${
+          itemsQuantity.length > 1 ? 'itens' : 'item'
+        })</h6>
+            <ul>
+              ${items.map(item => {
+                return `
+                    <li>${item.name || item.skuName}</li>
+                  `
+              })}
+
+            </ul>
+          </div>
+        `
+
+        _accordionElem.append(_onTermHTML)
+        _accordionElem.append(_summaryOrder)
+      }
+    } catch (e) {
+      console.error('summaryCustom error:', e)
+    }
+  }
+
   condensedTaxes(orderForm) {
     const customtax = orderForm.totalizers.filter(val => val.id === 'CustomTax')
 
@@ -965,6 +1013,7 @@ class checkoutCustom {
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
     new CustomHeader().init()
+    this.summaryCustom()
 
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
