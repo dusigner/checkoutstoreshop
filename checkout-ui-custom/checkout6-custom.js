@@ -1344,14 +1344,17 @@
           console.error('createChoiceNewProducts error:', e)
         }
       }
-      couponInfo() {
+      couponInfo(e) {
+        const o = e.marketingData.coupon || !1
         try {
-          const e = $('.summary-template-holder')
-          if (e.find('.coupon-fields').find('.div-coupon-info').length > 0)
-            return
-          e.find('.coupon-fields').append(
-            '<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">\n          <p style="font-size: 12px; padding-top: 5px; color: #555555;">\n            Digite o cupom de desconto\n          </p>\n        </div>'
-          )
+          if (!o) {
+            const e = $('.summary-template-holder')
+            if (e.find('.coupon-fields').find('.div-coupon-info').length > 0)
+              return
+            e.find('.coupon-fields').append(
+              '<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">\n            <p style="font-size: 12px; padding-top: 5px; color: #555555;">\n              Digite o cupom de desconto\n            </p>\n          </div>'
+            )
+          }
         } catch (e) {
           console.error('couponInfo error:', e)
         }
@@ -1366,6 +1369,34 @@
           )
         } catch (e) {
           console.error('imgEmptyCart error:', e)
+        }
+      }
+      ApplyCoupon(e) {
+        const o = e.marketingData.coupon || !1,
+          a =
+            e.clientProfileData.email || !1
+              ? 'Cupom inválido para essa compra.'
+              : 'Para usar o cupom, você precisa estar logado.'
+        try {
+          if (o) {
+            const o = $('.summary-template-holder'),
+              n = $('.coupon-fields .info .delete a')
+            if (o.find('.totalizers-list').find('.coupon-applied').length > 0)
+              return
+            o
+              .find('.totalizers-list .Items')
+              .after(
+                `<tr class="coupon-applied" style="height: 23px;">\n            <td>Cupom</td>\n            <td>\n              <p class="using-coupon-text" style="font-weight: 700">\n                ${e.marketingData.coupon}\n              </p>\n            </td>\n          </tr>`
+              ),
+              o.find('.totalizers-list .using-coupon-text').append(n[1]),
+              o
+                .find('.totalizers-list .coupon-applied')
+                .after(
+                  `<tr class="coupon-applied-message" style="height: 23px;">\n              <td>\n                <span style="color: #D62E2E; font-size: 12px;">${a}</span>\n              </td>\n          </tr>`
+                )
+          }
+        } catch (e) {
+          console.error('ApplyCoupon error:', e)
         }
       }
       condensedTaxes(e) {
@@ -1399,8 +1430,9 @@
           this.enchancementSummaryCart(e),
           this.enchancementUnavailableProduct(),
           this.createChoiceNewProducts(),
-          this.couponInfo(),
+          this.couponInfo(e),
           this.imgEmptyCart(),
+          this.ApplyCoupon(e),
           this.bundleItems(e),
           this.buildMiniCart(e),
           this.condensedTaxes(e),
