@@ -21,6 +21,10 @@ class CustomShippingData {
       ) {
         $postalCodeField.find('small').before($invalidPostalCodeMessage)
       }
+
+      if (!$('.invalid-postal-code-msg').length) {
+        $('.srp-delivery-header').append($invalidPostalCodeMessage)
+      }
     } catch (err) {
       console.error(
         `Ocorreu um erro ao adicionar mensagem de CEP inválido: ${err}`
@@ -53,6 +57,8 @@ class CustomShippingData {
   }
 
   validadePostalCode(address) {
+    // console.log(address);
+
     try {
       const _this = this
 
@@ -66,6 +72,7 @@ class CustomShippingData {
           }
         }, 50)
       } else {
+        // console.log('cep válido');
         this.setValidPostalCode()
         this.removeInvalidPostalCodeMessage()
       }

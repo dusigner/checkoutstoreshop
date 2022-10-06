@@ -943,6 +943,8 @@ class checkoutCustom {
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
 
+    _this.shipping.validadePostalCode(orderForm.shippingData.address)
+
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
       if (orderForm.marketingData) {
@@ -1381,8 +1383,6 @@ class checkoutCustom {
             isCalculateBttnEnabled: false,
           })
         }
-
-        _this.shipping.validadePostalCodeOnLoad()
       })
 
       // eslint-disable-next-line no-console
