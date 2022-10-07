@@ -227,6 +227,10 @@
         display: flex;
         justify-content: center;
 
+        min-width: unset;
+        width: 100%;
+        max-width: 330px;
+
         &::after {
             content: "Continuar para Pagamentos";
             font-size: 14px;
