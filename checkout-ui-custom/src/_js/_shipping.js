@@ -56,23 +56,20 @@ class CustomShippingData {
     $('#shipping-data input#ship-postalCode').prop('disabled', false)
   }
 
-  validadePostalCode(address) {
-    // console.log(address);
-
+  validadePostalCode(orderForm) {
     try {
+      if (!orderForm.shippingData) return
+
+      if (!orderForm.shippingData.address) return
+
       const _this = this
+
+      const { address } = orderForm.shippingData
 
       if (address.postalCode && !address.city) {
         this.setInvalidPostalCode()
-
-        const interval = setInterval(function () {
-          if (!$('.invalid-postal-code-msg').length) {
-            _this.addInvalidPostalCodeMessage()
-            clearInterval(interval)
-          }
-        }, 50)
+        _this.addInvalidPostalCodeMessage()
       } else {
-        // console.log('cep válido');
         this.setValidPostalCode()
         this.removeInvalidPostalCodeMessage()
       }
