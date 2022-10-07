@@ -7,6 +7,7 @@ const FnsCustomAddressForm = require('./_customAddressForm.js')
 const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
 const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
+const { default: InstallationService } = require('./_installationService.js')
 
 class checkoutCustom {
   constructor({
@@ -1036,6 +1037,7 @@ class checkoutCustom {
     this.indexedInItems(orderForm)
     new CustomHeader().init()
     new SamsungCarePlus().init()
+    new InstallationService().init()
     this.summaryCustom()
 
     // debounce to prevent append from default script
