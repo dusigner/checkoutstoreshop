@@ -57,6 +57,8 @@ class CustomShippingData {
   }
 
   validadePostalCode(orderForm) {
+    if (!orderForm) return
+
     try {
       if (!orderForm.shippingData) return
 
@@ -68,8 +70,15 @@ class CustomShippingData {
 
       if (address.postalCode && !address.city) {
         this.setInvalidPostalCode()
-        _this.addInvalidPostalCodeMessage()
+
+        const interval = setInterval(function () {
+          if (!$('.invalid-postal-code-msg').length) {
+            _this.addInvalidPostalCodeMessage()
+            clearInterval(interval)
+          }
+        }, 50)
       } else {
+        // console.log('cep válido');
         this.setValidPostalCode()
         this.removeInvalidPostalCodeMessage()
       }
