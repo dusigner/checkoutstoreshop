@@ -6,6 +6,7 @@ const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
+const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
 
 class checkoutCustom {
   constructor({
@@ -935,8 +936,12 @@ class checkoutCustom {
     try {
       const { items } = window.vtexjs.checkout.orderForm
       const itemsQuantity = items.length
-      const { paymentSystem } =
-        window.vtexjs.checkout.orderForm.paymentData.payments[0]
+      const paymentSystem = window.vtexjs.checkout.orderForm.paymentData
+        .payments[0]
+        ? window.vtexjs.checkout.orderForm.paymentData.payments[0].paymentSystem
+        : null
+
+      if (!paymentSystem) return
 
       const totalOnTerm =
         window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
@@ -1030,6 +1035,7 @@ class checkoutCustom {
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
     new CustomHeader().init()
+    new SamsungCarePlus().init()
     this.summaryCustom()
 
     _this.shipping.validadePostalCode(orderForm.shippingData.address)
