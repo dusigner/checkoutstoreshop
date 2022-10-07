@@ -1032,8 +1032,6 @@ class checkoutCustom {
     new CustomHeader().init()
     this.summaryCustom()
 
-    _this.shipping.validadePostalCode(orderForm.shippingData.address)
-
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
       if (orderForm.marketingData) {
@@ -1428,6 +1426,7 @@ class checkoutCustom {
         _this.init()
 
         if (settings.url.includes('/attachments/shippingData')) {
+          _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
         }
       })
@@ -1453,6 +1452,8 @@ class checkoutCustom {
             targetNode: cartItems,
             callback: () => _this.removeCILoader(),
           })
+
+          _this.shipping.validadePostalCode(_this.orderForm)
         }
       })
 
@@ -1478,9 +1479,7 @@ class checkoutCustom {
         _this.indexedInItems(window.vtexjs.checkout.orderForm)
 
         _this.shipping.toggleGoToPaymentDisabled()
-        _this.shipping.validadePostalCode(
-          window.vtexjs.checkout.orderForm.shippingData.address
-        )
+        _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
 
         if (_this.customAddressForm && typeof store !== 'undefined') {
           window.store.dispatch({
