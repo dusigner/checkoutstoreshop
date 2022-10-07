@@ -276,39 +276,4 @@
     .vtex-omnishipping-1-x-SummaryItemGroup {
         padding-top: 0;
     }
-} 
-
-.invalid-postal-code-msg {
-    display: none;
-    max-width: 566px;
-
-    body.body-cart & {
-        margin-top: 16px;
-    }
-
-    body.invalid-postal-code & {
-        display: block;
-    }
-
-    &__label {
-        display: inline-block;
-        margin: 8px 0;
-        font-size: 12px;
-        color: #D62E2E;
-
-        body.body-cart & {
-            display: none;
-        }
-    }
-    &__message {
-        font-size: 14px;
-        background: #FEF6F3;
-        padding: 16px;
-        border-radius: 12px;
-        margin-bottom: 16px;
-    }
-    &__link {
-        text-decoration: underline;
-        color: #000000;
-    }
 }
