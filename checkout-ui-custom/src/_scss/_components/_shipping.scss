@@ -148,6 +148,10 @@
         margin-top: 16px;
         margin-bottom: 32px;
 
+        @media (max-width: 768px) {
+            margin-top: 16px;
+        }
+
         // Fields
         p.input {
             @extend %field;
@@ -269,6 +273,9 @@
         margin-bottom: 0;
     }
 
+    .vtex-omnishipping-1-x-SummaryItemGroup {
+        padding-top: 0;
+    }
 } 
 
 .invalid-postal-code-msg {

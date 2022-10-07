@@ -3,12 +3,8 @@
 
 %steps-title {
 	font-size: $fontSize + 8px;
-  text-transform: uppercase;
-  border-bottom: 1px solid $muted5;
   font-weight: bold;
   margin-bottom: 15px;
-  padding:7px 0 !important;
-  color:$muted3;
 
   &::before {
     content: unset;

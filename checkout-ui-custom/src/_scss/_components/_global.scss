@@ -146,3 +146,88 @@ body {
     }
 
   }
+
+#client-profile-data {
+  @media (max-width: 768px) {
+    margin-top: 16px;
+  }
+}
+
+#client-profile-data,
+#shipping-data,
+#payment-data {
+  margin-bottom: 48px !important;
+
+  @media (max-width: 768px) {
+    box-sizing: border-box;
+    padding: 0 14px !important;
+  }
+
+  .step.client-profile-data {
+    @media (max-width: 768px) {
+      padding: 0 !important;
+    }
+  }
+
+  .accordion-inner {
+    padding: 0;
+  }
+
+  .box-info {
+    margin-top: 16px;
+  }
+
+  .accordion-toggle {
+    padding:0;
+    @extend %steps-title;
+
+    line-height: 20px;
+    display: block;
+    
+    &:not(.accordion-toggle-active) {
+      padding-bottom: 16px;
+      border-bottom: 1px solid #9E9E9E;
+    }
+
+    > i {display: none;}
+  }
+
+  p.notification {
+    display: block;
+    margin-top: 16px;
+    font-size: 14px;
+    color: #555555;
+    font-weight: bold;
+  }
+
+  .link-box-edit {
+    background: none;
+    box-shadow: none;
+    border: none;
+    color: #000000;
+    outline: none;
+
+    position: absolute;
+    right: 122px;
+    top: auto;
+    bottom: -35px;
+    padding: 1px;
+    font-size: 14px;
+    z-index: 10;
+    opacity: 1;
+    
+    @media (max-width: 768px) {
+      right: 0;
+    }
+
+    &::after {
+      content: "Editar";
+      text-decoration: underline;
+      color: #000000;
+    }
+
+    i {
+      display: none;
+    }
+  }
+}
