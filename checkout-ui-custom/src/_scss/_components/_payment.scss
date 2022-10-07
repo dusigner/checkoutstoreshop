@@ -67,7 +67,6 @@
 		background:#FFF;
 		border-radius:$borderRadius;
 
-		margin-bottom:20px !important;
 		z-index: initial;
 
 		border:$bordersContainers;
@@ -78,67 +77,6 @@
 			}
 		} @else {
 			padding:4px 15px 15px 10px;
-		}
-
-		.link-box-edit {
-			background: none;
-			box-shadow: none;
-			border: none;
-			color: #000000;
-			outline: none;
-
-			position: absolute;
-			right: 0;
-			top: auto;
-			bottom: -30px;
-			padding: 1px;
-			font-size: 14px;
-			z-index: 10;
-			opacity: 1;
-
-			&::after {
-				content: "Editar";
-				text-decoration: underline;
-				color: #000000;
-			}
-
-			i {
-				display: none;
-			}
-		}
-
-		.accordion-toggle {
-			padding:0;
-    		@extend %steps-title;
-
-			> i {display: none;}
-
-			> span {
-				line-height: 20px;
-				display: block;
-				padding: 16px 0;
-
-				&:not(.accordion-toggle-active) {
-					border-bottom: 1px solid #9E9E9E;
-				}
-
-				@if $countingSteps {
-					line-height: initial;
-				}
-    		}
-    	}
-
-
-		.accordion-toggle,
-		.accordion-inner {
-			padding: 0;
-		}
-
-		&.active {
-
-			@if $countingSteps {
-
-			}
 		}
   	}
 
@@ -605,9 +543,6 @@
 
 	  .box-info {
 			color:$muted1;
-			&[style*="display: block"] {
-				margin-top: 10px;
-			}
 
 			p {
 				font-size: 14px;

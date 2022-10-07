@@ -1384,13 +1384,16 @@ class checkoutCustom {
         $context.removeClass('filled')
       }
     })
+
+    $('body').on('click', '.link-edit, .link-box-edit', function () {
+      setTimeout(() => _this.fixLabels(), 30)
+    })
   }
 
   init() {
     const _this = this
 
     _this.shipping.bindEvents()
-    _this.shipping.toggleGoToPaymentDisabled()
 
     _this.orderForm = window.vtexjs.checkout.orderForm
       ? window.vtexjs.checkout.orderForm
@@ -1421,8 +1424,12 @@ class checkoutCustom {
         _this.rtlUI()
       })
 
-      $(document).ajaxComplete(function () {
+      $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
+
+        if (settings.url.includes('/attachments/shippingData')) {
+          _this.shipping.toggleGoToPaymentDisabled()
+        }
       })
 
       $(window).on('hashchange', function () {
@@ -1432,6 +1439,7 @@ class checkoutCustom {
         _this.changeShippingTimeInfoInit()
         _this.checkProfileFocus()
         _this.fixLabels()
+        _this.shipping.toggleGoToPaymentDisabled()
 
         if (_this.orderForm) {
           _this.buildMiniCart(_this.orderForm)
@@ -1459,6 +1467,8 @@ class checkoutCustom {
         if ($('#postalCode-finished-loading + .mb5').length) {
           _this.shipping.resetValidation()
         }
+
+        _this.shipping.toggleGoToPaymentDisabled()
       })
 
       $(window).load(function () {
@@ -1466,6 +1476,11 @@ class checkoutCustom {
         _this.checkProfileFocus()
         _this.changeShippingTimeInfoInit()
         _this.indexedInItems(window.vtexjs.checkout.orderForm)
+
+        _this.shipping.toggleGoToPaymentDisabled()
+        _this.shipping.validadePostalCode(
+          window.vtexjs.checkout.orderForm.shippingData.address
+        )
 
         if (_this.customAddressForm && typeof store !== 'undefined') {
           window.store.dispatch({

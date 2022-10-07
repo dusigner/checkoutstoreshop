@@ -4,6 +4,11 @@
 	margin-top: 9px !important;
 	margin-bottom: 9px !important;
 
+	@media (max-width: 768px) {
+		margin-top: 7px !important;
+		margin-bottom: 7px !important;
+	}
+
     input {
         @extend %input-style;
     }
