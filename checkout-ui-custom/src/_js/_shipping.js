@@ -24,6 +24,12 @@ class CustomShippingData {
 
       if (!$('.invalid-postal-code-msg').length) {
         $('.srp-delivery-header').append($invalidPostalCodeMessage)
+        $(
+          '.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100'
+        ).hide()
+        $(
+          '.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100'
+        ).hide()
       }
     } catch (err) {
       console.error(
@@ -56,6 +62,63 @@ class CustomShippingData {
     $('#shipping-data input#ship-postalCode').prop('disabled', false)
   }
 
+  addVirtualInventoryMessage() {
+    try {
+      const $postalCodeForm = $('.vtex-omnishipping-1-x-addressFormPart1')
+      const $postalCodeField = $postalCodeForm.find('p.ship-postalCode')
+      const $virtualInventoryMessage = $(
+        `<div class="virtual-inventory-msg" style="max-width: 566px; margin-top: 16px;">
+          <p class="invalid-postal-code-msg__message">
+            O prazo de entrega está acima do normal devido à reposição de estoque.
+          </p>
+        </div>`
+      )
+
+      if (
+        $postalCodeField.find('small').length &&
+        $postalCodeField.find('.virtual-inventory-msg').length === 0
+      ) {
+        $postalCodeField.find('small').before($virtualInventoryMessage)
+      }
+
+      if (
+        $('.srp-delivery-header').find('.virtual-inventory-msg').length === 0
+      ) {
+        $('.srp-delivery-header').append($virtualInventoryMessage)
+      }
+    } catch (err) {
+      console.error(
+        `Ocorreu um erro ao adicionar mensagem de prazo acima do normal: ${err}`
+      )
+    }
+  }
+
+  validateVirtualInventory(orderForm) {
+    const _this = this
+
+    try {
+      if (!orderForm.shippingData) return
+      if (!orderForm.shippingData.address) return
+      const { logisticsInfo } = orderForm.shippingData
+
+      logisticsInfo.filter(item => {
+        const appendItem = item.slas.filter(sla => {
+          return sla.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
+        })
+
+        if (appendItem.length > 0) {
+          if ($('.estoqueVirtual').length === 0) {
+            _this.addVirtualInventoryMessage()
+          }
+        }
+
+        return true
+      })
+    } catch (err) {
+      console.error(`Ocorreu um erro ao consultar o estoque virtual: ${err}`)
+    }
+  }
+
   validadePostalCode(orderForm) {
     if (!orderForm) return
 
@@ -81,6 +144,7 @@ class CustomShippingData {
         // console.log('cep válido');
         this.setValidPostalCode()
         this.removeInvalidPostalCodeMessage()
+        this.validateVirtualInventory(orderForm)
       }
     } catch (err) {
       console.error(`Ocorreu um erro ao validar CEP: ${err}`)

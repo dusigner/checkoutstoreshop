@@ -1,14 +1,14 @@
 !(function (e) {
   var o = {}
-  function a(n) {
-    if (o[n]) return o[n].exports
-    var t = (o[n] = { i: n, l: !1, exports: {} })
-    return e[n].call(t.exports, t, t.exports, a), (t.l = !0), t.exports
+  function a(t) {
+    if (o[t]) return o[t].exports
+    var n = (o[t] = { i: t, l: !1, exports: {} })
+    return e[t].call(n.exports, n, n.exports, a), (n.l = !0), n.exports
   }
   ;(a.m = e),
     (a.c = o),
-    (a.d = function (e, o, n) {
-      a.o(e, o) || Object.defineProperty(e, o, { enumerable: !0, get: n })
+    (a.d = function (e, o, t) {
+      a.o(e, o) || Object.defineProperty(e, o, { enumerable: !0, get: t })
     }),
     (a.r = function (e) {
       'undefined' != typeof Symbol &&
@@ -19,21 +19,21 @@
     (a.t = function (e, o) {
       if ((1 & o && (e = a(e)), 8 & o)) return e
       if (4 & o && 'object' == typeof e && e && e.__esModule) return e
-      var n = Object.create(null)
+      var t = Object.create(null)
       if (
-        (a.r(n),
-        Object.defineProperty(n, 'default', { enumerable: !0, value: e }),
+        (a.r(t),
+        Object.defineProperty(t, 'default', { enumerable: !0, value: e }),
         2 & o && 'string' != typeof e)
       )
-        for (var t in e)
+        for (var n in e)
           a.d(
-            n,
             t,
+            n,
             function (o) {
               return e[o]
-            }.bind(null, t)
+            }.bind(null, n)
           )
-      return n
+      return t
     }),
     (a.n = function (e) {
       var o =
@@ -63,9 +63,9 @@
         tomorrowLabel: 'Amanhã',
         cartSubmitButton: 'Fechar pedido',
         checkoutStepsLabelCart: 'Carrinho',
-        checkoutStepsLabelIdentification: 'Identificação',
+        checkoutStepsLabelIdentification: 'Dados Pessoais',
         checkoutStepsLabelShipping: 'Entrega',
-        checkoutStepsLabelPayment: 'Pagamento',
+        checkoutStepsLabelPayment: 'Pagamentos',
         checkoutStepsLabelConfirmation: 'Confirmação',
         city: 'Cidade',
         state: 'Estado',
@@ -731,22 +731,22 @@
     }
   },
   function (e, o, a) {
-    a(2), (e.exports = a(8))
+    a(2), (e.exports = a(11))
   },
   function (e, o, a) {
-    const n = a(3),
-      t = a(4)
+    const t = a(3),
+      n = a(4)
     ;(window.vcustom = {
-      checkout: new t({
+      checkout: new n({
         type: 'vertical',
-        accordionPayments: !0,
+        accordionPayments: !1,
         deliveryDateFormat: !1,
         quantityPriceCart: !0,
         showNoteField: !1,
         customAddressForm: !1,
         hideEmailStep: !1,
       }),
-      debug: new n({ dbg: !1, logo: '' }),
+      debug: new t({ dbg: !1, logo: '' }),
     }),
       window.vcustom.checkout.start()
   },
@@ -778,16 +778,19 @@
     }
   },
   function (e, o, a) {
-    const { _locale: n } = a(0),
-      { debounce: t, formatCurrency: r, formatCurrencyBRL: s } = a(5),
-      d = a(6)
+    const { _locale: t } = a(0),
+      { debounce: n, formatCurrency: r, formatCurrencyBRL: s } = a(5),
+      d = a(6),
+      m = a(8),
+      { default: h } = a(9),
+      { default: i } = a(10)
     e.exports = class {
       constructor({
         type: e = 'vertical',
         accordionPayments: o = !0,
         deliveryDateFormat: a = !1,
-        quantityPriceCart: n = !1,
-        showNoteField: t = !1,
+        quantityPriceCart: t = !1,
+        showNoteField: n = !1,
         customAddressForm: r = !1,
         hideEmailStep: s = !0,
       } = {}) {
@@ -797,10 +800,11 @@
           (this.lang = ''),
           (this.accordionPayments = o),
           (this.deliveryDateFormat = a),
-          (this.quantityPriceCart = n),
-          (this.showNoteField = t),
+          (this.quantityPriceCart = t),
+          (this.showNoteField = n),
           (this.customAddressForm = r),
-          (this.hideEmailStep = s)
+          (this.hideEmailStep = s),
+          (this.shipping = new m())
       }
       general() {
         $('.custom-cart-template-wrap').length ||
@@ -820,13 +824,13 @@
         callback: o,
         disconnectCondition: a = !0,
       }) {
-        const n = (function () {
+        const t = (function () {
             const e = window.MutationObserver || window.WebKitMutationObserver
             return function (o, a) {
               if (o && 1 === o.nodeType) {
                 if (e) {
-                  const n = new e(a)
-                  return n.observe(o, { childList: !0, subtree: !0 }), n
+                  const t = new e(a)
+                  return t.observe(o, { childList: !0, subtree: !0 }), t
                 }
                 window.addEventListener &&
                   (o.addEventListener('DOMNodeInserted', a, !1),
@@ -834,10 +838,10 @@
               }
             }
           })(),
-          t = new MutationObserver(function () {
-            e && a && (t.disconnect(), n(e, () => o()))
+          n = new MutationObserver(function () {
+            e && a && (n.disconnect(), t(e, () => o()))
           })
-        t.observe(document.body, { childList: !0, subtree: !0 })
+        n.observe(document.body, { childList: !0, subtree: !0 })
       }
       buildVertical() {
         $('body').addClass('body-cart-vertical'),
@@ -874,6 +878,20 @@
               !this.lang || this.lang.editLabel
             }">\n        <i class="icon-edit"></i>\n        <i class="icon-spinner icon-spin icon-3x"></i>\n      </a>\n    `
           )
+      }
+      addStepsHeader() {
+        if ($('.checkout-steps').length > 0 || !this.lang) return !1
+        const e = `\n        <div class="checkout-steps">\n          <div class="checkout-steps-wrap">\n            <span class="checkout-steps_bar">\n              <span class="checkout-steps_bar_inner"></span>\n              <span class="checkout-steps_bar_inner-active"></span>\n            </span>\n            <div class="checkout-steps_items">\n              <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="/checkout/#/profile">\n                <span class="text" data-before="1">${
+          this.lang
+            ? this.lang.checkoutStepsLabelIdentification
+            : 'Identification'
+        }</span>\n              </span>\n              <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="/checkout/#/shipping">\n                <span class="text" data-before="2">${
+          this.lang ? this.lang.checkoutStepsLabelShipping : 'Shipping'
+        }</span>\n              </span>\n              <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="/checkout/#/payment">\n                <span class="text" data-before="3">${
+          this.lang ? this.lang.checkoutStepsLabelPayment : 'Payment'
+        }</span>\n              </span>\n            </div>\n          </div>\n        </div>\n      `
+        $('header.main-header').length &&
+          $('header.main-header .container').append(e)
       }
       addAssemblies(e) {
         try {
@@ -958,8 +976,8 @@
             null !== e.clientProfileData && null !== e.clientProfileData.email
               ? 'Cupom inválido para essa compra.'
               : 'Para usar o cupom, você precisa estar logado.',
-          n = $('.summary-template-holder'),
-          t = e.items.reduce(function (e, a) {
+          t = $('.summary-template-holder'),
+          n = e.items.reduce(function (e, a) {
             return (
               e +
               (a.priceTags.length
@@ -973,10 +991,10 @@
                 : 0)
             )
           }, 0)
-        if (!o || t > 0) return $('.coupon-applied-message').remove(), !1
-        0 === t &&
+        if (!o || n > 0) return $('.coupon-applied-message').remove(), !1
+        0 === n &&
           0 === $('.coupon-applied-message').length &&
-          n
+          t
             .find('.totalizers-list .coupon-applied')
             .after(
               `<tr class="coupon-applied-message" style="height: 23px;">\n            <td>\n              <span style="color: #D62E2E; font-size: 12px;">${a}</span>\n            </td>\n        </tr>`
@@ -1060,7 +1078,7 @@
               {}
             )
             for (const o in a) {
-              const n = a[o]
+              const t = a[o]
               if (
                 $(`.table.cart-items tbody > tr.product-item:eq(${o})`).find(
                   '.v-custom-bundles'
@@ -1073,9 +1091,9 @@
                     .find('.v-custom-bundles')
                     .html())
               )
-                for (const e in n) {
-                  if (!n.hasOwnProperty(e)) continue
-                  const a = n[e]
+                for (const e in t) {
+                  if (!t.hasOwnProperty(e)) continue
+                  const a = t[e]
                   $(
                     `.table.cart-items tbody > tr.product-item[data-sku='${a.id}'][data-parentitemindex='${a.parentItemIndex}']`
                   )
@@ -1097,38 +1115,38 @@
                     .find(' > .v-custom-bundles')
                     .html())
               )
-                for (const a in n) {
-                  if (!n.hasOwnProperty(a)) continue
-                  const t = n[a]
+                for (const a in t) {
+                  if (!t.hasOwnProperty(a)) continue
+                  const n = t[a]
                   $(
                     `.mini-cart .cart-items > li:eq(${o}) > .v-custom-bundles`
                   ).append(
                     `\n                <div class="hproduct item v-custom-indexed-item" data-sku="${
-                      t.id
+                      n.id
                     }">\n                  <a href="${
-                      t.detailUrl
+                      n.detailUrl
                     }" class="url">\n                    <img height="45" width="45" class="photo" src="${
-                      t.imageUrl
+                      n.imageUrl
                     }" alt="${
-                      t.name
+                      n.name
                     }">\n                  </a>\n                  <span class="fn product-name" title="${
-                      t.name
-                    }" href="${t.detailUrl}">${
-                      t.name
+                      n.name
+                    }" href="${n.detailUrl}">${
+                      n.name
                     }</span>\n                  <span class="quantity badge">${
-                      t.quantity
+                      n.quantity
                     }</span>\n                  <div class="description">\n                    <strong class="price pull-right" data-bind="text: sellingPriceLabel">${
                       e.storePreferencesData.currencySymbol
                     } ${r(
                       e.clientPreferencesData.locale,
                       e.storePreferencesData.currencyCode,
-                      t.sellingPrice
+                      n.sellingPrice
                     ).toFixed(
                       2
                     )}</strong>\n                  </div>\n                </div>\n              `
                   ),
                     $(
-                      `.mini-cart .cart-items > li[data-sku='${t.id}']`
+                      `.mini-cart .cart-items > li[data-sku='${n.id}']`
                     ).addClass('v-custom-indexed-item')
                 }
             }
@@ -1140,22 +1158,22 @@
       }
       addBusinessDays(e, o = window.i18n.options.lng) {
         const a = this
-        let n = new Date()
-        n = new Date(n.getTime())
-        const t = n.getDay()
-        n.setDate(
-          n.getDate() +
+        let t = new Date()
+        t = new Date(t.getTime())
+        const n = t.getDay()
+        t.setDate(
+          t.getDate() +
             e +
-            (6 === t ? 2 : +!t) +
-            2 * Math.floor((e - 1 + (t % 6 || 1)) / 5)
+            (6 === n ? 2 : +!n) +
+            2 * Math.floor((e - 1 + (n % 6 || 1)) / 5)
         )
         let r = { weekday: 'long', month: 'short', day: 'numeric' }
         return (
           'pt' === o &&
             (r = { weekday: 'short', month: 'short', day: 'numeric' }),
-          n.getDate() - new Date().getDate() == 1
+          t.getDate() - new Date().getDate() == 1
             ? a.lang.tomorrowLabel || 'Tomorrow'
-            : ((n = n.toLocaleDateString(o, r)), n)
+            : ((t = t.toLocaleDateString(o, r)), t)
         )
       }
       changeShippingTimeInfo() {
@@ -1179,11 +1197,11 @@
           ).each(function () {
             const [a] =
                 window.vtexjs.checkout.orderForm.shippingData.logisticsInfo,
-              n = a.slas,
-              { selectedSla: t } = a,
+              t = a.slas,
+              { selectedSla: n } = a,
               r =
-                !!n.find(e => e.name === t) &&
-                n.find(e => e.name === t).shippingEstimate,
+                !!t.find(e => e.name === n) &&
+                t.find(e => e.name === n).shippingEstimate,
               s = $(this)
                 .find(
                   o
@@ -1222,18 +1240,18 @@
                 .text()
                 .split(':')[1]
                 .split(/,| and | e | y /),
-              n = []
+              t = []
             $.each(o, function (a) {
-              const t = o[a]
-              if ('' !== t && t.match(/(day)|(dia)|(día)/gm)) {
-                const o = parseInt(t.match(/\d+/), 10)
+              const n = o[a]
+              if ('' !== n && n.match(/(day)|(dia)|(día)/gm)) {
+                const o = parseInt(n.match(/\d+/), 10)
                 if (o) {
                   let a = e.lang.deliveryDateText
-                  t
+                  n
                     .toLowerCase()
                     .match(/(ready in up)|(pronto)|(A partir de)|(hasta)/gm) &&
                     (a = e.lang.PickupDateText),
-                    n.push(`${a} <strong>${e.addBusinessDays(o)}</strong>`)
+                    t.push(`${a} <strong>${e.addBusinessDays(o)}</strong>`)
                 }
               }
             }),
@@ -1242,7 +1260,7 @@
                 .after(
                   `<p class="black-50 mt3 mb0 js-shippingPreviewPackges">${
                     a.text().split(':')[0]
-                  }: ${n.join('; ')}</p>`
+                  }: ${t.join('; ')}</p>`
                 )
                 .addClass('v-changeShippingTimeInfo-active')
           }
@@ -1262,7 +1280,7 @@
               if (0 === o.find('td.product-price').find('.best-price').length)
                 return
               const a = o.find('.total-selling-price:eq(0)').text(),
-                n =
+                t =
                   this.listPrice > this.price &&
                   `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
                     this.listPrice > this.sellingPrice
@@ -1278,7 +1296,7 @@
                   .prepend(
                     `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${a}</p></div>`
                   )
-                  .append(n),
+                  .append(t),
                 o
                   .find('td.product-price')
                   .find('> .best-price')
@@ -1300,9 +1318,9 @@
             const a = $(`.table.cart-items tbody tr.product-item:eq(${o})`)
             if (1 === a.find('td.product-name').find('.more-info').length)
               return
-            const n = e.items[o].refId || ''
+            const t = e.items[o].refId || ''
             a.find('td.product-name').append(
-              `<div class="more-info">\n            <p class="ref-id" style="font-size: 12px">${n}</p>\n            <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>\n          </div>`
+              `<div class="more-info">\n            <p class="ref-id" style="font-size: 12px">${t}</p>\n            <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>\n          </div>`
             )
           })
         } catch (e) {
@@ -1313,19 +1331,19 @@
         try {
           const o = $('.summary-template-holder'),
             a = e.totalizers.filter(e => 'Items' === e.id).value || 0,
-            n = e.totalizers.filter(e => 'Discounts' === e.id).value || 0,
-            t = a + (e.totalizers.filter(e => 'Shipping' === e.id).value || 0),
+            t = e.totalizers.filter(e => 'Discounts' === e.id).value || 0,
+            n = a + (e.totalizers.filter(e => 'Shipping' === e.id).value || 0),
             r = `\n        <div class="cart-total" style="margin-bottom: 35px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${(
               e.value / 100
             ).toLocaleString('pt-BR', {
               style: 'currency',
               currency: 'BRL',
             })}</p>\n          </div>\n          ${
-              n
+              t
                 ? `\n                <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">\n                  <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">\n                    ${s(
-                    t
+                    n
                   )}\n                  </p>\n                  <p class="discount-total" style="color: #2189FF; font-weight: 700;">\n                    ${
-                    'economize ' + s(-n)
+                    'economize ' + s(-t)
                   }\n                  </p>\n                </div>\n              `
                 : ''
             }\n        </div>\n      `
@@ -1394,6 +1412,38 @@
           console.error('imgEmptyCart error:', e)
         }
       }
+      summaryCustom() {
+        try {
+          const { items: e } = window.vtexjs.checkout.orderForm,
+            o = e.length,
+            a = window.vtexjs.checkout.orderForm.paymentData.payments[0]
+              ? window.vtexjs.checkout.orderForm.paymentData.payments[0]
+                  .paymentSystem
+              : null
+          if (!a) return
+          const t =
+              window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
+                e => e.paymentSystem === a
+              ).value,
+            n = $($('.summary-totalizers .accordion-inner')[1])
+          if (!$('.on-term-price').length) {
+            const a = `\n          <div class="on-term-price">\n            <span class="text-description">Total a prazo</span>\n            <span class="text-bold-price">${s(
+                t
+              )}</span>\n          </div>\n        `,
+              r = `\n          <div class="summaryOrder">\n            <h6>Resumo do pedido (${o} ${
+                o.length > 1 ? 'itens' : 'item'
+              })</h6>\n            <ul>\n              ${e.map(
+                e =>
+                  `\n                    <li>${
+                    e.name || e.skuName
+                  }</li>\n                  `
+              )}\n\n            </ul>\n          </div>\n        `
+            n.append(a), n.append(r)
+          }
+        } catch (e) {
+          console.error('summaryCustom error:', e)
+        }
+      }
       condensedTaxes(e) {
         const o = e.totalizers.filter(e => 'CustomTax' === e.id)
         if (o && o.length < 2) return !1
@@ -1407,10 +1457,10 @@
                 } ${(o.value / 100).toFixed(2)}</span></p>`
             )
             .join('')}\n      </div>\n    `,
-          n = $('tr.CustomTax.CustomTax--total')
-        n.length &&
-          (n.find('.vcustom-customTax-tot').remove(),
-          n
+          t = $('tr.CustomTax.CustomTax--total')
+        t.length &&
+          (t.find('.vcustom-customTax-tot').remove(),
+          t
             .find('.info')
             .append(
               `<div class="vcustom-customTax-tot"><span>?</span> ${a}</div>`
@@ -1432,8 +1482,11 @@
           this.buildMiniCart(e),
           this.condensedTaxes(e),
           this.setParentIndex(e),
-          this.indexedInItems(e)
-        t(function () {
+          this.indexedInItems(e),
+          new h().init(),
+          new i().init(),
+          this.summaryCustom()
+        n(function () {
           e.marketingData && (o.addLabels(e), o.showCustomMsgCoupon(e))
         }, 250)()
       }
@@ -1451,9 +1504,9 @@
       updateLang(e) {
         const o = e.clientPreferencesData.locale
         if (
-          ((this.lang = Object.values(n).find(e => e.locale === o)
-            ? Object.values(n).find(e => e.locale === o)
-            : n[e.storePreferencesData.countryCode]),
+          ((this.lang = Object.values(t).find(e => e.locale === o)
+            ? Object.values(t).find(e => e.locale === o)
+            : t[e.storePreferencesData.countryCode]),
           !this.lang)
         )
           return !1
@@ -1502,20 +1555,20 @@
         const o = this
         if (e && 0 === $('.payment-group-item-cards').length && e.paymentData) {
           const a = ['debitCardPaymentGroup', 'creditCardPaymentGroup']
-          let n = ''
-          $.each(a, function (t) {
-            ;(n = '<span class="payment-group-item-cards">'),
+          let t = ''
+          $.each(a, function (n) {
+            ;(t = '<span class="payment-group-item-cards">'),
               $.each(
-                e.paymentData.paymentSystems.filter(e => e.groupName === a[t]),
+                e.paymentData.paymentSystems.filter(e => e.groupName === a[n]),
                 function () {
-                  n += `<span class="card-flag ${this.name}">${this.name}</span>`
+                  t += `<span class="card-flag ${this.name}">${this.name}</span>`
                 }
               ),
-              (n += '</span>'),
-              o.accordionPayments && $('#payment-group-' + a[t]).append(n)
+              (t += '</span>'),
+              o.accordionPayments && $('#payment-group-' + a[n]).append(t)
           }),
             o.accordionPayments ||
-              $('#iframe-placeholder-creditCardPaymentGroup').prepend(n)
+              $('#iframe-placeholder-creditCardPaymentGroup').prepend(t)
         }
         if (
           !this.accordionPayments ||
@@ -1651,13 +1704,17 @@
           $('body').on('blur', 'p.input input', function () {
             const e = $(this).closest('p.input')
             $(this).val() ? e.addClass('filled') : e.removeClass('filled')
+          }),
+          $('body').on('click', '.link-edit, .link-box-edit', function () {
+            setTimeout(() => e.fixLabels(), 30)
           })
       }
       init() {
         const e = this
-        ;(e.orderForm =
-          !!window.vtexjs.checkout.orderForm &&
-          window.vtexjs.checkout.orderForm),
+        e.shipping.bindEvents(),
+          (e.orderForm =
+            !!window.vtexjs.checkout.orderForm &&
+            window.vtexjs.checkout.orderForm),
           e.general(),
           e.updateStep(),
           e.builder(),
@@ -1665,6 +1722,7 @@
           e.orderForm &&
             (e.updateLang(e.orderForm),
             e.update(e.orderForm),
+            e.addStepsHeader(),
             e.paymentBuilder(e.orderForm)),
           e.addEditButtoninLogin(),
           e.fixLabels()
@@ -1675,8 +1733,13 @@
           $(function () {
             e.bind(), e.customAddressFormLoader(), e.rtlUI()
           }),
-            $(document).ajaxComplete(function () {
-              e.init()
+            $(document).ajaxComplete(function (o, a, t) {
+              e.init(),
+                t.url.includes('/attachments/shippingData') &&
+                  (e.shipping.validadePostalCode(
+                    window.vtexjs.checkout.orderForm
+                  ),
+                  e.shipping.toggleGoToPaymentDisabled())
             }),
             $(window).on('hashchange', function () {
               const o = document.querySelector('.cart-items')
@@ -1684,6 +1747,7 @@
                 e.changeShippingTimeInfoInit(),
                 e.checkProfileFocus(),
                 e.fixLabels(),
+                e.shipping.toggleGoToPaymentDisabled(),
                 e.orderForm &&
                   (e.buildMiniCart(e.orderForm),
                   e.indexedInItems(e.orderForm),
@@ -1694,7 +1758,8 @@
                   e.onDomMutation({
                     targetNode: o,
                     callback: () => e.removeCILoader(),
-                  }))
+                  }),
+                  e.shipping.validadePostalCode(e.orderForm))
             }),
             $(window).on('orderFormUpdated.vtex', function (o, a) {
               e.update(a),
@@ -1702,13 +1767,18 @@
                 e.URLHasIncludePayment(),
                 !window.google &&
                   e.customAddressForm &&
-                  e.customAddressForm.loadScript()
+                  e.customAddressForm.loadScript(),
+                $('#postalCode-finished-loading + .mb5').length &&
+                  e.shipping.resetValidation(),
+                e.shipping.toggleGoToPaymentDisabled()
             }),
             $(window).load(function () {
               $(window).one('componentValidated.vtex', () => e.builder()),
                 e.checkProfileFocus(),
                 e.changeShippingTimeInfoInit(),
                 e.indexedInItems(window.vtexjs.checkout.orderForm),
+                e.shipping.toggleGoToPaymentDisabled(),
+                e.shipping.validadePostalCode(window.vtexjs.checkout.orderForm),
                 e.customAddressForm &&
                   'undefined' != typeof store &&
                   window.store.dispatch({
@@ -1728,20 +1798,20 @@
   function (e, o) {
     ;(e.exports.debounce = (e, o) => {
       let a
-      return function (...n) {
+      return function (...t) {
         clearTimeout(a),
           (a = setTimeout(() => {
-            clearTimeout(a), e(...n)
+            clearTimeout(a), e(...t)
           }, o))
       }
     }),
       (e.exports.formatCurrency = (e, o, a) => {
-        const n = a / 100
+        const t = a / 100
         return (
           new Intl.NumberFormat(e, { style: 'currency', currency: o }).format(
-            n
+            t
           ),
-          n
+          t
         )
       }),
       (e.exports.formatCurrencyBRL = e =>
@@ -1751,8 +1821,8 @@
         }))
   },
   function (e, o, a) {
-    const { _locale: n } = a(0),
-      { _countries: t, _cities: r, _addressPlaceholder: s } = a(7)
+    const { _locale: t } = a(0),
+      { _countries: n, _cities: r, _addressPlaceholder: s } = a(7)
     window.callbackMap = () => {
       window.vtexjs.checkout.getOrderForm(e => {
         window.vcustom.checkout.customAddressFormInit(e)
@@ -1795,8 +1865,8 @@
         e = '',
         o = '',
         a = '',
-        n = '',
         t = '',
+        n = '',
         r = null,
         s = '',
         d = '',
@@ -1808,9 +1878,9 @@
           postalCode: o,
           addressId: m,
           city: a,
-          state: n,
+          state: t,
           geoCoordinates: h,
-          street: t,
+          street: n,
           number: r,
           complement: s,
           addressQuery: d,
@@ -1821,8 +1891,8 @@
         e = '',
         o = '',
         a = '',
-        n = '',
         t = '',
+        n = '',
         r = '',
         s = '',
         d = '',
@@ -1833,15 +1903,15 @@
           'number' in this.addressrules ? o : a
         ),
           $('.vcustom--vtex-omnishipping-1-x-address #ship-complement').val(d),
-          $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val(n),
+          $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val(t),
           $('.vcustom--vtex-omnishipping-1-x-address #ship-city').val(r),
-          $('.vcustom--vtex-omnishipping-1-x-address #ship-postalCode').val(t),
+          $('.vcustom--vtex-omnishipping-1-x-address #ship-postalCode').val(n),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
           ).attr('data-street', 'USA' === e || 'ZAF' === e ? a : o),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
-          ).attr('data-number', n),
+          ).attr('data-number', t),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
           ).attr('data-neighborhood', m),
@@ -1889,10 +1959,10 @@
               element: $('label#postalCode-label'),
             },
           ]
-        o._locale = n[e.toUpperCase()] || n.USA
+        o._locale = t[e.toUpperCase()] || t.USA
         for (let e = 0; e < a.length; e++) {
-          const n = a[e]
-          n.element.text(o._locale[n.prop] || n.default)
+          const t = a[e]
+          t.element.text(o._locale[t.prop] || t.default)
         }
         $('input#v-custom-ship-street').attr(
           'placeholder',
@@ -1902,11 +1972,11 @@
       }
       returnAddressFRules(e, o) {
         if (!o) return ''
-        const { valueIn: a = 'short_name', types: n } = o
-        for (let o = 0; o < n.length; o++) {
-          const t = n[o]
-          if (e.find(e => e.types.some(e => e === t)))
-            return e.find(e => e.types.some(e => e === t))[a]
+        const { valueIn: a = 'short_name', types: t } = o
+        for (let o = 0; o < t.length; o++) {
+          const n = t[o]
+          if (e.find(e => e.types.some(e => e === n)))
+            return e.find(e => e.types.some(e => e === n))[a]
         }
         return ''
       }
@@ -1921,7 +1991,7 @@
             const o = e.gPlacesAutocomplete.getPlace()
             a.geocode({ address: o.formatted_address }),
               ~window.location.host.indexOf('myvtex') && console.log(o)
-            const [, n] = t.find(
+            const [, t] = n.find(
                 e =>
                   e[0] ===
                   o.address_components.filter(e => 'country' === e.types[0])[0]
@@ -1976,16 +2046,16 @@
                     types: ['postal_code'],
                   })
                 : '00000'
-            'ARG' === n &&
+            'ARG' === t &&
               ((c = c.replace(/\D/gi, '')),
               'Provincia de Buenos Aires' === s && (s = 'Buenos Aires'),
               'CABA' === s.toUpperCase() &&
                 ((s = 'Ciudad Autónoma de Buenos Aires'),
                 (u = 'Ciudad Autónoma de Buenos Aires'))),
-              e.setForm(n, r, l, m, c, u, s, h, d, i),
+              e.setForm(t, r, l, m, c, u, s, h, d, i),
               e.validateAllFields(),
               e.updateAddress(
-                n,
+                t,
                 c,
                 u,
                 s,
@@ -2012,16 +2082,16 @@
           isCalculateBttnEnabled: !1,
         })
       }
-      sendAddress(e, o, a, n, t, r, s, d, m, h, i) {
+      sendAddress(e, o, a, t, n, r, s, d, m, h, i) {
         const C = this
         if (~i.indexOf(',')) {
-          const [o, t] = i.split(',')
-          ;(i = [parseFloat(t), parseFloat(o)]),
+          const [o, n] = i.split(',')
+          ;(i = [parseFloat(n), parseFloat(o)]),
             'ARG' === e &&
               'CABA' === r.toUpperCase() &&
               (r = 'Ciudad Autónoma de Buenos Aires'),
             'USA' === e && (a = null),
-            C.addressrules.state || (n = '')
+            C.addressrules.state || (t = '')
         } else i = []
         $('body').addClass('js-v-custom-is-loading'),
           fetch(
@@ -2045,9 +2115,9 @@
                     receiverName: '',
                     addressId: '',
                     isDisposable: !0,
-                    postalCode: t,
+                    postalCode: n,
                     city: r,
-                    state: n,
+                    state: t,
                     country: e,
                     geoCoordinates: i,
                     street: o,
@@ -2072,9 +2142,9 @@
                 : window.vtexjs.checkout.getOrderForm().done(function () {
                     C.updateAddress(
                       e,
-                      t,
-                      r,
                       n,
+                      r,
+                      t,
                       o,
                       a,
                       s,
@@ -2105,13 +2175,13 @@
             const a = window.vtex.i18n[e.lang]
               ? window.vtex.i18n[e.lang]
               : window.vtex.i18n[window.vtex.i18n.locale]
-            let n = ''
+            let t = ''
             return (
               a.countries[o] &&
-                (n = `<option value="${o}" ${
+                (t = `<option value="${o}" ${
                   o === e.mainCountry ? 'selected' : ''
                 }>${a.countries[o]}</option>`),
-              n
+              t
             )
           })
         )
@@ -2129,7 +2199,7 @@
       form(e) {
         const o = this,
           { shippingData: a } = e,
-          n = t.find(e => e[1] === o.mainCountry),
+          t = n.find(e => e[1] === o.mainCountry),
           r = `\n      <div class="vcustom--vtex-omnishipping-1-x-address step">\n        <div>\n        <form>\n            <p class="input v-custom-ship-street required text"><label id="address1-label" for="v-custom-ship-street">${
             (o.locale && o.locale.address1Placeholder) ||
             'Street address or P.O. Box'
@@ -2181,7 +2251,7 @@
           }</label>\n                  <select name="v-custom-state" id="ship-state" class="input-large">\n                    <option value="" disabled selected>${
             o.locale ? o.locale.state : 'State'
           }</option>\n                    ${o
-            .getRegions(n[0])
+            .getRegions(t[0])
             .join(
               ''
             )}\n                  </select>\n              </p>\n              <p class="input ship-postalCode required text"><label id="postalCode-label" for="ship-postalCode">${
@@ -2214,7 +2284,7 @@
           $('body').hasClass('.v-custom-addressForm-on') ||
             $('body').addClass('v-custom-addressForm-on'),
           this.googleForm(),
-          this.updateGoogleForm(n[1].toLowerCase())
+          this.updateGoogleForm(t[1].toLowerCase())
         const s = $('.vcustom--vtex-omnishipping-1-x-address #ship-country'),
           d = s.val(),
           m = s.find('option')
@@ -2242,10 +2312,10 @@
           ),
           o = $('.vcustom--vtex-omnishipping-1-x-address #ship-country').val(),
           a = e.attr('data-street') || '',
-          n = $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val()
+          t = $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val()
             ? $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val()
             : e.attr('data-number') || '',
-          t = e.attr('data-geocoordinates') || [],
+          n = e.attr('data-geocoordinates') || [],
           r = e.attr('data-neighborhood') || null,
           s = $(
             '.vcustom--vtex-omnishipping-1-x-address #ship-complement'
@@ -2258,7 +2328,7 @@
         this.sendAddress(
           o,
           a,
-          n,
+          t,
           m,
           h,
           d,
@@ -2266,16 +2336,16 @@
           this.address.addressQuery,
           this.address.addressId,
           r,
-          t
+          n
         )
       }
       updateFormByCountry(e) {
         ~window.location.host.indexOf('myvtex') &&
           console.log('countryCode:', e)
         const o = this,
-          a = t.find(o => o[1] === e)
-        o.getCountryRule(a[1]).then(n => {
-          ;(o.addressrules = n),
+          a = n.find(o => o[1] === e)
+        o.getCountryRule(a[1]).then(t => {
+          ;(o.addressrules = t),
             o.updateFormFieldByCountry(o.addressrules),
             $("select[name='v-custom-state']").html(
               '' + o.getRegions(a[0]).join('')
@@ -2423,8 +2493,8 @@
         return fetch('/rules/' + e)
           .then(e => e.json())
           .then(e => {
-            const { data: a, success: n } = e
-            return n ? a.geolocation : o.getCountryRule('default')
+            const { data: a, success: t } = e
+            return t ? a.geolocation : o.getCountryRule('default')
           })
           .catch(e => {
             throw new Error(e)
@@ -2455,7 +2525,7 @@
                 (o.deliveryCountries = window.checkout.deliveryCountries()),
                 (o.mainCountry = window.checkout.countryCode()),
                 (o.lang = o.orderForm.clientPreferencesData.locale),
-                (o.locale = n[o.orderForm.storePreferencesData.countryCode]),
+                (o.locale = t[o.orderForm.storePreferencesData.countryCode]),
                 'es-AR' === o.lang && (o.lang = 'es'),
                 o.orderForm && o.orderForm.shippingData)
               ) {
@@ -9194,6 +9264,259 @@
         PAN: 'Eg: C. Enrique Linares 4502',
         RUS: 'Eg: Arbat St, 3 Moscow, Russia',
       })
+  },
+  function (e, o) {
+    e.exports = class {
+      rootPath() {
+        return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+      }
+      addInvalidPostalCodeMessage() {
+        try {
+          const e = $('.vtex-omnishipping-1-x-addressFormPart1').find(
+              'p.ship-postalCode'
+            ),
+            o = $(
+              '<div class="invalid-postal-code-msg"> <span class="invalid-postal-code-msg__label">CEP Inválido</span> <p class="invalid-postal-code-msg__message"> Infelizmente não oferecemos entrega para a sua região. Em caso de dúvidas, por favor <a class="invalid-postal-code-msg__link" href="https://static.zdassets.com/web_widget/latest/liveChat.html?v=10#key=ajudasamsungcajamar.zendesk.com" target="_blank">clique aqui</a>.</p> </div>'
+            )
+          e.find('small').length &&
+            !$('.invalid-postal-code-msg').length &&
+            e.find('small').before(o),
+            $('.invalid-postal-code-msg').length ||
+              ($('.srp-delivery-header').append(o),
+              $(
+                '.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100'
+              ).hide(),
+              $(
+                '.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100'
+              ).hide())
+        } catch (e) {
+          console.error(
+            'Ocorreu um erro ao adicionar mensagem de CEP inválido: ' + e
+          )
+        }
+      }
+      removeInvalidPostalCodeMessage() {
+        $('.invalid-postal-code-msg').remove()
+      }
+      setInvalidPostalCode() {
+        $('body')
+          .removeClass('valid-postal-code')
+          .addClass('invalid-postal-code')
+      }
+      setValidPostalCode() {
+        $('body')
+          .removeClass('invalid-postal-code')
+          .addClass('valid-postal-code')
+      }
+      resetValidation() {
+        $('body').removeClass('invalid-postal-code valid-postal-code')
+      }
+      lockPostalCodeInput() {
+        $('#shipping-data input#ship-postalCode').prop('disabled', !0)
+      }
+      unlockPostalCodeInput() {
+        $('#shipping-data input#ship-postalCode').prop('disabled', !1)
+      }
+      addVirtualInventoryMessage() {
+        try {
+          const e = $('.vtex-omnishipping-1-x-addressFormPart1').find(
+              'p.ship-postalCode'
+            ),
+            o = $(
+              '<div class="virtual-inventory-msg" style="max-width: 566px; margin-top: 16px;">\n          <p class="invalid-postal-code-msg__message">\n            O prazo de entrega está acima do normal devido à reposição de estoque.\n          </p>\n        </div>'
+            )
+          if (0 === e.find('.virtual-inventory-msg').length) {
+            const a = setInterval(function () {
+              e.find('small').length &&
+                (e.find('small').before(o), clearInterval(a))
+            }, 50)
+          }
+          0 ===
+            $('.srp-delivery-header').find('.virtual-inventory-msg').length &&
+            $('.srp-delivery-header').append(o)
+        } catch (e) {
+          console.error(
+            'Ocorreu um erro ao adicionar mensagem de prazo acima do normal: ' +
+              e
+          )
+        }
+      }
+      validateVirtualInventory(e) {
+        const o = this
+        try {
+          if (!e.shippingData) return
+          if (!e.shippingData.address) return
+          const { logisticsInfo: a } = e.shippingData
+          a.filter(
+            e => (
+              e.slas.filter(
+                e => e.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
+              ).length > 0 &&
+                0 === $('.estoqueVirtual').length &&
+                o.addVirtualInventoryMessage(),
+              !0
+            )
+          )
+        } catch (e) {
+          console.error('Ocorreu um erro ao consultar o estoque virtual: ' + e)
+        }
+      }
+      validadePostalCode(e) {
+        if (e)
+          try {
+            if (!e.shippingData) return
+            if (!e.shippingData.address) return
+            const o = this,
+              { address: a } = e.shippingData
+            if (a.postalCode && !a.city) {
+              this.setInvalidPostalCode()
+              const e = setInterval(function () {
+                $('.invalid-postal-code-msg').length ||
+                  (o.addInvalidPostalCodeMessage(), clearInterval(e))
+              }, 50)
+            } else
+              this.setValidPostalCode(),
+                this.removeInvalidPostalCodeMessage(),
+                this.validateVirtualInventory(e)
+          } catch (e) {
+            console.error('Ocorreu um erro ao validar CEP: ' + e)
+          }
+      }
+      validadePostalCodeOnLoad() {
+        try {
+          const e = this,
+            o = $('#shipping-data input#ship-postalCode')
+          o.val() || e.resetValidation(),
+            !o.val().length < 9 && e.resetValidation(),
+            $.getJSON(
+              `${e.rootPath()}/api/checkout/pub/postal-code/BRA/${o.val()}`
+            ).done(function (o) {
+              const a = o
+              e.validadePostalCode(a), e.unlockPostalCodeInput()
+            })
+        } catch (e) {
+          console.error('Ocorreu um erro ao validar CEP: ' + e)
+        }
+      }
+      toggleGoToPaymentDisabled() {
+        const e =
+          0 ===
+          $('#shipping-data p.input.required input').filter(function () {
+            return 0 === $.trim($(this).val()).length
+          }).length
+        $('#btn-go-to-payment').prop('disabled', !e)
+      }
+      bindEvents() {
+        const e = this
+        $(document).on(
+          'input',
+          '#shipping-data input#ship-postalCode',
+          function () {
+            !$(this).val().length < 9 && e.resetValidation()
+          }
+        ),
+          $(document).on(
+            'input',
+            '#shipping-data p.input.required input',
+            function () {
+              e.toggleGoToPaymentDisabled()
+            }
+          )
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return t
+      })
+    class t {
+      init() {
+        this._conditionalHeader(), this._backToCartLink()
+      }
+      _conditionalHeader() {
+        try {
+          e(window.location.hash),
+            addEventListener('hashchange', o => {
+              const { hash: a } = o.target.location
+              e(a)
+            })
+        } catch (e) {
+          console.error('conditionalHeader error', e)
+        }
+        function e(e) {
+          const o = $('.checkout-steps'),
+            a = $('#go-to-cart-button-custom'),
+            t = $('.main-header')
+          ;['#/payment', '#/shipping', '#/profile'].includes(e)
+            ? (o.css('display', 'block'),
+              a.css('display', 'flex'),
+              t.css('box-shadow', '0px 4px 10px #00000033'))
+            : (o.css('display', 'none'),
+              a.css('display', 'none'),
+              t.css('box-shadow', 'none'))
+        }
+      }
+      _backToCartLink() {
+        try {
+          const e = $('.checkout-steps')
+          if (
+            $('.main-header .container').find('#go-to-cart-button-custom')
+              .length > 0
+          )
+            return
+          e.before(
+            '\n        <p id="go-to-cart-button-custom" class="link link-cart pull-right" data-bind="if: !window.router.sac.isActive()">\n          <small>\n            <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>\n          </small>\n        </p>\n      '
+          )
+        } catch (e) {
+          console.error('backToCart error', e)
+        }
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return t
+      })
+    class t {
+      constructor() {
+        ;(this.SAMSUNG_CARE_CATEGORY = '/2005/'),
+          (this.LINK_SCPLUS = 'linkSCPLUS')
+      }
+      init() {
+        try {
+          const { items: e } = window.vtexjs.checkout.orderForm
+          e && this.validateSamsungCarePlus(e)
+        } catch (e) {
+          console.error('SamsungCarePlus error', e)
+        }
+      }
+      isSamsungCarePlus(e) {
+        return e && e.productCategoryIds === this.SAMSUNG_CARE_CATEGORY
+      }
+      validateSamsungCarePlus(e) {
+        const o = e.filter(e => this.isSamsungCarePlus(e))
+        if (!o.length) return
+        if (o.length > 1) {
+          const e = o.filter((e, a) => a !== o.length - 1)
+          return void this.removeSamsungCarePlus(e)
+        }
+        const a = o[0].attachments.find(e => e.name === this.LINK_SCPLUS)
+        ;(a && a.content) || this.removeSamsungCarePlus()
+        e.find(e => e.id === a.content.idsku) || this.removeSamsungCarePlus()
+      }
+      removeSamsungCarePlus(e) {
+        ;(e || window.vtexjs.checkout.orderForm.items)
+          .filter(e => this.isSamsungCarePlus(e))
+          .forEach(e => {
+            const o = $(`tr.product-item[data-sku="${e.id}"] td.item-remove a`)
+            o.length && (o[0].click(), o[0].remove())
+          })
+      }
+    }
   },
   function (e, o, a) {
     e.exports = a.p + 'checkout6-custom.css'
