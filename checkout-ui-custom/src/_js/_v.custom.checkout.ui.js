@@ -32,6 +32,7 @@ class checkoutCustom {
     this.hideEmailStep = hideEmailStep
 
     this.shipping = new CustomShippingData()
+    this.installationService = new InstallationService()
   }
 
   general() {
@@ -1037,7 +1038,7 @@ class checkoutCustom {
     this.indexedInItems(orderForm)
     new CustomHeader().init()
     new SamsungCarePlus().init()
-    new InstallationService().init()
+    this.installationService.init()
     this.summaryCustom()
 
     // debounce to prevent append from default script
@@ -1481,6 +1482,10 @@ class checkoutCustom {
       })
 
       $(window).load(function () {
+        $('#cart-to-orderform').on('click', function () {
+          _this.installationService.addOpenTextFieldToInstallation()
+        })
+
         $(window).one('componentValidated.vtex', () => _this.builder())
         _this.checkProfileFocus()
         _this.changeShippingTimeInfoInit()
