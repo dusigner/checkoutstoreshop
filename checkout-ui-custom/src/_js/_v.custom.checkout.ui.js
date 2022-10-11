@@ -8,6 +8,7 @@ const CustomProfileData = require('./_profile')
 const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
 const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
+const { default: InstallationService } = require('./_installationService.js')
 
 class checkoutCustom {
   constructor({
@@ -31,8 +32,9 @@ class checkoutCustom {
     this.customAddressForm = customAddressForm
     this.hideEmailStep = hideEmailStep
 
-    this.shipping = new CustomShippingData()
     this.profile = new CustomProfileData()
+    this.shipping = new CustomShippingData()
+    this.installationService = new InstallationService()
   }
 
   general() {
@@ -1038,6 +1040,7 @@ class checkoutCustom {
     this.indexedInItems(orderForm)
     new CustomHeader().init()
     new SamsungCarePlus().init()
+    this.installationService.init()
     this.summaryCustom()
 
     // debounce to prevent append from default script
@@ -1503,6 +1506,10 @@ class checkoutCustom {
       })
 
       $(window).load(function () {
+        $('#cart-to-orderform').on('click', function () {
+          _this.installationService.addOpenTextFieldToInstallation()
+        })
+
         $(window).one('componentValidated.vtex', () => _this.builder())
         _this.checkProfileFocus()
         _this.changeShippingTimeInfoInit()
