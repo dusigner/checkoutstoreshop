@@ -8,6 +8,7 @@ const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
 const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
 const { default: InstallationService } = require('./_installationService.js')
+const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 
 class checkoutCustom {
   constructor({
@@ -1038,6 +1039,7 @@ class checkoutCustom {
     this.indexedInItems(orderForm)
     new CustomHeader().init()
     new SamsungCarePlus().init()
+    new BespokeRefrigerator().init()
     this.installationService.init()
     this.summaryCustom()
 
