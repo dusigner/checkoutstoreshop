@@ -343,14 +343,14 @@ export default class BespokeRefrigerator {
             }
           })
         })
+        clearInterval(addbespokeBtn)
       }
-
-      clearInterval(addbespokeBtn)
     }, 10)
   }
 
   getMandatorySkus() {
-    return new Promise(() => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async resolve => {
       const thePath =
         window.location.pathname.split('/')[1] === 'br' ? 'br' : ''
 
@@ -365,7 +365,7 @@ export default class BespokeRefrigerator {
         url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/2044/`
       }
 
-      return fetch(url)
+      await fetch(url)
         .then(response => response.json())
         .then(response => {
           response.forEach(product => {
@@ -376,19 +376,20 @@ export default class BespokeRefrigerator {
             }
           })
         })
-        .then(() => {
-          fetch(
-            `${thePath}/api/dataentities/GB/search?_fields=service,pairing,seller`
-          )
-            .then(response => response.json())
-            .then(response => {
-              const { service, pairing, seller } = response[0]
 
-              this.SKU_BESPOKE_SERVICE = service
-              this.SKU_BESPOKE_PAIR = pairing
-              this.SELLER = seller
-            })
+      await fetch(
+        `${thePath}/api/dataentities/GB/search?_fields=service,pairing,seller`
+      )
+        .then(response => response.json())
+        .then(response => {
+          const { service, pairing, seller } = response[0]
+
+          this.SKU_BESPOKE_SERVICE = service
+          this.SKU_BESPOKE_PAIR = pairing
+          this.SELLER = seller
         })
+
+      resolve(true)
     })
   }
 
