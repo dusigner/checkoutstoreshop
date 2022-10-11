@@ -378,9 +378,6 @@
 		}
 
 		p.notification {
-	    font-weight: bold;
-	    font-weight: 400;
-	    color:$muted1;
 	    &:not([style="display: none;"]) + .box-step {
 		    padding:0;
 		    border:none;
@@ -1232,8 +1229,6 @@
       }
     }
 
-		.orderform-template-holder #shipping-data .shipping-summary-info,
-		.orderform-template-holder .step .accordion-body p.notification,
 		.client-pre-email + .client-profile-data .accordion-body:before {
 			display: none;
 		}

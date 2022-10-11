@@ -210,6 +210,10 @@ body {
 
   .box-info {
     margin-top: 16px;
+
+    &.shipping-summary-placeholder {
+      margin-top: 0;
+    }
   }
 
   .accordion-toggle {
@@ -227,7 +231,8 @@ body {
     > i {display: none;}
   }
 
-  p.notification {
+  p.notification,
+  .shipping-summary-info {
     display: block;
     margin-top: 16px;
     font-size: 14px;
