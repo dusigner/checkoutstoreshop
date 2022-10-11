@@ -4,6 +4,7 @@
 const { _locale } = require('./_locale-infos.js')
 const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
+const CustomProfileData = require('./_profile')
 const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
 const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
@@ -31,6 +32,7 @@ class checkoutCustom {
     this.hideEmailStep = hideEmailStep
 
     this.shipping = new CustomShippingData()
+    this.profile = new CustomProfileData()
   }
 
   general() {
@@ -1397,8 +1399,6 @@ class checkoutCustom {
   init() {
     const _this = this
 
-    _this.shipping.bindEvents()
-
     _this.orderForm = window.vtexjs.checkout.orderForm
       ? window.vtexjs.checkout.orderForm
       : false
@@ -1426,6 +1426,10 @@ class checkoutCustom {
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
+
+        // #profile
+        _this.profile.bindEvents()
+        _this.shipping.bindEvents()
       })
 
       $(document).ajaxComplete(function (event, xhr, settings) {
@@ -1460,6 +1464,16 @@ class checkoutCustom {
           })
 
           _this.shipping.validadePostalCode(_this.orderForm)
+
+          if (window.location.hash === '#/profile') {
+            // Add WhatsApp
+            _this.profile.addWhatsAppField()
+            // Insere o campo data de nascimento
+            _this.profile.addDateBirthField()
+
+            _this.profile.addTerms(_this.orderForm)
+            _this.profile.toggleGoToShippingDisabled()
+          }
         }
       })
 
@@ -1467,6 +1481,16 @@ class checkoutCustom {
         _this.update(orderForm)
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
+
+        if (window.location.hash === '#/profile') {
+          // Add WhatsApp
+          _this.profile.addWhatsAppField()
+          // Insere o campo data de nascimento
+          _this.profile.addDateBirthField()
+
+          _this.profile.addTerms(orderForm)
+        }
+
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
         }
@@ -1484,6 +1508,8 @@ class checkoutCustom {
         _this.changeShippingTimeInfoInit()
         _this.indexedInItems(window.vtexjs.checkout.orderForm)
 
+        // #shipping
+        _this.profile.toggleGoToShippingDisabled()
         _this.shipping.toggleGoToPaymentDisabled()
         _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
 

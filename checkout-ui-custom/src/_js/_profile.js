@@ -1,0 +1,441 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable vtex/prefer-early-return */
+/* eslint-disable func-names */
+
+class CustomProfileData {
+  rootPath() {
+    return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+  }
+
+  calculateAge(yyyy, mm, dd) {
+    const d = new Date()
+    const currentYear = d.getFullYear()
+    const currentMonth = d.getMonth() + 1
+    const currentDay = d.getDate()
+    const year = +yyyy
+    const month = +mm
+    const day = +dd
+
+    let getAge = currentYear - year
+
+    if (currentMonth < month || (currentMonth === month && currentDay < day)) {
+      getAge--
+    }
+
+    const age = getAge < 0 ? 0 : getAge
+
+    return age >= 18 && age <= 120
+  }
+
+  insertPartialNewProfileData() {
+    const _this = this
+
+    const formattedDate = $('#client-birth-date')
+      .val()
+      .split('/')
+      .reverse()
+      .join('-')
+
+    const finalDate = new Date(formattedDate)
+
+    const newData = {
+      email: $('.email').text(),
+      birthDate: finalDate,
+      acceptTermsAndPrivacyPolicy: $('#inputTermAndPolicies').is(':checked'),
+      isNewsletterOptIn: $('#opt-in-newsletter').is(':checked'),
+      isWhatsAppOptIn: $('#inputWhatsapp').is(':checked'),
+      whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
+        ? $('.whatsapp_phone').val()
+        : '',
+      isRewardsAccepted: $('#inputRewards').is(':checked'),
+    }
+
+    $.ajax({
+      url: `${_this.rootPath()}/_v/insert/client/partial`,
+      type: 'POST',
+      crossDomain: true,
+      accept: 'application/vnd.vtex.ds.v10+json',
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(newData),
+      success(data) {
+        window.localStorage.setItem('doc', data.DocumentId)
+      },
+    })
+  }
+
+  saveProfileData() {
+    this.insertPartialNewProfileData()
+  }
+
+  validateAge(dataUser) {
+    $('#error-client-date-birth-required').hide()
+    let isValid
+    const timezoneOffset = new Date().getTimezoneOffset()
+
+    const formattedDate = dataUser.split('/')
+
+    if (!!formattedDate[0] && !!formattedDate[1] && !!formattedDate[2]) {
+      formattedDate.reverse()
+      const dataRecebida = new Date(formattedDate.join('-'))
+
+      dataRecebida.setUTCHours(0, timezoneOffset, 0, 0)
+      isValid = !!this.calculateAge(
+        dataRecebida.getFullYear(),
+        dataRecebida.getMonth() + 1,
+        dataRecebida.getDate()
+      )
+    } else {
+      isValid = false
+    }
+
+    function setInputError() {
+      $('#error-client-date-birth').show()
+      $('#client-birth-date').addClass('error').removeClass('success')
+    }
+
+    function setInputSuccess() {
+      $('#error-client-date-birth, #error-client-date-birth-required').hide()
+      $('#client-birth-date').addClass('success').removeClass('error')
+    }
+
+    const isTermsChecked = $('#inputTermAndPolicies').is(':checked')
+
+    if (dataUser.trim().length === 10 && isValid && isTermsChecked) {
+      setInputSuccess()
+    } else if (dataUser.trim().length === 10 && !isValid && !isTermsChecked) {
+      setInputError()
+    } else if (isValid && !isTermsChecked) {
+      setInputSuccess()
+    } else if (!isValid && dataUser.trim().length === 10 && isTermsChecked) {
+      setInputError()
+    }
+  }
+
+  mphone(v) {
+    let r = v.replace(/\D/g, '')
+
+    r = r.replace(/^0/, '')
+    if (r.length > 10) {
+      r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, '($1) $2-$3')
+    } else if (r.length > 5) {
+      r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, '($1) $2-$3')
+    } else if (r.length > 2) {
+      r = r.replace(/^(\d\d)(\d{0,5})/, '($1) $2')
+    } else {
+      r = r.replace(/^(\d*)/, '($1')
+    }
+
+    return r
+  }
+
+  mdata(v) {
+    let r = v.trim()
+
+    if (v.match(/^\d{2}$/) !== null) {
+      r += '/'
+    } else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+      r += '/'
+    }
+
+    return r
+  }
+
+  addDateBirthField() {
+    if ($('p.client-date-birth').length) return
+
+    const dateBirthField = `<p class="client-date-birth input text required">
+      <label for="client-date-birth">Data de Nascimento</label>
+      <input type="text" maxlength="10" placeholder="DD/MM/AAAA" id="client-birth-date" class="input-small">
+      <span id="error-client-date-birth-required" class="help error" style="display:none">Campo obrigatório.</span>
+      <span id="error-client-date-birth" class="help error" style="display:none;">
+        Menores de 18 anos não estão autorizados a efetuar o cadastro em nosso site. Em caso de dúvidas, acesse shop.samsung.com/br/faq.
+      </span>
+    </p>`
+
+    $('.client-document').first().after(dateBirthField)
+  }
+
+  addWhatsAppField() {
+    if ($('p.client-whatsapp').length) return
+
+    const field = `<p class="client-whatsapp input pull-left text">
+      <label for="client-whatsapp">Celular/WhatsApp</label>
+      <input type="text" id="client-whatasapp" placeholder="(00) 00000-0000" class="whatsapp_phone input-small success" oninvalid="this.setCustomValidity('Preencha este campo.')" maxlength="15" onchange="this.setCustomValidity('')">
+      <span id="error-client-whatsapp-required" class="help error" style="display:none">Campo obrigatório.</span>
+    </p>`
+
+    $('.client-phone').first().after(field)
+  }
+
+  addPJInformation() {
+    if ($('.pj-information').length) return
+
+    const $information = `<div class="pj-information">
+      <h3>Aviso: Compras para Pessoa Jurídica</h3>
+      <p>
+        A partir de 24/07/2022 as compras com dados de Pessoa Jurídica (CNPJ) deverão ser realizadas 
+        <a href="https://empresas.samsung.com.br" target="_blank">neste portal</a>. Caso
+        queira comprar utilizando seu CPF ou consultar a posição de compras já efetuadas, continue por aqui na Loja
+        Online Samsung.
+      </p>
+    </div>`
+
+    $('#client-profile-data p.save-data').after($information)
+  }
+
+  addNewsletterOptIn() {
+    if ($('.newsletter-optin').length) return
+    if ($('.newsletter-optin').find('.newsletter-text').length) return
+
+    const $field = `<div class="newsletter-optin">
+      <h3>Newsletter e Promoções (opcional)</h3>
+      <label class="inputOptIn __whatsapp">
+          <input type="checkbox" id="inputWhatsapp" />
+          <span class="custom-checkbox-icon"></span>
+          <span>Desejo receber ofertas e notificações por WhatsApp.</span>
+          <span class="form-tooltip">
+              <img alt="info" class="info-img form-tooltip__initiator"
+                  src="https://samsungbrtest.vteximg.com.br/arquivos/info.png" />
+              <span class="form-tooltip__item">Você receberá atualizações do seu pedido e mensagens sobre ofertas.</span>
+          </span>
+      </label>
+    </div>`
+
+    $('.pj-information').after($field)
+
+    // moves emails and offers into this context
+    $('.newsletter-text').before('<span class="custom-checkbox-icon"></span>')
+    const infoEmail = $('.box-client-info .newsletter').detach()
+
+    $('.box-client-info .__whatsapp').after($(infoEmail))
+  }
+
+  addTermsAndPolicies() {
+    if ($('.terms-and-policies').length) return
+
+    const $field = `<div class="terms-and-policies">
+      <h3>Privacidade (obrigatório)</h3>
+      <label class="inputOptIn checkbox-inline">
+        <input type="checkbox" id="inputTermAndPolicies" />
+        <span class="custom-checkbox-icon"></span>
+        <span>      
+          Aceito os 
+          <a href="https://www.samsung.com/br/shop/terms_and_conditions_of_sale/" target="_blank">termos e condições</a> e 
+          <a href="https://www.samsung.com/br/shop/privacy-policy/" target="_blank">política de privacidade</a>
+        </span>
+      </label>
+    </div>`
+
+    $('.newsletter-optin').after($field)
+  }
+
+  addRewardsBlock() {
+    if ($('.rewards-block').length) return
+
+    const $field = `<div class="rewards-block" id="RewardsBlock" style="display: none">
+      <h3>Samsung Rewards</h3>
+      <label class="inputOptIn __rewards">
+      <input type="checkbox" id="inputRewards" checked />
+      <span class="custom-checkbox-icon"></span>
+      <span>Participar do programa Samsung Rewards para ganhar pontos com este pedido.</span>
+      </label>
+    </div>`
+
+    $('.terms-and-policies').after($field)
+  }
+
+  checkTerms() {
+    if (!$('#inputTermAndPolicies').is(':checked')) {
+      $('#inputTermAndPolicies').closest('.checkbox-inline').addClass('error')
+    }
+  }
+
+  addTerms(orderForm) {
+    const _this = this
+
+    if ($('#inputTermAndPolicies').length !== 0) return false
+
+    _this.addPJInformation()
+    _this.addNewsletterOptIn()
+    _this.addTermsAndPolicies()
+
+    if (
+      orderForm.loggedIn ||
+      window.loggedIn ||
+      (orderForm.clientProfileData !== null &&
+        orderForm.clientProfileData.profileCompleteOnLoading)
+    ) {
+      $('#inputTermAndPolicies').prop('checked', true)
+    }
+  }
+
+  toggleGoToShippingDisabled() {
+    const $context = $('#client-profile-data')
+
+    const $allVisibleInputs = $context.find('p.input input:visible')
+    const $validInputs = $context.find('p.input input.success:visible')
+
+    const hasInvalidInputs = $validInputs.length < $allVisibleInputs.length
+
+    const isTermsChecked = $('#inputTermAndPolicies').is(':checked')
+    const disabled = !hasInvalidInputs && isTermsChecked
+
+    $('#go-to-shipping').prop('disabled', !disabled)
+  }
+
+  bindEvents() {
+    const _this = this
+
+    $('body').on(
+      'input',
+      'input#client-first-name, input#client-last-name',
+      function () {
+        const regexp = /[^A-Za-zÀ-ú\s]+$/
+
+        if ($(this).val().match(regexp)) {
+          $(this).val($(this).val().replace(regexp, ''))
+        }
+      }
+    )
+
+    $('#client-phone').keypress(o => {
+      setTimeout(() => {
+        const v = _this.mphone(o.target.value)
+
+        if (v !== o.target.value) {
+          o.target.value = v
+        }
+      }, 1)
+    })
+
+    $('body').on('keyup', '#client-birth-date', function (e) {
+      const v = _this.mdata(e.target.value)
+
+      if (v !== e.target.value) {
+        e.target.value = v
+      }
+
+      _this.validateAge(e.target.value)
+    })
+
+    $('body').on('blur', '#client-birth-date', function (e) {
+      if (e.target.value.length < 10) {
+        $('#error-client-date-birth').hide()
+        $('#error-client-date-birth-required').show()
+        $('#client-birth-date').addClass('error').removeClass('success')
+      }
+    })
+
+    $('body').on('keypress', '#client-whatasapp', function (e) {
+      setTimeout(() => {
+        const v = _this.mphone(e.target.value)
+
+        if (v !== e.target.value) {
+          e.target.value = v
+        }
+      }, 1)
+    })
+
+    $('body').on('input', '#client-whatasapp', function () {
+      const $this = $(this)
+      const isInvalidNumber = $this.val().length > 0 && $this.val().length < 15
+
+      $('#error-client-whatsapp-required').hide()
+
+      if (isInvalidNumber) {
+        $this.removeClass('success')
+      } else {
+        $this.removeClass('error').addClass('success')
+      }
+
+      if ($(this).is(':required') && !$this.val().length) {
+        $this.removeClass('success').addClass('error')
+        $('#error-client-whatsapp-required').show()
+      } else {
+        $this.removeClass('error')
+      }
+    })
+
+    $('body').on('blur', '#client-whatasapp', function () {
+      const $this = $(this)
+
+      const isEmpty = $this.val().length === 0
+      const isInvalidNumber = !isEmpty && $this.val().length < 15
+      const isRequired = $this.is(':required')
+
+      function setError() {
+        $this.removeClass('success').addClass('error')
+      }
+
+      function setSuccess() {
+        $this.removeClass('error').addClass('success')
+      }
+
+      if (isInvalidNumber) {
+        setError()
+      } else {
+        setSuccess()
+      }
+
+      if (isEmpty && !isRequired) {
+        setSuccess()
+      }
+
+      if (isEmpty && isRequired) {
+        setError()
+        $('#error-client-whatsapp-required').show()
+      }
+    })
+
+    $('body').on('change', '.checkbox-inline input:checkbox', function () {
+      if ($(this).is(':checked')) {
+        $(this).closest('.checkbox-inline').removeClass('error')
+      } else {
+        $(this).closest('.checkbox-inline').addClass('error')
+      }
+
+      _this.checkTerms()
+    })
+
+    $('body').on('change', '#inputWhatsapp', function () {
+      const isChecked = $(this).is(':checked')
+      const $whatsAppInput = $('#client-whatasapp')
+
+      $whatsAppInput.attr('required', isChecked)
+      $('#error-client-whatsapp-required').hide()
+
+      if (isChecked) {
+        $('p.client-whatsapp').addClass('required')
+        if (!$whatsAppInput.val().length) {
+          $whatsAppInput.removeClass('success').addClass('error')
+          $('#error-client-whatsapp-required').show()
+        }
+      } else {
+        $whatsAppInput.closest('p.client-whatsapp').removeClass('required')
+        $whatsAppInput.removeClass('error').addClass('success').val('')
+      }
+    })
+
+    $('body').on(
+      'input blur',
+      '#client-profile-data p.input input:visible',
+      function () {
+        setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
+      }
+    )
+
+    $('body').on(
+      'change',
+      '#client-profile-data input[type="checkbox"]',
+      function () {
+        setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
+      }
+    )
+
+    $('body').on('click', '#go-to-shipping', function () {
+      _this.saveProfileData()
+    })
+  }
+}
+
+module.exports = CustomProfileData
