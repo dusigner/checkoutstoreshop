@@ -1,195 +1,250 @@
-// pre email step
-
-
 .client-pre-email {
-  background: none;
-  width: 100%;
-  border-top:none;
-  position:relative;
-  text-align: left;
+  border: none;
+  left: 0;
 
-  fieldset.pre-email {
+  @media screen and (max-width: 1024px) {
+    padding-left: 10px;
+    padding-right: 10px;
     box-sizing: border-box;
-
   }
 
-  label {
-    margin: 0;
-    line-height: 20px;
+  #orderform-to-cart {
+    display: none;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #000;
+    text-transform: uppercase;
+    text-decoration: underline;
 
-    small {
-      font-size: $fontSize;
-      padding: 0;
-      margin: 0;
-      color: $muted1;
-      font-weight: 400;
-      margin: 0;
-      vertical-align: top;
-      display: block;
-      margin-bottom: 13px;
-
-      margin-top: 20px;
-      
+    @media screen and (max-width: 1024px) {
+      display: none;
     }
   }
-  
-  .link-cart {display: none;}  
 
-  h3.client-pre-email-h {
-    margin: 0;
+  .samsung-account-container {
+    display: inline-block;
+    width: 100%;
+    
+    #btn-samsung-account {
+      @media screen and (max-width: 1024px) {
+        width: 100%;
+      }
+    }
+  }
+
+  .client-pre-email .client-pre-email-h span {
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: #373737;
+    margin-bottom: 15px;
+  }
+
+  .client-pre-email-h {
+    label {
+      margin: 0;
+    }
+
     span {
-      
-      display: block;
-      position:relative;
-
-      font-size: 0;
+      font-size: 0px !important;
 
       &:after {
-        content: "Email";
-        @extend %steps-title;
-        vertical-align: middle;
-        display: inline-block;
-        margin: 0;        
-      }
+        display: block;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        color: #373737;
+        margin-bottom: 15px;
+        content: 'Para finalizar a compra, utilize sua';
 
-      @if $countingSteps {
-        padding:7px 0 !important;
-        &:after{padding: 0 !important;}
-      } @else {
-        &:after{width: 100%;}
+        @media screen and (max-width: 1024px) {
+          font-size: 17px;
+          margin-bottom: 5px;
+        }
       }
     }
 
-    .link-box-edit {display: none;}
+    small {
+      display: none;
+    }
   }
 
-
-
-  a#orderform-to-cart {
-    color:$actionPrimary;
+  .samsung-account-label {
+    margin: 12px 0px;
   }
 
-  .client-email.input.text {
+  .client-email {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     margin: 0;
     width: 100%;
-    position:initial;
 
-    input[type="email"] {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .btn-success {
-      width: 20%;
-      margin: 0;
-      height: initial;
-      position: absolute;
-      top: initial;
-      bottom:15px;
-      right: initial;
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: 55%;
-
-      @extend .btn-large;
-
-      @media(max-width: 768px) {
-        width: calc(100% - 60px);
-      }
+    @media screen and (max-width: 1024px) {
+      padding: 0;
     }
 
     .loading-inline {
-      position: absolute;
-      color: #FFF;
-      font-size: 16px;
-      bottom: 35px;
-      top: initial;
-      right: 50% !important;
-      margin-right: -10px;
+      margin: 12px 0;
+      top: 100%;
+      left: calc(50% - 10px);
+      right: auto !important;
+      transform: translateX(-50%);
     }
 
-    .loading-inline[style=""] + #btn-client-pre-email {
-      font-size:0;
+    #client-pre-email {
+      border: none;
+      border-bottom: 1px solid #000;
+      border-radius: 0;
+      box-shadow: none;
+      font-size: 14px;
+      font-weight: 300;
+      color: #7b7b7b;
+      height: 35px;
+      background: #0000;
+      width: 326px;
+
+      @media screen and (max-width: 1024px) {
+        width: 100%;
+      }
+    }
+
+    #btn-client-pre-email {
+      position: unset;
+      height: 40px;
+      border-radius: 20px;
+      background: #2189ff;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      width: 326px;
+      outline: none;
+      border: none;
+      font-family: 'SamsungOne';
+      margin-top: 12px;
+
+      @media screen and (max-width: 1024px) {
+        width: 100%;
+      }
+    }
+
+    #btn-client-pre-email:hover {
+      color: #555;
+      background-color: rgba(0, 0, 0, 0.05);
+      border-color: #555;
+    }
+
+    .help.error {
+      font-size: 13px;
+      text-align: right;
+      color: #1428a0;
+
+      &:before {
+        content: '*';
+      }
     }
   }
 
-  span.help.error {
-  }
-
-
-  
   .emailInfo {
-    margin-top:20px;
-    width: 80%;
-    box-sizing:border-box;
-    .icon-ok, 
-    h3 {
-      color:$actionPrimary;
+    max-width: 1050px;
+    width: 100%;
+    margin: 50px auto 0;
+    border: none;
+    background: none;
+
+    @media screen and (max-width: 1024px) {
+      padding: 0;
     }
 
-    @media(max-width: $mobileWidth) {
+    h3 {
+      margin: 0 0 34px;
+      font-size: 18px;
+      font-weight: normal;
+      text-align: center;
+      color: #363636;
+
+      @media screen and (max-width: 1024px) {
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+    }
+
+    ul.unstyled {
+      display: flex;
       width: 100%;
+      margin: 0;
+      background-color: #f9f9f9;
+      padding: 20px 0;
+
+      @media screen and (max-width: 1024px) {
+        display: block;
+      }
+
+      li {
+        flex: 1;
+
+        .icon-ok {
+          display: none;
+        }
+        span {
+          font-size: 13.5px;
+          font-weight: bold;
+          text-align: center;
+          color: #363636;
+          display: block;
+
+          @media screen and (max-width: 1024px) {
+            margin-bottom: 40px;
+          }
+
+          &[data-i18n='clientProfileData.bullet1WhyEmail']:before {
+            content: '';
+            background: url(https://samsungar.vteximg.com.br/arquivos/fingerprint.png?v=1)
+              no-repeat;
+            width: 44px;
+            height: 46px;
+            display: block;
+            margin: 0px auto 15px;
+          }
+
+          &[data-i18n='clientProfileData.bullet2WhyEmail']:before {
+            content: '';
+            background: url(https://samsungar.vteximg.com.br/arquivos/notification.png?v=1)
+              no-repeat;
+            width: 38px;
+            height: 46px;
+            display: block;
+            margin: 0px auto 15px;
+          }
+
+          &[data-i18n='clientProfileData.bullet3WhyEmail']:before {
+            content: '';
+            background: url(https://samsungar.vteximg.com.br/arquivos/return-to-the-past.png?v=1)
+              no-repeat;
+            width: 43px;
+            height: 46px;
+            display: block;
+            margin: 0px auto 15px;
+          }
+
+          &[data-i18n='clientProfileData.bullet4WhyEmail']:before {
+            content: '';
+            background: url(https://samsungar.vteximg.com.br/arquivos/list.png?v=1)
+              no-repeat;
+            width: 36px;
+            height: 46px;
+            display: block;
+            margin: 0px auto 15px;
+          }
+        }
+      }
     }
 
     .icon-lock {
-      color: $muted5;
+      display: none;
     }
   }
-
-
-  @media(max-width: $mobileWidth) {
-    .link-cart { display: none !important;}
-  }
-
-  & + .client-profile-data { 
-    .accordion-body:before {
-      content:"Waiting for more information";
-      display:block;
-    }
-    .accordion-body .accordion-inner {display:none;}
-
-    &.filled {
-      .accordion-body:before {
-        display: none;
-      }
-    }
-  }
-
-  &[style*="display: none"] {
-    padding-bottom:20px !important;
-
-    .link-box-edit {display: block !important;}
-    label {
-      small {display: none !important;}
-    }
-
-    input#client-pre-email {
-      padding: 0 !important;
-      border: none !important;
-      box-shadow: none !important;
-      font-size: 12px;
-      font-weight: 400;
-      pointer-events: none;
-      cursor: text;
-      background: none !important;
-      color:$muted2;
-    }
-
-    .emailInfo,
-    #btn-client-pre-email {
-        display:none;
-    }
-
-    & + .client-profile-data {
-      .accordion-body:before {
-        display: none;
-      }
-      .accordion-inner {display:block;}
-    }
-  }
-}
-
-
-
-body:not(.v-custom-step-email) .client-pre-email span.help.error {
-  display: none !important;
 }

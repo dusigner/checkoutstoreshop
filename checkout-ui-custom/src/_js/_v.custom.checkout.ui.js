@@ -9,6 +9,7 @@ const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
 const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
 const { default: InstallationService } = require('./_installationService.js')
+const CustomPreEmail = require('./_pre-email.js')
 
 class checkoutCustom {
   constructor({
@@ -32,6 +33,7 @@ class checkoutCustom {
     this.customAddressForm = customAddressForm
     this.hideEmailStep = hideEmailStep
 
+    this.preEmail = new CustomPreEmail()
     this.profile = new CustomProfileData()
     this.shipping = new CustomShippingData()
     this.installationService = new InstallationService()
@@ -1417,8 +1419,10 @@ class checkoutCustom {
       _this.paymentBuilder(_this.orderForm)
     }
 
-    _this.addEditButtoninLogin()
     _this.fixLabels()
+
+    // vtex customization
+    // _this.addEditButtoninLogin()
   }
 
   start() {
@@ -1429,6 +1433,10 @@ class checkoutCustom {
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
+
+        // #pre-email
+        _this.preEmail.bindEvents()
+        _this.preEmail.createElementSamsungAccountLogin()
 
         // #profile
         _this.profile.bindEvents()
@@ -1453,6 +1461,16 @@ class checkoutCustom {
         _this.fixLabels()
         _this.shipping.toggleGoToPaymentDisabled()
 
+        if (window.location.hash === '#/email') {
+          _this.preEmail.createElementSamsungAccountLogin()
+        }
+
+        if (window.location.hash === '#/profile') {
+          _this.profile.addWhatsAppField()
+          _this.profile.addDateBirthField()
+          _this.profile.toggleGoToShippingDisabled()
+        }
+
         if (_this.orderForm) {
           _this.buildMiniCart(_this.orderForm)
           _this.indexedInItems(_this.orderForm)
@@ -1469,13 +1487,7 @@ class checkoutCustom {
           _this.shipping.validadePostalCode(_this.orderForm)
 
           if (window.location.hash === '#/profile') {
-            // Add WhatsApp
-            _this.profile.addWhatsAppField()
-            // Insere o campo data de nascimento
-            _this.profile.addDateBirthField()
-
             _this.profile.addTerms(_this.orderForm)
-            _this.profile.toggleGoToShippingDisabled()
           }
         }
       })
@@ -1484,6 +1496,10 @@ class checkoutCustom {
         _this.update(orderForm)
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
+
+        if (!window.vtexjs.checkout.orderForm.loggedIn) {
+          _this.preEmail.createElementSamsungAccountLogin()
+        }
 
         if (window.location.hash === '#/profile') {
           // Add WhatsApp
@@ -1509,6 +1525,10 @@ class checkoutCustom {
         $('#cart-to-orderform').on('click', function () {
           _this.installationService.addOpenTextFieldToInstallation()
         })
+
+        if (window.location.hash === '#/email') {
+          _this.preEmail.createElementSamsungAccountLogin()
+        }
 
         $(window).one('componentValidated.vtex', () => _this.builder())
         _this.checkProfileFocus()
