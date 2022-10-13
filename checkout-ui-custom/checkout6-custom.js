@@ -50,8 +50,33 @@
       return Object.prototype.hasOwnProperty.call(e, o)
     }),
     (a.p = ''),
-    a((a.s = 1))
+    a((a.s = 2))
 })([
+  function (e, o) {
+    ;(e.exports.debounce = (e, o) => {
+      let a
+      return function (...t) {
+        clearTimeout(a),
+          (a = setTimeout(() => {
+            clearTimeout(a), e(...t)
+          }, o))
+      }
+    }),
+      (e.exports.formatCurrency = (e, o, a) => {
+        const t = a / 100
+        return (
+          new Intl.NumberFormat(e, { style: 'currency', currency: o }).format(
+            t
+          ),
+          t
+        )
+      }),
+      (e.exports.formatCurrencyBRL = (e, o = !0) =>
+        (e / (o ? 100 : 1)).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        }))
+  },
   function (e, o) {
     e.exports._locale = {
       BRA: {
@@ -731,11 +756,11 @@
     }
   },
   function (e, o, a) {
-    a(2), (e.exports = a(11))
+    a(3), (e.exports = a(14))
   },
   function (e, o, a) {
-    const t = a(3),
-      n = a(4)
+    const t = a(4),
+      n = a(5)
     ;(window.vcustom = {
       checkout: new n({
         type: 'vertical',
@@ -778,12 +803,15 @@
     }
   },
   function (e, o, a) {
-    const { _locale: t } = a(0),
-      { debounce: n, formatCurrency: r, formatCurrencyBRL: s } = a(5),
+    const { _locale: t } = a(1),
+      { debounce: n, formatCurrency: r, formatCurrencyBRL: s } = a(0),
       d = a(6),
       m = a(8),
-      { default: h } = a(9),
-      { default: i } = a(10)
+      { default: i } = a(9),
+      { default: h } = a(10),
+      { default: C } = a(11),
+      { default: l } = a(12),
+      { default: u } = a(13)
     e.exports = class {
       constructor({
         type: e = 'vertical',
@@ -804,7 +832,10 @@
           (this.showNoteField = n),
           (this.customAddressForm = r),
           (this.hideEmailStep = s),
-          (this.shipping = new m())
+          (this.shipping = new m()),
+          (this.installationService = new C()),
+          (this.TradeIn = new l()),
+          (this.SendAttachment = new u())
       }
       general() {
         $('.custom-cart-template-wrap').length ||
@@ -1483,8 +1514,10 @@
           this.condensedTaxes(e),
           this.setParentIndex(e),
           this.indexedInItems(e),
-          new h().init(),
           new i().init(),
+          new h().init(),
+          this.installationService.init(),
+          this.TradeIn.init(),
           this.summaryCustom()
         n(function () {
           e.marketingData && (o.addLabels(e), o.showCustomMsgCoupon(e))
@@ -1743,7 +1776,10 @@
             }),
             $(window).on('hashchange', function () {
               const o = document.querySelector('.cart-items')
-              e.updateStep(),
+              ;('#/payment' !== window.location.hash &&
+                '#/cart' !== window.location.hash) ||
+                e.TradeIn.validateTradeinCustomData(),
+                e.updateStep(),
                 e.changeShippingTimeInfoInit(),
                 e.checkProfileFocus(),
                 e.fixLabels(),
@@ -1773,7 +1809,13 @@
                 e.shipping.toggleGoToPaymentDisabled()
             }),
             $(window).load(function () {
-              $(window).one('componentValidated.vtex', () => e.builder()),
+              $('#cart-to-orderform').on('click', function () {
+                e.SendAttachment.newTextFieldTradeInAndInstallation()
+              }),
+                ('#/payment' !== window.location.hash &&
+                  '#/cart' !== window.location.hash) ||
+                  e.TradeIn.validateTradeinCustomData(),
+                $(window).one('componentValidated.vtex', () => e.builder()),
                 e.checkProfileFocus(),
                 e.changeShippingTimeInfoInit(),
                 e.indexedInItems(window.vtexjs.checkout.orderForm),
@@ -1795,33 +1837,8 @@
       }
     }
   },
-  function (e, o) {
-    ;(e.exports.debounce = (e, o) => {
-      let a
-      return function (...t) {
-        clearTimeout(a),
-          (a = setTimeout(() => {
-            clearTimeout(a), e(...t)
-          }, o))
-      }
-    }),
-      (e.exports.formatCurrency = (e, o, a) => {
-        const t = a / 100
-        return (
-          new Intl.NumberFormat(e, { style: 'currency', currency: o }).format(
-            t
-          ),
-          t
-        )
-      }),
-      (e.exports.formatCurrencyBRL = e =>
-        (e / 100).toLocaleString('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
-        }))
-  },
   function (e, o, a) {
-    const { _locale: t } = a(0),
+    const { _locale: t } = a(1),
       { _countries: n, _cities: r, _addressPlaceholder: s } = a(7)
     window.callbackMap = () => {
       window.vtexjs.checkout.getOrderForm(e => {
@@ -1871,7 +1888,7 @@
         s = '',
         d = '',
         m = '',
-        h = ''
+        i = ''
       ) {
         ;(this.address = {
           country: e,
@@ -1879,7 +1896,7 @@
           addressId: m,
           city: a,
           state: t,
-          geoCoordinates: h,
+          geoCoordinates: i,
           street: n,
           number: r,
           complement: s,
@@ -1897,7 +1914,7 @@
         s = '',
         d = '',
         m = '',
-        h = ''
+        i = ''
       ) {
         $('.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street').val(
           'number' in this.addressrules ? o : a
@@ -1917,7 +1934,7 @@
           ).attr('data-neighborhood', m),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
-          ).attr('data-geocoordinates', h),
+          ).attr('data-geocoordinates', i),
           $(
             `.vcustom--vtex-omnishipping-1-x-address #ship-state option[value='${s}']`
           ).length
@@ -2025,14 +2042,14 @@
                   : e.returnAddressFRules(o.address_components, {
                       types: ['street_number'],
                     }),
-              h = e.addressrules.complement
+              i = e.addressrules.complement
                 ? e.returnAddressFRules(o.address_components, {
                     types: ['subpremise'],
                   })
                 : $(
                     '.vcustom--vtex-omnishipping-1-x-address #ship-complement'
                   ).val(),
-              i = [o.geometry.location.lat(), o.geometry.location.lng()],
+              h = [o.geometry.location.lat(), o.geometry.location.lng()],
               C = $('<div></div>')
             C.html(o.adr_address)
             const l = $('.street-address', C).text()
@@ -2052,7 +2069,7 @@
               'CABA' === s.toUpperCase() &&
                 ((s = 'Ciudad Autónoma de Buenos Aires'),
                 (u = 'Ciudad Autónoma de Buenos Aires'))),
-              e.setForm(t, r, l, m, c, u, s, h, d, i),
+              e.setForm(t, r, l, m, c, u, s, i, d, h),
               e.validateAllFields(),
               e.updateAddress(
                 t,
@@ -2061,10 +2078,10 @@
                 s,
                 r,
                 m,
-                h,
+                i,
                 o.formatted_address,
                 e.address.addressId,
-                i
+                h
               )
           }),
           $('body').on('keyup', '#v-custom-ship-street', function () {
@@ -2082,17 +2099,17 @@
           isCalculateBttnEnabled: !1,
         })
       }
-      sendAddress(e, o, a, t, n, r, s, d, m, h, i) {
+      sendAddress(e, o, a, t, n, r, s, d, m, i, h) {
         const C = this
-        if (~i.indexOf(',')) {
-          const [o, n] = i.split(',')
-          ;(i = [parseFloat(n), parseFloat(o)]),
+        if (~h.indexOf(',')) {
+          const [o, n] = h.split(',')
+          ;(h = [parseFloat(n), parseFloat(o)]),
             'ARG' === e &&
               'CABA' === r.toUpperCase() &&
               (r = 'Ciudad Autónoma de Buenos Aires'),
             'USA' === e && (a = null),
             C.addressrules.state || (t = '')
-        } else i = []
+        } else h = []
         $('body').addClass('js-v-custom-is-loading'),
           fetch(
             `/api/checkout/pub/orderForm/${C.orderForm.orderFormId}/attachments/shippingData`,
@@ -2119,10 +2136,10 @@
                     city: r,
                     state: t,
                     country: e,
-                    geoCoordinates: i,
+                    geoCoordinates: h,
                     street: o,
                     number: a || '',
-                    neighborhood: h,
+                    neighborhood: i,
                     complement: s,
                     reference: null,
                     addressQuery: d,
@@ -2135,10 +2152,10 @@
             }
           )
             .then(e => e.json())
-            .then(function (h) {
-              h.error
+            .then(function (i) {
+              i.error
                 ? ($('body').removeClass('js-v-custom-is-loading'),
-                  alert('Something went wrong: ' + h.error.message))
+                  alert('Something went wrong: ' + i.error.message))
                 : window.vtexjs.checkout.getOrderForm().done(function () {
                     C.updateAddress(
                       e,
@@ -2151,7 +2168,7 @@
                       '',
                       d || '',
                       m || '',
-                      i || []
+                      h || []
                     ),
                       $('body').removeClass(C.BodyFormClasses.join(' ')),
                       (C.orderForm = window.vtexjs.checkout.orderForm),
@@ -2322,7 +2339,7 @@
           ).val(),
           d = $('.vcustom--vtex-omnishipping-1-x-address #ship-city').val(),
           m = $('.vcustom--vtex-omnishipping-1-x-address #ship-state').val(),
-          h = $(
+          i = $(
             '.vcustom--vtex-omnishipping-1-x-address #ship-postalCode'
           ).val()
         this.sendAddress(
@@ -2330,7 +2347,7 @@
           a,
           t,
           m,
-          h,
+          i,
           d,
           s,
           this.address.addressQuery,
@@ -9325,15 +9342,12 @@
             o = $(
               '<div class="virtual-inventory-msg" style="max-width: 566px; margin-top: 16px;">\n          <p class="invalid-postal-code-msg__message">\n            O prazo de entrega está acima do normal devido à reposição de estoque.\n          </p>\n        </div>'
             )
-          if (0 === e.find('.virtual-inventory-msg').length) {
-            const a = setInterval(function () {
-              e.find('small').length &&
-                (e.find('small').before(o), clearInterval(a))
-            }, 50)
-          }
-          0 ===
-            $('.srp-delivery-header').find('.virtual-inventory-msg').length &&
-            $('.srp-delivery-header').append(o)
+          e.find('small').length &&
+            0 === e.find('.virtual-inventory-msg').length &&
+            e.find('small').before(o),
+            0 ===
+              $('.srp-delivery-header').find('.virtual-inventory-msg').length &&
+              $('.srp-delivery-header').append(o)
         } catch (e) {
           console.error(
             'Ocorreu um erro ao adicionar mensagem de prazo acima do normal: ' +
@@ -9515,6 +9529,295 @@
             const o = $(`tr.product-item[data-sku="${e.id}"] td.item-remove a`)
             o.length && (o[0].click(), o[0].remove())
           })
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return t
+      })
+    class t {
+      constructor() {
+        this.INSTALLATION_URL = '/install-service/p'
+      }
+      init() {
+        const { items: e } = window.vtexjs.checkout.orderForm
+        this.hasInstallationService(e) && this.validateSamsungCarePlus(e)
+      }
+      validateSamsungCarePlus(e) {
+        const o = this.getInstallationItems(e),
+          a = this.getRelatedInstallationItems(e),
+          t = []
+        if (
+          (o.forEach(e => {
+            const a = o.filter(o => o.id === e.id && o.refId === e.refId),
+              n = t.find(o => o.id === e.id)
+            a.length > 1 && !n && t.push(...a.slice(1, a.length))
+          }),
+          t.length && this.removeInstallations(t),
+          o.length !== a.length && o.length > a.length)
+        ) {
+          const e = o.filter(
+            e => !a.find(o => o.refId === e.attachments[0].content.refId)
+          )
+          this.removeInstallations(e)
+        }
+      }
+      removeInstallations(e) {
+        e.forEach(e => {
+          const o = $(`tr.product-item[data-sku="${e.id}"] td.item-remove a`)
+          o.length && (o[0].click(), o[0].remove())
+        })
+      }
+      getInstallationItems(e) {
+        return e.filter(e => this.isInstallationService(e))
+      }
+      getRelatedInstallationItems(e) {
+        const o = this.getInstallationItems(e),
+          a = []
+        return (
+          o.forEach(o => {
+            const t = e.find(e => e.refId === o.attachments[0].content.refId)
+            t && a.push(t)
+          }),
+          a
+        )
+      }
+      hasInstallationService(e) {
+        return !!e.find(e => this.isInstallationService(e))
+      }
+      isInstallationService(e) {
+        return e.detailUrl === this.INSTALLATION_URL
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return n
+      })
+    var t = a(0)
+    class n {
+      init() {
+        const { items: e } = window.vtexjs.checkout.orderForm,
+          o = JSON.parse(localStorage.getItem('transport') || '[]')
+        e.length && o.length && this.checkTradeIn(e, o)
+      }
+      rootPath() {
+        return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+      }
+      checkTradeIn(e, o) {
+        let a = 0
+        if (o.length)
+          for (let t = 0; t < o.length; t++) {
+            let n = 0
+            const r = o[t]
+            let s = 0
+            for (let o = 0; o < e.length; o++)
+              r.mainProductId === e[o].productId && ++s
+            if (s > 0)
+              for (let e = 0; e < r.evaluatedProducts.length; e++)
+                n +=
+                  e > 0 && n > 0
+                    ? r.evaluatedProducts[e].price
+                    : r.evaluatedProducts[e].price + parseInt(r.boostSSG)
+            a += n
+          }
+        a > 0
+          ? (this.showDetailsTradeIn(),
+            this.showTotalTradeIn(a),
+            $('#total-tradein-value').text(
+              Object(t.formatCurrencyBRL)(a, !1) + '*'
+            ))
+          : 0 === a &&
+            ($('#total-details-tradein').remove(),
+            $('#text-details-tradein').remove(),
+            this.removeCustomDataTradeIn())
+        const n = o.filter(o => {
+          if (e.filter(e => e.id === o.skuId).length > 0) return o
+        })
+        n.length < o.length &&
+          (localStorage.setItem('transport', JSON.stringify(n)),
+          this.validateTradeinCustomData())
+      }
+      showDetailsTradeIn() {
+        try {
+          const e = $('.cart-fixed'),
+            o =
+              '\n        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: \'SamsungOne\'; float: right; text-align: left;">\n          <p>* A compra de um produto com a modalidade Troca Smart gera um transação de valor total do aparelho para pagamento no site.</p>\n          <p>O valor da pré-avaliação da Troca Smart será depositado em conta corrente após avaliação e aceitação do aparelho pela TROCAFONE.</p>\n        </div>\n      '
+          if (e.find('#text-details-tradein').length > 0) return
+          e.append(o)
+        } catch (e) {
+          console.error('showDetailsTradeIn error:', e)
+        }
+      }
+      showTotalTradeIn(e) {
+        try {
+          const o = $('.summary-totalizers .table'),
+            a = `\n        <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">\n            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart <br /> Dinheiro em Conta</td>\n            <td id="total-tradein-value" style="font-size: 14px; color: #000000; font-weight: 700;">${
+              Object(t.formatCurrencyBRL)(e, !1) + '*'
+            }</td>\n          </tr>\n        </tbody>\n      `
+          if (o.find('#total-details-tradein').length > 0) return
+          o.append(a)
+        } catch (e) {
+          console.error('showDetailsTradeIn error:', e)
+        }
+      }
+      async putCustomData(e, o) {
+        const { orderFormId: a } = window.vtexjs.checkout.orderForm,
+          n = {
+            trade_in_option_selected: JSON.stringify(e),
+            trade_in_total_value: o,
+          }
+        localStorage.setItem('transport', JSON.stringify(e)),
+          $('#total-tradein-value').text(
+            Object(t.formatCurrencyBRL)(o, !1) + '*'
+          ),
+          $.ajax({
+            url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${a}/domain`,
+            type: 'PUT',
+            crossDomain: !0,
+            accept: 'application/vnd.vtex.ds.v10+json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(n),
+          })
+      }
+      removeCustomDataTradeIn() {
+        const { orderFormId: e } = window.vtexjs.checkout.orderForm
+        localStorage.removeItem('transport'),
+          $.ajax({
+            url: `${this.rootPath()}/api/checkout/pub/orderForm/${e}/customData/domain/trade_in_option_selected`,
+            type: 'DELETE',
+          }),
+          $.ajax({
+            url: `${this.rootPath()}/api/checkout/pub/orderForm/${e}/customData/domain/trade_in_total_value`,
+            type: 'DELETE',
+          })
+      }
+      async validateTradeinCustomData() {
+        const e = JSON.parse(localStorage.getItem('transport'))
+        let o = 0
+        const a = [],
+          t = []
+        e && e.length > 0
+          ? (await e.map(e => {
+              e.evaluatedProducts.map(async e => {
+                t.push(e)
+              })
+            }),
+            t.map(e => {
+              const o = fetch(
+                `${this.rootPath()}/p4v1/tradeinCheckImei/${e.imei}`
+              )
+                .then(e => e.json())
+                .then(o => ({ ...o, imei: e.imei }))
+              a.push(o)
+            }),
+            Promise.all(a).then(a => {
+              e.map(e => {
+                e.evaluatedProducts.map(async e => {
+                  const t = a.find(o => o.imei === e.imei)
+                  if (t && t.products && t.products.length > 0) {
+                    const a = t.products.find(o => o.id === e.idProduct)
+                    if (a && a.gradings) {
+                      const t = a.gradings.find(o => o.code === e.grading)
+                      if (t && t.price)
+                        return (e.price = t.price), void (o += e.price)
+                    }
+                  }
+                  o += e.price
+                })
+              }),
+                this.putCustomData(e, o)
+            }))
+          : this.removeCustomDataTradeIn()
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return n
+      })
+    var t = a(0)
+    class n {
+      isInstallation(e) {
+        return -1 !== e.productCategoryIds.indexOf('2027')
+      }
+      newTextFieldTradeInAndInstallation() {
+        let e = ''
+        const { items: o } = window.vtexjs.checkout.orderForm,
+          a = JSON.parse(localStorage.getItem('transport') || '[]')
+        if (a.length)
+          for (let n = 0; n < a.length; n++) {
+            let r = 0
+            const s = a[n]
+            let d = 0,
+              m = ''
+            for (let e = 0; e < o.length; e++)
+              s.mainProductId === o[e].productId && ((m = o[e].ean), ++d)
+            if (d > 0) {
+              for (let e = 0; e < s.evaluatedProducts.length; e++)
+                r +=
+                  e > 0 && r > 0
+                    ? s.evaluatedProducts[e].price
+                    : s.evaluatedProducts[e].price + 100 * parseInt(s.boostSSG)
+              e += `{'ean':'${m}', 'isTradeIn':'true', 'trocaSmartValue': '${Object(
+                t.formatCurrencyBRL
+              )(r, !1)}'}, `
+            }
+          }
+        const n = window.vtexjs.checkout.orderForm.items.filter(e =>
+            this.isInstallation(e)
+          ),
+          r = []
+        n &&
+          (window.vtexjs.checkout.orderForm.items.filter(e => {
+            const o = window.vtexjs.checkout.orderForm.items.filter(e =>
+              this.isInstallation(e)
+            )
+            return (
+              o &&
+                o.filter(o => {
+                  'linkInstallation' === o.attachments[0].name &&
+                    e.refId == o.attachments[0].content.refId &&
+                    r.push(e)
+                }),
+              o
+            )
+          }),
+          r.filter(o => {
+            window.vtexjs.checkout.orderForm.shippingData.logisticsInfo.filter(
+              a => {
+                a.itemId == o.id &&
+                  a.slas.filter(r => {
+                    if (a.selectedDeliveryChannel == r.deliveryChannel) {
+                      let a = ''
+                      ;(a = parseInt(
+                        r.shippingEstimate.replace(/[^0-9\.]+/g, '')
+                      )),
+                        (e += n.map(
+                          e =>
+                            `{'isInstallation':'true','sku':'${
+                              o.refId
+                            }','estimate':'${a + 1}','price': '${Object(
+                              t.formatCurrencyBRL
+                            )(e.price)}'}`
+                        ))
+                    }
+                  })
+              }
+            )
+          })),
+          e &&
+            (window.vtexjs.checkout.sendAttachment('openTextField', {
+              value: '' + e,
+            }),
+            window.vtexjs.checkout.getOrderForm())
       }
     }
   },
