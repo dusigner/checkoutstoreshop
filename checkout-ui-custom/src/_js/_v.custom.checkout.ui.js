@@ -12,6 +12,7 @@ const { default: InstallationService } = require('./_installationService.js')
 const CustomPreEmail = require('./_pre-email.js')
 const { default: TradeIn } = require('./_tradeIn.js')
 const { default: SendAttachment } = require('./_sendAttachment.js')
+const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 
 class checkoutCustom {
   constructor({
@@ -1046,6 +1047,7 @@ class checkoutCustom {
     this.indexedInItems(orderForm)
     new CustomHeader().init()
     new SamsungCarePlus().init()
+    new BespokeRefrigerator().init()
     this.installationService.init()
     this.TradeIn.init()
     this.summaryCustom()

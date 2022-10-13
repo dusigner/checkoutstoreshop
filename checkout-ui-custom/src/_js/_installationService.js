@@ -4,12 +4,16 @@ export default class InstallationService {
   }
 
   init() {
-    const { items } = window.vtexjs.checkout.orderForm
-    const hasInstallation = this.hasInstallationService(items)
+    try {
+      const { items } = window.vtexjs.checkout.orderForm
+      const hasInstallation = this.hasInstallationService(items)
 
-    if (!hasInstallation) return
+      if (!hasInstallation) return
 
-    this.validateSamsungCarePlus(items)
+      this.validateSamsungCarePlus(items)
+    } catch (e) {
+      console.error('installationService error', e)
+    }
   }
 
   validateSamsungCarePlus(items) {
@@ -94,7 +98,9 @@ export default class InstallationService {
   }
 
   hasInstallationService(items) {
-    return !!items.find(item => this.isInstallationService(item))
+    return !!items.find(
+      item => this.isInstallationService(item) && item.attachments.length
+    )
   }
 
   isInstallationService(item) {
