@@ -865,6 +865,7 @@
 			min-height: initial;
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
 
   		@media(min-width: 769px) {
   			&.affix {
@@ -1003,7 +1004,6 @@
 		.summary-totalizers {
 			 tbody {
 		    border-top:1px solid $muted4;
-		    border-bottom:1px solid $muted4;
 		    padding: 14px 0;
   			display: block;
 

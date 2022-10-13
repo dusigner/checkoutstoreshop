@@ -1,5 +1,3 @@
-import { formatCurrencyBRL } from './_utils'
-
 export default class InstallationService {
   constructor() {
     this.INSTALLATION_URL = '/install-service/p'
@@ -12,48 +10,6 @@ export default class InstallationService {
     if (!hasInstallation) return
 
     this.validateSamsungCarePlus(items)
-  }
-
-  addOpenTextFieldToInstallation() {
-    const { items } = window.vtexjs.checkout.orderForm
-    const { openTextField } = window.vtexjs.checkout.orderForm
-    const istallationIsOpenTextField = openTextField.value.includes(
-      "'isInstallation':'true'"
-    )
-
-    if (istallationIsOpenTextField) return
-
-    const logisticInfo =
-      window.vtexjs.checkout.orderForm.shippingData.logisticsInfo
-
-    const installationItems = this.getInstallationItems(items)
-    const relatedItemsInstallation = this.getRelatedInstallationItems(items)
-    const obsForInstallationService = []
-
-    relatedItemsInstallation.forEach(relatedItem => {
-      const logInfo = logisticInfo.find(info => info.itemId === relatedItem.id)
-      const selectedSla = logInfo.slas.find(
-        sla => logInfo.selectedDeliveryChannel === sla.deliveryChannel
-      )
-      // eslint-disable-next-line
-      const estimate = selectedSla.shippingEstimate.replace(/[^0-9\.]+/g, '')
-      const currentInstallation = installationItems.find(
-        installation =>
-          installation.attachments[0].content.refId === relatedItem.refId
-      )
-
-      obsForInstallationService.push(
-        `{'isInstallation':'true','sku':'${
-          currentInstallation.refId
-        }','estimate':'${estimate + 1}','price': '${formatCurrencyBRL(
-          relatedItem.price
-        )}'}`
-      )
-    })
-
-    window.vtexjs.checkout.sendAttachment('openTextField', {
-      value: `${obsForInstallationService.join(',')}`,
-    })
   }
 
   validateSamsungCarePlus(items) {
