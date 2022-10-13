@@ -110,19 +110,31 @@ export default class BespokeRefrigerator {
     }
   }
 
-  removeItems({ items }) {
+  removeItems() {
     $('body').on('click', '.bespokeRemove', e => {
       e.preventDefault()
-      const skuDeleted = $(e.target).parents('.product-item').data().sku
+      const currentItems = window.vtexjs.checkout.orderForm.items
+      const data = $(e.target).parents('.product-item').data()
+      const skuDeleted = data ? data.sku : null
 
-      this.removeBespoke(items, skuDeleted, 0)
+      $(e.target).remove()
+
+      if (skuDeleted) {
+        this.removeBespoke(currentItems, skuDeleted, 0)
+      }
     })
 
     $('body').on('click', '.editBespoke', e => {
       e.preventDefault()
-      const skuEdited = $('.editBespoke').parents('.product-item').data().sku
+      const currentItems = window.vtexjs.checkout.orderForm.items
+      const data = $(e.target).parents('.product-item').data()
+      const skuEdited = data ? data.sku : null
 
-      this.clearBespokeRefrigerator(items, skuEdited, true)
+      $(e.target).remove()
+
+      if (skuEdited) {
+        this.clearBespokeRefrigerator(currentItems, skuEdited, true)
+      }
     })
   }
 
@@ -130,7 +142,7 @@ export default class BespokeRefrigerator {
     let category = ''
 
     items.forEach(el => {
-      if (parseInt(skuEdited, 10) === el.id) {
+      if (skuEdited.toString() === el.id) {
         category = el.productCategoryIds
       }
     })
@@ -178,14 +190,14 @@ export default class BespokeRefrigerator {
   removeBespoke(items, skuDeleted, removeManual) {
     let bespokeItems = JSON.parse(localStorage.getItem('BespokeItems'))
     const item = bespokeItems.filter(
-      currentItem => currentItem.mainSku === skuDeleted
+      currentItem => currentItem.mainSku === skuDeleted.toString()
     )
 
     let listSKU = []
     const updateList = []
     let pairingQtdRemove = 0
 
-    listSKU.push(skuDeleted)
+    listSKU.push(skuDeleted.toString())
     if (item) {
       item.forEach(({ options }) => {
         options.forEach(sku => {
@@ -197,7 +209,7 @@ export default class BespokeRefrigerator {
     listSKU = [...new Set(listSKU)]
 
     items.forEach((currentItem, i) => {
-      if (currentItem.id === skuDeleted) {
+      if (currentItem.id === skuDeleted.toString()) {
         pairingQtdRemove = currentItem.quantity
       }
 
@@ -231,7 +243,6 @@ export default class BespokeRefrigerator {
       window.vtexjs.checkout.updateItems(itemsToUpdate).then(orderForm => {
         this.removeButtons(orderForm)
         this.editButton(orderForm)
-
         let removeIndex = 0
 
         orderForm.items.forEach((currentItem, i) => {
@@ -241,7 +252,7 @@ export default class BespokeRefrigerator {
         })
 
         bespokeItems = bespokeItems.filter(
-          currentItem => currentItem.mainSku !== skuDeleted
+          currentItem => currentItem.mainSku !== skuDeleted.toString()
         )
         localStorage.setItem('BespokeItems', JSON.stringify(bespokeItems))
         removeIndex = [
@@ -401,7 +412,7 @@ export default class BespokeRefrigerator {
             this.checkItems(window.vtexjs.checkout.orderForm)
             this.removeButtons(window.vtexjs.checkout.orderForm)
             this.editButton(window.vtexjs.checkout.orderForm)
-            this.removeItems(window.vtexjs.checkout.orderForm)
+            this.removeItems()
           })
         } else {
           console.error(
