@@ -9,6 +9,8 @@ const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
 const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
 const { default: InstallationService } = require('./_installationService.js')
+const { default: TradeIn } = require('./_tradeIn.js')
+const { default: SendAttachment } = require('./_sendAttachment.js')
 
 class checkoutCustom {
   constructor({
@@ -35,6 +37,8 @@ class checkoutCustom {
     this.profile = new CustomProfileData()
     this.shipping = new CustomShippingData()
     this.installationService = new InstallationService()
+    this.TradeIn = new TradeIn()
+    this.SendAttachment = new SendAttachment()
   }
 
   general() {
@@ -1041,6 +1045,7 @@ class checkoutCustom {
     new CustomHeader().init()
     new SamsungCarePlus().init()
     this.installationService.init()
+    this.TradeIn.init()
     this.summaryCustom()
 
     // debounce to prevent append from default script
@@ -1447,6 +1452,13 @@ class checkoutCustom {
       $(window).on('hashchange', function () {
         const cartItems = document.querySelector('.cart-items')
 
+        if (
+          window.location.hash === '#/payment' ||
+          window.location.hash === '#/cart'
+        ) {
+          _this.TradeIn.validateTradeinCustomData()
+        }
+
         _this.updateStep()
         _this.changeShippingTimeInfoInit()
         _this.checkProfileFocus()
@@ -1507,8 +1519,15 @@ class checkoutCustom {
 
       $(window).load(function () {
         $('#cart-to-orderform').on('click', function () {
-          _this.installationService.addOpenTextFieldToInstallation()
+          _this.SendAttachment.newTextFieldTradeInAndInstallation()
         })
+
+        if (
+          window.location.hash === '#/payment' ||
+          window.location.hash === '#/cart'
+        ) {
+          _this.TradeIn.validateTradeinCustomData()
+        }
 
         $(window).one('componentValidated.vtex', () => _this.builder())
         _this.checkProfileFocus()
