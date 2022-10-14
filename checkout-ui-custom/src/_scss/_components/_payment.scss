@@ -1211,6 +1211,7 @@
 
 		.payment-submit-wrap {
 			margin:10px 0 0 0;
+      background: #F7F7F7;
 
 			@media(max-width: 768px) {
 				z-index: 9999;
@@ -1219,7 +1220,6 @@
 				width: 100%;
     		left: 0;
 				padding: 0;
-				background:#FFF;
 				margin: 0 !important;
 				button {
 					border-radius:0 !important;
