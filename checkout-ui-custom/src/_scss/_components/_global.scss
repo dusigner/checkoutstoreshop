@@ -39,14 +39,30 @@ body {
     }
   }
   //end short preloader to don't show a empty cart
+
+  &.v-custom-step-email {
+    p.client-document + div {
+      width: calc(50% - 12px);
+      margin-left: 24px !important;
+    }
+
+    p.client-phone {
+      width: 100% !important;
+    }
+    
+    p.client-date-birth,
+    p.client-whatsapp,
+    .pj-information,
+    .newsletter-optin,
+    .terms-and-policies {
+      display: none;
+    }
+  }
 }
 
 .onda-v1 .br-pill,
 .step, .cart, .totalizers {
 	border-radius:$borderRadius;
-}
-
-.container-main {
 }
 
 .loading.loading-bg {
