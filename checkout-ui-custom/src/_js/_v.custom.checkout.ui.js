@@ -1,6 +1,8 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
+/* eslint eqeqeq: 0 */
+
 const { _locale } = require('./_locale-infos.js')
 const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
@@ -785,10 +787,14 @@ class checkoutCustom {
       const _trElem = $(`.summary-template-holder`)
 
       const totalItems =
-        orderForm.totalizers.find(item => item.id === 'Items').value || 0
+        orderForm.totalizers.filter(item => item.id === 'Items') == false
+          ? 0
+          : orderForm.totalizers.find(item => item.id === 'Items').value
 
       const totalShipping =
-        orderForm.totalizers.find(item => item.id === 'Shipping').value || 0
+        orderForm.totalizers.filter(item => item.id === 'Shipping') == false
+          ? 0
+          : orderForm.totalizers.find(item => item.id === 'Shipping').value
 
       const totalGross = totalItems + totalShipping
 

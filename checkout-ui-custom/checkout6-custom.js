@@ -1354,8 +1354,15 @@
       enchancementSummaryCart(e) {
         try {
           const o = $('.summary-template-holder'),
-            a = e.totalizers.find(e => 'Items' === e.id).value || 0,
-            t = a + (e.totalizers.find(e => 'Shipping' === e.id).value || 0),
+            a =
+              0 == e.totalizers.filter(e => 'Items' === e.id)
+                ? 0
+                : e.totalizers.find(e => 'Items' === e.id).value,
+            t =
+              a +
+              (0 == e.totalizers.filter(e => 'Shipping' === e.id)
+                ? 0
+                : e.totalizers.find(e => 'Shipping' === e.id).value),
             n = t - e.value,
             r = `\n        <div class="cart-total" style="margin-bottom: 35px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${s(
               e.value
