@@ -20,6 +20,10 @@
 		font-size: 18px;
 		transition: 0.2s;
 		cursor: initial;
+		
+		@media (max-width: 768px) {
+			font-size: 14px;
+		}
 
 		&::after {
 			font-size: 18px;
