@@ -1027,7 +1027,7 @@
 		      text-align: left !important;
 		      width: auto;
 		      color:#000;
-		      font-size:13px;
+		      font-size: 14px;
 		      padding: 0 0 3px 0 !important;
 		      &.monetary {
 		        text-align: right !important;
@@ -1174,19 +1174,6 @@
       display: none !important;
 		}
 	  .summary-template-holder {margin-top: 0;}
-
-    .on-term-price {
-      padding: 8px 0px;
-      border-bottom: 1px solid #cbcbcb;
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      color: #000;
-
-      .text-bold-price {
-        font-weight: bold;
-      }
-    }
 
     .summaryOrder {
       color: #000;

@@ -1444,29 +1444,30 @@
         try {
           const { items: e } = window.vtexjs.checkout.orderForm,
             o = e.length,
-            a = window.vtexjs.checkout.orderForm.paymentData.payments[0]
-              ? window.vtexjs.checkout.orderForm.paymentData.payments[0]
-                  .paymentSystem
-              : null
-          if (!a) return
-          const t =
+            a = window.vtexjs.checkout.orderForm.paymentData.paymentSystems
+              .filter(e => 'creditCardPaymentGroup' === e.groupName)
+              .map(e => e.id),
+            t =
               window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
-                e => e.paymentSystem === a
-              ).value,
-            n = $($('.summary-totalizers .accordion-inner')[1])
+                e => a.includes(Number(e.paymentSystem))
+              ).installments,
+            n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
+            r = $($('.summary-totalizers .accordion-inner')[1]),
+            d = $('.summary-totalizers .table')
           if (!$('.on-term-price').length) {
-            const a = `\n          <div class="on-term-price">\n            <span class="text-description">Total a prazo</span>\n            <span class="text-bold-price">${s(
-                t
-              )}</span>\n          </div>\n        `,
-              r = `\n          <div class="summaryOrder">\n            <h6>Resumo do pedido (${o} ${
-                o.length > 1 ? 'itens' : 'item'
-              })</h6>\n            <ul>\n              ${e.map(
-                e =>
-                  `\n                    <li>${
-                    e.name || e.skuName
-                  }</li>\n                  `
-              )}\n\n            </ul>\n          </div>\n        `
-            n.append(a), n.append(r)
+            const a = `\n          <tbody class="on-term-price" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">\n            <td class="text-description" style="font-size: 14px; color: #000000; font-weight: 400;">Total a prazo</td>\n            <td class="text-bold-price" style="font-size: 14px; color: #000000; font-weight: 700;">${s(
+              n
+            )}\n            </td>\n          </tr>\n        </tbody>\n        `
+            let t = ''
+            e.forEach(e => {
+              t += `\n              <li>${
+                e.name || e.skuName
+              }</li>\n            `
+            })
+            const i = `\n          <div class="summaryOrder">\n            <h6>Resumo do pedido (${o} ${
+              o.length > 1 ? 'itens' : 'item'
+            })</h6>\n            <ul>\n              ${t}\n            </ul>\n          </div>\n        `
+            d.append(a), r.append(i)
           }
         } catch (e) {
           console.error('summaryCustom error:', e)
@@ -1512,12 +1513,12 @@
           this.condensedTaxes(e),
           this.setParentIndex(e),
           this.indexedInItems(e),
+          this.summaryCustom(),
           new h().init(),
           new C().init(),
           new g().init(),
           this.installationService.init(),
-          this.TradeIn.init(),
-          this.summaryCustom()
+          this.TradeIn.init()
         n(function () {
           e.marketingData && (o.addLabels(e), o.showCustomMsgCoupon(e))
         }, 250)()
@@ -1775,7 +1776,8 @@
                   (e.shipping.validadePostalCode(
                     window.vtexjs.checkout.orderForm
                   ),
-                  e.shipping.toggleGoToPaymentDisabled())
+                  e.shipping.toggleGoToPaymentDisabled(),
+                  e.shipping.limitPostalCodeInput())
             }),
             $(window).on('hashchange', function () {
               const o = document.querySelector('.cart-items')
@@ -9351,7 +9353,7 @@
       }
       validateAge(e) {
         let o
-        $('#error-client-date-birth-required').hide()
+        $('#error-client-date-birth, #error-client-date-birth-required').hide()
         const a = new Date().getTimezoneOffset(),
           t = e.split('/')
         if (t[0] && t[1] && t[2]) {
@@ -9364,24 +9366,16 @@
               e.getDate()
             ))
         } else o = !1
-        function n() {
-          $('#error-client-date-birth').show(),
-            $('#client-birth-date').addClass('error').removeClass('success')
-        }
-        function r() {
-          $(
-            '#error-client-date-birth, #error-client-date-birth-required'
-          ).hide(),
-            $('#client-birth-date').addClass('success').removeClass('error')
-        }
-        const s = $('#inputTermAndPolicies').is(':checked')
-        10 === e.trim().length && o && s
-          ? r()
-          : 10 !== e.trim().length || o || s
-          ? o && !s
-            ? r()
-            : !o && 10 === e.trim().length && s && n()
-          : n()
+        const n = e.trim()
+        0 === n.length
+          ? ($('#error-client-date-birth-required').show(),
+            $('#client-birth-date').addClass('error').removeClass('success'))
+          : n.length > 0 && n.length < 10
+          ? $('#client-birth-date').removeClass('error success')
+          : n.length >= 10 && o
+          ? $('#client-birth-date').addClass('success').removeClass('error')
+          : ($('#error-client-date-birth').show(),
+            $('#client-birth-date').addClass('error').removeClass('success'))
       }
       mphone(e) {
         let o = e.replace(/\D/g, '')
@@ -9418,7 +9412,7 @@
         if ($('p.client-whatsapp').length) return
         $('.client-phone')
           .first()
-          .after(
+          .before(
             '<p class="client-whatsapp input pull-left text">\n      <label for="client-whatsapp">Celular/WhatsApp</label>\n      <input type="text" id="client-whatasapp" placeholder="(00) 00000-0000" class="whatsapp_phone input-small success" oninvalid="this.setCustomValidity(\'Preencha este campo.\')" maxlength="15" onchange="this.setCustomValidity(\'\')">\n      <span id="error-client-whatsapp-required" class="help error" style="display:none">Campo obrigatório.</span>\n    </p>'
           )
       }
@@ -9463,6 +9457,7 @@
         this.addPJInformation(),
           this.addNewsletterOptIn(),
           this.addTermsAndPolicies(),
+          this.addRewardsBlock(),
           (e.loggedIn ||
             window.loggedIn ||
             (null !== e.clientProfileData &&
@@ -9487,7 +9482,7 @@
             $(this).val().match(e) && $(this).val($(this).val().replace(e, ''))
           }
         ),
-          $('#client-phone').keypress(o => {
+          $('body').on('keypress', '#client-phone', function (o) {
             setTimeout(() => {
               const a = e.mphone(o.target.value)
               a !== o.target.value && (o.target.value = a)
@@ -9561,7 +9556,7 @@
                   o.removeClass('error').addClass('success').val(''))
           }),
           $('body').on(
-            'input blur',
+            'input blur keyup keypress',
             '#client-profile-data p.input input:visible',
             function () {
               setTimeout(() => e.toggleGoToShippingDisabled(), 1)
@@ -9710,6 +9705,9 @@
           console.error('Ocorreu um erro ao validar CEP: ' + e)
         }
       }
+      limitPostalCodeInput() {
+        $('#shipping-data input#ship-postalCode').attr('maxlength', 9)
+      }
       toggleGoToPaymentDisabled() {
         const e =
           0 ===
@@ -9727,6 +9725,13 @@
             !$(this).val().length < 9 && e.resetValidation()
           }
         ),
+          $(document).on(
+            'focus',
+            '#shipping-data input#ship-postalCode',
+            function () {
+              e.limitPostalCodeInput()
+            }
+          ),
           $(document).on(
             'input',
             '#shipping-data p.input.required input',
@@ -10410,6 +10415,7 @@
       }
       init() {
         try {
+          if (!JSON.parse(localStorage.getItem('BespokeItems'))) return
           this.getMandatorySkus().then(e => {
             e
               ? $(document).ajaxStop(() => {
