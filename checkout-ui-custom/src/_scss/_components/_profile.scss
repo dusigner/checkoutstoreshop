@@ -1,4 +1,29 @@
 #client-profile-data {
+  p.link-cart{
+    display: flex;
+    align-items: center;
+    float: none;
+
+    &::before {
+      content: "<";
+      display: flex;
+      margin-right: 4px;
+      font-size: 21px;
+      font-weight: bold;
+      color: #000;
+    }
+  }
+  
+  #orderform-to-cart {
+    display: inline-block;
+    color: #000;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 14px;
+    text-transform: unset;
+    letter-spacing: unset;
+  }
+  
   .box-client-info {
     max-width: 448px;
   }
