@@ -77,6 +77,7 @@ export default class TradeIn {
   showDetailsTradeIn() {
     try {
       const _checkoutElem = $(`.cart-fixed`)
+      const _cartElem = $(`.summary-to-new-components`)
       const _component = `
         <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: left;">
           <p>* A compra de um produto com a modalidade Troca Smart gera um transação de valor total do aparelho para pagamento no site.</p>
@@ -84,10 +85,14 @@ export default class TradeIn {
         </div>
       `
 
-      if (_checkoutElem.find('#text-details-tradein').length > 0) {
+      if (
+        _checkoutElem.find('#text-details-tradein').length > 0 ||
+        _cartElem.find('#text-details-tradein').length > 0
+      ) {
         return
       }
 
+      _cartElem.append(_component)
       _checkoutElem.append(_component)
     } catch (e) {
       console.error('showDetailsTradeIn error:', e)
