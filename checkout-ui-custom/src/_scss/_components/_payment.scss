@@ -1213,7 +1213,7 @@
       .step.client-profile-data.active .box-step .form-step[style*="display: block"],
       .step.shipping-data.active .accordion-inner.shipping-container,
       #payment-data .box-step form.form-step {
-        grid-template-columns: 246px auto;
+        grid-template-columns: 1fr auto;
       }
     }
 

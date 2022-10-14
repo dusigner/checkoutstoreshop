@@ -177,6 +177,10 @@ class CustomShippingData {
     }
   }
 
+  limitPostalCodeInput() {
+    $('#shipping-data input#ship-postalCode').attr('maxlength', 9)
+  }
+
   toggleGoToPaymentDisabled() {
     const disabled =
       $('#shipping-data p.input.required input').filter(function () {
@@ -197,6 +201,12 @@ class CustomShippingData {
           _this.resetValidation()
         }
       }
+    )
+
+    $(document).on(
+      'focus',
+      '#shipping-data input#ship-postalCode',
+      _this.limitPostalCodeInput()
     )
 
     $(document).on(
