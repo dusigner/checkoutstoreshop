@@ -992,6 +992,10 @@ h1#cart-title {display:none !important;}
         }
       }
     }
+
+    #cart-shipping-calculate {
+      display: none;
+    }
   }
 
   .cart-select-gift-placeholder,

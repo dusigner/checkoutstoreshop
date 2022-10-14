@@ -4,6 +4,11 @@
 	margin-top: 9px !important;
 	margin-bottom: 9px !important;
 
+	@media (max-width: 768px) {
+		margin-top: 7px !important;
+		margin-bottom: 7px !important;
+	}
+
     input {
         @extend %input-style;
     }
@@ -15,6 +20,15 @@
 		font-size: 18px;
 		transition: 0.2s;
 		cursor: initial;
+		
+		@media (max-width: 768px) {
+			font-size: 14px;
+		}
+
+		&::after {
+			font-size: 18px;
+			transition: 0.2s;
+		}
 	}
 
     label[for="ship-state"] {
@@ -32,6 +46,9 @@
 		label {
 			top: 0;
 			font-size: 14px;
+			&::after {
+				font-size: 14px;
+			}
 		}
 	}
 }

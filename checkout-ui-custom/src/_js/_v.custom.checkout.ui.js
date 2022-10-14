@@ -4,7 +4,15 @@
 const { _locale } = require('./_locale-infos.js')
 const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
+const CustomProfileData = require('./_profile')
+const CustomShippingData = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
+const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
+const { default: InstallationService } = require('./_installationService.js')
+const CustomPreEmail = require('./_pre-email.js')
+const { default: TradeIn } = require('./_tradeIn.js')
+const { default: SendAttachment } = require('./_sendAttachment.js')
+const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 
 class checkoutCustom {
   constructor({
@@ -27,6 +35,13 @@ class checkoutCustom {
     this.showNoteField = showNoteField
     this.customAddressForm = customAddressForm
     this.hideEmailStep = hideEmailStep
+
+    this.preEmail = new CustomPreEmail()
+    this.profile = new CustomProfileData()
+    this.shipping = new CustomShippingData()
+    this.installationService = new InstallationService()
+    this.TradeIn = new TradeIn()
+    this.SendAttachment = new SendAttachment()
   }
 
   general() {
@@ -932,8 +947,12 @@ class checkoutCustom {
     try {
       const { items } = window.vtexjs.checkout.orderForm
       const itemsQuantity = items.length
-      const { paymentSystem } =
-        window.vtexjs.checkout.orderForm.paymentData.payments[0]
+      const paymentSystem = window.vtexjs.checkout.orderForm.paymentData
+        .payments[0]
+        ? window.vtexjs.checkout.orderForm.paymentData.payments[0].paymentSystem
+        : null
+
+      if (!paymentSystem) return
 
       const totalOnTerm =
         window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
@@ -1030,6 +1049,10 @@ class checkoutCustom {
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
     new CustomHeader().init()
+    new SamsungCarePlus().init()
+    new BespokeRefrigerator().init()
+    this.installationService.init()
+    this.TradeIn.init()
     this.summaryCustom()
 
     // debounce to prevent append from default script
@@ -1382,6 +1405,10 @@ class checkoutCustom {
         $context.removeClass('filled')
       }
     })
+
+    $('body').on('click', '.link-edit, .link-box-edit', function () {
+      setTimeout(() => _this.fixLabels(), 30)
+    })
   }
 
   init() {
@@ -1402,8 +1429,10 @@ class checkoutCustom {
       _this.paymentBuilder(_this.orderForm)
     }
 
-    _this.addEditButtoninLogin()
     _this.fixLabels()
+
+    // vtex customization
+    // _this.addEditButtoninLogin()
   }
 
   start() {
@@ -1414,19 +1443,50 @@ class checkoutCustom {
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
+
+        // #pre-email
+        _this.preEmail.bindEvents()
+        _this.preEmail.createElementSamsungAccountLogin()
+
+        // #profile
+        _this.profile.bindEvents()
+        _this.shipping.bindEvents()
       })
 
-      $(document).ajaxComplete(function () {
+      $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
+
+        if (settings.url.includes('/attachments/shippingData')) {
+          _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
+          _this.shipping.toggleGoToPaymentDisabled()
+        }
       })
 
       $(window).on('hashchange', function () {
         const cartItems = document.querySelector('.cart-items')
 
+        if (
+          window.location.hash === '#/payment' ||
+          window.location.hash === '#/cart'
+        ) {
+          _this.TradeIn.validateTradeinCustomData()
+        }
+
         _this.updateStep()
         _this.changeShippingTimeInfoInit()
         _this.checkProfileFocus()
         _this.fixLabels()
+        _this.shipping.toggleGoToPaymentDisabled()
+
+        if (window.location.hash === '#/email') {
+          _this.preEmail.createElementSamsungAccountLogin()
+        }
+
+        if (window.location.hash === '#/profile') {
+          _this.profile.addWhatsAppField()
+          _this.profile.addDateBirthField()
+          _this.profile.toggleGoToShippingDisabled()
+        }
 
         if (_this.orderForm) {
           _this.buildMiniCart(_this.orderForm)
@@ -1440,6 +1500,12 @@ class checkoutCustom {
             targetNode: cartItems,
             callback: () => _this.removeCILoader(),
           })
+
+          _this.shipping.validadePostalCode(_this.orderForm)
+
+          if (window.location.hash === '#/profile') {
+            _this.profile.addTerms(_this.orderForm)
+          }
         }
       })
 
@@ -1447,16 +1513,56 @@ class checkoutCustom {
         _this.update(orderForm)
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
+
+        if (!window.vtexjs.checkout.orderForm.loggedIn) {
+          _this.preEmail.createElementSamsungAccountLogin()
+        }
+
+        if (window.location.hash === '#/profile') {
+          // Add WhatsApp
+          _this.profile.addWhatsAppField()
+          // Insere o campo data de nascimento
+          _this.profile.addDateBirthField()
+
+          _this.profile.addTerms(orderForm)
+        }
+
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
         }
+
+        if ($('#postalCode-finished-loading + .mb5').length) {
+          _this.shipping.resetValidation()
+        }
+
+        _this.shipping.toggleGoToPaymentDisabled()
       })
 
       $(window).load(function () {
+        $('#cart-to-orderform').on('click', function () {
+          _this.SendAttachment.newTextFieldTradeInAndInstallation()
+        })
+
+        if (window.location.hash === '#/email') {
+          _this.preEmail.createElementSamsungAccountLogin()
+        }
+
+        if (
+          window.location.hash === '#/payment' ||
+          window.location.hash === '#/cart'
+        ) {
+          _this.TradeIn.validateTradeinCustomData()
+        }
+
         $(window).one('componentValidated.vtex', () => _this.builder())
         _this.checkProfileFocus()
         _this.changeShippingTimeInfoInit()
         _this.indexedInItems(window.vtexjs.checkout.orderForm)
+
+        // #shipping
+        _this.profile.toggleGoToShippingDisabled()
+        _this.shipping.toggleGoToPaymentDisabled()
+        _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
 
         if (_this.customAddressForm && typeof store !== 'undefined') {
           window.store.dispatch({

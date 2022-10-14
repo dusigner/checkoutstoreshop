@@ -1,14 +1,14 @@
 !(function (e) {
   var o = {}
-  function a(n) {
-    if (o[n]) return o[n].exports
-    var t = (o[n] = { i: n, l: !1, exports: {} })
-    return e[n].call(t.exports, t, t.exports, a), (t.l = !0), t.exports
+  function a(t) {
+    if (o[t]) return o[t].exports
+    var n = (o[t] = { i: t, l: !1, exports: {} })
+    return e[t].call(n.exports, n, n.exports, a), (n.l = !0), n.exports
   }
   ;(a.m = e),
     (a.c = o),
-    (a.d = function (e, o, n) {
-      a.o(e, o) || Object.defineProperty(e, o, { enumerable: !0, get: n })
+    (a.d = function (e, o, t) {
+      a.o(e, o) || Object.defineProperty(e, o, { enumerable: !0, get: t })
     }),
     (a.r = function (e) {
       'undefined' != typeof Symbol &&
@@ -19,21 +19,21 @@
     (a.t = function (e, o) {
       if ((1 & o && (e = a(e)), 8 & o)) return e
       if (4 & o && 'object' == typeof e && e && e.__esModule) return e
-      var n = Object.create(null)
+      var t = Object.create(null)
       if (
-        (a.r(n),
-        Object.defineProperty(n, 'default', { enumerable: !0, value: e }),
+        (a.r(t),
+        Object.defineProperty(t, 'default', { enumerable: !0, value: e }),
         2 & o && 'string' != typeof e)
       )
-        for (var t in e)
+        for (var n in e)
           a.d(
-            n,
             t,
+            n,
             function (o) {
               return e[o]
-            }.bind(null, t)
+            }.bind(null, n)
           )
-      return n
+      return t
     }),
     (a.n = function (e) {
       var o =
@@ -50,8 +50,33 @@
       return Object.prototype.hasOwnProperty.call(e, o)
     }),
     (a.p = ''),
-    a((a.s = 1))
+    a((a.s = 2))
 })([
+  function (e, o) {
+    ;(e.exports.debounce = (e, o) => {
+      let a
+      return function (...t) {
+        clearTimeout(a),
+          (a = setTimeout(() => {
+            clearTimeout(a), e(...t)
+          }, o))
+      }
+    }),
+      (e.exports.formatCurrency = (e, o, a) => {
+        const t = a / 100
+        return (
+          new Intl.NumberFormat(e, { style: 'currency', currency: o }).format(
+            t
+          ),
+          t
+        )
+      }),
+      (e.exports.formatCurrencyBRL = (e, o = !0) =>
+        (e / (o ? 100 : 1)).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        }))
+  },
   function (e, o) {
     e.exports._locale = {
       BRA: {
@@ -63,9 +88,9 @@
         tomorrowLabel: 'Amanhã',
         cartSubmitButton: 'Fechar pedido',
         checkoutStepsLabelCart: 'Carrinho',
-        checkoutStepsLabelIdentification: 'Identificação',
+        checkoutStepsLabelIdentification: 'Dados Pessoais',
         checkoutStepsLabelShipping: 'Entrega',
-        checkoutStepsLabelPayment: 'Pagamento',
+        checkoutStepsLabelPayment: 'Pagamentos',
         checkoutStepsLabelConfirmation: 'Confirmação',
         city: 'Cidade',
         state: 'Estado',
@@ -731,22 +756,22 @@
     }
   },
   function (e, o, a) {
-    a(2), (e.exports = a(8))
+    a(3), (e.exports = a(14))
   },
   function (e, o, a) {
-    const n = a(3),
-      t = a(4)
+    const t = a(4),
+      n = a(5)
     ;(window.vcustom = {
-      checkout: new t({
+      checkout: new n({
         type: 'vertical',
-        accordionPayments: !0,
+        accordionPayments: !1,
         deliveryDateFormat: !1,
         quantityPriceCart: !0,
         showNoteField: !1,
         customAddressForm: !1,
         hideEmailStep: !1,
       }),
-      debug: new n({ dbg: !1, logo: '' }),
+      debug: new t({ dbg: !1, logo: '' }),
     }),
       window.vcustom.checkout.start()
   },
@@ -778,16 +803,22 @@
     }
   },
   function (e, o, a) {
-    const { _locale: n } = a(0),
-      { debounce: t, formatCurrency: r, formatCurrencyBRL: s } = a(5),
-      d = a(6)
+    const { _locale: t } = a(1),
+      { debounce: n, formatCurrency: r, formatCurrencyBRL: s } = a(0),
+      d = a(6),
+      m = a(8),
+      { default: i } = a(9),
+      { default: h } = a(10),
+      { default: C } = a(11),
+      { default: l } = a(12),
+      { default: u } = a(13)
     e.exports = class {
       constructor({
         type: e = 'vertical',
         accordionPayments: o = !0,
         deliveryDateFormat: a = !1,
-        quantityPriceCart: n = !1,
-        showNoteField: t = !1,
+        quantityPriceCart: t = !1,
+        showNoteField: n = !1,
         customAddressForm: r = !1,
         hideEmailStep: s = !0,
       } = {}) {
@@ -797,10 +828,14 @@
           (this.lang = ''),
           (this.accordionPayments = o),
           (this.deliveryDateFormat = a),
-          (this.quantityPriceCart = n),
-          (this.showNoteField = t),
+          (this.quantityPriceCart = t),
+          (this.showNoteField = n),
           (this.customAddressForm = r),
-          (this.hideEmailStep = s)
+          (this.hideEmailStep = s),
+          (this.shipping = new m()),
+          (this.installationService = new C()),
+          (this.TradeIn = new l()),
+          (this.SendAttachment = new u())
       }
       general() {
         $('.custom-cart-template-wrap').length ||
@@ -820,13 +855,13 @@
         callback: o,
         disconnectCondition: a = !0,
       }) {
-        const n = (function () {
+        const t = (function () {
             const e = window.MutationObserver || window.WebKitMutationObserver
             return function (o, a) {
               if (o && 1 === o.nodeType) {
                 if (e) {
-                  const n = new e(a)
-                  return n.observe(o, { childList: !0, subtree: !0 }), n
+                  const t = new e(a)
+                  return t.observe(o, { childList: !0, subtree: !0 }), t
                 }
                 window.addEventListener &&
                   (o.addEventListener('DOMNodeInserted', a, !1),
@@ -834,10 +869,10 @@
               }
             }
           })(),
-          t = new MutationObserver(function () {
-            e && a && (t.disconnect(), n(e, () => o()))
+          n = new MutationObserver(function () {
+            e && a && (n.disconnect(), t(e, () => o()))
           })
-        t.observe(document.body, { childList: !0, subtree: !0 })
+        n.observe(document.body, { childList: !0, subtree: !0 })
       }
       buildVertical() {
         $('body').addClass('body-cart-vertical'),
@@ -874,6 +909,20 @@
               !this.lang || this.lang.editLabel
             }">\n        <i class="icon-edit"></i>\n        <i class="icon-spinner icon-spin icon-3x"></i>\n      </a>\n    `
           )
+      }
+      addStepsHeader() {
+        if ($('.checkout-steps').length > 0 || !this.lang) return !1
+        const e = `\n        <div class="checkout-steps">\n          <div class="checkout-steps-wrap">\n            <span class="checkout-steps_bar">\n              <span class="checkout-steps_bar_inner"></span>\n              <span class="checkout-steps_bar_inner-active"></span>\n            </span>\n            <div class="checkout-steps_items">\n              <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="/checkout/#/profile">\n                <span class="text" data-before="1">${
+          this.lang
+            ? this.lang.checkoutStepsLabelIdentification
+            : 'Identification'
+        }</span>\n              </span>\n              <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="/checkout/#/shipping">\n                <span class="text" data-before="2">${
+          this.lang ? this.lang.checkoutStepsLabelShipping : 'Shipping'
+        }</span>\n              </span>\n              <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="/checkout/#/payment">\n                <span class="text" data-before="3">${
+          this.lang ? this.lang.checkoutStepsLabelPayment : 'Payment'
+        }</span>\n              </span>\n            </div>\n          </div>\n        </div>\n      `
+        $('header.main-header').length &&
+          $('header.main-header .container').append(e)
       }
       addAssemblies(e) {
         try {
@@ -958,8 +1007,8 @@
             null !== e.clientProfileData && null !== e.clientProfileData.email
               ? 'Cupom inválido para essa compra.'
               : 'Para usar o cupom, você precisa estar logado.',
-          n = $('.summary-template-holder'),
-          t = e.items.reduce(function (e, a) {
+          t = $('.summary-template-holder'),
+          n = e.items.reduce(function (e, a) {
             return (
               e +
               (a.priceTags.length
@@ -973,10 +1022,10 @@
                 : 0)
             )
           }, 0)
-        if (!o || t > 0) return $('.coupon-applied-message').remove(), !1
-        0 === t &&
+        if (!o || n > 0) return $('.coupon-applied-message').remove(), !1
+        0 === n &&
           0 === $('.coupon-applied-message').length &&
-          n
+          t
             .find('.totalizers-list .coupon-applied')
             .after(
               `<tr class="coupon-applied-message" style="height: 23px;">\n            <td>\n              <span style="color: #D62E2E; font-size: 12px;">${a}</span>\n            </td>\n        </tr>`
@@ -1060,7 +1109,7 @@
               {}
             )
             for (const o in a) {
-              const n = a[o]
+              const t = a[o]
               if (
                 $(`.table.cart-items tbody > tr.product-item:eq(${o})`).find(
                   '.v-custom-bundles'
@@ -1073,9 +1122,9 @@
                     .find('.v-custom-bundles')
                     .html())
               )
-                for (const e in n) {
-                  if (!n.hasOwnProperty(e)) continue
-                  const a = n[e]
+                for (const e in t) {
+                  if (!t.hasOwnProperty(e)) continue
+                  const a = t[e]
                   $(
                     `.table.cart-items tbody > tr.product-item[data-sku='${a.id}'][data-parentitemindex='${a.parentItemIndex}']`
                   )
@@ -1097,38 +1146,38 @@
                     .find(' > .v-custom-bundles')
                     .html())
               )
-                for (const a in n) {
-                  if (!n.hasOwnProperty(a)) continue
-                  const t = n[a]
+                for (const a in t) {
+                  if (!t.hasOwnProperty(a)) continue
+                  const n = t[a]
                   $(
                     `.mini-cart .cart-items > li:eq(${o}) > .v-custom-bundles`
                   ).append(
                     `\n                <div class="hproduct item v-custom-indexed-item" data-sku="${
-                      t.id
+                      n.id
                     }">\n                  <a href="${
-                      t.detailUrl
+                      n.detailUrl
                     }" class="url">\n                    <img height="45" width="45" class="photo" src="${
-                      t.imageUrl
+                      n.imageUrl
                     }" alt="${
-                      t.name
+                      n.name
                     }">\n                  </a>\n                  <span class="fn product-name" title="${
-                      t.name
-                    }" href="${t.detailUrl}">${
-                      t.name
+                      n.name
+                    }" href="${n.detailUrl}">${
+                      n.name
                     }</span>\n                  <span class="quantity badge">${
-                      t.quantity
+                      n.quantity
                     }</span>\n                  <div class="description">\n                    <strong class="price pull-right" data-bind="text: sellingPriceLabel">${
                       e.storePreferencesData.currencySymbol
                     } ${r(
                       e.clientPreferencesData.locale,
                       e.storePreferencesData.currencyCode,
-                      t.sellingPrice
+                      n.sellingPrice
                     ).toFixed(
                       2
                     )}</strong>\n                  </div>\n                </div>\n              `
                   ),
                     $(
-                      `.mini-cart .cart-items > li[data-sku='${t.id}']`
+                      `.mini-cart .cart-items > li[data-sku='${n.id}']`
                     ).addClass('v-custom-indexed-item')
                 }
             }
@@ -1140,22 +1189,22 @@
       }
       addBusinessDays(e, o = window.i18n.options.lng) {
         const a = this
-        let n = new Date()
-        n = new Date(n.getTime())
-        const t = n.getDay()
-        n.setDate(
-          n.getDate() +
+        let t = new Date()
+        t = new Date(t.getTime())
+        const n = t.getDay()
+        t.setDate(
+          t.getDate() +
             e +
-            (6 === t ? 2 : +!t) +
-            2 * Math.floor((e - 1 + (t % 6 || 1)) / 5)
+            (6 === n ? 2 : +!n) +
+            2 * Math.floor((e - 1 + (n % 6 || 1)) / 5)
         )
         let r = { weekday: 'long', month: 'short', day: 'numeric' }
         return (
           'pt' === o &&
             (r = { weekday: 'short', month: 'short', day: 'numeric' }),
-          n.getDate() - new Date().getDate() == 1
+          t.getDate() - new Date().getDate() == 1
             ? a.lang.tomorrowLabel || 'Tomorrow'
-            : ((n = n.toLocaleDateString(o, r)), n)
+            : ((t = t.toLocaleDateString(o, r)), t)
         )
       }
       changeShippingTimeInfo() {
@@ -1179,11 +1228,11 @@
           ).each(function () {
             const [a] =
                 window.vtexjs.checkout.orderForm.shippingData.logisticsInfo,
-              n = a.slas,
-              { selectedSla: t } = a,
+              t = a.slas,
+              { selectedSla: n } = a,
               r =
-                !!n.find(e => e.name === t) &&
-                n.find(e => e.name === t).shippingEstimate,
+                !!t.find(e => e.name === n) &&
+                t.find(e => e.name === n).shippingEstimate,
               s = $(this)
                 .find(
                   o
@@ -1222,18 +1271,18 @@
                 .text()
                 .split(':')[1]
                 .split(/,| and | e | y /),
-              n = []
+              t = []
             $.each(o, function (a) {
-              const t = o[a]
-              if ('' !== t && t.match(/(day)|(dia)|(día)/gm)) {
-                const o = parseInt(t.match(/\d+/), 10)
+              const n = o[a]
+              if ('' !== n && n.match(/(day)|(dia)|(día)/gm)) {
+                const o = parseInt(n.match(/\d+/), 10)
                 if (o) {
                   let a = e.lang.deliveryDateText
-                  t
+                  n
                     .toLowerCase()
                     .match(/(ready in up)|(pronto)|(A partir de)|(hasta)/gm) &&
                     (a = e.lang.PickupDateText),
-                    n.push(`${a} <strong>${e.addBusinessDays(o)}</strong>`)
+                    t.push(`${a} <strong>${e.addBusinessDays(o)}</strong>`)
                 }
               }
             }),
@@ -1242,7 +1291,7 @@
                 .after(
                   `<p class="black-50 mt3 mb0 js-shippingPreviewPackges">${
                     a.text().split(':')[0]
-                  }: ${n.join('; ')}</p>`
+                  }: ${t.join('; ')}</p>`
                 )
                 .addClass('v-changeShippingTimeInfo-active')
           }
@@ -1262,7 +1311,7 @@
               if (0 === o.find('td.product-price').find('.best-price').length)
                 return
               const a = o.find('.total-selling-price:eq(0)').text(),
-                n =
+                t =
                   this.listPrice > this.price &&
                   `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
                     this.listPrice > this.sellingPrice
@@ -1278,7 +1327,7 @@
                   .prepend(
                     `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${a}</p></div>`
                   )
-                  .append(n),
+                  .append(t),
                 o
                   .find('td.product-price')
                   .find('> .best-price')
@@ -1300,9 +1349,9 @@
             const a = $(`.table.cart-items tbody tr.product-item:eq(${o})`)
             if (1 === a.find('td.product-name').find('.more-info').length)
               return
-            const n = e.items[o].refId || ''
+            const t = e.items[o].refId || ''
             a.find('td.product-name').append(
-              `<div class="more-info">\n            <p class="ref-id" style="font-size: 12px">${n}</p>\n            <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>\n          </div>`
+              `<div class="more-info">\n            <p class="ref-id" style="font-size: 12px">${t}</p>\n            <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>\n          </div>`
             )
           })
         } catch (e) {
@@ -1313,19 +1362,19 @@
         try {
           const o = $('.summary-template-holder'),
             a = e.totalizers.filter(e => 'Items' === e.id).value || 0,
-            n = e.totalizers.filter(e => 'Discounts' === e.id).value || 0,
-            t = a + (e.totalizers.filter(e => 'Shipping' === e.id).value || 0),
+            t = e.totalizers.filter(e => 'Discounts' === e.id).value || 0,
+            n = a + (e.totalizers.filter(e => 'Shipping' === e.id).value || 0),
             r = `\n        <div class="cart-total" style="margin-bottom: 35px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${(
               e.value / 100
             ).toLocaleString('pt-BR', {
               style: 'currency',
               currency: 'BRL',
             })}</p>\n          </div>\n          ${
-              n
+              t
                 ? `\n                <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">\n                  <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">\n                    ${s(
-                    t
+                    n
                   )}\n                  </p>\n                  <p class="discount-total" style="color: #2189FF; font-weight: 700;">\n                    ${
-                    'economize ' + s(-n)
+                    'economize ' + s(-t)
                   }\n                  </p>\n                </div>\n              `
                 : ''
             }\n        </div>\n      `
@@ -1394,6 +1443,38 @@
           console.error('imgEmptyCart error:', e)
         }
       }
+      summaryCustom() {
+        try {
+          const { items: e } = window.vtexjs.checkout.orderForm,
+            o = e.length,
+            a = window.vtexjs.checkout.orderForm.paymentData.payments[0]
+              ? window.vtexjs.checkout.orderForm.paymentData.payments[0]
+                  .paymentSystem
+              : null
+          if (!a) return
+          const t =
+              window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
+                e => e.paymentSystem === a
+              ).value,
+            n = $($('.summary-totalizers .accordion-inner')[1])
+          if (!$('.on-term-price').length) {
+            const a = `\n          <div class="on-term-price">\n            <span class="text-description">Total a prazo</span>\n            <span class="text-bold-price">${s(
+                t
+              )}</span>\n          </div>\n        `,
+              r = `\n          <div class="summaryOrder">\n            <h6>Resumo do pedido (${o} ${
+                o.length > 1 ? 'itens' : 'item'
+              })</h6>\n            <ul>\n              ${e.map(
+                e =>
+                  `\n                    <li>${
+                    e.name || e.skuName
+                  }</li>\n                  `
+              )}\n\n            </ul>\n          </div>\n        `
+            n.append(a), n.append(r)
+          }
+        } catch (e) {
+          console.error('summaryCustom error:', e)
+        }
+      }
       condensedTaxes(e) {
         const o = e.totalizers.filter(e => 'CustomTax' === e.id)
         if (o && o.length < 2) return !1
@@ -1407,10 +1488,10 @@
                 } ${(o.value / 100).toFixed(2)}</span></p>`
             )
             .join('')}\n      </div>\n    `,
-          n = $('tr.CustomTax.CustomTax--total')
-        n.length &&
-          (n.find('.vcustom-customTax-tot').remove(),
-          n
+          t = $('tr.CustomTax.CustomTax--total')
+        t.length &&
+          (t.find('.vcustom-customTax-tot').remove(),
+          t
             .find('.info')
             .append(
               `<div class="vcustom-customTax-tot"><span>?</span> ${a}</div>`
@@ -1432,8 +1513,13 @@
           this.buildMiniCart(e),
           this.condensedTaxes(e),
           this.setParentIndex(e),
-          this.indexedInItems(e)
-        t(function () {
+          this.indexedInItems(e),
+          new i().init(),
+          new h().init(),
+          this.installationService.init(),
+          this.TradeIn.init(),
+          this.summaryCustom()
+        n(function () {
           e.marketingData && (o.addLabels(e), o.showCustomMsgCoupon(e))
         }, 250)()
       }
@@ -1451,9 +1537,9 @@
       updateLang(e) {
         const o = e.clientPreferencesData.locale
         if (
-          ((this.lang = Object.values(n).find(e => e.locale === o)
-            ? Object.values(n).find(e => e.locale === o)
-            : n[e.storePreferencesData.countryCode]),
+          ((this.lang = Object.values(t).find(e => e.locale === o)
+            ? Object.values(t).find(e => e.locale === o)
+            : t[e.storePreferencesData.countryCode]),
           !this.lang)
         )
           return !1
@@ -1502,20 +1588,20 @@
         const o = this
         if (e && 0 === $('.payment-group-item-cards').length && e.paymentData) {
           const a = ['debitCardPaymentGroup', 'creditCardPaymentGroup']
-          let n = ''
-          $.each(a, function (t) {
-            ;(n = '<span class="payment-group-item-cards">'),
+          let t = ''
+          $.each(a, function (n) {
+            ;(t = '<span class="payment-group-item-cards">'),
               $.each(
-                e.paymentData.paymentSystems.filter(e => e.groupName === a[t]),
+                e.paymentData.paymentSystems.filter(e => e.groupName === a[n]),
                 function () {
-                  n += `<span class="card-flag ${this.name}">${this.name}</span>`
+                  t += `<span class="card-flag ${this.name}">${this.name}</span>`
                 }
               ),
-              (n += '</span>'),
-              o.accordionPayments && $('#payment-group-' + a[t]).append(n)
+              (t += '</span>'),
+              o.accordionPayments && $('#payment-group-' + a[n]).append(t)
           }),
             o.accordionPayments ||
-              $('#iframe-placeholder-creditCardPaymentGroup').prepend(n)
+              $('#iframe-placeholder-creditCardPaymentGroup').prepend(t)
         }
         if (
           !this.accordionPayments ||
@@ -1651,13 +1737,17 @@
           $('body').on('blur', 'p.input input', function () {
             const e = $(this).closest('p.input')
             $(this).val() ? e.addClass('filled') : e.removeClass('filled')
+          }),
+          $('body').on('click', '.link-edit, .link-box-edit', function () {
+            setTimeout(() => e.fixLabels(), 30)
           })
       }
       init() {
         const e = this
-        ;(e.orderForm =
-          !!window.vtexjs.checkout.orderForm &&
-          window.vtexjs.checkout.orderForm),
+        e.shipping.bindEvents(),
+          (e.orderForm =
+            !!window.vtexjs.checkout.orderForm &&
+            window.vtexjs.checkout.orderForm),
           e.general(),
           e.updateStep(),
           e.builder(),
@@ -1665,6 +1755,7 @@
           e.orderForm &&
             (e.updateLang(e.orderForm),
             e.update(e.orderForm),
+            e.addStepsHeader(),
             e.paymentBuilder(e.orderForm)),
           e.addEditButtoninLogin(),
           e.fixLabels()
@@ -1675,15 +1766,24 @@
           $(function () {
             e.bind(), e.customAddressFormLoader(), e.rtlUI()
           }),
-            $(document).ajaxComplete(function () {
-              e.init()
+            $(document).ajaxComplete(function (o, a, t) {
+              e.init(),
+                t.url.includes('/attachments/shippingData') &&
+                  (e.shipping.validadePostalCode(
+                    window.vtexjs.checkout.orderForm
+                  ),
+                  e.shipping.toggleGoToPaymentDisabled())
             }),
             $(window).on('hashchange', function () {
               const o = document.querySelector('.cart-items')
-              e.updateStep(),
+              ;('#/payment' !== window.location.hash &&
+                '#/cart' !== window.location.hash) ||
+                e.TradeIn.validateTradeinCustomData(),
+                e.updateStep(),
                 e.changeShippingTimeInfoInit(),
                 e.checkProfileFocus(),
                 e.fixLabels(),
+                e.shipping.toggleGoToPaymentDisabled(),
                 e.orderForm &&
                   (e.buildMiniCart(e.orderForm),
                   e.indexedInItems(e.orderForm),
@@ -1694,7 +1794,8 @@
                   e.onDomMutation({
                     targetNode: o,
                     callback: () => e.removeCILoader(),
-                  }))
+                  }),
+                  e.shipping.validadePostalCode(e.orderForm))
             }),
             $(window).on('orderFormUpdated.vtex', function (o, a) {
               e.update(a),
@@ -1702,13 +1803,24 @@
                 e.URLHasIncludePayment(),
                 !window.google &&
                   e.customAddressForm &&
-                  e.customAddressForm.loadScript()
+                  e.customAddressForm.loadScript(),
+                $('#postalCode-finished-loading + .mb5').length &&
+                  e.shipping.resetValidation(),
+                e.shipping.toggleGoToPaymentDisabled()
             }),
             $(window).load(function () {
-              $(window).one('componentValidated.vtex', () => e.builder()),
+              $('#cart-to-orderform').on('click', function () {
+                e.SendAttachment.newTextFieldTradeInAndInstallation()
+              }),
+                ('#/payment' !== window.location.hash &&
+                  '#/cart' !== window.location.hash) ||
+                  e.TradeIn.validateTradeinCustomData(),
+                $(window).one('componentValidated.vtex', () => e.builder()),
                 e.checkProfileFocus(),
                 e.changeShippingTimeInfoInit(),
                 e.indexedInItems(window.vtexjs.checkout.orderForm),
+                e.shipping.toggleGoToPaymentDisabled(),
+                e.shipping.validadePostalCode(window.vtexjs.checkout.orderForm),
                 e.customAddressForm &&
                   'undefined' != typeof store &&
                   window.store.dispatch({
@@ -1725,34 +1837,9 @@
       }
     }
   },
-  function (e, o) {
-    ;(e.exports.debounce = (e, o) => {
-      let a
-      return function (...n) {
-        clearTimeout(a),
-          (a = setTimeout(() => {
-            clearTimeout(a), e(...n)
-          }, o))
-      }
-    }),
-      (e.exports.formatCurrency = (e, o, a) => {
-        const n = a / 100
-        return (
-          new Intl.NumberFormat(e, { style: 'currency', currency: o }).format(
-            n
-          ),
-          n
-        )
-      }),
-      (e.exports.formatCurrencyBRL = e =>
-        (e / 100).toLocaleString('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
-        }))
-  },
   function (e, o, a) {
-    const { _locale: n } = a(0),
-      { _countries: t, _cities: r, _addressPlaceholder: s } = a(7)
+    const { _locale: t } = a(1),
+      { _countries: n, _cities: r, _addressPlaceholder: s } = a(7)
     window.callbackMap = () => {
       window.vtexjs.checkout.getOrderForm(e => {
         window.vcustom.checkout.customAddressFormInit(e)
@@ -1795,22 +1882,22 @@
         e = '',
         o = '',
         a = '',
-        n = '',
         t = '',
+        n = '',
         r = null,
         s = '',
         d = '',
         m = '',
-        h = ''
+        i = ''
       ) {
         ;(this.address = {
           country: e,
           postalCode: o,
           addressId: m,
           city: a,
-          state: n,
-          geoCoordinates: h,
-          street: t,
+          state: t,
+          geoCoordinates: i,
+          street: n,
           number: r,
           complement: s,
           addressQuery: d,
@@ -1821,33 +1908,33 @@
         e = '',
         o = '',
         a = '',
-        n = '',
         t = '',
+        n = '',
         r = '',
         s = '',
         d = '',
         m = '',
-        h = ''
+        i = ''
       ) {
         $('.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street').val(
           'number' in this.addressrules ? o : a
         ),
           $('.vcustom--vtex-omnishipping-1-x-address #ship-complement').val(d),
-          $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val(n),
+          $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val(t),
           $('.vcustom--vtex-omnishipping-1-x-address #ship-city').val(r),
-          $('.vcustom--vtex-omnishipping-1-x-address #ship-postalCode').val(t),
+          $('.vcustom--vtex-omnishipping-1-x-address #ship-postalCode').val(n),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
           ).attr('data-street', 'USA' === e || 'ZAF' === e ? a : o),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
-          ).attr('data-number', n),
+          ).attr('data-number', t),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
           ).attr('data-neighborhood', m),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
-          ).attr('data-geocoordinates', h),
+          ).attr('data-geocoordinates', i),
           $(
             `.vcustom--vtex-omnishipping-1-x-address #ship-state option[value='${s}']`
           ).length
@@ -1889,10 +1976,10 @@
               element: $('label#postalCode-label'),
             },
           ]
-        o._locale = n[e.toUpperCase()] || n.USA
+        o._locale = t[e.toUpperCase()] || t.USA
         for (let e = 0; e < a.length; e++) {
-          const n = a[e]
-          n.element.text(o._locale[n.prop] || n.default)
+          const t = a[e]
+          t.element.text(o._locale[t.prop] || t.default)
         }
         $('input#v-custom-ship-street').attr(
           'placeholder',
@@ -1902,11 +1989,11 @@
       }
       returnAddressFRules(e, o) {
         if (!o) return ''
-        const { valueIn: a = 'short_name', types: n } = o
-        for (let o = 0; o < n.length; o++) {
-          const t = n[o]
-          if (e.find(e => e.types.some(e => e === t)))
-            return e.find(e => e.types.some(e => e === t))[a]
+        const { valueIn: a = 'short_name', types: t } = o
+        for (let o = 0; o < t.length; o++) {
+          const n = t[o]
+          if (e.find(e => e.types.some(e => e === n)))
+            return e.find(e => e.types.some(e => e === n))[a]
         }
         return ''
       }
@@ -1921,7 +2008,7 @@
             const o = e.gPlacesAutocomplete.getPlace()
             a.geocode({ address: o.formatted_address }),
               ~window.location.host.indexOf('myvtex') && console.log(o)
-            const [, n] = t.find(
+            const [, t] = n.find(
                 e =>
                   e[0] ===
                   o.address_components.filter(e => 'country' === e.types[0])[0]
@@ -1955,14 +2042,14 @@
                   : e.returnAddressFRules(o.address_components, {
                       types: ['street_number'],
                     }),
-              h = e.addressrules.complement
+              i = e.addressrules.complement
                 ? e.returnAddressFRules(o.address_components, {
                     types: ['subpremise'],
                   })
                 : $(
                     '.vcustom--vtex-omnishipping-1-x-address #ship-complement'
                   ).val(),
-              i = [o.geometry.location.lat(), o.geometry.location.lng()],
+              h = [o.geometry.location.lat(), o.geometry.location.lng()],
               C = $('<div></div>')
             C.html(o.adr_address)
             const l = $('.street-address', C).text()
@@ -1976,25 +2063,25 @@
                     types: ['postal_code'],
                   })
                 : '00000'
-            'ARG' === n &&
+            'ARG' === t &&
               ((c = c.replace(/\D/gi, '')),
               'Provincia de Buenos Aires' === s && (s = 'Buenos Aires'),
               'CABA' === s.toUpperCase() &&
                 ((s = 'Ciudad Autónoma de Buenos Aires'),
                 (u = 'Ciudad Autónoma de Buenos Aires'))),
-              e.setForm(n, r, l, m, c, u, s, h, d, i),
+              e.setForm(t, r, l, m, c, u, s, i, d, h),
               e.validateAllFields(),
               e.updateAddress(
-                n,
+                t,
                 c,
                 u,
                 s,
                 r,
                 m,
-                h,
+                i,
                 o.formatted_address,
                 e.address.addressId,
-                i
+                h
               )
           }),
           $('body').on('keyup', '#v-custom-ship-street', function () {
@@ -2012,17 +2099,17 @@
           isCalculateBttnEnabled: !1,
         })
       }
-      sendAddress(e, o, a, n, t, r, s, d, m, h, i) {
+      sendAddress(e, o, a, t, n, r, s, d, m, i, h) {
         const C = this
-        if (~i.indexOf(',')) {
-          const [o, t] = i.split(',')
-          ;(i = [parseFloat(t), parseFloat(o)]),
+        if (~h.indexOf(',')) {
+          const [o, n] = h.split(',')
+          ;(h = [parseFloat(n), parseFloat(o)]),
             'ARG' === e &&
               'CABA' === r.toUpperCase() &&
               (r = 'Ciudad Autónoma de Buenos Aires'),
             'USA' === e && (a = null),
-            C.addressrules.state || (n = '')
-        } else i = []
+            C.addressrules.state || (t = '')
+        } else h = []
         $('body').addClass('js-v-custom-is-loading'),
           fetch(
             `/api/checkout/pub/orderForm/${C.orderForm.orderFormId}/attachments/shippingData`,
@@ -2045,14 +2132,14 @@
                     receiverName: '',
                     addressId: '',
                     isDisposable: !0,
-                    postalCode: t,
+                    postalCode: n,
                     city: r,
-                    state: n,
+                    state: t,
                     country: e,
-                    geoCoordinates: i,
+                    geoCoordinates: h,
                     street: o,
                     number: a || '',
-                    neighborhood: h,
+                    neighborhood: i,
                     complement: s,
                     reference: null,
                     addressQuery: d,
@@ -2065,23 +2152,23 @@
             }
           )
             .then(e => e.json())
-            .then(function (h) {
-              h.error
+            .then(function (i) {
+              i.error
                 ? ($('body').removeClass('js-v-custom-is-loading'),
-                  alert('Something went wrong: ' + h.error.message))
+                  alert('Something went wrong: ' + i.error.message))
                 : window.vtexjs.checkout.getOrderForm().done(function () {
                     C.updateAddress(
                       e,
-                      t,
-                      r,
                       n,
+                      r,
+                      t,
                       o,
                       a,
                       s,
                       '',
                       d || '',
                       m || '',
-                      i || []
+                      h || []
                     ),
                       $('body').removeClass(C.BodyFormClasses.join(' ')),
                       (C.orderForm = window.vtexjs.checkout.orderForm),
@@ -2105,13 +2192,13 @@
             const a = window.vtex.i18n[e.lang]
               ? window.vtex.i18n[e.lang]
               : window.vtex.i18n[window.vtex.i18n.locale]
-            let n = ''
+            let t = ''
             return (
               a.countries[o] &&
-                (n = `<option value="${o}" ${
+                (t = `<option value="${o}" ${
                   o === e.mainCountry ? 'selected' : ''
                 }>${a.countries[o]}</option>`),
-              n
+              t
             )
           })
         )
@@ -2129,7 +2216,7 @@
       form(e) {
         const o = this,
           { shippingData: a } = e,
-          n = t.find(e => e[1] === o.mainCountry),
+          t = n.find(e => e[1] === o.mainCountry),
           r = `\n      <div class="vcustom--vtex-omnishipping-1-x-address step">\n        <div>\n        <form>\n            <p class="input v-custom-ship-street required text"><label id="address1-label" for="v-custom-ship-street">${
             (o.locale && o.locale.address1Placeholder) ||
             'Street address or P.O. Box'
@@ -2181,7 +2268,7 @@
           }</label>\n                  <select name="v-custom-state" id="ship-state" class="input-large">\n                    <option value="" disabled selected>${
             o.locale ? o.locale.state : 'State'
           }</option>\n                    ${o
-            .getRegions(n[0])
+            .getRegions(t[0])
             .join(
               ''
             )}\n                  </select>\n              </p>\n              <p class="input ship-postalCode required text"><label id="postalCode-label" for="ship-postalCode">${
@@ -2214,7 +2301,7 @@
           $('body').hasClass('.v-custom-addressForm-on') ||
             $('body').addClass('v-custom-addressForm-on'),
           this.googleForm(),
-          this.updateGoogleForm(n[1].toLowerCase())
+          this.updateGoogleForm(t[1].toLowerCase())
         const s = $('.vcustom--vtex-omnishipping-1-x-address #ship-country'),
           d = s.val(),
           m = s.find('option')
@@ -2242,40 +2329,40 @@
           ),
           o = $('.vcustom--vtex-omnishipping-1-x-address #ship-country').val(),
           a = e.attr('data-street') || '',
-          n = $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val()
+          t = $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val()
             ? $('.vcustom--vtex-omnishipping-1-x-address #ship-number').val()
             : e.attr('data-number') || '',
-          t = e.attr('data-geocoordinates') || [],
+          n = e.attr('data-geocoordinates') || [],
           r = e.attr('data-neighborhood') || null,
           s = $(
             '.vcustom--vtex-omnishipping-1-x-address #ship-complement'
           ).val(),
           d = $('.vcustom--vtex-omnishipping-1-x-address #ship-city').val(),
           m = $('.vcustom--vtex-omnishipping-1-x-address #ship-state').val(),
-          h = $(
+          i = $(
             '.vcustom--vtex-omnishipping-1-x-address #ship-postalCode'
           ).val()
         this.sendAddress(
           o,
           a,
-          n,
+          t,
           m,
-          h,
+          i,
           d,
           s,
           this.address.addressQuery,
           this.address.addressId,
           r,
-          t
+          n
         )
       }
       updateFormByCountry(e) {
         ~window.location.host.indexOf('myvtex') &&
           console.log('countryCode:', e)
         const o = this,
-          a = t.find(o => o[1] === e)
-        o.getCountryRule(a[1]).then(n => {
-          ;(o.addressrules = n),
+          a = n.find(o => o[1] === e)
+        o.getCountryRule(a[1]).then(t => {
+          ;(o.addressrules = t),
             o.updateFormFieldByCountry(o.addressrules),
             $("select[name='v-custom-state']").html(
               '' + o.getRegions(a[0]).join('')
@@ -2423,8 +2510,8 @@
         return fetch('/rules/' + e)
           .then(e => e.json())
           .then(e => {
-            const { data: a, success: n } = e
-            return n ? a.geolocation : o.getCountryRule('default')
+            const { data: a, success: t } = e
+            return t ? a.geolocation : o.getCountryRule('default')
           })
           .catch(e => {
             throw new Error(e)
@@ -2455,7 +2542,7 @@
                 (o.deliveryCountries = window.checkout.deliveryCountries()),
                 (o.mainCountry = window.checkout.countryCode()),
                 (o.lang = o.orderForm.clientPreferencesData.locale),
-                (o.locale = n[o.orderForm.storePreferencesData.countryCode]),
+                (o.locale = t[o.orderForm.storePreferencesData.countryCode]),
                 'es-AR' === o.lang && (o.lang = 'es'),
                 o.orderForm && o.orderForm.shippingData)
               ) {
@@ -9194,6 +9281,545 @@
         PAN: 'Eg: C. Enrique Linares 4502',
         RUS: 'Eg: Arbat St, 3 Moscow, Russia',
       })
+  },
+  function (e, o) {
+    e.exports = class {
+      rootPath() {
+        return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+      }
+      addInvalidPostalCodeMessage() {
+        try {
+          const e = $('.vtex-omnishipping-1-x-addressFormPart1').find(
+              'p.ship-postalCode'
+            ),
+            o = $(
+              '<div class="invalid-postal-code-msg"> <span class="invalid-postal-code-msg__label">CEP Inválido</span> <p class="invalid-postal-code-msg__message"> Infelizmente não oferecemos entrega para a sua região. Em caso de dúvidas, por favor <a class="invalid-postal-code-msg__link" href="https://static.zdassets.com/web_widget/latest/liveChat.html?v=10#key=ajudasamsungcajamar.zendesk.com" target="_blank">clique aqui</a>.</p> </div>'
+            )
+          e.find('small').length &&
+            !$('.invalid-postal-code-msg').length &&
+            e.find('small').before(o),
+            $('.invalid-postal-code-msg').length ||
+              ($('.srp-delivery-header').append(o),
+              $(
+                '.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100'
+              ).hide(),
+              $(
+                '.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100'
+              ).hide())
+        } catch (e) {
+          console.error(
+            'Ocorreu um erro ao adicionar mensagem de CEP inválido: ' + e
+          )
+        }
+      }
+      removeInvalidPostalCodeMessage() {
+        $('.invalid-postal-code-msg').remove()
+      }
+      setInvalidPostalCode() {
+        $('body')
+          .removeClass('valid-postal-code')
+          .addClass('invalid-postal-code')
+      }
+      setValidPostalCode() {
+        $('body')
+          .removeClass('invalid-postal-code')
+          .addClass('valid-postal-code')
+      }
+      resetValidation() {
+        $('body').removeClass('invalid-postal-code valid-postal-code')
+      }
+      lockPostalCodeInput() {
+        $('#shipping-data input#ship-postalCode').prop('disabled', !0)
+      }
+      unlockPostalCodeInput() {
+        $('#shipping-data input#ship-postalCode').prop('disabled', !1)
+      }
+      addVirtualInventoryMessage() {
+        try {
+          const e = $('.vtex-omnishipping-1-x-addressFormPart1').find(
+              'p.ship-postalCode'
+            ),
+            o = $(
+              '<div class="virtual-inventory-msg" style="max-width: 566px; margin-top: 16px;">\n          <p class="invalid-postal-code-msg__message">\n            O prazo de entrega está acima do normal devido à reposição de estoque.\n          </p>\n        </div>'
+            )
+          e.find('small').length &&
+            0 === e.find('.virtual-inventory-msg').length &&
+            e.find('small').before(o),
+            0 ===
+              $('.srp-delivery-header').find('.virtual-inventory-msg').length &&
+              $('.srp-delivery-header').append(o)
+        } catch (e) {
+          console.error(
+            'Ocorreu um erro ao adicionar mensagem de prazo acima do normal: ' +
+              e
+          )
+        }
+      }
+      validateVirtualInventory(e) {
+        const o = this
+        try {
+          if (!e.shippingData) return
+          if (!e.shippingData.address) return
+          const { logisticsInfo: a } = e.shippingData
+          a.filter(
+            e => (
+              e.slas.filter(
+                e => e.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
+              ).length > 0 &&
+                0 === $('.estoqueVirtual').length &&
+                o.addVirtualInventoryMessage(),
+              !0
+            )
+          )
+        } catch (e) {
+          console.error('Ocorreu um erro ao consultar o estoque virtual: ' + e)
+        }
+      }
+      validadePostalCode(e) {
+        if (e)
+          try {
+            if (!e.shippingData) return
+            if (!e.shippingData.address) return
+            const o = this,
+              { address: a } = e.shippingData
+            if (a.postalCode && !a.city) {
+              this.setInvalidPostalCode()
+              const e = setInterval(function () {
+                $('.invalid-postal-code-msg').length ||
+                  (o.addInvalidPostalCodeMessage(), clearInterval(e))
+              }, 50)
+            } else
+              this.setValidPostalCode(),
+                this.removeInvalidPostalCodeMessage(),
+                this.validateVirtualInventory(e)
+          } catch (e) {
+            console.error('Ocorreu um erro ao validar CEP: ' + e)
+          }
+      }
+      validadePostalCodeOnLoad() {
+        try {
+          const e = this,
+            o = $('#shipping-data input#ship-postalCode')
+          o.val() || e.resetValidation(),
+            !o.val().length < 9 && e.resetValidation(),
+            $.getJSON(
+              `${e.rootPath()}/api/checkout/pub/postal-code/BRA/${o.val()}`
+            ).done(function (o) {
+              const a = o
+              e.validadePostalCode(a), e.unlockPostalCodeInput()
+            })
+        } catch (e) {
+          console.error('Ocorreu um erro ao validar CEP: ' + e)
+        }
+      }
+      toggleGoToPaymentDisabled() {
+        const e =
+          0 ===
+          $('#shipping-data p.input.required input').filter(function () {
+            return 0 === $.trim($(this).val()).length
+          }).length
+        $('#btn-go-to-payment').prop('disabled', !e)
+      }
+      bindEvents() {
+        const e = this
+        $(document).on(
+          'input',
+          '#shipping-data input#ship-postalCode',
+          function () {
+            !$(this).val().length < 9 && e.resetValidation()
+          }
+        ),
+          $(document).on(
+            'input',
+            '#shipping-data p.input.required input',
+            function () {
+              e.toggleGoToPaymentDisabled()
+            }
+          )
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return t
+      })
+    class t {
+      init() {
+        this._conditionalHeader(), this._backToCartLink()
+      }
+      _conditionalHeader() {
+        try {
+          e(window.location.hash),
+            addEventListener('hashchange', o => {
+              const { hash: a } = o.target.location
+              e(a)
+            })
+        } catch (e) {
+          console.error('conditionalHeader error', e)
+        }
+        function e(e) {
+          const o = $('.checkout-steps'),
+            a = $('#go-to-cart-button-custom'),
+            t = $('.main-header')
+          ;['#/payment', '#/shipping', '#/profile'].includes(e)
+            ? (o.css('display', 'block'),
+              a.css('display', 'flex'),
+              t.css('box-shadow', '0px 4px 10px #00000033'))
+            : (o.css('display', 'none'),
+              a.css('display', 'none'),
+              t.css('box-shadow', 'none'))
+        }
+      }
+      _backToCartLink() {
+        try {
+          const e = $('.checkout-steps')
+          if (
+            $('.main-header .container').find('#go-to-cart-button-custom')
+              .length > 0
+          )
+            return
+          e.before(
+            '\n        <p id="go-to-cart-button-custom" class="link link-cart pull-right" data-bind="if: !window.router.sac.isActive()">\n          <small>\n            <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>\n          </small>\n        </p>\n      '
+          )
+        } catch (e) {
+          console.error('backToCart error', e)
+        }
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return t
+      })
+    class t {
+      constructor() {
+        ;(this.SAMSUNG_CARE_CATEGORY = '/2005/'),
+          (this.LINK_SCPLUS = 'linkSCPLUS')
+      }
+      init() {
+        try {
+          const { items: e } = window.vtexjs.checkout.orderForm
+          e && this.validateSamsungCarePlus(e)
+        } catch (e) {
+          console.error('SamsungCarePlus error', e)
+        }
+      }
+      isSamsungCarePlus(e) {
+        return e && e.productCategoryIds === this.SAMSUNG_CARE_CATEGORY
+      }
+      validateSamsungCarePlus(e) {
+        const o = e.filter(e => this.isSamsungCarePlus(e))
+        if (!o.length) return
+        if (o.length > 1) {
+          const e = o.filter((e, a) => a !== o.length - 1)
+          return void this.removeSamsungCarePlus(e)
+        }
+        const a = o[0].attachments.find(e => e.name === this.LINK_SCPLUS)
+        ;(a && a.content) || this.removeSamsungCarePlus()
+        e.find(e => e.id === a.content.idsku) || this.removeSamsungCarePlus()
+      }
+      removeSamsungCarePlus(e) {
+        ;(e || window.vtexjs.checkout.orderForm.items)
+          .filter(e => this.isSamsungCarePlus(e))
+          .forEach(e => {
+            const o = $(`tr.product-item[data-sku="${e.id}"] td.item-remove a`)
+            o.length && (o[0].click(), o[0].remove())
+          })
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return t
+      })
+    class t {
+      constructor() {
+        this.INSTALLATION_URL = '/install-service/p'
+      }
+      init() {
+        const { items: e } = window.vtexjs.checkout.orderForm
+        this.hasInstallationService(e) && this.validateSamsungCarePlus(e)
+      }
+      validateSamsungCarePlus(e) {
+        const o = this.getInstallationItems(e),
+          a = this.getRelatedInstallationItems(e),
+          t = []
+        if (
+          (o.forEach(e => {
+            const a = o.filter(o => o.id === e.id && o.refId === e.refId),
+              n = t.find(o => o.id === e.id)
+            a.length > 1 && !n && t.push(...a.slice(1, a.length))
+          }),
+          t.length && this.removeInstallations(t),
+          o.length !== a.length && o.length > a.length)
+        ) {
+          const e = o.filter(
+            e => !a.find(o => o.refId === e.attachments[0].content.refId)
+          )
+          this.removeInstallations(e)
+        }
+      }
+      removeInstallations(e) {
+        e.forEach(e => {
+          const o = $(`tr.product-item[data-sku="${e.id}"] td.item-remove a`)
+          o.length && (o[0].click(), o[0].remove())
+        })
+      }
+      getInstallationItems(e) {
+        return e.filter(e => this.isInstallationService(e))
+      }
+      getRelatedInstallationItems(e) {
+        const o = this.getInstallationItems(e),
+          a = []
+        return (
+          o.forEach(o => {
+            const t = e.find(e => e.refId === o.attachments[0].content.refId)
+            t && a.push(t)
+          }),
+          a
+        )
+      }
+      hasInstallationService(e) {
+        return !!e.find(e => this.isInstallationService(e))
+      }
+      isInstallationService(e) {
+        return e.detailUrl === this.INSTALLATION_URL
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return n
+      })
+    var t = a(0)
+    class n {
+      init() {
+        const { items: e } = window.vtexjs.checkout.orderForm,
+          o = JSON.parse(localStorage.getItem('transport') || '[]')
+        e.length && o.length && this.checkTradeIn(e, o)
+      }
+      rootPath() {
+        return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+      }
+      checkTradeIn(e, o) {
+        let a = 0
+        if (o.length)
+          for (let t = 0; t < o.length; t++) {
+            let n = 0
+            const r = o[t]
+            let s = 0
+            for (let o = 0; o < e.length; o++)
+              r.mainProductId === e[o].productId && ++s
+            if (s > 0)
+              for (let e = 0; e < r.evaluatedProducts.length; e++)
+                n +=
+                  e > 0 && n > 0
+                    ? r.evaluatedProducts[e].price
+                    : r.evaluatedProducts[e].price + parseInt(r.boostSSG)
+            a += n
+          }
+        a > 0
+          ? (this.showDetailsTradeIn(),
+            this.showTotalTradeIn(a),
+            $('#total-tradein-value').text(
+              Object(t.formatCurrencyBRL)(a, !1) + '*'
+            ))
+          : 0 === a &&
+            ($('#total-details-tradein').remove(),
+            $('#text-details-tradein').remove(),
+            this.removeCustomDataTradeIn())
+        const n = o.filter(o => {
+          if (e.filter(e => e.id === o.skuId).length > 0) return o
+        })
+        n.length < o.length &&
+          (localStorage.setItem('transport', JSON.stringify(n)),
+          this.validateTradeinCustomData())
+      }
+      showDetailsTradeIn() {
+        try {
+          const e = $('.cart-fixed'),
+            o =
+              '\n        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: \'SamsungOne\'; float: right; text-align: left;">\n          <p>* A compra de um produto com a modalidade Troca Smart gera um transação de valor total do aparelho para pagamento no site.</p>\n          <p>O valor da pré-avaliação da Troca Smart será depositado em conta corrente após avaliação e aceitação do aparelho pela TROCAFONE.</p>\n        </div>\n      '
+          if (e.find('#text-details-tradein').length > 0) return
+          e.append(o)
+        } catch (e) {
+          console.error('showDetailsTradeIn error:', e)
+        }
+      }
+      showTotalTradeIn(e) {
+        try {
+          const o = $('.summary-totalizers .table'),
+            a = `\n        <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">\n            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart <br /> Dinheiro em Conta</td>\n            <td id="total-tradein-value" style="font-size: 14px; color: #000000; font-weight: 700;">${
+              Object(t.formatCurrencyBRL)(e, !1) + '*'
+            }</td>\n          </tr>\n        </tbody>\n      `
+          if (o.find('#total-details-tradein').length > 0) return
+          o.append(a)
+        } catch (e) {
+          console.error('showDetailsTradeIn error:', e)
+        }
+      }
+      async putCustomData(e, o) {
+        const { orderFormId: a } = window.vtexjs.checkout.orderForm,
+          n = {
+            trade_in_option_selected: JSON.stringify(e),
+            trade_in_total_value: o,
+          }
+        localStorage.setItem('transport', JSON.stringify(e)),
+          $('#total-tradein-value').text(
+            Object(t.formatCurrencyBRL)(o, !1) + '*'
+          ),
+          $.ajax({
+            url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${a}/domain`,
+            type: 'PUT',
+            crossDomain: !0,
+            accept: 'application/vnd.vtex.ds.v10+json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(n),
+          })
+      }
+      removeCustomDataTradeIn() {
+        const { orderFormId: e } = window.vtexjs.checkout.orderForm
+        localStorage.removeItem('transport'),
+          $.ajax({
+            url: `${this.rootPath()}/api/checkout/pub/orderForm/${e}/customData/domain/trade_in_option_selected`,
+            type: 'DELETE',
+          }),
+          $.ajax({
+            url: `${this.rootPath()}/api/checkout/pub/orderForm/${e}/customData/domain/trade_in_total_value`,
+            type: 'DELETE',
+          })
+      }
+      async validateTradeinCustomData() {
+        const e = JSON.parse(localStorage.getItem('transport'))
+        let o = 0
+        const a = [],
+          t = []
+        e && e.length > 0
+          ? (await e.map(e => {
+              e.evaluatedProducts.map(async e => {
+                t.push(e)
+              })
+            }),
+            t.map(e => {
+              const o = fetch(
+                `${this.rootPath()}/p4v1/tradeinCheckImei/${e.imei}`
+              )
+                .then(e => e.json())
+                .then(o => ({ ...o, imei: e.imei }))
+              a.push(o)
+            }),
+            Promise.all(a).then(a => {
+              e.map(e => {
+                e.evaluatedProducts.map(async e => {
+                  const t = a.find(o => o.imei === e.imei)
+                  if (t && t.products && t.products.length > 0) {
+                    const a = t.products.find(o => o.id === e.idProduct)
+                    if (a && a.gradings) {
+                      const t = a.gradings.find(o => o.code === e.grading)
+                      if (t && t.price)
+                        return (e.price = t.price), void (o += e.price)
+                    }
+                  }
+                  o += e.price
+                })
+              }),
+                this.putCustomData(e, o)
+            }))
+          : this.removeCustomDataTradeIn()
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return n
+      })
+    var t = a(0)
+    class n {
+      isInstallation(e) {
+        return -1 !== e.productCategoryIds.indexOf('2027')
+      }
+      newTextFieldTradeInAndInstallation() {
+        let e = ''
+        const { items: o } = window.vtexjs.checkout.orderForm,
+          a = JSON.parse(localStorage.getItem('transport') || '[]')
+        if (a.length)
+          for (let n = 0; n < a.length; n++) {
+            let r = 0
+            const s = a[n]
+            let d = 0,
+              m = ''
+            for (let e = 0; e < o.length; e++)
+              s.mainProductId === o[e].productId && ((m = o[e].ean), ++d)
+            if (d > 0) {
+              for (let e = 0; e < s.evaluatedProducts.length; e++)
+                r +=
+                  e > 0 && r > 0
+                    ? s.evaluatedProducts[e].price
+                    : s.evaluatedProducts[e].price + 100 * parseInt(s.boostSSG)
+              e += `{'ean':'${m}', 'isTradeIn':'true', 'trocaSmartValue': '${Object(
+                t.formatCurrencyBRL
+              )(r, !1)}'}, `
+            }
+          }
+        const n = window.vtexjs.checkout.orderForm.items.filter(e =>
+            this.isInstallation(e)
+          ),
+          r = []
+        n &&
+          (window.vtexjs.checkout.orderForm.items.filter(e => {
+            const o = window.vtexjs.checkout.orderForm.items.filter(e =>
+              this.isInstallation(e)
+            )
+            return (
+              o &&
+                o.filter(o => {
+                  'linkInstallation' === o.attachments[0].name &&
+                    e.refId == o.attachments[0].content.refId &&
+                    r.push(e)
+                }),
+              o
+            )
+          }),
+          r.filter(o => {
+            window.vtexjs.checkout.orderForm.shippingData.logisticsInfo.filter(
+              a => {
+                a.itemId == o.id &&
+                  a.slas.filter(r => {
+                    if (a.selectedDeliveryChannel == r.deliveryChannel) {
+                      let a = ''
+                      ;(a = parseInt(
+                        r.shippingEstimate.replace(/[^0-9\.]+/g, '')
+                      )),
+                        (e += n.map(
+                          e =>
+                            `{'isInstallation':'true','sku':'${
+                              o.refId
+                            }','estimate':'${a + 1}','price': '${Object(
+                              t.formatCurrencyBRL
+                            )(e.price)}'}`
+                        ))
+                    }
+                  })
+              }
+            )
+          })),
+          e &&
+            (window.vtexjs.checkout.sendAttachment('openTextField', {
+              value: '' + e,
+            }),
+            window.vtexjs.checkout.getOrderForm())
+      }
+    }
   },
   function (e, o, a) {
     e.exports = a.p + 'checkout6-custom.css'
