@@ -727,9 +727,7 @@ class checkoutCustom {
         }
 
         const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
-        const _eachprice =
-          _item.listPrice > _item.price &&
-          `
+        const _eachprice = `
           <div class="v-custom-quantity-price vqc-ldelem">
             <span class="v-custom-quantity-price__list">
               ${
@@ -753,16 +751,6 @@ class checkoutCustom {
             `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p></div>`
           )
           .append(_eachprice)
-        _trElem
-          .find('td.product-price')
-          .find('> .best-price')
-          .wrap(
-            `<div class="v-custom-quantity-price__list--selling" style="display: none"></div>`
-          )
-        _trElem
-          .find('td.product-price')
-          .find('.v-custom-quantity-price__list--selling')
-          .append(`<span class="vqc-ldelem">cada</span>`)
       })
     } catch (e) {
       console.error('enchancementTotalPrice error:', e)
@@ -797,41 +785,31 @@ class checkoutCustom {
       const _trElem = $(`.summary-template-holder`)
 
       const totalItems =
-        orderForm.totalizers.filter(item => item.id === 'Items').value || 0
-
-      const totalDiscount =
-        orderForm.totalizers.filter(item => item.id === 'Discounts').value || 0
+        orderForm.totalizers.find(item => item.id === 'Items').value || 0
 
       const totalShipping =
-        orderForm.totalizers.filter(item => item.id === 'Shipping').value || 0
+        orderForm.totalizers.find(item => item.id === 'Shipping').value || 0
 
       const totalGross = totalItems + totalShipping
+
+      const totalDiscount = totalGross - orderForm.value
 
       const _component = `
         <div class="cart-total" style="margin-bottom: 35px; color: #000">
           <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">
             <p class="ref-id">Total</p>
-            <p class="estimate-shipping">${(
-              orderForm.value / 100
-            ).toLocaleString('pt-BR', {
-              style: 'currency',
-              currency: 'BRL',
-            })}</p>
+            <p class="estimate-shipping">${formatCurrencyBRL(
+              orderForm.value
+            )}</p>
           </div>
-          ${
-            totalDiscount
-              ? `
-                <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">
-                  <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">
-                    ${formatCurrencyBRL(totalGross)}
-                  </p>
-                  <p class="discount-total" style="color: #2189FF; font-weight: 700;">
-                    ${`economize ${formatCurrencyBRL(-totalDiscount)}`}
-                  </p>
-                </div>
-              `
-              : ''
-          }
+          <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">
+            <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">
+              ${formatCurrencyBRL(totalGross)}
+            </p>
+            <p class="discount-total" style="color: #2189FF; font-weight: 700;">
+              ${`economize ${formatCurrencyBRL(-totalDiscount)}`}
+            </p>
+          </div>
         </div>
       `
 
@@ -940,6 +918,22 @@ class checkoutCustom {
         )
     } catch (e) {
       console.error('imgEmptyCart error:', e)
+    }
+  }
+
+  WrapSummary() {
+    try {
+      const _trElem = $(`.cart-template.full-cart`)
+
+      if (_trElem.find('.summary-to-new-components').length > 0) {
+        return
+      }
+
+      _trElem
+        .find('> .summary-template-holder')
+        .wrap(`<div class="summary-to-new-components"></div>`)
+    } catch (e) {
+      console.error('WrapSummary error:', e)
     }
   }
 
@@ -1053,6 +1047,7 @@ class checkoutCustom {
     this.createChoiceNewProducts()
     this.couponInfo(orderForm)
     this.imgEmptyCart()
+    this.WrapSummary()
     this.bundleItems(orderForm)
     this.buildMiniCart(orderForm)
     this.condensedTaxes(orderForm)

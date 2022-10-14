@@ -75,6 +75,10 @@ h1#cart-title {display:none !important;}
       display:none;
   }
 
+  td.shipping-date.empty {
+    display: none;
+  }
+
   tbody {
     display:flex;
     flex-wrap:wrap;
@@ -173,21 +177,6 @@ h1#cart-title {display:none !important;}
             font-size: 10px;
           }
 
-          .total-selling-price,
-          .best-price {
-            font-weight: bold;
-            color: #000;
-            font-size: 18px;
-            position: relative;
-            @media (max-width: $mobileWidth) {
-              display: flex;
-              justify-content: flex-end;
-              margin-top: 7px;
-              .discount {margin-left: 5px;display: block;}
-            }
-          }
-
-
           .new-product-real-price-per-unit {display: inline-block;}
 
           .v-custom-quantity-price {
@@ -223,11 +212,6 @@ h1#cart-title {display:none !important;}
 
                 &:after {content:")";}
                 &:before {content:"(";}
-
-                .best-price {
-                  font-weight:normal;
-                  display: inline-block;
-                }
               }
 
               > *:last-child {
@@ -245,7 +229,7 @@ h1#cart-title {display:none !important;}
 
           > span.list-price,
           > span.best-price {
-            display: block;
+            display: none;
           }
 
           //manual pricing
@@ -282,23 +266,6 @@ h1#cart-title {display:none !important;}
 
 
         }
-
-       /*  &.product-price {
-          @media (max-width: $mobileWidth) {
-            span.list-price:not(.hide) + br + span.best-price {margin-top:0;}
-          }
-        }
-
-
-        &.item-remove {
-          margin-left: auto;
-          width: 20px !important;
-          @media (max-width: $mobileWidth) {
-            top:0 !important;
-          }
-        } */
-
-
 
         &.product-image {order:1; grid-area: image;}
         &.product-name {order:2; grid-area: name;}
@@ -897,8 +864,8 @@ h1#cart-title {display:none !important;}
     }
 
     .srp-delivery-select-container {
-      border-radius: 6px;
-      background: #F5F7FE;
+      border-radius: 6px !important;
+      background: #F5F7FE !important;
       border: 0;
       padding-block: 12px;
       padding-inline: 16px;
@@ -1051,7 +1018,7 @@ h1#cart-title {display:none !important;}
     }
   }
 
-  .summary-template-holder {
+  .summary-to-new-components {
     width: 30%;
     @media(max-width:998px) {
       width:100%;

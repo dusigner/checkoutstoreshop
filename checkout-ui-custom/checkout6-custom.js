@@ -756,7 +756,7 @@
     }
   },
   function (e, o, a) {
-    a(3), (e.exports = a(14))
+    a(3), (e.exports = a(17))
   },
   function (e, o, a) {
     const t = a(4),
@@ -806,12 +806,15 @@
     const { _locale: t } = a(1),
       { debounce: n, formatCurrency: r, formatCurrencyBRL: s } = a(0),
       d = a(6),
-      m = a(8),
-      { default: i } = a(9),
+      i = a(8),
+      m = a(9),
       { default: h } = a(10),
       { default: C } = a(11),
       { default: l } = a(12),
-      { default: u } = a(13)
+      u = a(13),
+      { default: c } = a(14),
+      { default: p } = a(15),
+      { default: g } = a(16)
     e.exports = class {
       constructor({
         type: e = 'vertical',
@@ -832,10 +835,12 @@
           (this.showNoteField = n),
           (this.customAddressForm = r),
           (this.hideEmailStep = s),
+          (this.preEmail = new u()),
+          (this.profile = new i()),
           (this.shipping = new m()),
-          (this.installationService = new C()),
-          (this.TradeIn = new l()),
-          (this.SendAttachment = new u())
+          (this.installationService = new l()),
+          (this.TradeIn = new c()),
+          (this.SendAttachment = new p())
       }
       general() {
         $('.custom-cart-template-wrap').length ||
@@ -1311,15 +1316,13 @@
               if (0 === o.find('td.product-price').find('.best-price').length)
                 return
               const a = o.find('.total-selling-price:eq(0)').text(),
-                t =
-                  this.listPrice > this.price &&
-                  `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
-                    this.listPrice > this.sellingPrice
-                      ? `<span class="v-custom-quantity-price__list--list">\n                    ${s(
-                          this.listPrice * this.quantity
-                        )}</span>`
-                      : ''
-                  }\n            </span>\n          </div>\n        `
+                t = `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
+                  this.listPrice > this.sellingPrice
+                    ? `<span class="v-custom-quantity-price__list--list">\n                    ${s(
+                        this.listPrice * this.quantity
+                      )}</span>`
+                    : ''
+                }\n            </span>\n          </div>\n        `
               o.find('td.product-price').find('.vqc-ldelem').remove(),
                 o
                   .find('td.product-price')
@@ -1327,17 +1330,7 @@
                   .prepend(
                     `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${a}</p></div>`
                   )
-                  .append(t),
-                o
-                  .find('td.product-price')
-                  .find('> .best-price')
-                  .wrap(
-                    '<div class="v-custom-quantity-price__list--selling" style="display: none"></div>'
-                  ),
-                o
-                  .find('td.product-price')
-                  .find('.v-custom-quantity-price__list--selling')
-                  .append('<span class="vqc-ldelem">cada</span>')
+                  .append(t)
             })
           } catch (e) {
             console.error('enchancementTotalPrice error:', e)
@@ -1361,23 +1354,16 @@
       enchancementSummaryCart(e) {
         try {
           const o = $('.summary-template-holder'),
-            a = e.totalizers.filter(e => 'Items' === e.id).value || 0,
-            t = e.totalizers.filter(e => 'Discounts' === e.id).value || 0,
-            n = a + (e.totalizers.filter(e => 'Shipping' === e.id).value || 0),
-            r = `\n        <div class="cart-total" style="margin-bottom: 35px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${(
-              e.value / 100
-            ).toLocaleString('pt-BR', {
-              style: 'currency',
-              currency: 'BRL',
-            })}</p>\n          </div>\n          ${
+            a = e.totalizers.find(e => 'Items' === e.id).value || 0,
+            t = a + (e.totalizers.find(e => 'Shipping' === e.id).value || 0),
+            n = t - e.value,
+            r = `\n        <div class="cart-total" style="margin-bottom: 35px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${s(
+              e.value
+            )}</p>\n          </div>\n          <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">\n            <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">\n              ${s(
               t
-                ? `\n                <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">\n                  <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">\n                    ${s(
-                    n
-                  )}\n                  </p>\n                  <p class="discount-total" style="color: #2189FF; font-weight: 700;">\n                    ${
-                    'economize ' + s(-t)
-                  }\n                  </p>\n                </div>\n              `
-                : ''
-            }\n        </div>\n      `
+            )}\n            </p>\n            <p class="discount-total" style="color: #2189FF; font-weight: 700;">\n              ${
+              'economize ' + s(-n)
+            }\n            </p>\n          </div>\n        </div>\n      `
           0 === o.find('.cart-total').length || o.find('.cart-total').remove(),
             o.prepend(r)
         } catch (e) {
@@ -1441,6 +1427,17 @@
           )
         } catch (e) {
           console.error('imgEmptyCart error:', e)
+        }
+      }
+      WrapSummary() {
+        try {
+          const e = $('.cart-template.full-cart')
+          if (e.find('.summary-to-new-components').length > 0) return
+          e.find('> .summary-template-holder').wrap(
+            '<div class="summary-to-new-components"></div>'
+          )
+        } catch (e) {
+          console.error('WrapSummary error:', e)
         }
       }
       summaryCustom() {
@@ -1509,13 +1506,15 @@
           this.createChoiceNewProducts(),
           this.couponInfo(e),
           this.imgEmptyCart(),
+          this.WrapSummary(),
           this.bundleItems(e),
           this.buildMiniCart(e),
           this.condensedTaxes(e),
           this.setParentIndex(e),
           this.indexedInItems(e),
-          new i().init(),
           new h().init(),
+          new C().init(),
+          new g().init(),
           this.installationService.init(),
           this.TradeIn.init(),
           this.summaryCustom()
@@ -1744,10 +1743,9 @@
       }
       init() {
         const e = this
-        e.shipping.bindEvents(),
-          (e.orderForm =
-            !!window.vtexjs.checkout.orderForm &&
-            window.vtexjs.checkout.orderForm),
+        ;(e.orderForm =
+          !!window.vtexjs.checkout.orderForm &&
+          window.vtexjs.checkout.orderForm),
           e.general(),
           e.updateStep(),
           e.builder(),
@@ -1757,14 +1755,19 @@
             e.update(e.orderForm),
             e.addStepsHeader(),
             e.paymentBuilder(e.orderForm)),
-          e.addEditButtoninLogin(),
           e.fixLabels()
       }
       start() {
         const e = this
         try {
           $(function () {
-            e.bind(), e.customAddressFormLoader(), e.rtlUI()
+            e.bind(),
+              e.customAddressFormLoader(),
+              e.rtlUI(),
+              e.preEmail.bindEvents(),
+              e.preEmail.createElementSamsungAccountLogin(),
+              e.profile.bindEvents(),
+              e.shipping.bindEvents()
           }),
             $(document).ajaxComplete(function (o, a, t) {
               e.init(),
@@ -1784,6 +1787,12 @@
                 e.checkProfileFocus(),
                 e.fixLabels(),
                 e.shipping.toggleGoToPaymentDisabled(),
+                '#/email' === window.location.hash &&
+                  e.preEmail.createElementSamsungAccountLogin(),
+                '#/profile' === window.location.hash &&
+                  (e.profile.addWhatsAppField(),
+                  e.profile.addDateBirthField(),
+                  e.profile.toggleGoToShippingDisabled()),
                 e.orderForm &&
                   (e.buildMiniCart(e.orderForm),
                   e.indexedInItems(e.orderForm),
@@ -1795,12 +1804,20 @@
                     targetNode: o,
                     callback: () => e.removeCILoader(),
                   }),
-                  e.shipping.validadePostalCode(e.orderForm))
+                  e.shipping.validadePostalCode(e.orderForm),
+                  '#/profile' === window.location.hash &&
+                    e.profile.addTerms(e.orderForm))
             }),
             $(window).on('orderFormUpdated.vtex', function (o, a) {
               e.update(a),
                 e.customAddressFormInit(a),
                 e.URLHasIncludePayment(),
+                window.vtexjs.checkout.orderForm.loggedIn ||
+                  e.preEmail.createElementSamsungAccountLogin(),
+                '#/profile' === window.location.hash &&
+                  (e.profile.addWhatsAppField(),
+                  e.profile.addDateBirthField(),
+                  e.profile.addTerms(a)),
                 !window.google &&
                   e.customAddressForm &&
                   e.customAddressForm.loadScript(),
@@ -1812,6 +1829,8 @@
               $('#cart-to-orderform').on('click', function () {
                 e.SendAttachment.newTextFieldTradeInAndInstallation()
               }),
+                '#/email' === window.location.hash &&
+                  e.preEmail.createElementSamsungAccountLogin(),
                 ('#/payment' !== window.location.hash &&
                   '#/cart' !== window.location.hash) ||
                   e.TradeIn.validateTradeinCustomData(),
@@ -1819,6 +1838,7 @@
                 e.checkProfileFocus(),
                 e.changeShippingTimeInfoInit(),
                 e.indexedInItems(window.vtexjs.checkout.orderForm),
+                e.profile.toggleGoToShippingDisabled(),
                 e.shipping.toggleGoToPaymentDisabled(),
                 e.shipping.validadePostalCode(window.vtexjs.checkout.orderForm),
                 e.customAddressForm &&
@@ -1887,16 +1907,16 @@
         r = null,
         s = '',
         d = '',
-        m = '',
-        i = ''
+        i = '',
+        m = ''
       ) {
         ;(this.address = {
           country: e,
           postalCode: o,
-          addressId: m,
+          addressId: i,
           city: a,
           state: t,
-          geoCoordinates: i,
+          geoCoordinates: m,
           street: n,
           number: r,
           complement: s,
@@ -1913,8 +1933,8 @@
         r = '',
         s = '',
         d = '',
-        m = '',
-        i = ''
+        i = '',
+        m = ''
       ) {
         $('.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street').val(
           'number' in this.addressrules ? o : a
@@ -1931,10 +1951,10 @@
           ).attr('data-number', t),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
-          ).attr('data-neighborhood', m),
+          ).attr('data-neighborhood', i),
           $(
             '.vcustom--vtex-omnishipping-1-x-address #v-custom-ship-street'
-          ).attr('data-geocoordinates', i),
+          ).attr('data-geocoordinates', m),
           $(
             `.vcustom--vtex-omnishipping-1-x-address #ship-state option[value='${s}']`
           ).length
@@ -2034,7 +2054,7 @@
                   types: ['street_number'],
                 })
               )
-            const m =
+            const i =
                 'number' in e.addressrules
                   ? $(
                       '.vcustom--vtex-omnishipping-1-x-address #ship-number'
@@ -2042,7 +2062,7 @@
                   : e.returnAddressFRules(o.address_components, {
                       types: ['street_number'],
                     }),
-              i = e.addressrules.complement
+              m = e.addressrules.complement
                 ? e.returnAddressFRules(o.address_components, {
                     types: ['subpremise'],
                   })
@@ -2069,7 +2089,7 @@
               'CABA' === s.toUpperCase() &&
                 ((s = 'Ciudad Autónoma de Buenos Aires'),
                 (u = 'Ciudad Autónoma de Buenos Aires'))),
-              e.setForm(t, r, l, m, c, u, s, i, d, h),
+              e.setForm(t, r, l, i, c, u, s, m, d, h),
               e.validateAllFields(),
               e.updateAddress(
                 t,
@@ -2077,8 +2097,8 @@
                 u,
                 s,
                 r,
-                m,
                 i,
+                m,
                 o.formatted_address,
                 e.address.addressId,
                 h
@@ -2099,7 +2119,7 @@
           isCalculateBttnEnabled: !1,
         })
       }
-      sendAddress(e, o, a, t, n, r, s, d, m, i, h) {
+      sendAddress(e, o, a, t, n, r, s, d, i, m, h) {
         const C = this
         if (~h.indexOf(',')) {
           const [o, n] = h.split(',')
@@ -2139,7 +2159,7 @@
                     geoCoordinates: h,
                     street: o,
                     number: a || '',
-                    neighborhood: i,
+                    neighborhood: m,
                     complement: s,
                     reference: null,
                     addressQuery: d,
@@ -2152,10 +2172,10 @@
             }
           )
             .then(e => e.json())
-            .then(function (i) {
-              i.error
+            .then(function (m) {
+              m.error
                 ? ($('body').removeClass('js-v-custom-is-loading'),
-                  alert('Something went wrong: ' + i.error.message))
+                  alert('Something went wrong: ' + m.error.message))
                 : window.vtexjs.checkout.getOrderForm().done(function () {
                     C.updateAddress(
                       e,
@@ -2167,7 +2187,7 @@
                       s,
                       '',
                       d || '',
-                      m || '',
+                      i || '',
                       h || []
                     ),
                       $('body').removeClass(C.BodyFormClasses.join(' ')),
@@ -2304,11 +2324,11 @@
           this.updateGoogleForm(t[1].toLowerCase())
         const s = $('.vcustom--vtex-omnishipping-1-x-address #ship-country'),
           d = s.val(),
-          m = s.find('option')
-        m.sort(function (e, o) {
+          i = s.find('option')
+        i.sort(function (e, o) {
           return $(e).text() > $(o).text() ? 1 : -1
         }),
-          s.html('').append(m),
+          s.html('').append(i),
           s.val(d)
       }
       validateAllFields() {
@@ -2338,16 +2358,16 @@
             '.vcustom--vtex-omnishipping-1-x-address #ship-complement'
           ).val(),
           d = $('.vcustom--vtex-omnishipping-1-x-address #ship-city').val(),
-          m = $('.vcustom--vtex-omnishipping-1-x-address #ship-state').val(),
-          i = $(
+          i = $('.vcustom--vtex-omnishipping-1-x-address #ship-state').val(),
+          m = $(
             '.vcustom--vtex-omnishipping-1-x-address #ship-postalCode'
           ).val()
         this.sendAddress(
           o,
           a,
           t,
-          m,
           i,
+          m,
           d,
           s,
           this.address.addressQuery,
@@ -9287,6 +9307,284 @@
       rootPath() {
         return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
       }
+      calculateAge(e, o, a) {
+        const t = new Date(),
+          n = t.getFullYear(),
+          r = t.getMonth() + 1,
+          s = t.getDate(),
+          d = +o
+        let i = n - +e
+        ;(r < d || (r === d && s < +a)) && i--
+        const m = i < 0 ? 0 : i
+        return m >= 18 && m <= 120
+      }
+      insertPartialNewProfileData() {
+        const e = $('#client-birth-date').val().split('/').reverse().join('-'),
+          o = new Date(e),
+          a = {
+            email: $('.email').text(),
+            birthDate: o,
+            acceptTermsAndPrivacyPolicy: $('#inputTermAndPolicies').is(
+              ':checked'
+            ),
+            isNewsletterOptIn: $('#opt-in-newsletter').is(':checked'),
+            isWhatsAppOptIn: $('#inputWhatsapp').is(':checked'),
+            whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
+              ? $('.whatsapp_phone').val()
+              : '',
+            isRewardsAccepted: $('#inputRewards').is(':checked'),
+          }
+        $.ajax({
+          url: this.rootPath() + '/_v/insert/client/partial',
+          type: 'POST',
+          crossDomain: !0,
+          accept: 'application/vnd.vtex.ds.v10+json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify(a),
+          success(e) {
+            window.localStorage.setItem('doc', e.DocumentId)
+          },
+        })
+      }
+      saveProfileData() {
+        this.insertPartialNewProfileData()
+      }
+      validateAge(e) {
+        let o
+        $('#error-client-date-birth-required').hide()
+        const a = new Date().getTimezoneOffset(),
+          t = e.split('/')
+        if (t[0] && t[1] && t[2]) {
+          t.reverse()
+          const e = new Date(t.join('-'))
+          e.setUTCHours(0, a, 0, 0),
+            (o = !!this.calculateAge(
+              e.getFullYear(),
+              e.getMonth() + 1,
+              e.getDate()
+            ))
+        } else o = !1
+        function n() {
+          $('#error-client-date-birth').show(),
+            $('#client-birth-date').addClass('error').removeClass('success')
+        }
+        function r() {
+          $(
+            '#error-client-date-birth, #error-client-date-birth-required'
+          ).hide(),
+            $('#client-birth-date').addClass('success').removeClass('error')
+        }
+        const s = $('#inputTermAndPolicies').is(':checked')
+        10 === e.trim().length && o && s
+          ? r()
+          : 10 !== e.trim().length || o || s
+          ? o && !s
+            ? r()
+            : !o && 10 === e.trim().length && s && n()
+          : n()
+      }
+      mphone(e) {
+        let o = e.replace(/\D/g, '')
+        return (
+          (o = o.replace(/^0/, '')),
+          (o =
+            o.length > 10
+              ? o.replace(/^(\d\d)(\d{5})(\d{4}).*/, '($1) $2-$3')
+              : o.length > 5
+              ? o.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, '($1) $2-$3')
+              : o.length > 2
+              ? o.replace(/^(\d\d)(\d{0,5})/, '($1) $2')
+              : o.replace(/^(\d*)/, '($1')),
+          o
+        )
+      }
+      mdata(e) {
+        let o = e.trim()
+        return (
+          (null !== e.match(/^\d{2}$/) || null !== e.match(/^\d{2}\/\d{2}$/)) &&
+            (o += '/'),
+          o
+        )
+      }
+      addDateBirthField() {
+        if ($('p.client-date-birth').length) return
+        $('.client-document')
+          .first()
+          .after(
+            '<p class="client-date-birth input text required">\n      <label for="client-date-birth">Data de Nascimento</label>\n      <input type="text" maxlength="10" placeholder="DD/MM/AAAA" id="client-birth-date" class="input-small">\n      <span id="error-client-date-birth-required" class="help error" style="display:none">Campo obrigatório.</span>\n      <span id="error-client-date-birth" class="help error" style="display:none;">\n        Menores de 18 anos não estão autorizados a efetuar o cadastro em nosso site. Em caso de dúvidas, acesse shop.samsung.com/br/faq.\n      </span>\n    </p>'
+          )
+      }
+      addWhatsAppField() {
+        if ($('p.client-whatsapp').length) return
+        $('.client-phone')
+          .first()
+          .after(
+            '<p class="client-whatsapp input pull-left text">\n      <label for="client-whatsapp">Celular/WhatsApp</label>\n      <input type="text" id="client-whatasapp" placeholder="(00) 00000-0000" class="whatsapp_phone input-small success" oninvalid="this.setCustomValidity(\'Preencha este campo.\')" maxlength="15" onchange="this.setCustomValidity(\'\')">\n      <span id="error-client-whatsapp-required" class="help error" style="display:none">Campo obrigatório.</span>\n    </p>'
+          )
+      }
+      addPJInformation() {
+        if ($('.pj-information').length) return
+        $('#client-profile-data p.save-data').after(
+          '<div class="pj-information">\n      <h3>Aviso: Compras para Pessoa Jurídica</h3>\n      <p>\n        A partir de 24/07/2022 as compras com dados de Pessoa Jurídica (CNPJ) deverão ser realizadas \n        <a href="https://empresas.samsung.com.br" target="_blank">neste portal</a>. Caso\n        queira comprar utilizando seu CPF ou consultar a posição de compras já efetuadas, continue por aqui na Loja\n        Online Samsung.\n      </p>\n    </div>'
+        )
+      }
+      addNewsletterOptIn() {
+        if ($('.newsletter-optin').length) return
+        if ($('.newsletter-optin').find('.newsletter-text').length) return
+        $('.pj-information').after(
+          '<div class="newsletter-optin">\n      <h3>Newsletter e Promoções (opcional)</h3>\n      <label class="inputOptIn __whatsapp">\n          <input type="checkbox" id="inputWhatsapp" />\n          <span class="custom-checkbox-icon"></span>\n          <span>Desejo receber ofertas e notificações por WhatsApp.</span>\n          <span class="form-tooltip">\n              <img alt="info" class="info-img form-tooltip__initiator"\n                  src="https://samsungbrtest.vteximg.com.br/arquivos/info.png" />\n              <span class="form-tooltip__item">Você receberá atualizações do seu pedido e mensagens sobre ofertas.</span>\n          </span>\n      </label>\n    </div>'
+        ),
+          $('.newsletter-text').before(
+            '<span class="custom-checkbox-icon"></span>'
+          )
+        const e = $('.box-client-info .newsletter').detach()
+        $('.box-client-info .__whatsapp').after($(e))
+      }
+      addTermsAndPolicies() {
+        if ($('.terms-and-policies').length) return
+        $('.newsletter-optin').after(
+          '<div class="terms-and-policies">\n      <h3>Privacidade (obrigatório)</h3>\n      <label class="inputOptIn checkbox-inline">\n        <input type="checkbox" id="inputTermAndPolicies" />\n        <span class="custom-checkbox-icon"></span>\n        <span>      \n          Aceito os \n          <a href="https://www.samsung.com/br/shop/terms_and_conditions_of_sale/" target="_blank">termos e condições</a> e \n          <a href="https://www.samsung.com/br/shop/privacy-policy/" target="_blank">política de privacidade</a>\n        </span>\n      </label>\n    </div>'
+        )
+      }
+      addRewardsBlock() {
+        if ($('.rewards-block').length) return
+        $('.terms-and-policies').after(
+          '<div class="rewards-block" id="RewardsBlock" style="display: none">\n      <h3>Samsung Rewards</h3>\n      <label class="inputOptIn __rewards">\n      <input type="checkbox" id="inputRewards" checked />\n      <span class="custom-checkbox-icon"></span>\n      <span>Participar do programa Samsung Rewards para ganhar pontos com este pedido.</span>\n      </label>\n    </div>'
+        )
+      }
+      checkTerms() {
+        $('#inputTermAndPolicies').is(':checked') ||
+          $('#inputTermAndPolicies')
+            .closest('.checkbox-inline')
+            .addClass('error')
+      }
+      addTerms(e) {
+        if (0 !== $('#inputTermAndPolicies').length) return !1
+        this.addPJInformation(),
+          this.addNewsletterOptIn(),
+          this.addTermsAndPolicies(),
+          (e.loggedIn ||
+            window.loggedIn ||
+            (null !== e.clientProfileData &&
+              e.clientProfileData.profileCompleteOnLoading)) &&
+            $('#inputTermAndPolicies').prop('checked', !0)
+      }
+      toggleGoToShippingDisabled() {
+        const e = $('#client-profile-data'),
+          o = e.find('p.input input:visible'),
+          a = e.find('p.input input.success:visible').length < o.length,
+          t = $('#inputTermAndPolicies').is(':checked'),
+          n = !a && t
+        $('#go-to-shipping').prop('disabled', !n)
+      }
+      bindEvents() {
+        const e = this
+        $('body').on(
+          'input',
+          'input#client-first-name, input#client-last-name',
+          function () {
+            const e = /[^A-Za-zÀ-ú\s]+$/
+            $(this).val().match(e) && $(this).val($(this).val().replace(e, ''))
+          }
+        ),
+          $('#client-phone').keypress(o => {
+            setTimeout(() => {
+              const a = e.mphone(o.target.value)
+              a !== o.target.value && (o.target.value = a)
+            }, 1)
+          }),
+          $('body').on('keyup', '#client-birth-date', function (o) {
+            const a = e.mdata(o.target.value)
+            a !== o.target.value && (o.target.value = a),
+              e.validateAge(o.target.value)
+          }),
+          $('body').on('blur', '#client-birth-date', function (e) {
+            e.target.value.length < 10 &&
+              ($('#error-client-date-birth').hide(),
+              $('#error-client-date-birth-required').show(),
+              $('#client-birth-date').addClass('error').removeClass('success'))
+          }),
+          $('body').on('keypress', '#client-whatasapp', function (o) {
+            setTimeout(() => {
+              const a = e.mphone(o.target.value)
+              a !== o.target.value && (o.target.value = a)
+            }, 1)
+          }),
+          $('body').on('input', '#client-whatasapp', function () {
+            const e = $(this),
+              o = e.val().length > 0 && e.val().length < 15
+            $('#error-client-whatsapp-required').hide(),
+              o
+                ? e.removeClass('success')
+                : e.removeClass('error').addClass('success'),
+              $(this).is(':required') && !e.val().length
+                ? (e.removeClass('success').addClass('error'),
+                  $('#error-client-whatsapp-required').show())
+                : e.removeClass('error')
+          }),
+          $('body').on('blur', '#client-whatasapp', function () {
+            const e = $(this),
+              o = 0 === e.val().length,
+              a = !o && e.val().length < 15,
+              t = e.is(':required')
+            function n() {
+              e.removeClass('success').addClass('error')
+            }
+            function r() {
+              e.removeClass('error').addClass('success')
+            }
+            a ? n() : r(),
+              o && !t && r(),
+              o && t && (n(), $('#error-client-whatsapp-required').show())
+          }),
+          $('body').on(
+            'change',
+            '.checkbox-inline input:checkbox',
+            function () {
+              $(this).is(':checked')
+                ? $(this).closest('.checkbox-inline').removeClass('error')
+                : $(this).closest('.checkbox-inline').addClass('error'),
+                e.checkTerms()
+            }
+          ),
+          $('body').on('change', '#inputWhatsapp', function () {
+            const e = $(this).is(':checked'),
+              o = $('#client-whatasapp')
+            o.attr('required', e),
+              $('#error-client-whatsapp-required').hide(),
+              e
+                ? ($('p.client-whatsapp').addClass('required'),
+                  o.val().length ||
+                    (o.removeClass('success').addClass('error'),
+                    $('#error-client-whatsapp-required').show()))
+                : (o.closest('p.client-whatsapp').removeClass('required'),
+                  o.removeClass('error').addClass('success').val(''))
+          }),
+          $('body').on(
+            'input blur',
+            '#client-profile-data p.input input:visible',
+            function () {
+              setTimeout(() => e.toggleGoToShippingDisabled(), 1)
+            }
+          ),
+          $('body').on(
+            'change',
+            '#client-profile-data input[type="checkbox"]',
+            function () {
+              setTimeout(() => e.toggleGoToShippingDisabled(), 1)
+            }
+          ),
+          $('body').on('click', '#go-to-shipping', function () {
+            e.saveProfileData()
+          })
+      }
+    }
+  },
+  function (e, o) {
+    e.exports = class {
+      rootPath() {
+        return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+      }
       addInvalidPostalCodeMessage() {
         try {
           const e = $('.vtex-omnishipping-1-x-addressFormPart1').find(
@@ -9543,8 +9841,13 @@
         this.INSTALLATION_URL = '/install-service/p'
       }
       init() {
-        const { items: e } = window.vtexjs.checkout.orderForm
-        this.hasInstallationService(e) && this.validateSamsungCarePlus(e)
+        try {
+          const { items: e } = window.vtexjs.checkout.orderForm
+          if (!this.hasInstallationService(e)) return
+          this.validateSamsungCarePlus(e)
+        } catch (e) {
+          console.error('installationService error', e)
+        }
       }
       validateSamsungCarePlus(e) {
         const o = this.getInstallationItems(e),
@@ -9586,10 +9889,44 @@
         )
       }
       hasInstallationService(e) {
-        return !!e.find(e => this.isInstallationService(e))
+        return !!e.find(
+          e => this.isInstallationService(e) && e.attachments.length
+        )
       }
       isInstallationService(e) {
         return e.detailUrl === this.INSTALLATION_URL
+      }
+    }
+  },
+  function (e, o) {
+    e.exports = class {
+      createElementSamsungAccountLogin() {
+        $('#client-pre-email').attr('placeholder', 'Ex:.exemplo@mail.com'),
+          0 === $('.samsung-account-container').length &&
+            $('.client-pre-email-h').length > 0 &&
+            $('.client-pre-email-h').after(
+              '\n            <div class="samsung-account-container">\n              <div class="samsung-account-image">\n                <button \n                  id="btn-samsung-account"\n                  type="submit"\n                  style="background: black; border-radius: 20px; border: none; padding-inline: 60px; padding-block: 11px;"\n                >\n                  <img src="https://samsungbr.vteximg.com.br/arquivos/logo-ssg-account.svg"/>\n                </button>\n              </div>\n              <div class="samsung-account-label" style="font-size:14px; font-family:\'SamsungOne\'; margin-top: 30px;">Ou informe seu e-mail:</div>\n            </div>\n        '
+            )
+      }
+      openSamsungAccountModal() {
+        window.vtexid.start()
+        const e = setInterval(function () {
+          $('#vtexIdUI-custom-oauth').length &&
+            (clearInterval(e),
+            $('#vtexIdContainer, #vtexIdUI-global-loader').hide(),
+            $('#vtexIdUI-custom-oauth').trigger('click')),
+            window.location.href.includes('samsungbrtest') &&
+              $('#vtexIdUI-').length &&
+              (clearInterval(e),
+              $('#vtexIdContainer, #vtexIdUI-global-loader').hide(),
+              $('#vtexIdUI-').trigger('click'))
+        }, 100)
+      }
+      bindEvents() {
+        const e = this
+        $(document).on('click', '#btn-samsung-account', function () {
+          e.openSamsungAccountModal()
+        })
       }
     }
   },
@@ -9623,7 +9960,7 @@
                 n +=
                   e > 0 && n > 0
                     ? r.evaluatedProducts[e].price
-                    : r.evaluatedProducts[e].price + parseInt(r.boostSSG)
+                    : r.evaluatedProducts[e].price + parseInt(r.boostSSG, 10)
             a += n
           }
         a > 0
@@ -9636,9 +9973,9 @@
             ($('#total-details-tradein').remove(),
             $('#text-details-tradein').remove(),
             this.removeCustomDataTradeIn())
-        const n = o.filter(o => {
-          if (e.filter(e => e.id === o.skuId).length > 0) return o
-        })
+        const n = o.filter(o =>
+          e.filter(e => e.id === o.skuId).length > 0 ? o : ''
+        )
         n.length < o.length &&
           (localStorage.setItem('transport', JSON.stringify(n)),
           this.validateTradeinCustomData())
@@ -9646,10 +9983,15 @@
       showDetailsTradeIn() {
         try {
           const e = $('.cart-fixed'),
-            o =
+            o = $('.summary-to-new-components'),
+            a =
               '\n        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: \'SamsungOne\'; float: right; text-align: left;">\n          <p>* A compra de um produto com a modalidade Troca Smart gera um transação de valor total do aparelho para pagamento no site.</p>\n          <p>O valor da pré-avaliação da Troca Smart será depositado em conta corrente após avaliação e aceitação do aparelho pela TROCAFONE.</p>\n        </div>\n      '
-          if (e.find('#text-details-tradein').length > 0) return
-          e.append(o)
+          if (
+            e.find('#text-details-tradein').length > 0 ||
+            o.find('#text-details-tradein').length > 0
+          )
+            return
+          o.append(a), e.append(a)
         } catch (e) {
           console.error('showDetailsTradeIn error:', e)
         }
@@ -9657,9 +9999,12 @@
       showTotalTradeIn(e) {
         try {
           const o = $('.summary-totalizers .table'),
-            a = `\n        <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">\n            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart <br /> Dinheiro em Conta</td>\n            <td id="total-tradein-value" style="font-size: 14px; color: #000000; font-weight: 700;">${
-              Object(t.formatCurrencyBRL)(e, !1) + '*'
-            }</td>\n          </tr>\n        </tbody>\n      `
+            a = `\n        <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">\n            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart <br /> Dinheiro em Conta</td>\n            <td id="total-tradein-value" style="font-size: 14px; color: #000000; font-weight: 700;">${Object(
+              t.formatCurrencyBRL
+            )(
+              e,
+              !1
+            )}*\n            </td>\n          </tr>\n        </tbody>\n      `
           if (o.find('#total-details-tradein').length > 0) return
           o.append(a)
         } catch (e) {
@@ -9703,34 +10048,40 @@
         const a = [],
           t = []
         e && e.length > 0
-          ? (await e.map(e => {
-              e.evaluatedProducts.map(async e => {
-                t.push(e)
-              })
-            }),
+          ? (await e.map(
+              e => (
+                e.evaluatedProducts.map(async e => {
+                  t.push(e)
+                }),
+                ''
+              )
+            ),
             t.map(e => {
               const o = fetch(
                 `${this.rootPath()}/p4v1/tradeinCheckImei/${e.imei}`
               )
                 .then(e => e.json())
                 .then(o => ({ ...o, imei: e.imei }))
-              a.push(o)
+              return a.push(o), ''
             }),
             Promise.all(a).then(a => {
-              e.map(e => {
-                e.evaluatedProducts.map(async e => {
-                  const t = a.find(o => o.imei === e.imei)
-                  if (t && t.products && t.products.length > 0) {
-                    const a = t.products.find(o => o.id === e.idProduct)
-                    if (a && a.gradings) {
-                      const t = a.gradings.find(o => o.code === e.grading)
-                      if (t && t.price)
-                        return (e.price = t.price), void (o += e.price)
+              e.map(
+                e => (
+                  e.evaluatedProducts.map(async e => {
+                    const t = a.find(o => o.imei === e.imei)
+                    if (t && t.products && t.products.length > 0) {
+                      const a = t.products.find(o => o.id === e.idProduct)
+                      if (a && a.gradings) {
+                        const t = a.gradings.find(o => o.code === e.grading)
+                        if (t && t.price)
+                          return (e.price = t.price), void (o += e.price)
+                      }
                     }
-                  }
-                  o += e.price
-                })
-              }),
+                    o += e.price
+                  }),
+                  ''
+                )
+              ),
                 this.putCustomData(e, o)
             }))
           : this.removeCustomDataTradeIn()
@@ -9757,16 +10108,17 @@
             let r = 0
             const s = a[n]
             let d = 0,
-              m = ''
+              i = ''
             for (let e = 0; e < o.length; e++)
-              s.mainProductId === o[e].productId && ((m = o[e].ean), ++d)
+              s.mainProductId === o[e].productId && ((i = o[e].ean), ++d)
             if (d > 0) {
               for (let e = 0; e < s.evaluatedProducts.length; e++)
                 r +=
                   e > 0 && r > 0
                     ? s.evaluatedProducts[e].price
-                    : s.evaluatedProducts[e].price + 100 * parseInt(s.boostSSG)
-              e += `{'ean':'${m}', 'isTradeIn':'true', 'trocaSmartValue': '${Object(
+                    : s.evaluatedProducts[e].price +
+                      100 * parseInt(s.boostSSG, 10)
+              e += `{'ean':'${i}', 'isTradeIn':'true', 'trocaSmartValue': '${Object(
                 t.formatCurrencyBRL
               )(r, !1)}'}, `
             }
@@ -9782,42 +10134,297 @@
             )
             return (
               o &&
-                o.filter(o => {
-                  'linkInstallation' === o.attachments[0].name &&
-                    e.refId == o.attachments[0].content.refId &&
-                    r.push(e)
-                }),
+                o.filter(
+                  o => (
+                    'linkInstallation' === o.attachments[0].name &&
+                      e.refId == o.attachments[0].content.refId &&
+                      r.push(e),
+                    ''
+                  )
+                ),
               o
             )
           }),
-          r.filter(o => {
-            window.vtexjs.checkout.orderForm.shippingData.logisticsInfo.filter(
-              a => {
-                a.itemId == o.id &&
-                  a.slas.filter(r => {
-                    if (a.selectedDeliveryChannel == r.deliveryChannel) {
-                      let a = ''
-                      ;(a = parseInt(
-                        r.shippingEstimate.replace(/[^0-9\.]+/g, '')
-                      )),
-                        (e += n.map(
-                          e =>
-                            `{'isInstallation':'true','sku':'${
-                              o.refId
-                            }','estimate':'${a + 1}','price': '${Object(
-                              t.formatCurrencyBRL
-                            )(e.price)}'}`
-                        ))
-                    }
-                  })
-              }
+          r.filter(
+            o => (
+              window.vtexjs.checkout.orderForm.shippingData.logisticsInfo.filter(
+                a => (
+                  a.itemId == o.id &&
+                    a.slas.filter(r => {
+                      if (a.selectedDeliveryChannel == r.deliveryChannel) {
+                        let a = ''
+                        ;(a = parseInt(
+                          r.shippingEstimate.replace(/[^0-9\.]+/g, ''),
+                          10
+                        )),
+                          (e += n.map(
+                            e =>
+                              `{'isInstallation':'true','sku':'${
+                                o.refId
+                              }','estimate':'${a + 1}','price': '${Object(
+                                t.formatCurrencyBRL
+                              )(e.price)}'}`
+                          ))
+                      }
+                      return ''
+                    }),
+                  ''
+                )
+              ),
+              ''
             )
-          })),
+          )),
           e &&
             (window.vtexjs.checkout.sendAttachment('openTextField', {
               value: '' + e,
             }),
             window.vtexjs.checkout.getOrderForm())
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return t
+      })
+    class t {
+      constructor() {
+        ;(this.SKU_BESPOKE_PAIR = ''),
+          (this.SKU_MAIN = []),
+          (this.SKU_BESPOKE_SERVICE = ''),
+          (this.SELLER = ''),
+          (this.CATEGORYID =
+            window.location.href.indexOf('samsungbr.') >= 0 ||
+            window.location.host.split('.')[0].indexOf('shop') >= 0
+              ? '/30/33/39/2113/'
+              : '/2044/')
+      }
+      removeButtons({ items: e }) {
+        $('.product-item') &&
+          e.forEach(e => {
+            ;(e.productCategoryIds === this.CATEGORYID ||
+              e.name.indexOf('Instalação Geladeira') > 0) &&
+              $(`.product-item[data-sku="${e.id}"]`) &&
+              ($(`.product-item[data-sku="${e.id}"] .item-link-remove`) &&
+                $(`.product-item[data-sku="${e.id}"] .item-link-remove`).hide(),
+              $(`.product-item[data-sku="${e.id}"] .add-item-attachment`) &&
+                $(`.product-item[data-sku="${e.id}"] .add-item-attachment`),
+              $(`.product-item[data-sku="${e.id}"] input`) &&
+                $(`.product-item[data-sku="${e.id}"] input`).attr(
+                  'disabled',
+                  !0
+                ),
+              $(`.product-item[data-sku="${e.id}"] input`) &&
+                $(`.product-item[data-sku="${e.id}"] input`).attr(
+                  'disabled',
+                  !0
+                ),
+              $(
+                `.product-item[data-sku="${e.id}"] #item-quantity-change-decrement-${e.id}`
+              ) &&
+                $(
+                  `.product-item[data-sku="${e.id}"] #item-quantity-change-decrement-${e.id}`
+                ).addClass('disabled'),
+              $(
+                `.product-item[data-sku="${e.id}"] #item-quantity-change-increment-${e.id}`
+              ) &&
+                $(
+                  `.product-item[data-sku="${e.id}"] #item-quantity-change-increment-${e.id}`
+                ).addClass('disabled')),
+              e.productCategoryIds !== this.CATEGORYID &&
+                $(`.product-item[data-sku="${e.id}"]`) &&
+                ($(`.product-item[data-sku="${e.id}"] .item-link-remove`) &&
+                  $(
+                    `.product-item[data-sku="${e.id}"] .item-link-remove`
+                  ).show(),
+                $(
+                  `.product-item[data-sku="${e.id}"] .item-quantity-change-decrement`
+                ) &&
+                  $(
+                    `.product-item[data-sku="${e.id}"] .item-quantity-change-decrement`
+                  ).show(),
+                $(
+                  `.product-item[data-sku="${e.id}"] .item-quantity-change-increment`
+                ) &&
+                  $(
+                    `.product-item[data-sku="${e.id}"] .item-quantity-change-increment`
+                  ).show(),
+                $(`.product-item[data-sku="${e.id}"] .add-item-attachment`) &&
+                  $(
+                    `.product-item[data-sku="${e.id}"] .add-item-attachment`
+                  ).show()),
+              e.name.indexOf('Instalação Geladeira') > 0 &&
+                document
+                  .querySelector(`.product-item[data-sku="${e.id}"]`)
+                  .setAttribute('install-item', !0)
+          })
+      }
+      removeItems() {
+        $('body').on('click', '.bespokeRemove', e => {
+          e.preventDefault()
+          const o = window.vtexjs.checkout.orderForm.items,
+            a = $(e.target).parents('.product-item').data(),
+            t = a ? a.sku : null
+          $(e.target).remove(), t && this.removeBespoke(o, t, 0)
+        }),
+          $('body').on('click', '.editBespoke', e => {
+            e.preventDefault()
+            const o = window.vtexjs.checkout.orderForm.items,
+              a = $(e.target).parents('.product-item').data(),
+              t = a ? a.sku : null
+            $(e.target).remove(), t && this.clearBespokeRefrigerator(o, t, !0)
+          })
+      }
+      clearBespokeRefrigerator(e, o, a) {
+        let t = ''
+        e.forEach(e => {
+          o.toString() === e.id && (t = e.productCategoryIds)
+        })
+        const n = []
+        t === this.CATEGORYID &&
+          e.forEach((e, o) => {
+            ;('/2044/' !== e.productCategoryIds &&
+              '/30/33/39/2113/' !== e.productCategoryIds) ||
+              n.push({ index: o, quantity: 0 }),
+              e.id === this.SKU_BESPOKE_SERVICE &&
+                n.push({ index: o, quantity: 0 })
+          })
+        const r = n
+        if (r.length > 0)
+          return window.vtexjs.checkout.removeItems(r).then(() => {
+            if (a) {
+              const e =
+                'br' === window.location.pathname.split('/')[1] ? '/br' : ''
+              window.location.href = e + '/simule-sua-bespoke?create=true'
+            } else localStorage.setItem('BespokeItems', '[]')
+          })
+      }
+      removeBespoke(e, o, a) {
+        let t = JSON.parse(localStorage.getItem('BespokeItems'))
+        const n = t.filter(e => e.mainSku === o.toString())
+        let r = []
+        const s = []
+        let d = 0
+        r.push(o.toString()),
+          n &&
+            n.forEach(({ options: e }) => {
+              e.forEach(e => {
+                r.push(e.sku)
+              })
+            }),
+          (r = [...new Set(r)]),
+          e.forEach((e, t) => {
+            e.id === o.toString() && (d = e.quantity)
+            r.find(o => o === e.id) && s.push({ index: t, quantity: 0 }),
+              e.id === this.SKU_BESPOKE_PAIR &&
+                e.quantity > 0 &&
+                ((d = e.quantity - d - a),
+                d < 0 && (d = 0),
+                s.push({ index: t, quantity: d }))
+          })
+        const i = s
+        i.length > 0 &&
+          window.vtexjs.checkout.updateItems(i).then(e => {
+            this.removeButtons(e), this.editButton(e)
+            let a = 0
+            e.items.forEach((e, o) => {
+              e.id === this.SKU_BESPOKE_SERVICE && (a = o)
+            }),
+              (t = t.filter(e => e.mainSku !== o.toString())),
+              localStorage.setItem('BespokeItems', JSON.stringify(t)),
+              (a = [{ index: a, quantity: 0 }]),
+              0 === t.length && window.vtexjs.checkout.removeItems(a)
+          })
+      }
+      checkItems({ items: e }) {
+        const o = JSON.parse(localStorage.getItem('BespokeItems'))
+        o.forEach(a => {
+          const t = e.find(e => e.id === a.mainSku)
+          if (t)
+            a.options.forEach(o => {
+              e.find(e => e.id === o.sku) || this.removeBespoke(e, t.id, 0)
+            })
+          else {
+            let t = 0
+            const n = o.filter(e => e.mainSku === a.mainSku)
+            n && (t = n.length), this.removeBespoke(e, a.mainSku, t)
+          }
+        })
+        const a = e.find(e => e.id === this.SKU_BESPOKE_PAIR)
+        a &&
+          a.quantity !== o.length - 1 &&
+          this.clearBespokeRefrigerator(e, o[0].mainSku, !1)
+      }
+      editButton({ items: e }) {
+        const o = setInterval(() => {
+          $('.product-item').length > 0 &&
+            (e.forEach(e => {
+              this.SKU_MAIN.forEach(o => {
+                o === e.id &&
+                  0 ===
+                    $(`.product-item[data-sku='${e.id}']`).find('.editBespoke')
+                      .length &&
+                  $($(`.product-item[data-sku='${e.id}']`))
+                    .find('.item-remove')
+                    .prepend(
+                      '\n                  <div style="display: flex; align-items: center;">\n                    <a href="/simule-sua-bespoke" class="editBespoke btn" style="\n                      background-color: #fff;\n                      color: #000;\n                      border-radius: 20px;\n                      display: flex;\n                      text-align: center;\n                      align-items: center;\n                      justify-content: center;\n                      padding: 10px 24px;\n                      border: 1px solid #000;\n                      text-decoration: none;\n                      font-size: 14px;\n                      font-weight: bold;\n                      line-height: 14px;\n                      height: fit-content;\n                    ">\n                      Editar\n                    </a>\n                    <a class="bespokeRemove" href="javascript:void(0);">\n                        <i class="icon icon-remove item-remove-ico"></i>\n                        <span class="hide item-remove-text">\n                          remover\n                        </span>\n                    </a>\n                  </div>\n\t\t\t\t\t\t\t\t'
+                    )
+              })
+            }),
+            clearInterval(o))
+        }, 10)
+      }
+      getMandatorySkus() {
+        return new Promise(async e => {
+          const o = 'br' === window.location.pathname.split('/')[1] ? 'br' : ''
+          let a
+          ;(a =
+            window.location.href.indexOf('samsungbr.') >= 0 ||
+            window.location.host.indexOf('shop.') >= 0
+              ? o +
+                '/api/catalog_system/pub/products/search?fq=C:/30/33/39/2113/'
+              : o + '/api/catalog_system/pub/products/search?fq=C:/2044/'),
+            await fetch(a)
+              .then(e => e.json())
+              .then(e => {
+                e.forEach(e => {
+                  e.productName.indexOf('parelhamento') < 0 &&
+                    e.items.forEach(e => {
+                      this.SKU_MAIN.push(e.itemId)
+                    })
+                })
+              }),
+            await fetch(
+              o + '/api/dataentities/GB/search?_fields=service,pairing,seller'
+            )
+              .then(e => e.json())
+              .then(e => {
+                const { service: o, pairing: a, seller: t } = e[0]
+                ;(this.SKU_BESPOKE_SERVICE = o),
+                  (this.SKU_BESPOKE_PAIR = a),
+                  (this.SELLER = t)
+              }),
+            e(!0)
+        })
+      }
+      init() {
+        try {
+          this.getMandatorySkus().then(e => {
+            e
+              ? $(document).ajaxStop(() => {
+                  this.checkItems(window.vtexjs.checkout.orderForm),
+                    this.removeButtons(window.vtexjs.checkout.orderForm),
+                    this.editButton(window.vtexjs.checkout.orderForm),
+                    this.removeItems()
+                })
+              : console.error(
+                  "There is a problem with Checkout's Bespoke Customization. Please, check out the code. "
+                )
+          })
+        } catch (e) {
+          console.error('Bespoke refrigerators', e)
+        }
       }
     }
   },
