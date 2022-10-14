@@ -406,6 +406,10 @@ export default class BespokeRefrigerator {
 
   init() {
     try {
+      const bespokeItems = JSON.parse(localStorage.getItem('BespokeItems'))
+
+      if (!bespokeItems) return
+
       this.getMandatorySkus().then(response => {
         if (response) {
           $(document).ajaxStop(() => {
