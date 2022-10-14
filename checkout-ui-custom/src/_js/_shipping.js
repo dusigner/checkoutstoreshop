@@ -206,7 +206,9 @@ class CustomShippingData {
     $(document).on(
       'focus',
       '#shipping-data input#ship-postalCode',
-      _this.limitPostalCodeInput()
+      function () {
+        _this.limitPostalCodeInput()
+      }
     )
 
     $(document).on(
