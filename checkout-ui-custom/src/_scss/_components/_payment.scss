@@ -899,19 +899,9 @@
 			padding: 0;
 
       .best-price {
-        .ref-id {
-          font-size: 0px;
-        }
-
-        .ref-id::after{
-          content: "Total à vista";
-          font-size: 28px;
-          display: inline-block;
-        }
-
         @media screen and (max-width: 768px) {
           .estimate-shipping,
-          .ref-id::after{
+          .ref-id {
             font-size: 18px;
           }
         }
