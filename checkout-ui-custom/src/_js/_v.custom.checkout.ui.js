@@ -1456,6 +1456,7 @@ class checkoutCustom {
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
+          _this.shipping.limitPostalCodeInput()
         }
       })
 

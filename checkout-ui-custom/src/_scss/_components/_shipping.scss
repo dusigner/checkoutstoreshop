@@ -10,6 +10,15 @@
         }
     }
 
+    .step.shipping-data.active {
+        .accordion-inner.shipping-container {
+            grid-template-columns: 1fr auto;
+        }
+        .box-step {
+            max-width: 448px;
+        }
+    }
+
     .vtex-omnishipping-1-x-addressFormPart1,
     .vtex-omnishipping-1-x-deliveryGroup,
     .vtex-omnishipping-1-x-addressForm {
@@ -279,5 +288,17 @@
 
     .vtex-omnishipping-1-x-SummaryItemGroup {
         padding-top: 0;
+    }
+
+    .vtex-omnishipping-1-x-SummaryItemContent {
+        margin-top: 16px;
+    }
+
+    .link-change-shipping {
+        display: none;
+    }
+
+    .vtex-omnishipping-1-x-warning {
+        margin-top: 16px;
     }
 }
