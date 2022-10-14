@@ -947,17 +947,27 @@ class checkoutCustom {
     try {
       const { items } = window.vtexjs.checkout.orderForm
       const itemsQuantity = items.length
-      const paymentSystem = window.vtexjs.checkout.orderForm.paymentData
-        .payments[0]
-        ? window.vtexjs.checkout.orderForm.paymentData.payments[0].paymentSystem
-        : null
 
-      if (!paymentSystem) return
+      // Pega os ids de todos os cartões de creditos (pagamento a prazo), exceto itau card.
+      const creditCardPaymentGroupIds =
+        window.vtexjs.checkout.orderForm.paymentData.paymentSystems
+          .filter(payment => payment.groupName === 'creditCardPaymentGroup')
+          .map(payment => payment.id)
 
-      const totalOnTerm =
+      // Encontra as installments para qualquer um dos ids acima.
+      const installmentOption =
         window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
-          installment => installment.paymentSystem === paymentSystem
-        ).value
+          installment =>
+            creditCardPaymentGroupIds.includes(
+              Number(installment.paymentSystem)
+            )
+        ).installments
+
+      // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
+      const totalOnTerm = installmentOption.find(
+        install =>
+          install.count === Math.max(...installmentOption.map(ins => ins.count))
+      ).total
 
       const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
 
