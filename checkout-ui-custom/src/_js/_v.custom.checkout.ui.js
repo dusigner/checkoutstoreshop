@@ -964,15 +964,19 @@ class checkoutCustom {
       ).total
 
       const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
+      const _tableElem = $(`.summary-totalizers .table`)
 
       if (!$('.on-term-price').length) {
         const _onTermHTML = `
-          <div class="on-term-price">
-            <span class="text-description">Total a prazo</span>
-            <span class="text-bold-price">${formatCurrencyBRL(
+          <tbody class="on-term-price" style="border-top: 1px solid #cbcbcb;">
+          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
+            <td class="text-description" style="font-size: 14px; color: #000000; font-weight: 400;">Total a prazo</td>
+            <td class="text-bold-price" style="font-size: 14px; color: #000000; font-weight: 700;">${formatCurrencyBRL(
               totalOnTerm
-            )}</span>
-          </div>
+            )}
+            </td>
+          </tr>
+        </tbody>
         `
 
         let listItems = ''
@@ -994,7 +998,7 @@ class checkoutCustom {
           </div>
         `
 
-        _accordionElem.append(_onTermHTML)
+        _tableElem.append(_onTermHTML)
         _accordionElem.append(_summaryOrder)
       }
     } catch (e) {
@@ -1053,12 +1057,12 @@ class checkoutCustom {
     this.condensedTaxes(orderForm)
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
+    this.summaryCustom()
     new CustomHeader().init()
     new SamsungCarePlus().init()
     new BespokeRefrigerator().init()
     this.installationService.init()
     this.TradeIn.init()
-    this.summaryCustom()
 
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
