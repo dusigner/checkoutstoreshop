@@ -3,6 +3,17 @@
     max-width: 448px;
   }
 
+  .form-step.box-info {
+		@media (max-width: 768px) {
+			padding-right: 44px;
+		}
+  }
+
+  .link-logout {
+    font-weight: 400;
+    text-decoration: underline;
+  }
+
   .client-notice.notice {
     display: none;
   }
@@ -31,7 +42,7 @@
 
     &.client-last-name,
     &.client-date-birth,
-    &.client-whatsapp {
+    &.client-phone {
       margin-left: 24px !important;
     }
 
