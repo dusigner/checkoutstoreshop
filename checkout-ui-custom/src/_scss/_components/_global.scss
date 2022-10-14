@@ -40,7 +40,11 @@ body {
   }
   //end short preloader to don't show a empty cart
 
-  &.v-custom-step-email {
+  &.v-custom-step-email {    
+    #orderform-to-cart {
+      display: inline-block;
+    }
+
     p.client-document + div {
       width: calc(50% - 12px);
       margin-left: 24px !important;
