@@ -68,7 +68,7 @@ class CustomProfileData {
   }
 
   validateAge(dataUser) {
-    $('#error-client-date-birth-required').hide()
+    $('#error-client-date-birth, #error-client-date-birth-required').hide()
     let isValid
     const timezoneOffset = new Date().getTimezoneOffset()
 
@@ -88,26 +88,18 @@ class CustomProfileData {
       isValid = false
     }
 
-    function setInputError() {
+    const inputDateVal = dataUser.trim()
+
+    if (inputDateVal.length === 0) {
+      $('#error-client-date-birth-required').show()
+      $('#client-birth-date').addClass('error').removeClass('success')
+    } else if (inputDateVal.length > 0 && inputDateVal.length < 10) {
+      $('#client-birth-date').removeClass('error success')
+    } else if (inputDateVal.length >= 10 && isValid) {
+      $('#client-birth-date').addClass('success').removeClass('error')
+    } else {
       $('#error-client-date-birth').show()
       $('#client-birth-date').addClass('error').removeClass('success')
-    }
-
-    function setInputSuccess() {
-      $('#error-client-date-birth, #error-client-date-birth-required').hide()
-      $('#client-birth-date').addClass('success').removeClass('error')
-    }
-
-    const isTermsChecked = $('#inputTermAndPolicies').is(':checked')
-
-    if (dataUser.trim().length === 10 && isValid && isTermsChecked) {
-      setInputSuccess()
-    } else if (dataUser.trim().length === 10 && !isValid && !isTermsChecked) {
-      setInputError()
-    } else if (isValid && !isTermsChecked) {
-      setInputSuccess()
-    } else if (!isValid && dataUser.trim().length === 10 && isTermsChecked) {
-      setInputError()
     }
   }
 
@@ -143,7 +135,7 @@ class CustomProfileData {
   addDateBirthField() {
     if ($('p.client-date-birth').length) return
 
-    const dateBirthField = `<p class="client-date-birth input text required">
+    const $dateBirthField = `<p class="client-date-birth input text required">
       <label for="client-date-birth">Data de Nascimento</label>
       <input type="text" maxlength="10" placeholder="DD/MM/AAAA" id="client-birth-date" class="input-small">
       <span id="error-client-date-birth-required" class="help error" style="display:none">Campo obrigatório.</span>
@@ -152,19 +144,19 @@ class CustomProfileData {
       </span>
     </p>`
 
-    $('.client-document').first().after(dateBirthField)
+    $('.client-document').first().after($dateBirthField)
   }
 
   addWhatsAppField() {
     if ($('p.client-whatsapp').length) return
 
-    const field = `<p class="client-whatsapp input pull-left text">
+    const $field = `<p class="client-whatsapp input pull-left text">
       <label for="client-whatsapp">Celular/WhatsApp</label>
       <input type="text" id="client-whatasapp" placeholder="(00) 00000-0000" class="whatsapp_phone input-small success" oninvalid="this.setCustomValidity('Preencha este campo.')" maxlength="15" onchange="this.setCustomValidity('')">
       <span id="error-client-whatsapp-required" class="help error" style="display:none">Campo obrigatório.</span>
     </p>`
 
-    $('.client-phone').first().after(field)
+    $('.client-phone').first().before($field)
   }
 
   addPJInformation() {
@@ -205,9 +197,9 @@ class CustomProfileData {
 
     // moves emails and offers into this context
     $('.newsletter-text').before('<span class="custom-checkbox-icon"></span>')
-    const infoEmail = $('.box-client-info .newsletter').detach()
+    const $infoEmail = $('.box-client-info .newsletter').detach()
 
-    $('.box-client-info .__whatsapp').after($(infoEmail))
+    $('.box-client-info .__whatsapp').after($($infoEmail))
   }
 
   addTermsAndPolicies() {
@@ -258,6 +250,7 @@ class CustomProfileData {
     _this.addPJInformation()
     _this.addNewsletterOptIn()
     _this.addTermsAndPolicies()
+    _this.addRewardsBlock()
 
     if (
       orderForm.loggedIn ||
@@ -298,12 +291,12 @@ class CustomProfileData {
       }
     )
 
-    $('#client-phone').keypress(o => {
+    $('body').on('keypress', '#client-phone', function (e) {
       setTimeout(() => {
-        const v = _this.mphone(o.target.value)
+        const v = _this.mphone(e.target.value)
 
-        if (v !== o.target.value) {
-          o.target.value = v
+        if (v !== e.target.value) {
+          e.target.value = v
         }
       }, 1)
     })
@@ -417,7 +410,7 @@ class CustomProfileData {
     })
 
     $('body').on(
-      'input blur',
+      'input blur keyup keypress',
       '#client-profile-data p.input input:visible',
       function () {
         setTimeout(() => _this.toggleGoToShippingDisabled(), 1)

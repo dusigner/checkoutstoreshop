@@ -898,6 +898,25 @@
 			border: none;
 			padding: 0;
 
+      .best-price {
+        .ref-id {
+          font-size: 0px;
+        }
+
+        .ref-id::after{
+          content: "Total à vista";
+          font-size: 28px;
+          display: inline-block;
+        }
+
+        @media screen and (max-width: 768px) {
+          .estimate-shipping,
+          .ref-id::after{
+            font-size: 18px;
+          }
+        }
+      }
+
 			.accordion-inner {margin-top: 0px;}
 
 			.summary > .summary-coupon-wrap,
@@ -1093,6 +1112,7 @@
 
 		.payment-submit-wrap {
 			margin:10px 0 0 0;
+      background: #F7F7F7;
 
 			@media(max-width: 768px) {
 				z-index: 9999;
@@ -1101,7 +1121,6 @@
 				width: 100%;
     		left: 0;
 				padding: 0;
-				background:#FFF;
 				margin: 0 !important;
 				button {
 					border-radius:0 !important;
@@ -1213,7 +1232,7 @@
       .step.client-profile-data.active .box-step .form-step[style*="display: block"],
       .step.shipping-data.active .accordion-inner.shipping-container,
       #payment-data .box-step form.form-step {
-        grid-template-columns: 246px auto;
+        grid-template-columns: 1fr auto;
       }
     }
 
