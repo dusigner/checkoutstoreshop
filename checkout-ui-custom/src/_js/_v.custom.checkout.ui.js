@@ -952,18 +952,21 @@ class checkoutCustom {
           </div>
         `
 
+        let listItems = ''
+
+        items.forEach(item => {
+          listItems += `
+              <li>${item.name || item.skuName}</li>
+            `
+        })
+
         const _summaryOrder = `
           <div class="summaryOrder">
             <h6>Resumo do pedido (${itemsQuantity} ${
           itemsQuantity.length > 1 ? 'itens' : 'item'
         })</h6>
             <ul>
-              ${items.map(item => {
-                return `
-                    <li>${item.name || item.skuName}</li>
-                  `
-              })}
-
+              ${listItems}
             </ul>
           </div>
         `
