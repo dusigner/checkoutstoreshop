@@ -15,6 +15,7 @@ const CustomPreEmail = require('./_pre-email.js')
 const { default: TradeIn } = require('./_tradeIn.js')
 const { default: SendAttachment } = require('./_sendAttachment.js')
 const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
+const { default: AdobeLaunchPixel } = require('./_adobeLaunchPixel.js')
 
 class checkoutCustom {
   constructor({
@@ -44,6 +45,7 @@ class checkoutCustom {
     this.installationService = new InstallationService()
     this.TradeIn = new TradeIn()
     this.SendAttachment = new SendAttachment()
+    this.adobeLaunchPixel = new AdobeLaunchPixel()
   }
 
   general() {
@@ -1552,6 +1554,9 @@ class checkoutCustom {
         _this.profile.toggleGoToShippingDisabled()
         _this.shipping.toggleGoToPaymentDisabled()
         _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
+
+        // Adobe Launch Pixel
+        _this.adobeLaunchPixel.init()
 
         if (_this.customAddressForm && typeof store !== 'undefined') {
           window.store.dispatch({
