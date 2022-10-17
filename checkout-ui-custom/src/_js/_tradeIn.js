@@ -79,8 +79,8 @@ export default class TradeIn {
       const _checkoutElem = $(`.cart-fixed`)
       const _cartElem = $(`.summary-to-new-components`)
       const _component = `
-        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: left;">
-          <p>* A compra de um produto com a modalidade Troca Smart gera um transação de valor total do aparelho para pagamento no site.</p>
+        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #0077C8; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: left;">
+          <p>* A compra de um produto com a modalidade Troca Smart gera uma <span style="font-weight: 700"> transação de valor total do aparelho </span> para pagamento no site.</p>
           <p>O valor da pré-avaliação da Troca Smart será depositado em conta corrente após avaliação e aceitação do aparelho pela TROCAFONE.</p>
         </div>
       `
@@ -106,7 +106,7 @@ export default class TradeIn {
         <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
             <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart <br /> Dinheiro em Conta</td>
-            <td id="total-tradein-value" style="font-size: 14px; color: #000000; font-weight: 700;">${formatCurrencyBRL(
+            <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(
               totalTradeIn,
               false
             )}*

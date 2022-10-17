@@ -5,7 +5,6 @@ body {
   min-width: initial !important;
   padding: 0;
   background: $base;
-  padding-bottom:40px !important;
 
   min-height: 93vh;
   position: relative;
@@ -40,7 +39,7 @@ body {
   }
   //end short preloader to don't show a empty cart
 
-  &.v-custom-step-email {    
+  &.v-custom-step-email {
     #orderform-to-cart {
       display: inline-block;
     }
@@ -53,7 +52,7 @@ body {
     p.client-phone {
       width: 100% !important;
     }
-    
+
     p.client-date-birth,
     p.client-whatsapp,
     .pj-information,
@@ -242,7 +241,7 @@ body {
 
     line-height: 20px;
     display: block;
-    
+
     &:not(.accordion-toggle-active) {
       padding-bottom: 16px;
       border-bottom: 1px solid #9E9E9E;
@@ -275,7 +274,7 @@ body {
     font-size: 14px;
     z-index: 10;
     opacity: 1;
-    
+
     @media (max-width: 768px) {
       right: 0;
     }
