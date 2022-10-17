@@ -1315,14 +1315,7 @@
               const o = $(`.table.cart-items tbody tr.product-item:eq(${e})`)
               if (0 === o.find('td.product-price').find('.best-price').length)
                 return
-              const a = o.find('.total-selling-price:eq(0)').text(),
-                t = `\n          <div class="v-custom-quantity-price vqc-ldelem">\n            <span class="v-custom-quantity-price__list">\n              ${
-                  this.listPrice > this.sellingPrice
-                    ? `<span class="v-custom-quantity-price__list--list">\n                    ${s(
-                        this.listPrice * this.quantity
-                      )}</span>`
-                    : ''
-                }\n            </span>\n          </div>\n        `
+              const a = o.find('.total-selling-price:eq(0)').text()
               o.find('td.product-price').find('.vqc-ldelem').remove(),
                 o
                   .find('td.product-price')
@@ -1330,7 +1323,6 @@
                   .prepend(
                     `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${a}</p></div>`
                   )
-                  .append(t)
             })
           } catch (e) {
             console.error('enchancementTotalPrice error:', e)
@@ -1354,23 +1346,19 @@
       enchancementSummaryCart(e) {
         try {
           const o = $('.summary-template-holder'),
-            a =
-              0 == e.totalizers.filter(e => 'Items' === e.id)
-                ? 0
-                : e.totalizers.find(e => 'Items' === e.id).value,
+            a = window.vtexjs.checkout.orderForm.paymentData.paymentSystems
+              .filter(e => 'creditCardPaymentGroup' === e.groupName)
+              .map(e => e.id),
             t =
-              a +
-              (0 == e.totalizers.filter(e => 'Shipping' === e.id)
-                ? 0
-                : e.totalizers.find(e => 'Shipping' === e.id).value),
-            n = t - e.value,
-            r = `\n        <div class="cart-total" style="margin-bottom: 35px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total</p>\n            <p class="estimate-shipping">${s(
+              window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
+                e => a.includes(Number(e.paymentSystem))
+              ).installments,
+            n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
+            r = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${s(
               e.value
-            )}</p>\n          </div>\n          <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">\n            <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">\n              ${s(
-              t
-            )}\n            </p>\n            <p class="discount-total" style="color: #2189FF; font-weight: 700;">\n              ${
-              'economize ' + s(-n)
-            }\n            </p>\n          </div>\n        </div>\n      `
+            )}</p>\n          </div>\n          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">\n            <p class="gross-total">\n              Total a prazo\n            </p>\n            <p class="discount-total" style="font-weight: 700;">\n              ${s(
+              n
+            )}\n            </p>\n          </div>\n        </div>\n      `
           0 === o.find('.cart-total').length || o.find('.cart-total').remove(),
             o.prepend(r)
         } catch (e) {
@@ -1417,7 +1405,7 @@
             if (e.find('.coupon-fields').find('.div-coupon-info').length > 0)
               return
             e.find('.coupon-fields').append(
-              '<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">\n            <p style="font-size: 12px; padding-top: 5px; color: #555555;">\n              Digite o cupom de desconto\n            </p>\n          </div>'
+              '<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">\n            <p style="font-size: 12px; color: #555555;">\n              Digite o cupom de desconto\n            </p>\n          </div>'
             )
           }
         } catch (e) {
@@ -1447,34 +1435,33 @@
           console.error('WrapSummary error:', e)
         }
       }
+      addMedalliaScript() {
+        try {
+          const e = document.createElement('script')
+          ;(e.id = 'medallia-script'),
+            (e.src =
+              'https://resources.digital-cloud-west.medallia.com/wdcwest/145272/onsite/embed.js'),
+            document.body.appendChild(e)
+        } catch (e) {
+          console.error('addMedalliaScript error:', e)
+        }
+      }
       summaryCustom() {
         try {
           const { items: e } = window.vtexjs.checkout.orderForm,
             o = e.length,
-            a = window.vtexjs.checkout.orderForm.paymentData.paymentSystems
-              .filter(e => 'creditCardPaymentGroup' === e.groupName)
-              .map(e => e.id),
-            t =
-              window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
-                e => a.includes(Number(e.paymentSystem))
-              ).installments,
-            n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
-            r = $($('.summary-totalizers .accordion-inner')[1]),
-            d = $('.summary-totalizers .table')
-          if (!$('.on-term-price').length) {
-            const a = `\n          <tbody class="on-term-price" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">\n            <td class="text-description" style="font-size: 14px; color: #000000; font-weight: 400;">Total a prazo</td>\n            <td class="text-bold-price" style="font-size: 14px; color: #000000; font-weight: 700;">${s(
-              n
-            )}\n            </td>\n          </tr>\n        </tbody>\n        `
+            a = $($('.summary-totalizers .accordion-inner')[1])
+          if (!$('.summaryOrder').length) {
             let t = ''
             e.forEach(e => {
               t += `\n              <li>${
                 e.name || e.skuName
               }</li>\n            `
             })
-            const i = `\n          <div class="summaryOrder">\n            <h6>Resumo do pedido (${o} ${
+            const n = `\n          <div class="summaryOrder">\n            <h6>Resumo do pedido (${o} ${
               o.length > 1 ? 'itens' : 'item'
             })</h6>\n            <ul>\n              ${t}\n            </ul>\n          </div>\n        `
-            d.append(a), r.append(i)
+            a.append(n)
           }
         } catch (e) {
           console.error('summaryCustom error:', e)
@@ -1847,6 +1834,9 @@
                 e.checkProfileFocus(),
                 e.changeShippingTimeInfoInit(),
                 e.indexedInItems(window.vtexjs.checkout.orderForm),
+                window.vtexjs.checkout.getOrderForm().done(function () {
+                  e.addMedalliaScript()
+                }),
                 e.profile.toggleGoToShippingDisabled(),
                 e.shipping.toggleGoToPaymentDisabled(),
                 e.shipping.validadePostalCode(window.vtexjs.checkout.orderForm),
@@ -9997,7 +9987,7 @@
           const e = $('.cart-fixed'),
             o = $('.summary-to-new-components'),
             a =
-              '\n        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: \'SamsungOne\'; float: right; text-align: left;">\n          <p>* A compra de um produto com a modalidade Troca Smart gera um transação de valor total do aparelho para pagamento no site.</p>\n          <p>O valor da pré-avaliação da Troca Smart será depositado em conta corrente após avaliação e aceitação do aparelho pela TROCAFONE.</p>\n        </div>\n      '
+              '\n        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #0077C8; font-size: 12px; font-family: \'SamsungOne\'; float: right; text-align: left;">\n          <p>* A compra de um produto com a modalidade Troca Smart gera uma <span style="font-weight: 700"> transação de valor total do aparelho </span> para pagamento no site.</p>\n          <p>O valor da pré-avaliação da Troca Smart será depositado em conta corrente após avaliação e aceitação do aparelho pela TROCAFONE.</p>\n        </div>\n      '
           if (
             e.find('#text-details-tradein').length > 0 ||
             o.find('#text-details-tradein').length > 0
@@ -10011,7 +10001,7 @@
       showTotalTradeIn(e) {
         try {
           const o = $('.summary-totalizers .table'),
-            a = `\n        <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">\n            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart <br /> Dinheiro em Conta</td>\n            <td id="total-tradein-value" style="font-size: 14px; color: #000000; font-weight: 700;">${Object(
+            a = `\n        <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">\n            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart <br /> Dinheiro em Conta</td>\n            <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${Object(
               t.formatCurrencyBRL
             )(
               e,

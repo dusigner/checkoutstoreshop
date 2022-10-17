@@ -721,7 +721,6 @@ class checkoutCustom {
     if (!_this.quantityPriceCart) return
     try {
       $.each(orderForm.items, function (i) {
-        const _item = this
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
 
         if (_trElem.find('td.product-price').find('.best-price').length === 0) {
@@ -729,20 +728,6 @@ class checkoutCustom {
         }
 
         const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
-        const _eachprice = `
-          <div class="v-custom-quantity-price vqc-ldelem">
-            <span class="v-custom-quantity-price__list">
-              ${
-                _item.listPrice > _item.sellingPrice
-                  ? `<span class="v-custom-quantity-price__list--list">
-                    ${formatCurrencyBRL(
-                      _item.listPrice * _item.quantity
-                    )}</span>`
-                  : ''
-              }
-            </span>
-          </div>
-        `
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
@@ -752,7 +737,6 @@ class checkoutCustom {
           .prepend(
             `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p></div>`
           )
-          .append(_eachprice)
       })
     } catch (e) {
       console.error('enchancementTotalPrice error:', e)
@@ -786,34 +770,41 @@ class checkoutCustom {
     try {
       const _trElem = $(`.summary-template-holder`)
 
-      const totalItems =
-        orderForm.totalizers.filter(item => item.id === 'Items') == false
-          ? 0
-          : orderForm.totalizers.find(item => item.id === 'Items').value
+      // Pega os ids de todos os cartões de creditos (pagamento a prazo), exceto itau card.
+      const creditCardPaymentGroupIds =
+        window.vtexjs.checkout.orderForm.paymentData.paymentSystems
+          .filter(payment => payment.groupName === 'creditCardPaymentGroup')
+          .map(payment => payment.id)
 
-      const totalShipping =
-        orderForm.totalizers.filter(item => item.id === 'Shipping') == false
-          ? 0
-          : orderForm.totalizers.find(item => item.id === 'Shipping').value
+      // Encontra as installments para qualquer um dos ids acima.
+      const installmentOption =
+        window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
+          installment =>
+            creditCardPaymentGroupIds.includes(
+              Number(installment.paymentSystem)
+            )
+        ).installments
 
-      const totalGross = totalItems + totalShipping
-
-      const totalDiscount = totalGross - orderForm.value
+      // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
+      const totalOnTerm = installmentOption.find(
+        install =>
+          install.count === Math.max(...installmentOption.map(ins => ins.count))
+      ).total
 
       const _component = `
-        <div class="cart-total" style="margin-bottom: 35px; color: #000">
+        <div class="cart-total" style="margin-bottom: 20px; color: #000">
           <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">
-            <p class="ref-id">Total</p>
+            <p class="ref-id">Total à vista</p>
             <p class="estimate-shipping">${formatCurrencyBRL(
               orderForm.value
             )}</p>
           </div>
-          <div class="discount-price" style="font-size: 12px; display: flex; justify-content: flex-end;">
-            <p class="gross-total" style="margin-right: 8px; text-decoration: line-through;">
-              ${formatCurrencyBRL(totalGross)}
+          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
+            <p class="gross-total">
+              Total a prazo
             </p>
-            <p class="discount-total" style="color: #2189FF; font-weight: 700;">
-              ${`economize ${formatCurrencyBRL(-totalDiscount)}`}
+            <p class="discount-total" style="font-weight: 700;">
+              ${formatCurrencyBRL(totalOnTerm)}
             </p>
           </div>
         </div>
@@ -896,7 +887,7 @@ class checkoutCustom {
 
         _trElem.find('.coupon-fields').append(
           `<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">
-            <p style="font-size: 12px; padding-top: 5px; color: #555555;">
+            <p style="font-size: 12px; color: #555555;">
               Digite o cupom de desconto
             </p>
           </div>`
@@ -943,48 +934,27 @@ class checkoutCustom {
     }
   }
 
+  addMedalliaScript() {
+    try {
+      const script = document.createElement('script')
+
+      script.id = 'medallia-script'
+      script.src =
+        'https://resources.digital-cloud-west.medallia.com/wdcwest/145272/onsite/embed.js'
+      document.body.appendChild(script)
+    } catch (e) {
+      console.error('addMedalliaScript error:', e)
+    }
+  }
+
   summaryCustom() {
     try {
       const { items } = window.vtexjs.checkout.orderForm
       const itemsQuantity = items.length
 
-      // Pega os ids de todos os cartões de creditos (pagamento a prazo), exceto itau card.
-      const creditCardPaymentGroupIds =
-        window.vtexjs.checkout.orderForm.paymentData.paymentSystems
-          .filter(payment => payment.groupName === 'creditCardPaymentGroup')
-          .map(payment => payment.id)
-
-      // Encontra as installments para qualquer um dos ids acima.
-      const installmentOption =
-        window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
-          installment =>
-            creditCardPaymentGroupIds.includes(
-              Number(installment.paymentSystem)
-            )
-        ).installments
-
-      // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-      const totalOnTerm = installmentOption.find(
-        install =>
-          install.count === Math.max(...installmentOption.map(ins => ins.count))
-      ).total
-
       const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
-      const _tableElem = $(`.summary-totalizers .table`)
 
-      if (!$('.on-term-price').length) {
-        const _onTermHTML = `
-          <tbody class="on-term-price" style="border-top: 1px solid #cbcbcb;">
-          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
-            <td class="text-description" style="font-size: 14px; color: #000000; font-weight: 400;">Total a prazo</td>
-            <td class="text-bold-price" style="font-size: 14px; color: #000000; font-weight: 700;">${formatCurrencyBRL(
-              totalOnTerm
-            )}
-            </td>
-          </tr>
-        </tbody>
-        `
-
+      if (!$('.summaryOrder').length) {
         let listItems = ''
 
         items.forEach(item => {
@@ -1004,7 +974,6 @@ class checkoutCustom {
           </div>
         `
 
-        _tableElem.append(_onTermHTML)
         _accordionElem.append(_summaryOrder)
       }
     } catch (e) {
@@ -1574,6 +1543,10 @@ class checkoutCustom {
         _this.checkProfileFocus()
         _this.changeShippingTimeInfoInit()
         _this.indexedInItems(window.vtexjs.checkout.orderForm)
+
+        window.vtexjs.checkout.getOrderForm().done(function () {
+          _this.addMedalliaScript()
+        })
 
         // #shipping
         _this.profile.toggleGoToShippingDisabled()
