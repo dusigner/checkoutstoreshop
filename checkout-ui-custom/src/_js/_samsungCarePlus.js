@@ -25,6 +25,12 @@ export default class SamsungCarePlus {
 
     if (!scpItem.length) return
 
+    scpItem.forEach(item => {
+      if ($(`.product-item[data-sku="${item.id}"] .item-link-remove`)) {
+        $(`.product-item[data-sku="${item.id}"] .quantity`).hide()
+      }
+    })
+
     // Se tem mais de um seguro então deixa somente o ultimo seguro colocado.
     if (scpItem.length > 1) {
       const remove = scpItem.filter((item, index) => {

@@ -24,6 +24,10 @@ export default class InstallationService {
     const toRemove = []
 
     installations.forEach(installation => {
+      if ($(`.product-item[data-sku="${installation.id}"] .item-link-remove`)) {
+        $(`.product-item[data-sku="${installation.id}"] .quantity`).hide()
+      }
+
       const duplicated = installations.filter(
         installationItem =>
           installationItem.id === installation.id &&
