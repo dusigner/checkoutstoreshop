@@ -729,7 +729,7 @@ class checkoutCustom {
           return
         }
 
-        const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
+        const totalValue = _trElem.find('.total-price:eq(0)').text()
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
@@ -770,6 +770,10 @@ class checkoutCustom {
 
   enchancementSummaryCart(orderForm) {
     try {
+      if (orderForm.value == 0) {
+        return
+      }
+
       const _trElem = $(`.summary-template-holder`)
 
       // Pega o valor do pix (código 125)
@@ -778,10 +782,9 @@ class checkoutCustom {
       ).installments[0].total
 
       // Encontra as installments para do cartao visa (código 2)
-      const installmentOption =
-        window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
-          item => item.paymentSystem == 2
-        ).installments
+      const installmentOption = orderForm.paymentData.installmentOptions.find(
+        item => item.paymentSystem == 2
+      ).installments
 
       // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
       const totalOnTerm = installmentOption.find(
@@ -799,9 +802,14 @@ class checkoutCustom {
             <p class="ref-id">Total à vista</p>
             <p class="estimate-shipping">${formatCurrencyBRL(priceAVista)}</p>
           </div>
-          <div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
-            <p>(${percentDiscount}% de desconto)</p>
-          </div>
+          ${
+            percentDiscount > 0
+              ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
+                  <p>(${percentDiscount}% de desconto)</p>
+                </div>`
+              : ''
+          }
+
           <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
             <p class="gross-total">
               Total a prazo

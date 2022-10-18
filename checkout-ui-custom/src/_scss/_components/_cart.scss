@@ -743,6 +743,10 @@ h1#cart-title {display:none !important;}
 		display: none;
 	}
 
+  .link-choose-more-products {
+    display: none;
+  }
+
 	.cart-links-bottom {
 		float: none;
 		margin: 10px 0 0 0;
@@ -880,7 +884,8 @@ h1#cart-title {display:none !important;}
       }
     }
 
-    .srp-delivery-select-container {
+    .srp-delivery-select-container,
+    .srp-shipping-current-single {
       border-radius: 6px !important;
       background: #F5F7FE !important;
       border: 0;
@@ -889,6 +894,10 @@ h1#cart-title {display:none !important;}
       width: 566px;
       @media (max-width: $mobileWidth) {
         width: 100%;
+      }
+      .srp-shipping-current-single__sla{
+        font-size: 14px;
+        color: #000000;
       }
       .srp-delivery-current-many{
         padding: 0;

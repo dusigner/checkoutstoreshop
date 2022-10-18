@@ -756,7 +756,7 @@
     }
   },
   function (e, o, a) {
-    a(3), (e.exports = a(17))
+    a(3), (e.exports = a(18))
   },
   function (e, o, a) {
     const t = a(4),
@@ -811,10 +811,11 @@
       { default: h } = a(10),
       { default: C } = a(11),
       { default: l } = a(12),
-      u = a(13),
-      { default: c } = a(14),
+      c = a(13),
+      { default: u } = a(14),
       { default: p } = a(15),
-      { default: g } = a(16)
+      { default: g } = a(16),
+      { default: y } = a(17)
     e.exports = class {
       constructor({
         type: e = 'vertical',
@@ -835,12 +836,13 @@
           (this.showNoteField = n),
           (this.customAddressForm = r),
           (this.hideEmailStep = s),
-          (this.preEmail = new u()),
+          (this.preEmail = new c()),
           (this.profile = new i()),
           (this.shipping = new m()),
           (this.installationService = new l()),
-          (this.TradeIn = new c()),
-          (this.SendAttachment = new p())
+          (this.TradeIn = new u()),
+          (this.SendAttachment = new p()),
+          (this.adobeLaunchPixel = new y())
       }
       general() {
         $('.custom-cart-template-wrap').length ||
@@ -1315,7 +1317,7 @@
               const o = $(`.table.cart-items tbody tr.product-item:eq(${e})`)
               if (0 === o.find('td.product-price').find('.best-price').length)
                 return
-              const a = o.find('.total-selling-price:eq(0)').text()
+              const a = o.find('.total-price:eq(0)').text()
               o.find('td.product-price').find('.vqc-ldelem').remove(),
                 o
                   .find('td.product-price')
@@ -1345,19 +1347,23 @@
       }
       enchancementSummaryCart(e) {
         try {
+          if (0 == e.value) return
           const o = $('.summary-template-holder'),
             a = e.paymentData.installmentOptions.find(
               e => 125 == e.paymentSystem
             ).installments[0].total,
-            t =
-              window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
-                e => 2 == e.paymentSystem
-              ).installments,
+            t = e.paymentData.installmentOptions.find(
+              e => 2 == e.paymentSystem
+            ).installments,
             n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
             r = Math.floor(((n - a) / a) * 100),
             d = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${s(
               a
-            )}</p>\n          </div>\n          <div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">\n            <p>(${r}% de desconto)</p>\n          </div>\n          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">\n            <p class="gross-total">\n              Total a prazo\n            </p>\n            <p class="discount-total" style="font-weight: 700;">\n              ${s(
+            )}</p>\n          </div>\n          ${
+              r > 0
+                ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">\n                  <p>(${r}% de desconto)</p>\n                </div>`
+                : ''
+            }\n\n          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">\n            <p class="gross-total">\n              Total a prazo\n            </p>\n            <p class="discount-total" style="font-weight: 700;">\n              ${s(
               n
             )}\n            </p>\n          </div>\n        </div>\n      `
           0 === o.find('.cart-total').length || o.find('.cart-total').remove(),
@@ -1841,6 +1847,7 @@
                 e.profile.toggleGoToShippingDisabled(),
                 e.shipping.toggleGoToPaymentDisabled(),
                 e.shipping.validadePostalCode(window.vtexjs.checkout.orderForm),
+                e.adobeLaunchPixel.init(),
                 e.customAddressForm &&
                   'undefined' != typeof store &&
                   window.store.dispatch({
@@ -2073,28 +2080,28 @@
               C = $('<div></div>')
             C.html(o.adr_address)
             const l = $('.street-address', C).text()
-            let u =
+            let c =
                 e.returnAddressFRules(
                   o.address_components,
                   e.addressrules.city
                 ) || $('.locality', C).text(),
-              c = e.addressrules.postalCode
+              u = e.addressrules.postalCode
                 ? e.returnAddressFRules(o.address_components, {
                     types: ['postal_code'],
                   })
                 : '00000'
             'ARG' === t &&
-              ((c = c.replace(/\D/gi, '')),
+              ((u = u.replace(/\D/gi, '')),
               'Provincia de Buenos Aires' === s && (s = 'Buenos Aires'),
               'CABA' === s.toUpperCase() &&
                 ((s = 'Ciudad Autónoma de Buenos Aires'),
-                (u = 'Ciudad Autónoma de Buenos Aires'))),
-              e.setForm(t, r, l, i, c, u, s, m, d, h),
+                (c = 'Ciudad Autónoma de Buenos Aires'))),
+              e.setForm(t, r, l, i, u, c, s, m, d, h),
               e.validateAllFields(),
               e.updateAddress(
                 t,
-                c,
                 u,
+                c,
                 s,
                 r,
                 i,
@@ -10378,6 +10385,20 @@
             clearInterval(o))
         }, 10)
       }
+      voltageIsValid(e) {
+        const o = e.every(o => o.voltage === e[0].voltage),
+          { items: a } = window.vtexjs.checkout.orderForm,
+          t = a.filter(o => e.map(e => e.mainSku).includes(o.id))
+        if (!o && t.length) {
+          const e = $(`tr.product-item[data-sku="${t[0].id}"] td.item-remove a`)
+          return (
+            e.length &&
+              (e[0].remove(), this.clearBespokeRefrigerator(a, t[0].id, !1)),
+            !1
+          )
+        }
+        return !0
+      }
       getMandatorySkus() {
         return new Promise(async e => {
           const o = 'br' === window.location.pathname.split('/')[1] ? 'br' : ''
@@ -10413,22 +10434,942 @@
       }
       init() {
         try {
-          if (!JSON.parse(localStorage.getItem('BespokeItems'))) return
-          this.getMandatorySkus().then(e => {
-            e
-              ? $(document).ajaxStop(() => {
-                  this.checkItems(window.vtexjs.checkout.orderForm),
-                    this.removeButtons(window.vtexjs.checkout.orderForm),
-                    this.editButton(window.vtexjs.checkout.orderForm),
-                    this.removeItems()
-                })
-              : console.error(
-                  "There is a problem with Checkout's Bespoke Customization. Please, check out the code. "
-                )
+          const e = JSON.parse(localStorage.getItem('BespokeItems'))
+          if (!e) return
+          this.getMandatorySkus().then(o => {
+            this.voltageIsValid(e) &&
+              (o
+                ? $(document).ajaxStop(() => {
+                    this.checkItems(window.vtexjs.checkout.orderForm),
+                      this.removeButtons(window.vtexjs.checkout.orderForm),
+                      this.editButton(window.vtexjs.checkout.orderForm),
+                      this.removeItems()
+                  })
+                : console.error(
+                    "There is a problem with Checkout's Bespoke Customization. Please, check out the code. "
+                  ))
           })
         } catch (e) {
           console.error('Bespoke refrigerators', e)
         }
+      }
+    }
+  },
+  function (e, o, a) {
+    'use strict'
+    a.r(o),
+      a.d(o, 'default', function () {
+        return t
+      })
+    class t {
+      constructor() {
+        ;(this.dtmWatchPages = { checkout: 'checkout-header' }),
+          (this.scriptFiles = {
+            ar: '//assets.adobedtm.com/72afb75f5516/510bc748cd99/launch-2ab05c7d16d3.min.js',
+            br: '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
+            cl: '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-2dc5f0c95eb9-development.min.js',
+            co: '//assets.adobedtm.com/72afb75f5516/666481c328a4/launch-d4f674a4f20e.min.js',
+            mx: '//assets.adobedtm.com/72afb75f5516/15c6fca01360/launch-eeaa88ea2df8.min.js',
+            pe: '//assets.adobedtm.com/72afb75f5516/e81c20aa5fa4/launch-8c7166247df8.min.js',
+            ar_staging:
+              '//assets.adobedtm.com/94a07bb253a23a545fca071a500c666bbb8d4a94/satelliteLib-00602685fc5991db91c246c9ada0d0aff71599cc-staging.js',
+            br_staging:
+              '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-005f425fd4fc-staging.min.js',
+            cl_staging:
+              '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-2dc5f0c95eb9-development.min.js',
+            co_staging:
+              '//assets.adobedtm.com/72afb75f5516/666481c328a4/launch-b4a7b8e288e1-staging.min.js',
+            mx_staging:
+              '//assets.adobedtm.com/72afb75f5516/15c6fca01360/launch-850c1bb8210b-development.min.js',
+            pe_staging:
+              '//assets.adobedtm.com/72afb75f5516/e81c20aa5fa4/launch-f3a9bb019200-staging.min.js',
+          }),
+          (this.version2 = ['ar', 'br', 'cl', 'co', 'mx', 'pe']),
+          (this.countryCodes = ['ar', 'br', 'cl', 'co', 'mx', 'pe']),
+          (this.pageType = !1),
+          (this.observer = null),
+          (this.pageInterval = null),
+          (this.codesCache = []),
+          (this.productsOrdered = ''),
+          (this.pagesWithMutation = ['checkout']),
+          (this.cacheKey = 'ssgDtmCache')
+      }
+      init() {
+        const e = this
+        e.loadCache()
+        const o = document.createElement('script')
+        ;(o.type = 'text/javascript'),
+          (o.innerText =
+            'var siteCode="",pageURL=" ",digitalData={page:{pageInfo:{siteCode:"",siteSection:"shop",pageName:"" },pathIndicator:{depth_2:"",depth_3:"",depth_4:"",depth_5:""},offerId:""},user:{loginStatus:false},product:{modelVariant:"",model_name:"",displayName:"",productDivision:"",productFamily:"",pimSubType:"",listPrice:""},orderdetails:{listPrice:"",productsOrdered:"",modelVariant:"",deliveryOption:"",paymentMethod:"",orderId:"",productDivision:"",productFamily:"",pimSubType:"",displayName:"",addService:"",oldDevice:""}},depth=window.location.href.split("/").length,depth_last=window.location.href.split("/")[depth-1];""!==depth_last&&"?"!==depth_last.charAt(0)||(depth-=1),""===digitalData.page.pathIndicator.depth_2&&(depth>=5&&(digitalData.page.pathIndicator.depth_2=pageURL.split("/")[4]),depth>=6&&(digitalData.page.pathIndicator.depth_3=pageURL.split("/")[5]),depth>=7&&(digitalData.page.pathIndicator.depth_4=pageURL.split("/")[6]),depth>=8&&(digitalData.page.pathIndicator.depth_5=pageURL.split("/")[7]));var pageName=siteCode+":shop";""!=digitalData.page.pathIndicator.depth_2&&(pageName+=":"+digitalData.page.pathIndicator.depth_2),""!=digitalData.page.pathIndicator.depth_3&&(pageName+=":"+digitalData.page.pathIndicator.depth_3),""!=digitalData.page.pathIndicator.depth_4&&(pageName+=":"+digitalData.page.pathIndicator.depth_4),""!=digitalData.page.pathIndicator.depth_5&&(pageName+=":"+digitalData.page.pathIndicator.depth_5),digitalData.page.pageInfo.pageName=pageName;'),
+          document.head.appendChild(o),
+          e.getPageType(),
+          e._populateProductLayer()
+        const a = document.createElement('script')
+        a.type = 'text/javascript'
+        let t = e._fetchSiteCode()
+        const n = e._fetchSiteCode()
+        e._isProduction() || (t += '_staging')
+        const r = Math.floor(1e3 * Math.random())
+        ;(a.src = `${e.scriptFiles[t]}?v=${r}`),
+          e.version2.indexOf(n) > -1 && a.setAttribute('async', ''),
+          document.head.appendChild(a),
+          (a.onload = function () {
+            e.waitForDataSend()
+            const o = setInterval(function () {
+              if (document.body) {
+                if (document.getElementById('satelliteAA'))
+                  return void clearInterval(o)
+                if (-1 === e.version2.indexOf(n)) {
+                  const e = document.createElement('script')
+                  ;(e.id = 'satelliteAA'),
+                    (e.innerText = 'try{_satellite.pageBottom();}catch(e){}'),
+                    (e.type = 'text/javascript'),
+                    document.body.appendChild(e)
+                }
+              }
+            }, 100)
+            e._populateDataLayer(),
+              e._addProductToDigitalDataV2(),
+              e._pageTrack()
+          })
+      }
+      setup() {
+        const e = this
+        window.location.href.indexOf('upselling') > -1 ||
+          (!1 !== e.pageType &&
+            ((window.onhashchange = function () {
+              e._populateDataLayer(), e.waitForDataSend(), e._pageTrack()
+            }),
+            null === e.observer &&
+              (-1 === e.pagesWithMutation.indexOf(e.pageType)
+                ? e._populateProductLayer()
+                : ((e.observer = new MutationObserver(function (o) {
+                    o.forEach(function (o) {
+                      if (
+                        null !==
+                          document.querySelector(
+                            '.payment-unauthorized-modal'
+                          ) &&
+                        'block' ===
+                          document.querySelector('.payment-unauthorized-modal')
+                            .style.display
+                      )
+                        return void (e.pageType = 'order_failure')
+                      if ('render-provider' === o.target.className) {
+                        if (e.getPageType() !== e.pageType)
+                          return (e.pageType = !1), void e.setup()
+                      }
+                      const a = o.addedNodes.length
+                      if (a > 0)
+                        for (let t = 0; t < a; t++) {
+                          const a = o.addedNodes[t]
+                          if (!(a instanceof HTMLElement)) return
+                          e.inspectElement(a)
+                        }
+                      'checkout' === e.pageType &&
+                        $('.item-link-remove.data-omni-remove').on(
+                          'click',
+                          function (o) {
+                            const { target: a } = o,
+                              t = a.getAttribute('data-omni-variant')
+                            t
+                              ? e._removeFromDigitalData(t)
+                              : e._removeFromDigitalData(
+                                  a.parentElement.getAttribute(
+                                    'data-omni-variant'
+                                  )
+                                )
+                          }
+                        )
+                    })
+                  })),
+                  e.observer.observe(document.querySelector('html'), {
+                    childList: !0,
+                    subtree: !0,
+                  })))))
+      }
+      _removeFromDigitalData(e) {
+        const o = {
+            modelVariant: window.digitalData.product.modelVariant.split(','),
+            model_name: window.digitalData.product.model_name.split(','),
+            displayName: window.digitalData.product.displayName.split(';'),
+            productDivision:
+              window.digitalData.product.productDivision.split(','),
+            productFamily: window.digitalData.product.productFamily.split(','),
+            pimSubType: window.digitalData.product.pimSubType.split(','),
+            listPrice: window.digitalData.product.listPrice.split(','),
+          },
+          a = o.modelVariant.indexOf(e)
+        Object.keys(o).forEach(function (e) {
+          let t = ','
+          'displayName' === e && (t = ';'),
+            (o[e] = o[e]
+              .filter(function (e, o) {
+                return o !== a
+              })
+              .join(t))
+        }),
+          (window.digitalData.product = o)
+      }
+      getPageType() {
+        const e = this
+        null === e.pageInterval &&
+          (e.pageInterval = setInterval(function () {
+            if (document.body) {
+              const o = document.querySelectorAll('body > div')
+              for (let a = 0; a < o.length; a++)
+                if (
+                  (Object.keys(e.dtmWatchPages).forEach(function (t) {
+                    const n = e.dtmWatchPages[t]
+                    o[a].classList.forEach(function (o) {
+                      'custom' === t && o.indexOf(n) > -1
+                        ? (e.pageType = 'custom')
+                        : o === n &&
+                          ((e.pageType = t),
+                          ('department' !== e.pageType &&
+                            'subcategory' !== e.pageType) ||
+                            (e.pageType = 'category'))
+                    })
+                  }),
+                  !1 !== e.pageType)
+                ) {
+                  clearInterval(e.pageInterval), e.setup()
+                  break
+                }
+            }
+          }, 500))
+      }
+      async setElementOmni(e, o, a, t = null, n = null) {
+        const r = this
+        if (null !== e) {
+          if ((e.classList.add(o), null !== t)) {
+            const o = r._findCachedInfo(t.type, t.value, !1)
+            let a = '',
+              s = ''
+            if (o) {
+              if (
+                (Array.isArray(o) ||
+                  ((s = o.modelCode.toUpperCase()), (a = o.modelName)),
+                'bundle' in o && ((a = ''), !0 === o.bundle))
+              ) {
+                const e = o.modelCode.split('_'),
+                  t = []
+                for (let o = 0; o < e.length; o++) {
+                  const a = r._findCachedInfo('modelCode', e[o])
+                  void 0 !== a && t.push(a.modelName)
+                }
+                t.length && (a = ';' + t.join('_').toLowerCase())
+              }
+              e.setAttribute('data-omni-variant', s),
+                e.setAttribute('data-omni-base', ';' + a),
+                n && n()
+            } else await r._fetchData(e, t.type, t.value, n)
+          }
+          null !== a &&
+            Object.keys(a).forEach(function (o) {
+              let t = 'data-omni'
+              const n = a[o]
+              '' !== o && (t += '-' + o), e.setAttribute(t, n)
+            })
+        }
+      }
+      _findCachedInfo(e, o, a = !0) {
+        const t = this
+        let n = null
+        if (null === t.codesCache || 0 === t.codesCache.length) return !1
+        'ean' === e && (e = 'modelCode'),
+          'url' === e && (e = 'productUrl'),
+          'url' === e && ((e = 'productUrl'), o.endsWith('/p') || (o += '/p'))
+        try {
+          if ('name' === e)
+            return t.codesCache.find(function (a) {
+              return a[e] === o
+            })
+          if (
+            ((n = t.codesCache.find(function (a) {
+              return a[e] === o
+            })),
+            !n)
+          )
+            return
+          if (!0 === a && 'bundle' in n && n.bundle) {
+            const e = n.modelCode.split('_'),
+              o = []
+            for (let a = 0; a < e.length; a++) {
+              const r = t._findCachedInfo('modelCode', e[a], !0, e[a])
+              void 0 === r && o.push(n), o.push(r)
+            }
+            return o
+          }
+          return n
+        } catch (e) {
+          'string' == typeof t.codesCache &&
+            (t.codesCache = JSON.parse(t.codesCache))
+        }
+      }
+      async _fetchData(e, o, a, t = null) {
+        const n = this
+        if (null === e) return
+        if (
+          e.hasAttribute('data-loaded') ||
+          (e.hasAttribute('data-omni-variant') &&
+            e.hasAttribute('data-omni-base'))
+        )
+          return
+        e.setAttribute('data-loaded', !0)
+        const r = {}
+        ;(r.type = o), (r.searchValue = a), (r.country = n._fetchSiteCode())
+        let s = '',
+          d = ''
+        if (
+          ('name' === o && (s = a),
+          'url' === o && (d = a),
+          ('' !== r.type || '' !== r.searchValue) && -1 !== n.codesCache)
+        ) {
+          const o = new XMLHttpRequest()
+          o.addEventListener('load', function () {
+            n._callbackFetch(this, e, t, s, d)
+          }),
+            o.open(
+              'POST',
+              'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=4512d4c4a13541a9bc451c529f2bbb31',
+              !0
+            ),
+            o.setRequestHeader('Content-Type', 'application/json')
+        }
+      }
+      _callbackFetch(e, o, a = null) {
+        if (4 === e.readyState && 200 === e.status) {
+          const t = JSON.parse(e.response)
+          if (void 0 === t.modelCode && void 0 === t.modelName) return
+          o.setAttribute('data-omni-variant', t.modelCode.toUpperCase()),
+            o.setAttribute('data-omni-base', ';' + t.modelName),
+            a && a()
+        }
+      }
+      inspectElement(e) {
+        const o = this
+        if (void 0 === e || void 0 === e.className) return
+        const a = 'string' != typeof e.className ? '' : e.className.split(' ')
+        'checkout' === o.pageType && o.cart(a, e), o._populateProductLayer()
+      }
+      cart(e, o) {
+        const a = this
+        if (
+          (a._populateProductLayer(), o.className.indexOf('product-item') > -1)
+        ) {
+          const e = o.querySelector(
+            'td.quantity a.item-quantity-change.item-quantity-change-increment'
+          )
+          if (null !== o.querySelector('td.product-name a')) {
+            const t = o.getAttribute('data-sku')
+            a.setElementOmni(e, 'data-omni-buynow', {
+              base: a._mountDataBuyNow('base', t),
+              variant: a._mountDataBuyNow('variant', t),
+            })
+          }
+          const t = o.querySelector('.item-link-remove')
+          null !== o.querySelector('td.product-name a') &&
+            a.setElementOmni(t, 'data-omni-remove', null, {
+              type: 'url',
+              value: a._getLocation(o.querySelector('td.product-name a').href),
+            })
+        }
+        const t = document.querySelector('#cart-to-orderform')
+        null !== t &&
+          a.setElementOmni(t, 'data-omni-proceedtocheckout', {
+            '': 'cart:proceed to checkout',
+            base: window.digitalData.product.model_name,
+            variant: window.digitalData.product.modelVariant,
+          })
+        const n = document.querySelector('#orderform-to-cart')
+        null !== n &&
+          a.setElementOmni(n, 'data-omni-backtocart', {
+            '': 'checkout:back to cart',
+          })
+        const r = document.querySelector('#go-to-cart-button')
+        null !== r &&
+          null !== r.querySelector('#orderform-minicart-to-cart') &&
+          a.setElementOmni(
+            r.querySelector('#orderform-minicart-to-cart'),
+            'data-omni-backtocart',
+            { '': 'checkout:back to cart' }
+          )
+        const s = document.querySelector('.checkout-header-back')
+        null !== s &&
+          (null === document.querySelector('.cart-active')
+            ? a.setElementOmni(s.querySelector('a'), 'data-omni-backtoshop', {
+                '': 'checkout:continue shopping',
+              })
+            : a.setElementOmni(s.querySelector('a'), 'data-omni-backtoshop', {
+                '': 'cart:continue shopping',
+              }))
+        const d = document.querySelector('#cart-choose-more-products')
+        null !== d &&
+          a.setElementOmni(d, 'data-omni-backtoshop', {
+            '': 'cart:continue shopping',
+          })
+        const i = document.querySelector('#go-to-shipping')
+        null !== i &&
+          a.setElementOmni(i, 'data-omni-continue', {
+            '': 'checkout:order detail:next step',
+          })
+        const m = document.querySelector('#btn-go-to-payment')
+        null !== m &&
+          a.setElementOmni(m, 'data-omni-continue', {
+            '': 'checkout:delivery:next step',
+          }),
+          o.className.indexOf('hproduct') > -1 &&
+            void 0 !== o.querySelector('.url') &&
+            a.setElementOmni(o, 'data-placeholder', null, {
+              type: 'url',
+              value: a._getLocation(o.querySelector('.url').href),
+            })
+        let h = document.querySelectorAll('#payment-data-submit')
+        if (
+          h.length > 0 &&
+          ((h = h[1]), null !== document.querySelector('.payment-group-item'))
+        ) {
+          const e = document.querySelector('.payment-group-item.active')
+          let o = 'boleto invoice'
+          e &&
+            'payment-group-bankInvoicePaymentGroup' === e.id &&
+            (o = 'boleto invoice'),
+            e && 'payment-group-payPalPaymentGroup' === e.id && (o = 'paypal'),
+            e &&
+              'payment-group-debitCardPaymentGroup' === e.id &&
+              (o = 'debit card'),
+            e &&
+              'payment-group-MercadoPagoPaymentGroup' === e.id &&
+              (o = 'mercado pago'),
+            e &&
+              'payment-group-creditCardPaymentGroup' === e.id &&
+              (o = 'credit card'),
+            e &&
+              'payment-group-customPrivate_501PaymentGroup' === e.id &&
+              (o = 'porto'),
+            a.setElementOmni(h, 'data-omni-checkout', {
+              base: window.digitalData.product.model_name,
+              variant: window.digitalData.product.modelVariant,
+              '': 'checkout:' + o,
+            })
+        }
+        const C = document.querySelector('.client-pre-email'),
+          l = document.querySelector('#btn-client-pre-email')
+        null !== l &&
+          null !== C &&
+          (a.setElementOmni(l, 'data-omni-signin', { '': 'login_try:guest' }),
+          (C.onsubmit = function (e) {
+            e.preventDefault()
+            let o = 'login_try:guest'
+            C.checkValidity() || (o = 'login_try:guest'),
+              a.setElementOmni(l, 'data-omni-signin', { '': o })
+          }))
+      }
+      waitForDataSend() {
+        const e = this
+        let o = setInterval(function () {
+          if (!e.pageType || '' === window.digitalData.page.pageInfo.siteCode)
+            return
+          const { product: a } = window.digitalData
+          if (!e._checkProperties(a)) {
+            const a = e._removeAccents(window.location.href)
+            ;(window.digitalData.page.pageInfo.pageURL = a),
+              clearInterval(o),
+              (o = null)
+          }
+        }, 50)
+      }
+      _populateDataLayer() {
+        const e = this,
+          o = e._fetchSiteCode()
+        ;(window.digitalData.user.loginStatus = !1),
+          (window.digitalData.page.pageInfo.siteCode = o),
+          (window.digitalData.page.pageInfo.siteSection = 'shop')
+        const a = window.location.pathname.replace('/' + o, '')
+        if (
+          (e.countryCodes.indexOf(a[0]) > -1 && a.shift(0),
+          (window.digitalData.page.pageInfo.pageName = ' '),
+          (window.digitalData.page.pageInfo.pageName = e
+            ._removeAccents(
+              (
+                window.digitalData.page.pageInfo.siteSection +
+                a.replace(/\//gi, ':') +
+                window.location.hash.replace(/\//gi, ':').trim(':')
+              ).replace(/:$/gi, '')
+            )
+            .replace('#', '')),
+          document.body)
+        ) {
+          const o = document.querySelectorAll('body > div')
+          for (
+            let a = 0;
+            a < o.length &&
+            (Object.keys(e.dtmWatchPages).forEach(function (t) {
+              const n = e.dtmWatchPages[t]
+              o[a].classList.forEach(function (o) {
+                o === n && (e.pageType = t)
+              })
+            }),
+            !1 === e.pageType);
+            a++
+          );
+        }
+        switch (e.pageType) {
+          case 'checkout':
+            ;(window.digitalData.page.pageInfo.pageTrack = 'shop checkout'),
+              '#/cart' === window.location.hash &&
+                (window.digitalData.page.pageInfo.pageTrack = 'shop cart')
+            break
+          case 'order_failure':
+            window.digitalData.page.pageInfo.pageTrack = 'shop order failure'
+            break
+          case 'help':
+            window.digitalData.page.pageInfo.pageTrack = 'shop help'
+            break
+          case 'error':
+            window.digitalData.page.pageInfo.pageTrack = 'shop error'
+        }
+        let { pathname: t } = window.location
+        t = e._removeAccents(t).replace('/', '')
+        const n = window.location.hash
+          .replace('#/', '')
+          .split('/')
+          .filter(function (e) {
+            return '' !== e
+          })
+        let r = t
+          .split('/')
+          .filter(function (e) {
+            return '' !== e
+          })
+          .concat(n)
+        e.countryCodes.indexOf(r[0]) > -1 && r.shift(),
+          (r = r.filter(function (e) {
+            return '' !== e.trim()
+          }))
+        for (let e = 0; e <= 3; e++) {
+          const o = e + 2
+          window.digitalData.page.pathIndicator['depth_' + o] =
+            void 0 === r[e]
+              ? ''
+              : (window.digitalData.page.pathIndicator['depth_' + o] = r[e])
+        }
+      }
+      _populateProductLayer() {
+        const e = this
+        if (-1 === ['checkout'].indexOf(e.pageType))
+          return (
+            (window.digitalData.product.modelVariant = ''),
+            (window.digitalData.product.model_name = ''),
+            (window.digitalData.product.displayName = ''),
+            (window.digitalData.product.productDivision = ''),
+            (window.digitalData.product.productFamily = ''),
+            (window.digitalData.product.pimSubType = ''),
+            void (window.digitalData.product.listPrice = '')
+          )
+        if (!e._checkProperties(window.digitalData.product)) return
+        let o = 'ean'
+        if ('checkout' === e.pageType || 'cart' === e.pageType) {
+          if (
+            void 0 !== window.vtexjs &&
+            void 0 !== e.codesCache &&
+            void 0 !== window.vtexjs.checkout.orderForm &&
+            window.vtexjs.checkout.orderForm.items.length > 0
+          ) {
+            const { items: o } = window.vtexjs.checkout.orderForm
+            'string' == typeof e.codesCache &&
+              (e.codesCache = JSON.parse(e.codesCache))
+            const a =
+              window.vtexjs.checkout.orderForm.storePreferencesData
+                .currencyFormatInfo.currencyDecimalDigits
+            try {
+              for (let t = 0; t < o.length; t++) {
+                const n = o[t],
+                  r = e.codesCache.findIndex(function (e) {
+                    return n.refId === e.modelCode
+                  })
+                e.codesCache[r] &&
+                  (e.codesCache[r].price =
+                    a > 0
+                      ? (n.sellingPrice / 10 ** a).toFixed(a)
+                      : n.sellingPrice)
+              }
+            } catch (e) {
+              console.error('_populateProductLayer: ' + e)
+            }
+            const t = {}
+            ;(e.codesCache.lastUpdate = new Date()),
+              (t[this._fetchSiteCode()] = e.codesCache),
+              localStorage.setItem(e.cacheKey, JSON.stringify(t))
+          }
+          document.querySelectorAll('tr.product-item').forEach(function (a) {
+            if (null !== a) {
+              if (
+                null !== a.getAttribute('data-loading') &&
+                null !== a.querySelector('.total-selling-price')
+              )
+                return
+              const t = a.querySelector('.total-selling-price')
+              if (null === t) return
+              let n = t.innerText
+              ;(n = n.replace(/[^\d]/g, '').trim()),
+                a.setAttribute('data-loading', !0),
+                (o = 'sku')
+              const r = a.dataset.sku,
+                s = e._findCachedInfo(o, r, !1)
+              let d = {}
+              if (s) (d = s), (d.listPrice = n)
+              else if (-1 === e.codesCache) {
+                const a = new XMLHttpRequest(),
+                  t =
+                    'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=4512d4c4a13541a9bc451c529f2bbb31',
+                  s = {}
+                if (
+                  ((s.type = o),
+                  (s.searchValue = r),
+                  (s.country = e._fetchSiteCode()),
+                  '' === s.type || '' === s.searchValue)
+                )
+                  return
+                if (null === r) return
+                a.open('POST', t, !0),
+                  (a.onreadystatechange = function () {
+                    4 === this.readyState &&
+                      200 === this.status &&
+                      ((d = JSON.parse(this.response)),
+                      (d.listPrice = n
+                        .replace(/\./g, '')
+                        .replace(',', '')
+                        .trim()))
+                  }),
+                  a.setRequestHeader('Content-Type', 'application/json')
+              }
+            }
+          })
+        }
+      }
+      _addProductToDigitalDataV2() {
+        const e = this,
+          o = [],
+          a = [],
+          t = [],
+          n = [],
+          r = [],
+          s = [],
+          d = [],
+          i = setInterval(function () {
+            try {
+              if (
+                window.vtexjs &&
+                window.vtexjs.hasOwnProperty('checkout') &&
+                window.vtexjs.checkout.hasOwnProperty('orderForm') &&
+                window.vtexjs.checkout.orderForm.hasOwnProperty('items')
+              ) {
+                clearInterval(i)
+                const { items: m } = window.vtexjs.checkout.orderForm
+                m.forEach(async i => {
+                  if (e._isSCPlus(i)) {
+                    const m = e._getMobileCareData(i)
+                    o.push(';' + m.model_name),
+                      a.push(m.displayName),
+                      t.push(m.modelVariant),
+                      n.push(m.productDivision),
+                      r.push(m.productFamily),
+                      s.push(m.pimSubType),
+                      'samsungbr' === window.__RUNTIME__.account
+                        ? d.push(Number(m.listPrice).toFixed(2))
+                        : d.push(Number(m.listPrice))
+                  } else {
+                    const m = await e._getModel(i)
+                    o.push(';' + m.modelName),
+                      a.push(i.name ? i.name : ''),
+                      t.push(i.refId),
+                      n.push(
+                        void 0 !== m.productDivision ? m.productDivision : ''
+                      ),
+                      r.push(void 0 !== m.productFamily ? m.productFamily : ''),
+                      s.push(void 0 !== m.pimSubType ? m.pimSubType : ''),
+                      window.__RUNTIME__.account.indexOf('samsungbr') > -1 ||
+                      window.__RUNTIME__.account.indexOf('samsungmx') > -1
+                        ? d.push(Number(i.price / 100).toFixed(2))
+                        : d.push(Number(i.price))
+                  }
+                  window.digitalData.product = {
+                    model_name: o.join(','),
+                    modelVariant: t.join(','),
+                    displayName: a.join(','),
+                    productDivision: n.join(','),
+                    productFamily: r.join(','),
+                    pimSubType: s.join(','),
+                    listPrice: d.join(','),
+                  }
+                })
+              }
+            } catch (e) {
+              console.error(e)
+            }
+          }, 100)
+      }
+      _checkProperties(e) {
+        for (const o in e) if (null !== e[o] && '' !== e[o]) return !1
+        return !0
+      }
+      _removeAccents(e) {
+        e.indexOf('%') > -1 && (e = decodeURI(e))
+        const o = (e = e.split('')).length
+        let a, t
+        for (a = 0; a < o; a++)
+          -1 !==
+            (t =
+              'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž'.indexOf(
+                e[a]
+              )) &&
+            (e[a] =
+              'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz'[
+                t
+              ])
+        return e.join('')
+      }
+      _fetchSiteCode() {
+        const e = window.location.host.split('.')
+        if (e[0].includes('samsungbrtest')) return 'br'
+        if ('samsungmxio' === e[0]) return 'mx'
+        const o = e[e.length - 1]
+        if (this.countryCodes.indexOf(o) > -1) return o
+        const a = window.location.pathname.replace('/', '').split('/')
+        return this.countryCodes.indexOf(a[0]) > -1 ? a[0] : e[0].substr(-2)
+      }
+      _isProduction() {
+        const e = [
+          'shop.samsung.com/ar',
+          'shop.samsung.com.ar',
+          'shop.samsung.com/pe',
+          'shop.samsung.com.pe',
+          'shop.samsung.com/co',
+          'shop.samsung.com.co',
+          'shop.samsung.com/br',
+          'shop.samsung.com.br',
+          'www.samsungstore.mx',
+          'shop.samsung.com/mx',
+        ]
+        for (let o = 0; o < e.length; o++)
+          if (window.location.href.indexOf(e[o]) > -1) return !0
+        return !1
+      }
+      _getLocation(e) {
+        const o = document.createElement('a')
+        return (o.href = e), o.pathname
+      }
+      loadCache() {
+        const e = this,
+          o = {
+            ar: '88c1b01b99814a5f857c637d37bae622',
+            br: '78ca5fdbcadb437083408712375af24c',
+            ch: 'd2d9609836c04d9bbb7b07affa9c7a87',
+            co: '846f6305d72e4a058d3d11d6f13fc2f7',
+            mx: '8b6be84693f840849d056aef5c88149f',
+            pm: '150c1dcde6c9443fa12721a1204af446',
+            py: '75ea8fb8a57144d4a6dbbd77144d9fb3',
+            pe: '918161aef5d34eff8745f32917ffef8c',
+          },
+          a = e._fetchSiteCode()
+        let t = null
+        try {
+          localStorage &&
+            ((t = localStorage.getItem(e.cacheKey)),
+            'string' == typeof t && (t = JSON.parse(t)))
+        } catch (e) {
+          console.error(
+            '[SAMSUNG AA DTM] Error during the read of the localStorage data',
+            e
+          ),
+            (t = null)
+        } finally {
+          const n = 18e5
+          if (
+            null === t ||
+            'object' != typeof t ||
+            !(a in t) ||
+            !('lastUpdate' in t) ||
+            new Date() - new Date(t.lastUpdate) >= n
+          ) {
+            const t = new XMLHttpRequest(),
+              n =
+                'https://ssg-checkout.linkapi.com.br/v1/products?apiKey=' + o[a]
+            t.open('POST', n, !0),
+              (e.codesCache = -1),
+              (t.onreadystatechange = function () {
+                if (4 === this.readyState && 200 === this.status) {
+                  const o = {}
+                  ;(o[a] = this.response),
+                    (o.lastUpdate = new Date()),
+                    localStorage &&
+                      localStorage.setItem(e.cacheKey, JSON.stringify(o)),
+                    (e.codesCache = this.response)
+                } else e.codesCache = []
+              }),
+              t.setRequestHeader('Content-Type', 'application/json'),
+              t.send()
+          }
+          null != t && (e.codesCache = t[a])
+        }
+      }
+      _pageTrack() {
+        try {
+          void 0 === window._satellite ||
+            null === window._satellite ||
+            !('track' in window._satellite) ||
+            ('#/cart' !== window.location.hash &&
+              '#/email' !== window.location.hash &&
+              '#/shipping' !== window.location.hash &&
+              '#/payment' !== window.location.hash &&
+              '#/profile' !== window.location.hash) ||
+            window._satellite.track('page_view')
+        } catch (e) {
+          console.error('[DTM]: Error window._satellite.track')
+        }
+      }
+      _getTradeInData() {
+        return {
+          model_name: 'trade-in',
+          modelVariant: 'trade-in',
+          displayName: 'trade-in',
+          listPrice: 0,
+          unit: 0,
+          productDivision: 'shop program',
+          productFamily: 'trade-in',
+          pimSubType: 'trade-in',
+        }
+      }
+      _getMobileCareData(e) {
+        return {
+          model_name: 'samsung care',
+          modelVariant: e.refId.toUpperCase(),
+          displayName: e.name,
+          listPrice: e.listPrice / 100,
+          productDivision: 'shop program',
+          productFamily: 'samsung care',
+          pimSubType: 'insurance',
+        }
+      }
+      _isTradeIn(e) {
+        return (
+          Object.values(e.productCategories)
+            .map(e => e.toLowerCase())
+            .filter(e => e.match('trade') || e.match('cambia-tu-smartphone'))
+            .length > 0
+        )
+      }
+      _isSCPlus(e) {
+        return (
+          Object.values(e.productCategories)
+            .map(e => e.toLowerCase())
+            .filter(e => e.match('samsung care')).length > 0
+        )
+      }
+      _hasServicesInAttachment(e, o) {
+        return 'linkscplus' === e
+          ? o.find(function (o) {
+              return (
+                o.name.toLowerCase() === e.toLowerCase() &&
+                '0' !== o.content.idsku
+              )
+            })
+          : o.find(function (o) {
+              return o.name.toLowerCase() === e.toLowerCase()
+            })
+      }
+      _mountDataBuyNow(e, o) {
+        const a = this
+        let t = ''
+        const n = window.vtexjs.checkout.orderForm.items.find(function (e) {
+          return e.id === o
+        })
+        if (!n) return ''
+        try {
+          const o = a.codesCache.find(function (e) {
+            return e.sku === n.id
+          })
+          o
+            ? ('base' === e &&
+                (t = '' !== o.modelName ? o.modelName : n.productRefId),
+              'variant' === e &&
+                (t = '' !== o.modelCode ? o.modelCode : n.refId))
+            : (t = 'base' === e ? n.productRefId : n.refId)
+        } catch (e) {
+          console.error('_mountDataBuyNow: ' + e)
+        }
+        return 'base' === e ? ';' + t : t
+      }
+      async _getModel(e) {
+        const o = e.refId,
+          a = window.__RUNTIME__.account
+            .replace('samsung', '')
+            .split('test')
+            .shift()
+        let t = '',
+          n = '',
+          r = '',
+          s = ''
+        const d = `${
+            window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+          }/pvt/getModel?siteCode=${a}&modelCode=${o}`,
+          i = new Headers({ 'Content-Type': 'application/json' })
+        return fetch(d, { method: 'GET', headers: i })
+          .then(e => e.json())
+          .then(a => {
+            if (!a.hasOwnProperty('more')) {
+              const a = Object.values(e.productCategories)
+              return {
+                modelCode: o || '',
+                modelName: o || '',
+                productDivision: a[0] || 'N/A',
+                productFamily: a.length > 1 ? a[1] : 'N/A',
+                pimSubType: a[a.length - 1] || 'N/A',
+              }
+            }
+            if (
+              ((t =
+                a.more.resultData.Products.Product.BasicInfo[0].PviCategories
+                  .ProductTypeName),
+              (n =
+                a.more.resultData.Products.Product.BasicInfo[0].PviCategories
+                  .ProductSubTypeName),
+              (r =
+                a.more.resultData.Products.Product.BasicInfo[0].Categories.Category[0].CategoryEnglishNamePath.split(
+                  '|'
+                )),
+              (s = r.length > 2 ? r[2] : ''),
+              0 === Object.values(a).length || a.message)
+            ) {
+              const a = Object.values(e.productCategories)
+              return {
+                modelCode: o || '',
+                modelName: o || '',
+                productDivision: a[0] || 'N/A',
+                productFamily: a.length > 1 ? a[1] : 'N/A',
+                pimSubType: a[a.length - 1] || 'N/A',
+              }
+            }
+            return {
+              modelCode: a.ModelCode,
+              modelName: a.ModelName,
+              productDivision: t || 'N/A',
+              productFamily: n || 'N/A',
+              pimSubType: s || 'N/A',
+            }
+          })
+          .catch(() => {
+            const a = Object.values(e.productCategories)
+            return {
+              modelCode: o || '',
+              modelName: o || '',
+              productDivision: a[0] || 'N/A',
+              productFamily: a.length > 1 ? a[1] : 'N/A',
+              pimSubType: a[a.length - 1] || 'N/A',
+            }
+          })
       }
     }
   },
