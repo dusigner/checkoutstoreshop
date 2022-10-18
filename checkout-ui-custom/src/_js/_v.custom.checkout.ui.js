@@ -1396,6 +1396,16 @@ class checkoutCustom {
     $('body').on('click', '.link-edit, .link-box-edit', function () {
       setTimeout(() => _this.fixLabels(), 30)
     })
+
+    $('body').on('focus', 'input#ship-postalCode', function () {
+      $(this).attr('maxlength', 9)
+    })
+
+    $('body').on('input', '#ship-postalCode', function () {
+      if ($.trim($(this).val().length) >= 9) {
+        setTimeout(() => $('#cart-shipping-calculate').click(), 10)
+      }
+    })
   }
 
   init() {
