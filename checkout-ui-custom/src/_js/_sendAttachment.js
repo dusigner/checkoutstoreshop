@@ -61,7 +61,10 @@ export default class SendAttachment {
 
         if (productsService) {
           productsService.filter(service => {
-            if (service.attachments[0].name === 'linkInstallation') {
+            if (
+              service.attachments.length &&
+              service.attachments[0].name === 'linkInstallation'
+            ) {
               if (item.refId == service.attachments[0].content.refId) {
                 installationInProduct.push(item)
               }
