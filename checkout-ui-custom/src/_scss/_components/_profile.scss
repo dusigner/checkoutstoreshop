@@ -1,11 +1,11 @@
 #client-profile-data {
-  p.link-cart{
+  p.link-cart {
     display: flex;
     align-items: center;
     float: none;
 
     &::before {
-      content: "<";
+      content: '<';
       display: flex;
       margin-right: 4px;
       font-size: 21px;
@@ -13,7 +13,7 @@
       color: #000;
     }
   }
-  
+
   #orderform-to-cart {
     display: inline-block;
     color: #000;
@@ -23,15 +23,15 @@
     text-transform: unset;
     letter-spacing: unset;
   }
-  
+
   .box-client-info {
     max-width: 448px;
   }
 
   .form-step.box-info {
-		@media (max-width: 768px) {
-			padding-right: 44px;
-		}
+    @media (max-width: 768px) {
+      padding-right: 44px;
+    }
   }
 
   .link-logout {
@@ -50,6 +50,12 @@
   fieldset.box-client-info-pf {
     display: flex;
     flex-wrap: wrap;
+  }
+
+  p.text {
+    &.client-email {
+      width: 100%;
+    }
   }
 
   p.input {
@@ -275,7 +281,8 @@
     }
   }
 
-  #go-to-shipping {
+  #go-to-shipping,
+  #go-to-payment {
     margin-left: 0;
     font-size: 0;
     display: flex;
@@ -286,9 +293,16 @@
     max-width: 330px;
 
     &::after {
-      content: 'Continuar para Entrega';
       font-size: 14px;
       font-weight: bold;
     }
+  }
+
+  #go-to-shipping::after {
+    content: 'Continuar para Entrega';
+  }
+
+  #go-to-payment::after {
+    content: 'Continuar para Pagamentos';
   }
 }
