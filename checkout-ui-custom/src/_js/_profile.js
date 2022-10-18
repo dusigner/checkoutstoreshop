@@ -47,7 +47,7 @@ class CustomProfileData {
       whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
         ? $('.whatsapp_phone').val()
         : '',
-      isRewardsAccepted: $('#inputRewards').is(':checked'),
+      isRewardsAccepted: false,
     }
 
     $.ajax({
