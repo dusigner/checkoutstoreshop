@@ -273,7 +273,7 @@ class CustomProfileData {
     const isTermsChecked = $('#inputTermAndPolicies').is(':checked')
     const disabled = !hasInvalidInputs && isTermsChecked
 
-    $('#go-to-shipping').prop('disabled', !disabled)
+    $context.find('#go-to-shipping, #go-to-payment').prop('disabled', !disabled)
   }
 
   bindEvents() {
@@ -425,9 +425,17 @@ class CustomProfileData {
       }
     )
 
-    $('body').on('click', '#go-to-shipping', function () {
-      _this.saveProfileData()
+    $('body').on('click', '#edit-profile-data', function () {
+      setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
     })
+
+    $('body').on(
+      'click',
+      '#go-to-shipping, #client-profile-data #go-to-payment',
+      function () {
+        _this.saveProfileData()
+      }
+    )
   }
 }
 
