@@ -770,19 +770,15 @@ class checkoutCustom {
     try {
       const _trElem = $(`.summary-template-holder`)
 
-      // Pega os ids de todos os cartões de creditos (pagamento a prazo), exceto itau card.
-      const creditCardPaymentGroupIds =
-        window.vtexjs.checkout.orderForm.paymentData.paymentSystems
-          .filter(payment => payment.groupName === 'creditCardPaymentGroup')
-          .map(payment => payment.id)
+      // Pega o valor do pix (código 125)
+      const priceAVista = orderForm.paymentData.installmentOptions.find(
+        item => item.paymentSystem == 125
+      ).installments[0].total
 
-      // Encontra as installments para qualquer um dos ids acima.
+      // Encontra as installments para do cartao visa (código 2)
       const installmentOption =
         window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
-          installment =>
-            creditCardPaymentGroupIds.includes(
-              Number(installment.paymentSystem)
-            )
+          item => item.paymentSystem == 2
         ).installments
 
       // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
@@ -791,13 +787,18 @@ class checkoutCustom {
           install.count === Math.max(...installmentOption.map(ins => ins.count))
       ).total
 
+      const percentDiscount = Math.floor(
+        ((totalOnTerm - priceAVista) / priceAVista) * 100
+      )
+
       const _component = `
         <div class="cart-total" style="margin-bottom: 20px; color: #000">
           <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">
             <p class="ref-id">Total à vista</p>
-            <p class="estimate-shipping">${formatCurrencyBRL(
-              orderForm.value
-            )}</p>
+            <p class="estimate-shipping">${formatCurrencyBRL(priceAVista)}</p>
+          </div>
+          <div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
+            <p>(${percentDiscount}% de desconto)</p>
           </div>
           <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
             <p class="gross-total">

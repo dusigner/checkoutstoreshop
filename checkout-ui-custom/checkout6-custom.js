@@ -1346,21 +1346,22 @@
       enchancementSummaryCart(e) {
         try {
           const o = $('.summary-template-holder'),
-            a = window.vtexjs.checkout.orderForm.paymentData.paymentSystems
-              .filter(e => 'creditCardPaymentGroup' === e.groupName)
-              .map(e => e.id),
+            a = e.paymentData.installmentOptions.find(
+              e => 125 == e.paymentSystem
+            ).installments[0].total,
             t =
               window.vtexjs.checkout.orderForm.paymentData.installmentOptions.find(
-                e => a.includes(Number(e.paymentSystem))
+                e => 2 == e.paymentSystem
               ).installments,
             n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
-            r = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${s(
-              e.value
-            )}</p>\n          </div>\n          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">\n            <p class="gross-total">\n              Total a prazo\n            </p>\n            <p class="discount-total" style="font-weight: 700;">\n              ${s(
+            r = Math.floor(((n - a) / a) * 100),
+            d = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${s(
+              a
+            )}</p>\n          </div>\n          <div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">\n            <p>(${r}% de desconto)</p>\n          </div>\n          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">\n            <p class="gross-total">\n              Total a prazo\n            </p>\n            <p class="discount-total" style="font-weight: 700;">\n              ${s(
               n
             )}\n            </p>\n          </div>\n        </div>\n      `
           0 === o.find('.cart-total').length || o.find('.cart-total').remove(),
-            o.prepend(r)
+            o.prepend(d)
         } catch (e) {
           console.error('enchancementSummaryCart error:', e)
         }
