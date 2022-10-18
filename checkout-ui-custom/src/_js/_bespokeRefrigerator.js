@@ -359,6 +359,32 @@ export default class BespokeRefrigerator {
     }, 10)
   }
 
+  voltageIsValid(bespokeItems) {
+    const voltageIsEquals = bespokeItems.every(
+      item => item.voltage === bespokeItems[0].voltage
+    )
+
+    const { items } = window.vtexjs.checkout.orderForm
+    const mainItems = items.filter(item =>
+      bespokeItems.map(bespokeItem => bespokeItem.mainSku).includes(item.id)
+    )
+
+    if (!voltageIsEquals && mainItems.length) {
+      const removeBtn = $(
+        `tr.product-item[data-sku="${mainItems[0].id}"] td.item-remove a`
+      )
+
+      if (removeBtn.length) {
+        removeBtn[0].remove()
+        this.clearBespokeRefrigerator(items, mainItems[0].id, false)
+      }
+
+      return false
+    }
+
+    return true
+  }
+
   getMandatorySkus() {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
@@ -408,9 +434,15 @@ export default class BespokeRefrigerator {
     try {
       const bespokeItems = JSON.parse(localStorage.getItem('BespokeItems'))
 
+      // Se não tiver bespoke não faz nada.
       if (!bespokeItems) return
 
       this.getMandatorySkus().then(response => {
+        // Remover SKUs se as voltagens estiverem diferentes.
+        const isValid = this.voltageIsValid(bespokeItems)
+
+        if (!isValid) return
+
         if (response) {
           $(document).ajaxStop(() => {
             this.checkItems(window.vtexjs.checkout.orderForm)
