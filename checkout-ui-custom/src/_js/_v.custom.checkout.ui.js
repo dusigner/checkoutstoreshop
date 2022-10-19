@@ -887,26 +887,29 @@ class checkoutCustom {
 
       const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
 
+      let listItems = ''
+
+      items.forEach(item => {
+        listItems += `
+            <li>${item.name || item.skuName}</li>
+          `
+      })
+
+      const _summaryOrder = `
+        <div class="summaryOrder">
+          <h6>Resumo do pedido (${itemsQuantity} ${
+        itemsQuantity.length > 1 ? 'itens' : 'item'
+      })</h6>
+          <ul>
+            ${listItems}
+          </ul>
+        </div>
+      `
+
       if (!$('.summaryOrder').length) {
-        let listItems = ''
-
-        items.forEach(item => {
-          listItems += `
-              <li>${item.name || item.skuName}</li>
-            `
-        })
-
-        const _summaryOrder = `
-          <div class="summaryOrder">
-            <h6>Resumo do pedido (${itemsQuantity} ${
-          itemsQuantity.length > 1 ? 'itens' : 'item'
-        })</h6>
-            <ul>
-              ${listItems}
-            </ul>
-          </div>
-        `
-
+        _accordionElem.append(_summaryOrder)
+      } else {
+        $('.summaryOrder').remove()
         _accordionElem.append(_summaryOrder)
       }
     } catch (e) {

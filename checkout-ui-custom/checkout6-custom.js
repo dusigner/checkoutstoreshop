@@ -835,6 +835,9 @@
           (this.SendAttachment = new u()),
           (this.adobeLaunchPixel = new g())
       }
+      rootPath() {
+        return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+      }
       general() {
         $('.custom-cart-template-wrap').length ||
           $('.cart-template.mini-cart .cart-fixed > *').wrapAll(
@@ -904,13 +907,13 @@
       }
       addStepsHeader() {
         if ($('.checkout-steps').length > 0 || !this.lang) return !1
-        const e = `\n        <div class="checkout-steps">\n          <div class="checkout-steps-wrap">\n            <span class="checkout-steps_bar">\n              <span class="checkout-steps_bar_inner"></span>\n              <span class="checkout-steps_bar_inner-active"></span>\n            </span>\n            <div class="checkout-steps_items">\n              <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="/checkout/#/profile">\n                <span class="text" data-before="1">${
+        const e = `\n        <div class="checkout-steps">\n          <div class="checkout-steps-wrap">\n            <span class="checkout-steps_bar">\n              <span class="checkout-steps_bar_inner"></span>\n              <span class="checkout-steps_bar_inner-active"></span>\n            </span>\n            <div class="checkout-steps_items">\n              <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="${this.rootPath()}/checkout/#/profile">\n                <span class="text" data-before="1">${
           this.lang
             ? this.lang.checkoutStepsLabelIdentification
             : 'Identification'
-        }</span>\n              </span>\n              <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="/checkout/#/shipping">\n                <span class="text" data-before="2">${
+        }</span>\n              </span>\n              <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="${this.rootPath()}/checkout/#/shipping">\n                <span class="text" data-before="2">${
           this.lang ? this.lang.checkoutStepsLabelShipping : 'Shipping'
-        }</span>\n              </span>\n              <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="/checkout/#/payment">\n                <span class="text" data-before="3">${
+        }</span>\n              </span>\n              <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="${this.rootPath()}/checkout/#/payment">\n                <span class="text" data-before="3">${
           this.lang ? this.lang.checkoutStepsLabelPayment : 'Payment'
         }</span>\n              </span>\n            </div>\n          </div>\n        </div>\n      `
         $('header.main-header').length &&
@@ -1279,7 +1282,7 @@
             ).installments,
             n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
             s = Math.floor(100 * (1 - a / n)),
-            d = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${r(
+            d = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${r(
               a
             )}</p>\n          </div>\n          ${
               s > 0
@@ -1380,18 +1383,16 @@
           const { items: e } = window.vtexjs.checkout.orderForm,
             o = e.length,
             a = $($('.summary-totalizers .accordion-inner')[1])
-          if (!$('.summaryOrder').length) {
-            let t = ''
-            e.forEach(e => {
-              t += `\n              <li>${
-                e.name || e.skuName
-              }</li>\n            `
-            })
-            const n = `\n          <div class="summaryOrder">\n            <h6>Resumo do pedido (${o} ${
-              o.length > 1 ? 'itens' : 'item'
-            })</h6>\n            <ul>\n              ${t}\n            </ul>\n          </div>\n        `
-            a.append(n)
-          }
+          let t = ''
+          e.forEach(e => {
+            t += `\n            <li>${e.name || e.skuName}</li>\n          `
+          })
+          const n = `\n        <div class="summaryOrder">\n          <h6>Resumo do pedido (${o} ${
+            o.length > 1 ? 'itens' : 'item'
+          })</h6>\n          <ul>\n            ${t}\n          </ul>\n        </div>\n      `
+          $('.summaryOrder').length
+            ? ($('.summaryOrder').remove(), a.append(n))
+            : a.append(n)
         } catch (e) {
           console.error('summaryCustom error:', e)
         }
@@ -9355,7 +9356,7 @@
       addPJInformation() {
         if ($('.pj-information').length) return
         $('#client-profile-data p.save-data').after(
-          '<div class="pj-information">\n      <h3>Aviso: Compras para Pessoa Jurídica</h3>\n      <p>\n        A partir de 24/07/2022 as compras com dados de Pessoa Jurídica (CNPJ) deverão ser realizadas \n        <a href="https://empresas.samsung.com.br" target="_blank">neste portal</a>. Caso\n        queira comprar utilizando seu CPF ou consultar a posição de compras já efetuadas, continue por aqui na Loja\n        Online Samsung.\n      </p>\n    </div>'
+          '<div class="pj-information">\n      <h3>Aviso: Compras para Pessoa Jurídica</h3>\n      <p>\n        A partir de 24/07/2022 as compras com dados de Pessoa Jurídica (CNPJ) deverão ser realizadas\n        <a href="https://empresas.samsung.com.br" target="_blank">neste portal</a>. Caso\n        queira comprar utilizando seu CPF ou consultar a posição de compras já efetuadas, continue por aqui na Loja\n        Online Samsung.\n      </p>\n    </div>'
         )
       }
       addNewsletterOptIn() {
@@ -9373,7 +9374,7 @@
       addTermsAndPolicies() {
         if ($('.terms-and-policies').length) return
         $('.newsletter-optin').after(
-          '<div class="terms-and-policies">\n      <h3>Privacidade (obrigatório)</h3>\n      <label class="inputOptIn checkbox-inline">\n        <input type="checkbox" id="inputTermAndPolicies" />\n        <span class="custom-checkbox-icon"></span>\n        <span>      \n          Aceito os \n          <a href="https://www.samsung.com/br/shop/terms_and_conditions_of_sale/" target="_blank">termos e condições</a> e \n          <a href="https://www.samsung.com/br/shop/privacy-policy/" target="_blank">política de privacidade</a>\n        </span>\n      </label>\n    </div>'
+          '<div class="terms-and-policies">\n      <h3>Privacidade (obrigatório)</h3>\n      <label class="inputOptIn checkbox-inline">\n        <input type="checkbox" id="inputTermAndPolicies" />\n        <span class="custom-checkbox-icon"></span>\n        <span>\n          Aceito os\n          <a href="https://www.samsung.com/br/shop/terms_and_conditions_of_sale/" target="_blank">termos e condições</a> e\n          <a href="https://www.samsung.com/br/shop/privacy-policy/" target="_blank">política de privacidade</a>\n        </span>\n      </label>\n    </div>'
         )
       }
       addRewardsBlock() {
@@ -9390,8 +9391,7 @@
       }
       addTerms(e) {
         if (0 !== $('#inputTermAndPolicies').length) return !1
-        this.addPJInformation(),
-          this.addNewsletterOptIn(),
+        this.addNewsletterOptIn(),
           this.addTermsAndPolicies(),
           this.addRewardsBlock(),
           (e.loggedIn ||
@@ -10410,7 +10410,7 @@
       })
     class t {
       constructor() {
-        ;(this.dtmWatchPages = { checkout: 'checkout-header' }),
+        ;(this.dtmWatchPages = { checkout: 'main-header' }),
           (this.scriptFiles = {
             ar: '//assets.adobedtm.com/72afb75f5516/510bc748cd99/launch-2ab05c7d16d3.min.js',
             br: '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
@@ -10563,7 +10563,7 @@
         null === e.pageInterval &&
           (e.pageInterval = setInterval(function () {
             if (document.body) {
-              const o = document.querySelectorAll('body > div')
+              const o = document.querySelectorAll('body > div, body > header')
               for (let a = 0; a < o.length; a++)
                 if (
                   (Object.keys(e.dtmWatchPages).forEach(function (t) {
@@ -11028,8 +11028,14 @@
                         ? d.push(Number(m.listPrice).toFixed(2))
                         : d.push(Number(m.listPrice))
                   } else {
-                    const m = await e._getModel(i)
-                    o.push(';' + m.modelName),
+                    const m = await e._getModel(i),
+                      h = document.querySelector(
+                        '#item-quantity-change-increment-' + i.id
+                      )
+                    null !== h &&
+                      (h.setAttribute('data-omni-base', ';' + m.modelName),
+                      h.setAttribute('data-omni-variant', m.modelCode)),
+                      o.push(';' + m.modelName),
                       a.push(i.name ? i.name : ''),
                       t.push(i.refId),
                       n.push(
