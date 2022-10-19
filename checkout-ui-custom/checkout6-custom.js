@@ -1278,7 +1278,7 @@
               e => 2 == e.paymentSystem
             ).installments,
             n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
-            s = Math.floor(((n - a) / a) * 100),
+            s = Math.floor(100 * (1 - a / n)),
             d = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${r(
               a
             )}</p>\n          </div>\n          ${
