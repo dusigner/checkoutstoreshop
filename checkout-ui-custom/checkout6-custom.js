@@ -62,15 +62,6 @@
           }, o))
       }
     }),
-      (e.exports.formatCurrency = (e, o, a) => {
-        const t = a / 100
-        return (
-          new Intl.NumberFormat(e, { style: 'currency', currency: o }).format(
-            t
-          ),
-          t
-        )
-      }),
       (e.exports.formatCurrencyBRL = (e, o = !0) =>
         (e / (o ? 100 : 1)).toLocaleString('pt-BR', {
           style: 'currency',
@@ -804,18 +795,18 @@
   },
   function (e, o, a) {
     const { _locale: t } = a(1),
-      { debounce: n, formatCurrency: r, formatCurrencyBRL: s } = a(0),
-      d = a(6),
-      i = a(8),
-      m = a(9),
-      { default: h } = a(10),
-      { default: C } = a(11),
-      { default: l } = a(12),
-      c = a(13),
-      { default: u } = a(14),
-      { default: p } = a(15),
-      { default: g } = a(16),
-      { default: y } = a(17)
+      { debounce: n, formatCurrencyBRL: r } = a(0),
+      s = a(6),
+      d = a(8),
+      i = a(9),
+      { default: m } = a(10),
+      { default: h } = a(11),
+      { default: C } = a(12),
+      l = a(13),
+      { default: c } = a(14),
+      { default: u } = a(15),
+      { default: p } = a(16),
+      { default: g } = a(17)
     e.exports = class {
       constructor({
         type: e = 'vertical',
@@ -836,13 +827,13 @@
           (this.showNoteField = n),
           (this.customAddressForm = r),
           (this.hideEmailStep = s),
-          (this.preEmail = new c()),
-          (this.profile = new i()),
-          (this.shipping = new m()),
-          (this.installationService = new l()),
-          (this.TradeIn = new u()),
-          (this.SendAttachment = new p()),
-          (this.adobeLaunchPixel = new y())
+          (this.preEmail = new l()),
+          (this.profile = new d()),
+          (this.shipping = new i()),
+          (this.installationService = new C()),
+          (this.TradeIn = new c()),
+          (this.SendAttachment = new u()),
+          (this.adobeLaunchPixel = new g())
       }
       general() {
         $('.custom-cart-template-wrap').length ||
@@ -887,22 +878,16 @@
             '.cart-template > .summary-template-holder'
           )
       }
-      buildHorizontal() {}
       showDeliveryOptions() {
         $(
           '.cart-template .cart-more-options:eq(0), .cart-template .extensions-checkout-buttons-container'
         ).appendTo('.cart-template-holder')
       }
       builder() {
-        const e = this
-        'vertical' === e.type
-          ? e.buildVertical()
-          : 'horizontal' === e.type
-          ? e.buildHorizontal()
-          : console.error('No `type` identified, check your code'),
-          e.showNoteField && $('body').addClass('js-vcustom-showNoteField'),
-          e.hideEmailStep && $('body').addClass('js-vcustom-hideEmailStep'),
-          e.showDeliveryOptions()
+        this.buildVertical(),
+          this.showDeliveryOptions(),
+          this.showNoteField && $('body').addClass('js-vcustom-showNoteField'),
+          this.hideEmailStep && $('body').addClass('js-vcustom-hideEmailStep')
       }
       checkEmpty(e) {
         0 === e.length
@@ -1046,10 +1031,7 @@
           a = []
         if (!o) return !1
         try {
-          $(
-            '.table.cart-items tbody tr.product-item, .mini-cart .cart-items li'
-          ).removeClass('v-custom-addLabels-active js-vcustom-addLabels'),
-            $('.v-custom-addLabels-active-flag').remove(),
+          $('.v-custom-addLabels-active-flag').remove(),
             $.each(e.items, function (e) {
               this.priceTags.length > 0 &&
                 this.priceTags.filter(
@@ -1070,20 +1052,6 @@
         } catch (e) {
           console.error(e)
         }
-      }
-      buildMiniCart(e) {
-        if (0 === e.items.filter(e => null !== e.parentItemIndex).length)
-          return !1
-        '' !== $('.mini-cart .cart-items').text().trim() &&
-          ($('.mini-cart .cart-items').html(
-            '' + $('.mini-cart .cart-items').html()
-          ),
-          $.each(e.items, function (e) {
-            'available' === this.availability &&
-              $(`.mini-cart .cart-items li:eq(${e})`)
-                .find('.item-unavailable')
-                .remove()
-          }))
       }
       setParentIndex(e) {
         $.each(e.items, function (e) {
@@ -1115,77 +1083,31 @@
               ),
               {}
             )
-            for (const o in a) {
-              const t = a[o]
+            for (const e in a) {
+              const o = a[e]
               if (
-                $(`.table.cart-items tbody > tr.product-item:eq(${o})`).find(
+                $(`.table.cart-items tbody > tr.product-item:eq(${e})`).find(
                   '.v-custom-bundles'
                 ).length <= 1 &&
-                ($(`.table.cart-items tbody > tr.product-item:eq(${o})`)
+                ($(`.table.cart-items tbody > tr.product-item:eq(${e})`)
                   .append('<div class="v-custom-bundles"></div>')
                   .addClass('v-custom-indexedItems-in'),
                 '' ===
-                  $(`.table.cart-items tbody > tr.product-item:eq(${o})`)
+                  $(`.table.cart-items tbody > tr.product-item:eq(${e})`)
                     .find('.v-custom-bundles')
                     .html())
               )
-                for (const e in t) {
-                  if (!t.hasOwnProperty(e)) continue
-                  const a = t[e]
+                for (const a in o) {
+                  if (!o.hasOwnProperty(a)) continue
+                  const t = o[a]
                   $(
-                    `.table.cart-items tbody > tr.product-item[data-sku='${a.id}'][data-parentitemindex='${a.parentItemIndex}']`
+                    `.table.cart-items tbody > tr.product-item[data-sku='${t.id}'][data-parentitemindex='${t.parentItemIndex}']`
                   )
                     .addClass('v-custom-indexed-item')
                     .clone()
                     .appendTo(
-                      `.table.cart-items tbody > tr.product-item:eq(${o}) > .v-custom-bundles`
+                      `.table.cart-items tbody > tr.product-item:eq(${e}) > .v-custom-bundles`
                     )
-                }
-              if (
-                ($(`.mini-cart .cart-items > li:eq(${o})`)
-                  .find('.v-custom-bundles')
-                  .remove(),
-                $(`.mini-cart .cart-items > li:eq(${o})`)
-                  .append('<div class="v-custom-bundles"></div>')
-                  .addClass('v-custom-indexedItems-in'),
-                '' ===
-                  $(`.mini-cart .cart-items > li:eq(${o})`)
-                    .find(' > .v-custom-bundles')
-                    .html())
-              )
-                for (const a in t) {
-                  if (!t.hasOwnProperty(a)) continue
-                  const n = t[a]
-                  $(
-                    `.mini-cart .cart-items > li:eq(${o}) > .v-custom-bundles`
-                  ).append(
-                    `\n                <div class="hproduct item v-custom-indexed-item" data-sku="${
-                      n.id
-                    }">\n                  <a href="${
-                      n.detailUrl
-                    }" class="url">\n                    <img height="45" width="45" class="photo" src="${
-                      n.imageUrl
-                    }" alt="${
-                      n.name
-                    }">\n                  </a>\n                  <span class="fn product-name" title="${
-                      n.name
-                    }" href="${n.detailUrl}">${
-                      n.name
-                    }</span>\n                  <span class="quantity badge">${
-                      n.quantity
-                    }</span>\n                  <div class="description">\n                    <strong class="price pull-right" data-bind="text: sellingPriceLabel">${
-                      e.storePreferencesData.currencySymbol
-                    } ${r(
-                      e.clientPreferencesData.locale,
-                      e.storePreferencesData.currencyCode,
-                      n.sellingPrice
-                    ).toFixed(
-                      2
-                    )}</strong>\n                  </div>\n                </div>\n              `
-                  ),
-                    $(
-                      `.mini-cart .cart-items > li[data-sku='${n.id}']`
-                    ).addClass('v-custom-indexed-item')
                 }
             }
             o.removeMCLoader()
@@ -1356,14 +1278,14 @@
               e => 2 == e.paymentSystem
             ).installments,
             n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
-            r = Math.floor(((n - a) / a) * 100),
-            d = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${s(
+            s = Math.floor(((n - a) / a) * 100),
+            d = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${r(
               a
             )}</p>\n          </div>\n          ${
-              r > 0
-                ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">\n                  <p>(${r}% de desconto)</p>\n                </div>`
+              s > 0
+                ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">\n                  <p>(${s}% de desconto)</p>\n                </div>`
                 : ''
-            }\n\n          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">\n            <p class="gross-total">\n              Total a prazo\n            </p>\n            <p class="discount-total" style="font-weight: 700;">\n              ${s(
+            }\n\n          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">\n            <p class="gross-total">\n              Total a prazo\n            </p>\n            <p class="discount-total" style="font-weight: 700;">\n              ${r(
               n
             )}\n            </p>\n          </div>\n        </div>\n      `
           0 === o.find('.cart-total').length || o.find('.cart-total').remove(),
@@ -1510,14 +1432,13 @@
           this.imgEmptyCart(),
           this.WrapSummary(),
           this.bundleItems(e),
-          this.buildMiniCart(e),
           this.condensedTaxes(e),
           this.setParentIndex(e),
           this.indexedInItems(e),
           this.summaryCustom(),
+          new m().init(),
           new h().init(),
-          new C().init(),
-          new g().init(),
+          new p().init(),
           this.installationService.init(),
           this.TradeIn.init()
         n(function () {
@@ -1634,7 +1555,7 @@
             (e.customAddressForm = !1),
             !1
           )
-        e.customAddressForm && (e.customAddressForm = new d({}))
+        e.customAddressForm && (e.customAddressForm = new s({}))
       }
       goToShippingStep() {
         window.location.hash = '#/shipping'
@@ -1797,8 +1718,7 @@
                   e.profile.addDateBirthField(),
                   e.profile.toggleGoToShippingDisabled()),
                 e.orderForm &&
-                  (e.buildMiniCart(e.orderForm),
-                  e.indexedInItems(e.orderForm),
+                  (e.indexedInItems(e.orderForm),
                   e.updateLang(e.orderForm),
                   e.paymentBuilder(e.orderForm),
                   e.customAddressFormInit(e.orderForm),

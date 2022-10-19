@@ -4,7 +4,7 @@
 /* eslint eqeqeq: 0 */
 
 const { _locale } = require('./_locale-infos.js')
-const { debounce, formatCurrency, formatCurrencyBRL } = require('./_utils.js')
+const { debounce, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const CustomProfileData = require('./_profile')
 const CustomShippingData = require('./_shipping')
@@ -111,8 +111,6 @@ class checkoutCustom {
     )
   }
 
-  buildHorizontal() {}
-
   showDeliveryOptions() {
     $(
       '.cart-template .cart-more-options:eq(0), .cart-template .extensions-checkout-buttons-container'
@@ -122,13 +120,8 @@ class checkoutCustom {
   builder() {
     const _this = this
 
-    if (_this.type === 'vertical') {
-      _this.buildVertical()
-    } else if (_this.type === 'horizontal') {
-      _this.buildHorizontal()
-    } else {
-      console.error('No `type` identified, check your code')
-    }
+    _this.buildVertical()
+    _this.showDeliveryOptions()
 
     if (_this.showNoteField) {
       $('body').addClass('js-vcustom-showNoteField')
@@ -137,8 +130,6 @@ class checkoutCustom {
     if (_this.hideEmailStep) {
       $('body').addClass('js-vcustom-hideEmailStep')
     }
-
-    _this.showDeliveryOptions()
   }
 
   checkEmpty(items) {
@@ -367,9 +358,6 @@ class checkoutCustom {
     if (!_coupon) return false
 
     try {
-      $(
-        `.table.cart-items tbody tr.product-item, .mini-cart .cart-items li`
-      ).removeClass('v-custom-addLabels-active js-vcustom-addLabels')
       $(`.v-custom-addLabels-active-flag`).remove()
       $.each(orderForm.items, function (i) {
         if (this.priceTags.length > 0) {
@@ -394,28 +382,6 @@ class checkoutCustom {
       })
     } catch (e) {
       console.error(e)
-    }
-  }
-
-  buildMiniCart(orderForm) {
-    /* overide refresh from vtex */
-    if (
-      orderForm.items.filter(item => {
-        return item.parentItemIndex !== null
-      }).length === 0
-    ) {
-      return false
-    }
-
-    if ($(`.mini-cart .cart-items`).text().trim() !== '') {
-      $(`.mini-cart .cart-items`).html(`${$(`.mini-cart .cart-items`).html()}`)
-      $.each(orderForm.items, function (i) {
-        if (this.availability === 'available') {
-          $(`.mini-cart .cart-items li:eq(${i})`)
-            .find('.item-unavailable')
-            .remove()
-        }
-      })
     }
   }
 
@@ -491,52 +457,6 @@ class checkoutCustom {
                     `.table.cart-items tbody > tr.product-item:eq(${key}) > .v-custom-bundles`
                   )
               }
-            }
-          }
-
-          $(`.mini-cart .cart-items > li:eq(${key})`)
-            .find(`.v-custom-bundles`)
-            .remove()
-          $(`.mini-cart .cart-items > li:eq(${key})`)
-            .append(`<div class="v-custom-bundles"></div>`)
-            .addClass('v-custom-indexedItems-in')
-          if (
-            $(`.mini-cart .cart-items > li:eq(${key})`)
-              .find(' > .v-custom-bundles')
-              .html() === ''
-          ) {
-            for (const prop in obj) {
-              if (!obj.hasOwnProperty(prop)) continue
-              const iiItem = obj[prop]
-
-              $(`.mini-cart .cart-items > li:eq(${key}) > .v-custom-bundles`)
-                .append(`
-                <div class="hproduct item v-custom-indexed-item" data-sku="${
-                  iiItem.id
-                }">
-                  <a href="${iiItem.detailUrl}" class="url">
-                    <img height="45" width="45" class="photo" src="${
-                      iiItem.imageUrl
-                    }" alt="${iiItem.name}">
-                  </a>
-                  <span class="fn product-name" title="${iiItem.name}" href="${
-                iiItem.detailUrl
-              }">${iiItem.name}</span>
-                  <span class="quantity badge">${iiItem.quantity}</span>
-                  <div class="description">
-                    <strong class="price pull-right" data-bind="text: sellingPriceLabel">${
-                      orderForm.storePreferencesData.currencySymbol
-                    } ${formatCurrency(
-                orderForm.clientPreferencesData.locale,
-                orderForm.storePreferencesData.currencyCode,
-                iiItem.sellingPrice
-              ).toFixed(2)}</strong>
-                  </div>
-                </div>
-              `)
-              $(
-                `.mini-cart .cart-items > li[data-sku='${iiItem.id}']`
-              ).addClass('v-custom-indexed-item')
             }
           }
         }
@@ -1039,7 +959,6 @@ class checkoutCustom {
     this.imgEmptyCart()
     this.WrapSummary()
     this.bundleItems(orderForm)
-    this.buildMiniCart(orderForm)
     this.condensedTaxes(orderForm)
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
@@ -1485,7 +1404,6 @@ class checkoutCustom {
         }
 
         if (_this.orderForm) {
-          _this.buildMiniCart(_this.orderForm)
           _this.indexedInItems(_this.orderForm)
           _this.updateLang(_this.orderForm)
           _this.paymentBuilder(_this.orderForm)

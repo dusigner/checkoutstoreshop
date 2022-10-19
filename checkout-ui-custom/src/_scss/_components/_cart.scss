@@ -578,9 +578,6 @@ h1#cart-title {display:none !important;}
 	box-sizing: border-box;
 	border-radius: $borderRadius;
 
-	position: sticky;
-	top: 20px;
-
 	border: $bordersContainers;
 
   @media(max-width: $mobileWidth) {
@@ -1067,6 +1064,14 @@ h1#cart-title {display:none !important;}
       width: 100%;
       padding:0;
       margin:0;
+    }
+
+    .summary-to-new-components{
+      position: sticky;
+      top: 125px;
+      @media(max-width: $mobileWidth) {
+        top: 0px;
+      }
     }
   }
 }
