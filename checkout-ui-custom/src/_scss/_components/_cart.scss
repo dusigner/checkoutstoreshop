@@ -21,6 +21,8 @@ body.v-custom-cart-empty {
 .cart-more-options {display:none !important;}
 .cart-template-holder {
   margin:0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 }
 .empty-cart-content {padding:50px 0;}
@@ -477,6 +479,7 @@ h1#cart-title {display:none !important;}
         display:block;
         max-width: initial;
         height: auto;
+        background-color: #ffffff;
 
         @media(max-width: $mobileWidth) {
           width: 70px;
