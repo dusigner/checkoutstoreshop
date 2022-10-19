@@ -14,6 +14,14 @@ body {
   &.v-custom-step-payment {
     padding-top: 263px;
 
+    .cart-template.mini-cart {
+      top: 263px;
+
+      @media(max-width: $mobileWidth) {
+        top: 0;
+      }
+    }
+
     @media(max-width: $mobileWidth) {
       padding-top: 180px;
     }
