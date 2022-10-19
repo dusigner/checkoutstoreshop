@@ -1660,8 +1660,19 @@
             const e = $(this).closest('p.input')
             $(this).val() ? e.addClass('filled') : e.removeClass('filled')
           }),
-          $('body').on('click', '.link-edit, .link-box-edit', function () {
-            setTimeout(() => e.fixLabels(), 30)
+          $('body').on(
+            'click',
+            '.link-edit, .link-box-edit, #edit-address-button, #new-address-button',
+            function () {
+              setTimeout(() => e.fixLabels(), 30)
+            }
+          ),
+          $('body').on('focus', 'input#ship-postalCode', function () {
+            $(this).attr('maxlength', 9)
+          }),
+          $('body').on('input', '#ship-postalCode', function () {
+            $.trim($(this).val().length) >= 9 &&
+              setTimeout(() => $('#cart-shipping-calculate').click(), 10)
           })
       }
       init() {
@@ -9259,7 +9270,7 @@
             whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
               ? $('.whatsapp_phone').val()
               : '',
-            isRewardsAccepted: $('#inputRewards').is(':checked'),
+            isRewardsAccepted: !1,
           }
         $.ajax({
           url: this.rootPath() + '/_v/insert/client/partial',
@@ -9395,7 +9406,7 @@
           a = e.find('p.input input.success:visible').length < o.length,
           t = $('#inputTermAndPolicies').is(':checked'),
           n = !a && t
-        $('#go-to-shipping').prop('disabled', !n)
+        e.find('#go-to-shipping, #go-to-payment').prop('disabled', !n)
       }
       bindEvents() {
         const e = this
@@ -9494,9 +9505,16 @@
               setTimeout(() => e.toggleGoToShippingDisabled(), 1)
             }
           ),
-          $('body').on('click', '#go-to-shipping', function () {
-            e.saveProfileData()
-          })
+          $('body').on('click', '#edit-profile-data', function () {
+            setTimeout(() => e.toggleGoToShippingDisabled(), 1)
+          }),
+          $('body').on(
+            'click',
+            '#go-to-shipping, #client-profile-data #go-to-payment',
+            function () {
+              e.saveProfileData()
+            }
+          )
       }
     }
   },
@@ -9742,7 +9760,13 @@
       validateSamsungCarePlus(e) {
         const o = e.filter(e => this.isSamsungCarePlus(e))
         if (!o.length) return
-        if (o.length > 1) {
+        if (
+          (o.forEach(e => {
+            $(`.product-item[data-sku="${e.id}"] .item-link-remove`) &&
+              $(`.product-item[data-sku="${e.id}"] .quantity`).hide()
+          }),
+          o.length > 1)
+        ) {
           const e = o.filter((e, a) => a !== o.length - 1)
           return void this.removeSamsungCarePlus(e)
         }
@@ -9785,6 +9809,8 @@
           t = []
         if (
           (o.forEach(e => {
+            $(`.product-item[data-sku="${e.id}"] .item-link-remove`) &&
+              $(`.product-item[data-sku="${e.id}"] .quantity`).hide()
             const a = o.filter(o => o.id === e.id && o.refId === e.refId),
               n = t.find(o => o.id === e.id)
             a.length > 1 && !n && t.push(...a.slice(1, a.length))
@@ -9824,7 +9850,7 @@
         )
       }
       isInstallationService(e) {
-        return e.detailUrl === this.INSTALLATION_URL
+        return e.detailUrl === this.INSTALLATION_URL && e.attachments.length
       }
     }
   },
@@ -10066,7 +10092,8 @@
               o &&
                 o.filter(
                   o => (
-                    'linkInstallation' === o.attachments[0].name &&
+                    o.attachments.length &&
+                      'linkInstallation' === o.attachments[0].name &&
                       e.refId == o.attachments[0].content.refId &&
                       r.push(e),
                     ''
