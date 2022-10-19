@@ -716,7 +716,7 @@ class checkoutCustom {
 
       const _component = `
         <div class="cart-total" style="margin-bottom: 20px; color: #000">
-          <div class="best-price" style="font-size: 28px; display: flex; justify-content: space-between; font-weight: 700">
+          <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
             <p class="ref-id">Total à vista</p>
             <p class="estimate-shipping">${formatCurrencyBRL(priceAVista)}</p>
           </div>

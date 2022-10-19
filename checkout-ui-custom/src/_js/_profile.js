@@ -165,7 +165,7 @@ class CustomProfileData {
     const $information = `<div class="pj-information">
       <h3>Aviso: Compras para Pessoa Jurídica</h3>
       <p>
-        A partir de 24/07/2022 as compras com dados de Pessoa Jurídica (CNPJ) deverão ser realizadas 
+        A partir de 24/07/2022 as compras com dados de Pessoa Jurídica (CNPJ) deverão ser realizadas
         <a href="https://empresas.samsung.com.br" target="_blank">neste portal</a>. Caso
         queira comprar utilizando seu CPF ou consultar a posição de compras já efetuadas, continue por aqui na Loja
         Online Samsung.
@@ -210,9 +210,9 @@ class CustomProfileData {
       <label class="inputOptIn checkbox-inline">
         <input type="checkbox" id="inputTermAndPolicies" />
         <span class="custom-checkbox-icon"></span>
-        <span>      
-          Aceito os 
-          <a href="https://www.samsung.com/br/shop/terms_and_conditions_of_sale/" target="_blank">termos e condições</a> e 
+        <span>
+          Aceito os
+          <a href="https://www.samsung.com/br/shop/terms_and_conditions_of_sale/" target="_blank">termos e condições</a> e
           <a href="https://www.samsung.com/br/shop/privacy-policy/" target="_blank">política de privacidade</a>
         </span>
       </label>
@@ -247,7 +247,6 @@ class CustomProfileData {
 
     if ($('#inputTermAndPolicies').length !== 0) return false
 
-    _this.addPJInformation()
     _this.addNewsletterOptIn()
     _this.addTermsAndPolicies()
     _this.addRewardsBlock()
