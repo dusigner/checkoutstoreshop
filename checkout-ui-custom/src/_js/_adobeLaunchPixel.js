@@ -6,7 +6,7 @@
 export default class AdobeLaunchPixel {
   constructor() {
     /* List of pages where the DTM transformation is enabled */
-    this.dtmWatchPages = { checkout: 'checkout-header' }
+    this.dtmWatchPages = { checkout: 'main-header' }
 
     /* ATTENTION: THOSE FILES ARE RELATED TO STAGING ENVIRONMENT OF ADOBE DTM, EACH ONE OF THESE ARE RELATED TO ONE SPECIFIC COUNTRY/REGION */
     this.scriptFiles = {
@@ -244,7 +244,7 @@ export default class AdobeLaunchPixel {
 
     _this.pageInterval = setInterval(function () {
       if (document.body) {
-        const rootDivs = document.querySelectorAll('body > div')
+        const rootDivs = document.querySelectorAll('body > div, body > header')
 
         for (let i = 0; i < rootDivs.length; i++) {
           Object.keys(_this.dtmWatchPages).forEach(function (page) {
@@ -983,6 +983,21 @@ export default class AdobeLaunchPixel {
               }
             } else {
               const model = await _this._getModel(item)
+
+              const btnChangeIncrement = document.querySelector(
+                `#item-quantity-change-increment-${item.id}`
+              )
+
+              if (btnChangeIncrement !== null) {
+                btnChangeIncrement.setAttribute(
+                  'data-omni-base',
+                  `;${model.modelName}`
+                )
+                btnChangeIncrement.setAttribute(
+                  'data-omni-variant',
+                  model.modelCode
+                )
+              }
 
               _modelName.push(`;${model.modelName}`)
               _displayName.push(item.name ? item.name : '')
