@@ -48,7 +48,7 @@ export default class CustomHeader {
       _stepElem.before(`
         <p id="go-to-cart-button-custom" class="link link-cart pull-right" data-bind="if: !window.router.sac.isActive()">
           <small>
-            <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>
+            <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="${window.checkout.cartURL()}">Voltar para o carrinho</a>
           </small>
         </p>
       `)
