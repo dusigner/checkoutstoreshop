@@ -48,6 +48,10 @@ class checkoutCustom {
     this.adobeLaunchPixel = new AdobeLaunchPixel()
   }
 
+  rootPath() {
+    return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+  }
+
   general() {
     if (!$('.custom-cart-template-wrap').length) {
       $('.cart-template.mini-cart .cart-fixed > *').wrapAll(
@@ -163,19 +167,19 @@ class checkoutCustom {
               <span class="checkout-steps_bar_inner-active"></span>
             </span>
             <div class="checkout-steps_items">
-              <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="/checkout/#/profile">
+              <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="${this.rootPath()}/checkout/#/profile">
                 <span class="text" data-before="1">${
                   this.lang
                     ? this.lang.checkoutStepsLabelIdentification
                     : 'Identification'
                 }</span>
               </span>
-              <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="/checkout/#/shipping">
+              <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="${this.rootPath()}/checkout/#/shipping">
                 <span class="text" data-before="2">${
                   this.lang ? this.lang.checkoutStepsLabelShipping : 'Shipping'
                 }</span>
               </span>
-              <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="/checkout/#/payment">
+              <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="${this.rootPath()}/checkout/#/payment">
                 <span class="text" data-before="3">${
                   this.lang ? this.lang.checkoutStepsLabelPayment : 'Payment'
                 }</span>
