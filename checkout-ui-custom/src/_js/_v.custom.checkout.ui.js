@@ -1320,9 +1320,13 @@ class checkoutCustom {
       }
     })
 
-    $('body').on('click', '.link-edit, .link-box-edit', function () {
-      setTimeout(() => _this.fixLabels(), 30)
-    })
+    $('body').on(
+      'click',
+      '.link-edit, .link-box-edit, #edit-address-button, #new-address-button',
+      function () {
+        setTimeout(() => _this.fixLabels(), 30)
+      }
+    )
 
     $('body').on('focus', 'input#ship-postalCode', function () {
       $(this).attr('maxlength', 9)
