@@ -700,17 +700,7 @@
     	}
 
 		.vtex-omnishipping-1-x-linkEdit {
-			text-decoration: underline;
-			color: #000000;
-			font-weight: bold;
-			font-size: 14px;
-			position: absolute;
-			right: 16px;
-			top: 50%;
-			transform: translateY(-50%);
-			&::first-letter {
-				text-transform: uppercase;
-			}
+			display: none;
 		}
 
     	.vtex-omnishipping-1-x-deliveryChannelsWrapper,

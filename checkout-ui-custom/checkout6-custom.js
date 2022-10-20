@@ -1026,36 +1026,6 @@
               `<tr class="coupon-applied-message" style="height: 23px;">\n            <td>\n              <span style="color: #D62E2E; font-size: 12px;">${a}</span>\n            </td>\n        </tr>`
             )
       }
-      addLabels(e) {
-        const o =
-            null !== e.marketingData &&
-            !!e.marketingData.coupon &&
-            e.marketingData.coupon,
-          a = []
-        if (!o) return !1
-        try {
-          $('.v-custom-addLabels-active-flag').remove(),
-            $.each(e.items, function (e) {
-              this.priceTags.length > 0 &&
-                this.priceTags.filter(
-                  e =>
-                    !!e.ratesAndBenefitsIdentifier &&
-                    e.ratesAndBenefitsIdentifier.matchedParameters[
-                      'couponCode@Marketing'
-                    ] === o
-                ).length > 0 &&
-                (a.push(this),
-                $(`.table.cart-items tbody tr.product-item:eq(${e})`)
-                  .addClass('v-custom-addLabels-active js-vcustom-addLabels')
-                  .find('.product-name')
-                  .append(
-                    `<span class="v-custom-addLabels-active-flag">${o}</span>`
-                  ))
-            })
-        } catch (e) {
-          console.error(e)
-        }
-      }
       setParentIndex(e) {
         $.each(e.items, function (e) {
           null !== this.parentItemIndex &&
@@ -1281,7 +1251,7 @@
               e => 2 == e.paymentSystem
             ).installments,
             n = t.find(e => e.count === Math.max(...t.map(e => e.count))).total,
-            s = Math.floor(100 * (1 - a / n)),
+            s = Math.floor(100 - (a / n) * 100),
             d = `\n        <div class="cart-total" style="margin-bottom: 20px; color: #000">\n          <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">\n            <p class="ref-id">Total à vista</p>\n            <p class="estimate-shipping">${r(
               a
             )}</p>\n          </div>\n          ${
@@ -1443,7 +1413,7 @@
           this.installationService.init(),
           this.TradeIn.init()
         n(function () {
-          e.marketingData && (o.addLabels(e), o.showCustomMsgCoupon(e))
+          e.marketingData && o.showCustomMsgCoupon(e)
         }, 250)()
       }
       updateStep() {
@@ -9362,7 +9332,7 @@
       addNewsletterOptIn() {
         if ($('.newsletter-optin').length) return
         if ($('.newsletter-optin').find('.newsletter-text').length) return
-        $('.pj-information').after(
+        $('#client-profile-data p.save-data').after(
           '<div class="newsletter-optin">\n      <h3>Newsletter e Promoções (opcional)</h3>\n      <label class="inputOptIn __whatsapp">\n          <input type="checkbox" id="inputWhatsapp" />\n          <span class="custom-checkbox-icon"></span>\n          <span>Desejo receber ofertas e notificações por WhatsApp.</span>\n          <span class="form-tooltip">\n              <img alt="info" class="info-img form-tooltip__initiator"\n                  src="https://samsungbrtest.vteximg.com.br/arquivos/info.png" />\n              <span class="form-tooltip__item">Você receberá atualizações do seu pedido e mensagens sobre ofertas.</span>\n          </span>\n      </label>\n    </div>'
         ),
           $('.newsletter-text').before(
@@ -9727,7 +9697,7 @@
           )
             return
           e.before(
-            '\n        <p id="go-to-cart-button-custom" class="link link-cart pull-right" data-bind="if: !window.router.sac.isActive()">\n          <small>\n            <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>\n          </small>\n        </p>\n      '
+            `\n        <p id="go-to-cart-button-custom" class="link link-cart pull-right" data-bind="if: !window.router.sac.isActive()">\n          <small>\n            <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="${window.checkout.cartURL()}">Voltar para o carrinho</a>\n          </small>\n        </p>\n      `
           )
         } catch (e) {
           console.error('backToCart error', e)

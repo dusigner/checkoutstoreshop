@@ -349,46 +349,6 @@ class checkoutCustom {
     }
   }
 
-  addLabels(orderForm) {
-    const _coupon =
-      orderForm.marketingData === null
-        ? false
-        : orderForm.marketingData.coupon
-        ? orderForm.marketingData.coupon
-        : false
-
-    const _couponItems = []
-
-    if (!_coupon) return false
-
-    try {
-      $(`.v-custom-addLabels-active-flag`).remove()
-      $.each(orderForm.items, function (i) {
-        if (this.priceTags.length > 0) {
-          if (
-            this.priceTags.filter(_pricetag => {
-              return _pricetag.ratesAndBenefitsIdentifier
-                ? _pricetag.ratesAndBenefitsIdentifier.matchedParameters[
-                    'couponCode@Marketing'
-                  ] === _coupon
-                : false
-            }).length > 0
-          ) {
-            _couponItems.push(this)
-            $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-              .addClass('v-custom-addLabels-active js-vcustom-addLabels')
-              .find('.product-name')
-              .append(
-                `<span class="v-custom-addLabels-active-flag">${_coupon}</span>`
-              )
-          }
-        }
-      })
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
   setParentIndex(orderForm) {
     $.each(orderForm.items, function (i) {
       if (this.parentItemIndex !== null) {
@@ -979,7 +939,6 @@ class checkoutCustom {
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
       if (orderForm.marketingData) {
-        _this.addLabels(orderForm)
         _this.showCustomMsgCoupon(orderForm)
       }
     }, 250)
