@@ -879,6 +879,20 @@ class checkoutCustom {
     }
   }
 
+  displayHideSuperChat(page) {
+    try {
+      const _elem = $('#spr-live-chat-app')
+
+      if (page === '#/cart') {
+        _elem.show()
+      } else {
+        _elem.hide()
+      }
+    } catch (e) {
+      console.error('displayHideSuperChat error:', e)
+    }
+  }
+
   condensedTaxes(orderForm) {
     const customtax = orderForm.totalizers.filter(val => val.id === 'CustomTax')
 
@@ -1324,9 +1338,6 @@ class checkoutCustom {
     }
 
     _this.fixLabels()
-
-    // vtex customization
-    // _this.addEditButtoninLogin()
   }
 
   start() {
@@ -1365,6 +1376,7 @@ class checkoutCustom {
           window.location.hash === '#/cart'
         ) {
           _this.TradeIn.validateTradeinCustomData()
+          _this.displayHideSuperChat(window.location.hash)
         }
 
         _this.updateStep()
@@ -1446,6 +1458,7 @@ class checkoutCustom {
           window.location.hash === '#/cart'
         ) {
           _this.TradeIn.validateTradeinCustomData()
+          _this.displayHideSuperChat(window.location.hash)
         }
 
         $(window).one('componentValidated.vtex', () => _this.builder())
