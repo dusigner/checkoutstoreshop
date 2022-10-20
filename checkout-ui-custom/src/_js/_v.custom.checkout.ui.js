@@ -716,7 +716,9 @@ class checkoutCustom {
           install.count === Math.max(...installmentOption.map(ins => ins.count))
       ).total
 
-      const percentDiscount = Math.floor((1 - priceAVista / totalOnTerm) * 100)
+      const percentDiscount = Math.floor(
+        100 - (priceAVista / totalOnTerm) * 100
+      )
 
       const _component = `
         <div class="cart-total" style="margin-bottom: 20px; color: #000">
