@@ -193,7 +193,7 @@ class CustomProfileData {
       </label>
     </div>`
 
-    $('.pj-information').after($field)
+    $('#client-profile-data p.save-data').after($field)
 
     // moves emails and offers into this context
     $('.newsletter-text').before('<span class="custom-checkbox-icon"></span>')
