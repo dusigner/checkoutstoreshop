@@ -719,6 +719,28 @@ h1#cart-title {display:none !important;}
 					margin-right: 10px;
 				}
 			}
+
+      span:first-child {
+        position: relative;
+
+        &::before {
+          content: "Cupom de desconto";
+          position: absolute;
+          font-size: 18px;
+          color: #858585;
+          left: 0;
+          padding-bottom: 5px;
+          cursor: pointer;
+        }
+
+        &.has-value::before {
+          display: none;
+        }
+      }
+
+      #cart-coupon::placeholder {
+        opacity: 0;
+      }
 		}
 
 		i.icon-spin.loading-coupon {

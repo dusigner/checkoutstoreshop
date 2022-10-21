@@ -1317,6 +1317,16 @@ class checkoutCustom {
         setTimeout(() => $('#cart-shipping-calculate').click(), 10)
       }
     })
+
+    $('body').on('input', '#cart-coupon', function () {
+      const $this = $(this)
+
+      if ($this.val()) {
+        $this.closest('span').addClass('has-value')
+      } else {
+        $this.closest('span').removeClass('has-value')
+      }
+    })
   }
 
   init() {
