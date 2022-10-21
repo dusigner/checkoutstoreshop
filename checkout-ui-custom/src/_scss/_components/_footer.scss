@@ -1,6 +1,8 @@
 .checkout-footer {
 	background-color: #f7f7f7;
 	padding: 15px 0;
+  position: sticky;
+  top: 100vh;
 
 	@media screen and (max-width: 1024px) {
 		padding: 30px 20px;

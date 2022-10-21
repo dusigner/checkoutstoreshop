@@ -349,46 +349,6 @@ class checkoutCustom {
     }
   }
 
-  addLabels(orderForm) {
-    const _coupon =
-      orderForm.marketingData === null
-        ? false
-        : orderForm.marketingData.coupon
-        ? orderForm.marketingData.coupon
-        : false
-
-    const _couponItems = []
-
-    if (!_coupon) return false
-
-    try {
-      $(`.v-custom-addLabels-active-flag`).remove()
-      $.each(orderForm.items, function (i) {
-        if (this.priceTags.length > 0) {
-          if (
-            this.priceTags.filter(_pricetag => {
-              return _pricetag.ratesAndBenefitsIdentifier
-                ? _pricetag.ratesAndBenefitsIdentifier.matchedParameters[
-                    'couponCode@Marketing'
-                  ] === _coupon
-                : false
-            }).length > 0
-          ) {
-            _couponItems.push(this)
-            $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-              .addClass('v-custom-addLabels-active js-vcustom-addLabels')
-              .find('.product-name')
-              .append(
-                `<span class="v-custom-addLabels-active-flag">${_coupon}</span>`
-              )
-          }
-        }
-      })
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
   setParentIndex(orderForm) {
     $.each(orderForm.items, function (i) {
       if (this.parentItemIndex !== null) {
@@ -716,7 +676,9 @@ class checkoutCustom {
           install.count === Math.max(...installmentOption.map(ins => ins.count))
       ).total
 
-      const percentDiscount = Math.floor((1 - priceAVista / totalOnTerm) * 100)
+      const percentDiscount = Math.floor(
+        100 - (priceAVista / totalOnTerm) * 100
+      )
 
       const _component = `
         <div class="cart-total" style="margin-bottom: 20px; color: #000">
@@ -917,6 +879,20 @@ class checkoutCustom {
     }
   }
 
+  displayHideSuperChat(page) {
+    try {
+      const _elem = $('#spr-live-chat-app')
+
+      if (page === '#/cart') {
+        _elem.show()
+      } else {
+        _elem.hide()
+      }
+    } catch (e) {
+      console.error('displayHideSuperChat error:', e)
+    }
+  }
+
   condensedTaxes(orderForm) {
     const customtax = orderForm.totalizers.filter(val => val.id === 'CustomTax')
 
@@ -977,7 +953,6 @@ class checkoutCustom {
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
       if (orderForm.marketingData) {
-        _this.addLabels(orderForm)
         _this.showCustomMsgCoupon(orderForm)
       }
     }, 250)
@@ -1373,9 +1348,6 @@ class checkoutCustom {
     }
 
     _this.fixLabels()
-
-    // vtex customization
-    // _this.addEditButtoninLogin()
   }
 
   start() {
@@ -1414,6 +1386,7 @@ class checkoutCustom {
           window.location.hash === '#/cart'
         ) {
           _this.TradeIn.validateTradeinCustomData()
+          _this.displayHideSuperChat(window.location.hash)
         }
 
         _this.updateStep()
@@ -1495,6 +1468,7 @@ class checkoutCustom {
           window.location.hash === '#/cart'
         ) {
           _this.TradeIn.validateTradeinCustomData()
+          _this.displayHideSuperChat(window.location.hash)
         }
 
         $(window).one('componentValidated.vtex', () => _this.builder())
