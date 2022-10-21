@@ -149,6 +149,12 @@
       grid-area: payment-group;
       max-width: 330px;
 
+      #payment-group-SamsungPayPaymentGroup{
+        span {
+          background-position-y: calc(100% - 10px);
+        }
+      }
+
 
       @media screen and (max-width: 768px) {
         max-width: none;

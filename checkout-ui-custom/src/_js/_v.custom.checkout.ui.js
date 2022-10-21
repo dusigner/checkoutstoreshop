@@ -933,7 +933,10 @@ class checkoutCustom {
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
-    this.enchancementSummaryCart(orderForm)
+    if (window.location.hash === '#/cart') {
+      this.enchancementSummaryCart(orderForm)
+    }
+
     this.enchancementUnavailableProduct()
     this.createChoiceNewProducts()
     this.couponInfo(orderForm)

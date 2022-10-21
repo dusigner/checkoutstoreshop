@@ -1367,6 +1367,14 @@
           console.error('summaryCustom error:', e)
         }
       }
+      displayHideSuperChat(e) {
+        try {
+          const o = $('#spr-live-chat-app')
+          '#/cart' === e ? o.show() : o.hide()
+        } catch (e) {
+          console.error('displayHideSuperChat error:', e)
+        }
+      }
       condensedTaxes(e) {
         const o = e.totalizers.filter(e => 'CustomTax' === e.id)
         if (o && o.length < 2) return !1
@@ -1396,7 +1404,7 @@
           this.addAssemblies(e),
           this.enchancementTotalPrice(e),
           this.enchancementProductCart(e),
-          this.enchancementSummaryCart(e),
+          '#/cart' === window.location.hash && this.enchancementSummaryCart(e),
           this.enchancementUnavailableProduct(),
           this.createChoiceNewProducts(),
           this.couponInfo(e),
@@ -1644,6 +1652,12 @@
           $('body').on('input', '#ship-postalCode', function () {
             $.trim($(this).val().length) >= 9 &&
               setTimeout(() => $('#cart-shipping-calculate').click(), 10)
+          }),
+          $('body').on('input', '#cart-coupon', function () {
+            const e = $(this)
+            e.val()
+              ? e.closest('span').addClass('has-value')
+              : e.closest('span').removeClass('has-value')
           })
       }
       init() {
@@ -1687,7 +1701,8 @@
               const o = document.querySelector('.cart-items')
               ;('#/payment' !== window.location.hash &&
                 '#/cart' !== window.location.hash) ||
-                e.TradeIn.validateTradeinCustomData(),
+                (e.TradeIn.validateTradeinCustomData(),
+                e.displayHideSuperChat(window.location.hash)),
                 e.updateStep(),
                 e.changeShippingTimeInfoInit(),
                 e.checkProfileFocus(),
@@ -1738,7 +1753,8 @@
                   e.preEmail.createElementSamsungAccountLogin(),
                 ('#/payment' !== window.location.hash &&
                   '#/cart' !== window.location.hash) ||
-                  e.TradeIn.validateTradeinCustomData(),
+                  (e.TradeIn.validateTradeinCustomData(),
+                  e.displayHideSuperChat(window.location.hash)),
                 $(window).one('componentValidated.vtex', () => e.builder()),
                 e.checkProfileFocus(),
                 e.changeShippingTimeInfoInit(),
