@@ -728,9 +728,14 @@ h1#cart-title {display:none !important;}
           position: absolute;
           font-size: 18px;
           color: #858585;
+          top: 14px;
           left: 0;
-          padding-bottom: 5px;
           cursor: pointer;
+
+          @media (max-width: $mobileWidth) {
+            font-size: 14px;
+            top: 12px;
+          }
         }
 
         &.has-value::before {
