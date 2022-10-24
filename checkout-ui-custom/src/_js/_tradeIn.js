@@ -4,9 +4,17 @@ export default class TradeIn {
   init() {
     const { items } = window.vtexjs.checkout.orderForm
     const transport = JSON.parse(localStorage.getItem('transport') || '[]')
+    const customData = vtexjs.checkout.orderForm.customData || null
 
     if (items.length && transport.length) {
       this.checkTradeIn(items, transport)
+      return
+    }
+
+    if (items.length && customData) {
+      const transportCustomData = customData.customApps[0].fields.trade_in_option_selected
+      this.checkTradeIn(items, JSON.parse(transportCustomData))
+      return
     }
   }
 
