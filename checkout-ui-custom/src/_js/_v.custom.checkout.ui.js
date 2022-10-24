@@ -652,7 +652,7 @@ class checkoutCustom {
     }
   }
 
-  enchancementSummaryCart(orderForm) {
+  enchancementSummaryCart(orderForm, path) {
     try {
       if (orderForm.value == 0) {
         return
@@ -705,11 +705,17 @@ class checkoutCustom {
         </div>
       `
 
-      if (_trElem.find('.cart-total').length === 0) {
-        _trElem.prepend(_component)
-      } else {
-        _trElem.find('.cart-total').remove()
-        _trElem.prepend(_component)
+      if (path !== '#/cart') {
+        if (_trElem.find('.cart-total').length === 0) {
+          _trElem.prepend(_component)
+        }
+      } else if (path === '#/cart') {
+        if (_trElem.find('.cart-total').length === 0) {
+          _trElem.prepend(_component)
+        } else {
+          _trElem.find('.cart-total').remove()
+          _trElem.prepend(_component)
+        }
       }
     } catch (e) {
       console.error('enchancementSummaryCart error:', e)
@@ -933,10 +939,7 @@ class checkoutCustom {
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
-    if (window.location.hash === '#/cart') {
-      this.enchancementSummaryCart(orderForm)
-    }
-
+    this.enchancementSummaryCart(orderForm, window.location.hash)
     this.enchancementUnavailableProduct()
     this.createChoiceNewProducts()
     this.couponInfo(orderForm)
