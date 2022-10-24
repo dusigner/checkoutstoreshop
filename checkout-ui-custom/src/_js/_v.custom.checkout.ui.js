@@ -1466,7 +1466,7 @@ class checkoutCustom {
 
       $(window).load(function () {
         $('#cart-to-orderform').on('click', function () {
-          _this.SendAttachment.newTextFieldTradeInAndInstallation()
+          _this.SendAttachment.sendOpenTextField()
         })
 
         if (window.location.hash === '#/email') {

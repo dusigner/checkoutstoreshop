@@ -8,12 +8,14 @@ export default class SendAttachment {
     return item.productCategoryIds.indexOf('2027') !== -1
   }
 
-  newTextFieldTradeInAndInstallation() {
-    let obsForTradeInAndInstallation = ''
+  sendOpenTextField() {
+    let obsToOpenTextField = ''
 
     const { items } = window.vtexjs.checkout.orderForm
     const transport = JSON.parse(localStorage.getItem('transport') || '[]')
+    const of = window.vtexjs.checkout.orderForm
 
+    // TRADE-IN
     if (transport.length) {
       for (let i = 0; i < transport.length; i++) {
         let totalItemTradeIn = 0
@@ -39,7 +41,7 @@ export default class SendAttachment {
             }
           }
 
-          obsForTradeInAndInstallation += `{'ean':'${ean}', 'isTradeIn':'true', 'trocaSmartValue': '${formatCurrencyBRL(
+          obsToOpenTextField += `{'ean':'${ean}', 'isTradeIn':'true', 'trocaSmartValue': '${formatCurrencyBRL(
             totalItemTradeIn,
             false
           )}'}, `
@@ -47,20 +49,17 @@ export default class SendAttachment {
       }
     }
 
-    const hasInstallation = window.vtexjs.checkout.orderForm.items.filter(
+    // INSTALLATION
+    const productsInstallation = window.vtexjs.checkout.orderForm.items.filter(
       item => this.isInstallation(item)
     )
 
     const installationInProduct = []
 
-    if (hasInstallation) {
+    if (productsInstallation) {
       window.vtexjs.checkout.orderForm.items.filter(item => {
-        const productsService = window.vtexjs.checkout.orderForm.items.filter(
-          product => this.isInstallation(product)
-        )
-
-        if (productsService) {
-          productsService.filter(service => {
+        if (productsInstallation) {
+          productsInstallation.filter(service => {
             if (
               service.attachments.length &&
               service.attachments[0].name === 'linkInstallation'
@@ -74,28 +73,25 @@ export default class SendAttachment {
           })
         }
 
-        return productsService
+        return ''
       })
 
-      installationInProduct.filter(install => {
-        window.vtexjs.checkout.orderForm.shippingData.logisticsInfo.filter(
+      installationInProduct.map(install => {
+        window.vtexjs.checkout.orderForm.shippingData.logisticsInfo.map(
           logistic => {
             if (logistic.itemId == install.id) {
-              logistic.slas.filter(sla => {
-                if (logistic.selectedDeliveryChannel == sla.deliveryChannel) {
-                  let estimative = ''
-
-                  estimative = parseInt(
+              logistic.slas.map(sla => {
+                if (logistic.selectedSla == sla.id) {
+                  const estimative = parseInt(
                     sla.shippingEstimate.replace(/[^0-9\.]+/g, ''),
                     10
                   )
-                  obsForTradeInAndInstallation += hasInstallation.map(item => {
-                    return `{'isInstallation':'true','sku':'${
-                      install.refId
-                    }','estimate':'${
-                      estimative + 1
-                    }','price': '${formatCurrencyBRL(item.price)}'}`
-                  })
+
+                  obsToOpenTextField += `{'isInstallation':'true','sku':'${
+                    install.refId
+                  }','estimate':'${
+                    estimative + 1
+                  }','price': '${formatCurrencyBRL(install.price)}'}, `
                 }
 
                 return ''
@@ -110,11 +106,32 @@ export default class SendAttachment {
       })
     }
 
-    if (obsForTradeInAndInstallation) {
-      window.vtexjs.checkout.sendAttachment('openTextField', {
-        value: `${obsForTradeInAndInstallation}`,
-      })
-      window.vtexjs.checkout.getOrderForm()
+    // IN STORE
+    if (of) {
+      const ofMarketingData = of.marketingData
+
+      if (ofMarketingData.marketingTags.length) {
+        const isInStore = ofMarketingData.marketingTags.some(
+          tag => tag.toLowerCase() == 'instore'
+        )
+
+        if (isInStore) {
+          if (of.openTextField.value.indexOf('instore') < 0) {
+            obsToOpenTextField += `{'instore': '${window.vtexjs.checkout.orderForm.openTextField.value}'}, `
+          }
+        }
+      }
     }
+
+    // SEND FINAL TEXT TO OPENTEXTFIELD
+    if (obsToOpenTextField) {
+      window.vtexjs.checkout.sendAttachment('openTextField', {
+        value: `${obsToOpenTextField}`,
+      })
+    } else {
+      window.vtexjs.checkout.sendAttachment('openTextField', { value: null })
+    }
+
+    window.vtexjs.checkout.getOrderForm()
   }
 }
