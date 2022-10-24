@@ -1347,6 +1347,10 @@ class checkoutCustom {
   init() {
     const _this = this
 
+    if (window.vtex) {
+      window.vtex.showInstallmentsPreviewValue = true
+    }
+
     _this.orderForm = window.vtexjs.checkout.orderForm
       ? window.vtexjs.checkout.orderForm
       : false
