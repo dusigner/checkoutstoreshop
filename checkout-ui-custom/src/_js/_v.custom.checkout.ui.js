@@ -1478,7 +1478,6 @@ class checkoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
-        _this.defaultPaymentMethod()
       })
 
       $(window).load(function () {
