@@ -1,5 +1,5 @@
 body {
-  
+
   &.v-custom-step-cart,
   &.v-custom-step-email {
     padding-top: 125px;
@@ -8,7 +8,7 @@ body {
       padding-top: 73px;
     }
   }
-  
+
   &.v-custom-step-profile,
   &.v-custom-step-shipping,
   &.v-custom-step-payment {
@@ -87,7 +87,7 @@ body {
       grid-area: steps;
       max-width: 540px;
       margin: 0 auto;
-      min-height: 104px;
+      min-height: 68px;
 
       @media (max-width: $mobileWidth) {
         min-height: auto;
@@ -112,11 +112,11 @@ body {
     max-width: 1280px;
     width: 100%;
     margin: 0 auto;
-  
+
     @media (max-width: $mobileWidth) {
     margin: 16px auto;
     }
-  
+
     &:before {
       content: "<";
       display: flex;
@@ -124,7 +124,7 @@ body {
       font-weight: bold;
       color: #000
     }
-  
+
     #orderform-minicart-to-cart {
       color: #000;
       font-size: 14px;
