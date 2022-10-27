@@ -1,7 +1,7 @@
 {
   "name": "store-checkout",
   "vendor": "samsungbr",
-  "version": "0.1.9-beta.2",
+  "version": "0.1.9",
   "title": "Shop BR Checkout",
   "description": "Shop BR Checkout",
   "builders": {
