@@ -195,14 +195,35 @@
 		}
 
 		.payment-group-list-btn {
-		  width: 100%;
+		  	width: 100%;
+			display: flex;
+			flex-direction: column;
 
-      a {
-        text-align: left;
-        border-radius: 0;
-        box-shadow: none;
-        margin-bottom: 0px;
-      }
+			// To sort the PaymentGroup positions, just change the order
+			$PaymentGroups: (
+				'#payment-group-instantPaymentPaymentGroup', // PIX
+				'#payment-group-creditCardPaymentGroup', // Normal Credit Card
+				'#payment-group-customPrivate_501PaymentGroup', // SSG Itaucard
+				'#payment-group-bankInvoicePaymentGroup', // Boleto
+				'#payment-group-SamsungPayPaymentGroup', // SSG pay
+				'#payment-group-AmeDigitalPaymentGroup', // Ame
+				'#payment-group-picPayPaymentGroup' // PicPay
+			);
+
+			@for $i from 1 through length($PaymentGroups) {
+				$button: nth($PaymentGroups, $i);
+				#{$button} {
+				  order: $i;
+				}
+			}
+
+			a {
+				text-align: left;
+				border-radius: 0;
+				box-shadow: none;
+				margin-bottom: 0px;
+				order: 20;
+			}
 		}
 
 		p.link.link-gift-card *,
