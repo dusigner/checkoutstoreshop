@@ -1217,6 +1217,24 @@ class checkoutCustom {
     })
   }
 
+  defaultPaymentMethod() {
+    try {
+      // Default Payment Method: PIX
+      const $defaultPaymentMethod = $(
+        '#payment-group-instantPaymentPaymentGroup'
+      )
+
+      if (
+        $defaultPaymentMethod.length &&
+        !$defaultPaymentMethod.is('.active')
+      ) {
+        $defaultPaymentMethod.trigger('click')
+      }
+    } catch (err) {
+      console.error(`Erro ao definir método de pagamento padrão: ${err}`)
+    }
+  }
+
   bind() {
     const _this = this
 
@@ -1338,6 +1356,10 @@ class checkoutCustom {
   init() {
     const _this = this
 
+    if (window.vtex) {
+      window.vtex.showInstallmentsPreviewValue = true
+    }
+
     _this.orderForm = window.vtexjs.checkout.orderForm
       ? window.vtexjs.checkout.orderForm
       : false
@@ -1399,6 +1421,8 @@ class checkoutCustom {
         _this.changeShippingTimeInfoInit()
         _this.checkProfileFocus()
         _this.fixLabels()
+        _this.defaultPaymentMethod()
+
         _this.shipping.toggleGoToPaymentDisabled()
 
         if (window.location.hash === '#/email') {
@@ -1458,6 +1482,7 @@ class checkoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
+        _this.defaultPaymentMethod()
       })
 
       $(window).load(function () {
@@ -1485,6 +1510,8 @@ class checkoutCustom {
         window.vtexjs.checkout.getOrderForm().done(function () {
           _this.addMedalliaScript()
         })
+
+        _this.defaultPaymentMethod()
 
         // #shipping
         _this.profile.toggleGoToShippingDisabled()
