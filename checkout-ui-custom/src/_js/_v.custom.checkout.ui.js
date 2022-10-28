@@ -1403,6 +1403,10 @@ class checkoutCustom {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
           _this.shipping.limitPostalCodeInput()
+
+          if (window.location.hash === '#/shipping') {
+            _this.shipping.checkReceiverName(_this.orderForm)
+          }
         }
       })
 
@@ -1452,6 +1456,10 @@ class checkoutCustom {
           if (window.location.hash === '#/profile') {
             _this.profile.addTerms(_this.orderForm)
           }
+
+          if (window.location.hash === '#/shipping') {
+            _this.shipping.checkReceiverName(_this.orderForm)
+          }
         }
       })
 
@@ -1473,6 +1481,10 @@ class checkoutCustom {
           _this.profile.addTerms(orderForm)
         }
 
+        if (window.location.hash === '#/shipping') {
+          _this.shipping.checkReceiverName(orderForm)
+        }
+
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
         }
@@ -1491,6 +1503,14 @@ class checkoutCustom {
 
         if (window.location.hash === '#/email') {
           _this.preEmail.createElementSamsungAccountLogin()
+        }
+
+        if (window.location.hash === '#/shipping') {
+          try {
+            _this.shipping.checkReceiverName(window.vtexjs.checkout.orderForm)
+          } catch (err) {
+            console.error(`Erro ao verificar campo destinatário: ${err}`)
+          }
         }
 
         if (
