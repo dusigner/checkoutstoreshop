@@ -652,7 +652,7 @@ class checkoutCustom {
     }
   }
 
-  enchancementSummaryCart(orderForm, path) {
+  async enchancementSummaryCart(orderForm, path) {
     try {
       if (orderForm.value == 0) {
         return
@@ -666,18 +666,27 @@ class checkoutCustom {
       ).installments[0].total
 
       // Encontra as installments para do cartao visa (código 2)
-      const installmentOption = orderForm.paymentData.installmentOptions.find(
-        item => item.paymentSystem == 2
-      ).installments
-
       // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-      const totalOnTerm = installmentOption.find(
-        install =>
-          install.count === Math.max(...installmentOption.map(ins => ins.count))
-      ).total
+      const priceAPrazo = await fetch(
+        `${this.rootPath()}/api/checkout/pub/orderForm/${
+          orderForm.orderFormId
+        }/installments?paymentSystem=2`
+      )
+        .then(response => response.json())
+        .then(data => {
+          const installmentOptions = data.installments
+
+          return (
+            installmentOptions.find(
+              install =>
+                install.count ===
+                Math.max(...installmentOptions.map(inst => inst.count))
+            ).total || 0
+          )
+        })
 
       const percentDiscount = Math.floor(
-        100 - (priceAVista / totalOnTerm) * 100
+        100 - (priceAVista / priceAPrazo) * 100
       )
 
       const _component = `
@@ -699,7 +708,7 @@ class checkoutCustom {
               Total a prazo
             </p>
             <p class="discount-total" style="font-weight: 700;">
-              ${formatCurrencyBRL(totalOnTerm)}
+              ${formatCurrencyBRL(priceAPrazo)}
             </p>
           </div>
         </div>
