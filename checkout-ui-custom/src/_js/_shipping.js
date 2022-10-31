@@ -15,26 +15,40 @@ class CustomShippingData {
         '<div class="invalid-postal-code-msg"> <span class="invalid-postal-code-msg__label">CEP Inválido</span> <p class="invalid-postal-code-msg__message"> Infelizmente não oferecemos entrega para a sua região. Em caso de dúvidas, por favor <a class="invalid-postal-code-msg__link" href="https://static.zdassets.com/web_widget/latest/liveChat.html?v=10#key=ajudasamsungcajamar.zendesk.com" target="_blank">clique aqui</a>.</p> </div>'
       )
 
-      if (
-        $postalCodeField.find('small').length &&
-        !$('.invalid-postal-code-msg').length
-      ) {
+      if ($postalCodeField.find('small').length && !$('.invalid-postal-code-msg').length) {
         $postalCodeField.find('small').before($invalidPostalCodeMessage)
       }
 
       if (!$('.invalid-postal-code-msg').length) {
         $('.srp-delivery-header').append($invalidPostalCodeMessage)
-        $(
-          '.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100'
-        ).hide()
-        $(
-          '.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100'
-        ).hide()
+        $('.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100').hide()
+        $('.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100').hide()
       }
     } catch (err) {
-      console.error(
-        `Ocorreu um erro ao adicionar mensagem de CEP inválido: ${err}`
+      console.error(`Ocorreu um erro ao adicionar mensagem de CEP inválido: ${err}`)
+    }
+  }
+
+
+  addInvalidInventoryCodeMessage() {
+    try {
+      const $postalCodeForm = $('.vtex-omnishipping-1-x-addressFormPart1')
+      const $postalCodeField = $postalCodeForm.find('p.ship-postalCode')
+      const $invalidPostalCodeMessage = $(
+        '<div class="invalid-postal-inventory"><p class="invalid-postal-code-msg__message">Infelizmente o produto que você escolheu está sem estoque para a sua região. Em breve nosso estoque será reabastecido.</p></div>'
       )
+
+      if ($postalCodeField.find('small').length && !$('.invalid-postal-inventory').length) {
+        $postalCodeField.find('small').before($invalidPostalCodeMessage)
+      }
+
+      if (!$('.invalid-postal-inventory').length) {
+        $('.srp-delivery-header').append($invalidPostalCodeMessage)
+        $('.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100').hide()
+        $('.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100').hide()
+      }
+    } catch (err) {
+      console.error(`Ocorreu um erro ao adicionar mensagem de CEP inválido: ${err}`)
     }
   }
 
@@ -74,17 +88,12 @@ class CustomShippingData {
         </div>`
       )
 
-      if (
-        $postalCodeField.find('small').length &&
-        $postalCodeField.find('.virtual-inventory-msg').length === 0
-      ) {
+      if ($postalCodeField.find('small').length && $postalCodeField.find('.virtual-inventory-msg').length === 0) {
         $postalCodeField.find('small').before($virtualInventoryMessage)
       }
 
-      if (
-        $('.srp-delivery-header').find('.virtual-inventory-msg').length === 0
-      ) {
-        $('.srp-delivery-header').append($virtualInventoryMessage)
+      if ($('.srp-delivery-header').find('.virtual-inventory-msg').length === 0) {
+        $('.srp-delivery-header').append($virtualInventoryMessage) 
       }
     } catch (err) {
       console.error(
@@ -100,18 +109,15 @@ class CustomShippingData {
       if (!orderForm.shippingData) return
       if (!orderForm.shippingData.address) return
       const { logisticsInfo } = orderForm.shippingData
-
       logisticsInfo.filter(item => {
         const appendItem = item.slas.filter(sla => {
           return sla.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
         })
-
         if (appendItem.length > 0) {
-          if ($('.estoqueVirtual').length === 0) {
-            _this.addVirtualInventoryMessage()
+          if ($('.virtual-inventory-msg').length === 0) {
+            _this.addVirtualInventoryMessage()  
           }
         }
-
         return true
       })
     } catch (err) {
@@ -127,27 +133,41 @@ class CustomShippingData {
 
       if (!orderForm.shippingData.address) return
 
+      if (!orderForm.messages) return
+
+      if (!orderForm.messages[0].text) return
+
       const _this = this
 
       const { address } = orderForm.shippingData
 
-      if (address.postalCode && !address.city) {
-        this.setInvalidPostalCode()
+      this.validateVirtualInventory(orderForm) 
 
-        const interval = setInterval(function () {
+
+      const interval = setInterval(function () {
+        if(orderForm.messages[0].text.indexOf('CEP selecionado') > -1) {
           if (!$('.invalid-postal-code-msg').length) {
             _this.addInvalidPostalCodeMessage()
             clearInterval(interval)
           }
-        }, 50)
+        } else if (orderForm.messages[0].text.indexOf('coordenadas') > -1) {
+          _this.setInvalidPostalCode()
+          if (!$('.invalid-postal-inventory').length) {
+            _this.addInvalidInventoryCodeMessage()
+            clearInterval(interval) 
+          }
+        }
+      }, 50)
+
+      if (address.postalCode && !address.city) {
+        this.setInvalidPostalCode()
       } else {
         // console.log('cep válido');
         this.setValidPostalCode()
         this.removeInvalidPostalCodeMessage()
-        this.validateVirtualInventory(orderForm)
       }
     } catch (err) {
-      console.error(`Ocorreu um erro ao validar CEP: ${err}`)
+      console.error(`Ocorreu um erro ao validar CEP: ${err}`) 
     }
   }
 
@@ -157,7 +177,7 @@ class CustomShippingData {
       const $postalCodeInput = $('#shipping-data input#ship-postalCode')
 
       if (!$postalCodeInput.val()) {
-        _this.resetValidation()
+        _this.resetValidation() 
       }
 
       if (!$postalCodeInput.val().length < 9) {
