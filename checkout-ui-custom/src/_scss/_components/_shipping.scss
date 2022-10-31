@@ -144,6 +144,10 @@
 
                 .street {
                     min-width: 900px;
+
+                    @media(max-width: $mobileWidth) {
+                        min-width: calc(100vw - 118px);
+                    }
                 }
             }
 

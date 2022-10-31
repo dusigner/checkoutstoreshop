@@ -225,6 +225,31 @@ class CustomShippingData {
     $('#shipping-data input#ship-postalCode').attr('maxlength', 9)
   }
 
+  checkReceiverName(orderForm) {
+    if (!orderForm) return
+
+    const profileData = orderForm.clientProfileData
+
+    if (!profileData) return
+
+    try {
+      const receiverName = `${profileData.firstName} ${profileData.lastName}`
+      const $receiverNameInput = $('#ship-receiverName')
+
+      if ($.trim($receiverNameInput.val()) === $.trim(receiverName)) {
+        $receiverNameInput
+          .prev('label[for="ship-receiverName"]')
+          .text('Destinatário é o mesmo da entrega')
+      } else {
+        $receiverNameInput
+          .prev('label[for="ship-receiverName"]')
+          .text('Destinatário')
+      }
+    } catch (err) {
+      console.error(`Erro ao verificar campo destinatário: ${err}`)
+    }
+  }
+
   toggleGoToPaymentDisabled() {
     const disabled =
       $('#shipping-data p.input.required input').filter(function () {
@@ -262,6 +287,14 @@ class CustomShippingData {
         _this.toggleGoToPaymentDisabled()
       }
     )
+
+    $(document).on('input', '#ship-receiverName', function () {
+      try {
+        _this.checkReceiverName(window.vtexjs.checkout.orderForm)
+      } catch (err) {
+        console.error(`Erro ao verificar campo destinatário: ${err}`)
+      }
+    })
   }
 }
 
