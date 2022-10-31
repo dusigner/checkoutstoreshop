@@ -1757,8 +1757,7 @@
                   e.customAddressForm.loadScript(),
                 $('#postalCode-finished-loading + .mb5').length &&
                   e.shipping.resetValidation(),
-                e.shipping.toggleGoToPaymentDisabled(),
-                e.defaultPaymentMethod()
+                e.shipping.toggleGoToPaymentDisabled()
             }),
             $(window).load(function () {
               $('#cart-to-orderform').on('click', function () {
@@ -9550,6 +9549,31 @@
           )
         }
       }
+      addInvalidInventoryCodeMessage() {
+        try {
+          const e = $('.vtex-omnishipping-1-x-addressFormPart1').find(
+              'p.ship-postalCode'
+            ),
+            o = $(
+              '<div class="invalid-postal-inventory"><p class="invalid-postal-code-msg__message">Infelizmente o produto que você escolheu está sem estoque para a sua região. Em breve nosso estoque será reabastecido.</p></div>'
+            )
+          e.find('small').length &&
+            !$('.invalid-postal-inventory').length &&
+            e.find('small').before(o),
+            $('.invalid-postal-inventory').length ||
+              ($('.srp-delivery-header').append(o),
+              $(
+                '.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100'
+              ).hide(),
+              $(
+                '.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100'
+              ).hide())
+        } catch (e) {
+          console.error(
+            'Ocorreu um erro ao adicionar mensagem de CEP inválido: ' + e
+          )
+        }
+      }
       removeInvalidPostalCodeMessage() {
         $('.invalid-postal-code-msg').remove()
       }
@@ -9604,7 +9628,7 @@
               e.slas.filter(
                 e => e.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
               ).length > 0 &&
-                0 === $('.estoqueVirtual').length &&
+                0 === $('.virtual-inventory-msg').length &&
                 o.addVirtualInventoryMessage(),
               !0
             )
@@ -9618,18 +9642,24 @@
           try {
             if (!e.shippingData) return
             if (!e.shippingData.address) return
+            if (!e.messages) return
+            if (!e.messages[0].text) return
             const o = this,
               { address: a } = e.shippingData
-            if (a.postalCode && !a.city) {
-              this.setInvalidPostalCode()
-              const e = setInterval(function () {
-                $('.invalid-postal-code-msg').length ||
-                  (o.addInvalidPostalCodeMessage(), clearInterval(e))
-              }, 50)
-            } else
-              this.setValidPostalCode(),
-                this.removeInvalidPostalCodeMessage(),
-                this.validateVirtualInventory(e)
+            this.validateVirtualInventory(e)
+            const t = setInterval(function () {
+              e.messages[0].text.indexOf('CEP selecionado') > -1
+                ? $('.invalid-postal-code-msg').length ||
+                  (o.addInvalidPostalCodeMessage(), clearInterval(t))
+                : e.messages[0].text.indexOf('coordenadas') > -1 &&
+                  (o.setInvalidPostalCode(),
+                  $('.invalid-postal-inventory').length ||
+                    (o.addInvalidInventoryCodeMessage(), clearInterval(t)))
+            }, 50)
+            a.postalCode && !a.city
+              ? this.setInvalidPostalCode()
+              : (this.setValidPostalCode(),
+                this.removeInvalidPostalCodeMessage())
           } catch (e) {
             console.error('Ocorreu um erro ao validar CEP: ' + e)
           }
