@@ -12,8 +12,16 @@ export default class SendAttachment {
     let obsToOpenTextField = ''
 
     const { items } = window.vtexjs.checkout.orderForm
-    const transport = JSON.parse(localStorage.getItem('transport') || '[]')
     const of = window.vtexjs.checkout.orderForm
+    const customData = window.vtexjs.checkout.orderForm.customData || false
+    const transportCustomData =
+      customData && customData.customApps[0].fields.trade_in_option_selected
+
+    const transport = localStorage.getItem('transport')
+      ? JSON.parse(localStorage.getItem('transport'))
+      : transportCustomData
+      ? JSON.parse(transportCustomData)
+      : '[]'
 
     // TRADE-IN
     if (transport.length) {

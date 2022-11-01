@@ -5,3 +5,6 @@
 node_modules/
 npm-debug.log
 build/
+
+checkout6-custom.css
+checkout6-custom.js
