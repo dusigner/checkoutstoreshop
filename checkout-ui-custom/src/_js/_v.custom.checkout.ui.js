@@ -852,7 +852,9 @@ class checkoutCustom {
     try {
       const { items } = window.vtexjs.checkout.orderForm
       const itemsQuantity = items.length
-
+      
+      const quantitySelectedItems = items.map((item) => {item.quantity});
+      
       const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
 
       let listItems = ''
@@ -865,8 +867,8 @@ class checkoutCustom {
 
       const _summaryOrder = `
         <div class="summaryOrder">
-          <h6>Resumo do pedido (${itemsQuantity} ${
-        itemsQuantity.length > 1 ? 'itens' : 'item'
+          <h6> do pedido (${itemsQuantity} ${
+            quantitySelectedItems.length <= 1 ? 'item' : 'itens'
       })</h6>
           <ul>
             ${listItems}
