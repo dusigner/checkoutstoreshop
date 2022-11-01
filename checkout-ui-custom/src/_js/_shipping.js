@@ -15,28 +15,20 @@ class CustomShippingData {
         '<div class="invalid-postal-code-msg"> <span class="invalid-postal-code-msg__label">CEP Inválido</span> <p class="invalid-postal-code-msg__message"> Infelizmente não oferecemos entrega para a sua região. Em caso de dúvidas, por favor <a class="invalid-postal-code-msg__link" href="https://static.zdassets.com/web_widget/latest/liveChat.html?v=10#key=ajudasamsungcajamar.zendesk.com" target="_blank">clique aqui</a>.</p> </div>'
       )
 
-      if (
-        $postalCodeField.find('small').length &&
-        !$('.invalid-postal-code-msg').length
-      ) {
+      if ($postalCodeField.find('small').length && !$('.invalid-postal-code-msg').length) {
         $postalCodeField.find('small').before($invalidPostalCodeMessage)
       }
 
       if (!$('.invalid-postal-code-msg').length) {
         $('.srp-delivery-header').append($invalidPostalCodeMessage)
-        $(
-          '.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100'
-        ).hide()
-        $(
-          '.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100'
-        ).hide()
+        $('.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100').hide()
+        $('.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100').hide()
       }
     } catch (err) {
-      console.error(
-        `Ocorreu um erro ao adicionar mensagem de CEP inválido: ${err}`
-      )
+      console.error(`Ocorreu um erro ao adicionar mensagem de CEP inválido: ${err}`)
     }
   }
+
 
   addInvalidInventoryCodeMessage() {
     try {
@@ -46,26 +38,17 @@ class CustomShippingData {
         '<div class="invalid-postal-inventory"><p class="invalid-postal-code-msg__message">Infelizmente o produto que você escolheu está sem estoque para a sua região. Em breve nosso estoque será reabastecido.</p></div>'
       )
 
-      if (
-        $postalCodeField.find('small').length &&
-        !$('.invalid-postal-inventory').length
-      ) {
+      if ($postalCodeField.find('small').length && !$('.invalid-postal-inventory').length) {
         $postalCodeField.find('small').before($invalidPostalCodeMessage)
       }
 
       if (!$('.invalid-postal-inventory').length) {
         $('.srp-delivery-header').append($invalidPostalCodeMessage)
-        $(
-          '.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100'
-        ).hide()
-        $(
-          '.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100'
-        ).hide()
+        $('.shp-alert.vtex-shipping-preview-0-x-alert.shp-alert-shipping-unavailable.vtex-shipping-preview-0-x-alertPickup.w-100').hide()
+        $('.srp-delivery-select-container.br2.bw1.relative.bg-white.ba.b--light-gray.hover-b--silver.h-100').hide()
       }
     } catch (err) {
-      console.error(
-        `Ocorreu um erro ao adicionar mensagem de CEP inválido: ${err}`
-      )
+      console.error(`Ocorreu um erro ao adicionar mensagem de CEP inválido: ${err}`)
     }
   }
 
@@ -105,17 +88,12 @@ class CustomShippingData {
         </div>`
       )
 
-      if (
-        $postalCodeField.find('small').length &&
-        $postalCodeField.find('.virtual-inventory-msg').length === 0
-      ) {
+      if ($postalCodeField.find('small').length && $postalCodeField.find('.virtual-inventory-msg').length === 0) {
         $postalCodeField.find('small').before($virtualInventoryMessage)
       }
 
-      if (
-        $('.srp-delivery-header').find('.virtual-inventory-msg').length === 0
-      ) {
-        $('.srp-delivery-header').append($virtualInventoryMessage)
+      if ($('.srp-delivery-header').find('.virtual-inventory-msg').length === 0) {
+        $('.srp-delivery-header').append($virtualInventoryMessage) 
       }
     } catch (err) {
       console.error(
@@ -131,18 +109,17 @@ class CustomShippingData {
       if (!orderForm.shippingData) return
       if (!orderForm.shippingData.address) return
       const { logisticsInfo } = orderForm.shippingData
-
       logisticsInfo.filter(item => {
-        const appendItem = item.slas.filter(sla => {
-          return sla.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
-        })
-
-        if (appendItem.length > 0) {
-          if ($('.virtual-inventory-msg').length === 0) {
-            _this.addVirtualInventoryMessage()
+        if(logisticsInfo[0].slas.length > 0) {
+          const appendItem = item.slas.every(sla => {
+            return sla.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
+          })
+          if (appendItem) {
+            if ($('.virtual-inventory-msg').length === 0) {
+              _this.addVirtualInventoryMessage()  
+            }
           }
         }
-
         return true
       })
     } catch (err) {
@@ -158,28 +135,29 @@ class CustomShippingData {
 
       if (!orderForm.shippingData.address) return
 
-      if (!orderForm.messages) return
-
-      if (!orderForm.messages[0].text) return
-
       const _this = this
 
       const { address } = orderForm.shippingData
 
-      this.validateVirtualInventory(orderForm)
+      this.validateVirtualInventory(orderForm) 
+
 
       const interval = setInterval(function () {
-        if (orderForm.messages[0].text.indexOf('CEP selecionado') > -1) {
-          if (!$('.invalid-postal-code-msg').length) {
-            _this.addInvalidPostalCodeMessage()
-            clearInterval(interval)
+        if(orderForm.messages && orderForm.messages[0] && orderForm.messages[0].text) {
+          if(orderForm.messages[0].text.indexOf('CEP selecionado') > -1) {
+            if (!$('.invalid-postal-code-msg').length) {
+              _this.addInvalidPostalCodeMessage()
+              clearInterval(interval)
+            }
+          } else if (orderForm.messages[0].text.indexOf('coordenadas') > -1) {
+            _this.setInvalidPostalCode()
+            if (!$('.invalid-postal-inventory').length) {
+              _this.addInvalidInventoryCodeMessage()
+              clearInterval(interval) 
+            }
           }
-        } else if (orderForm.messages[0].text.indexOf('coordenadas') > -1) {
-          _this.setInvalidPostalCode()
-          if (!$('.invalid-postal-inventory').length) {
-            _this.addInvalidInventoryCodeMessage()
-            clearInterval(interval)
-          }
+        } else {
+          clearInterval(interval)
         }
       }, 50)
 
@@ -191,7 +169,7 @@ class CustomShippingData {
         this.removeInvalidPostalCodeMessage()
       }
     } catch (err) {
-      console.error(`Ocorreu um erro ao validar CEP: ${err}`)
+      console.error(`Ocorreu um erro ao validar CEP: ${err}`) 
     }
   }
 
@@ -201,7 +179,7 @@ class CustomShippingData {
       const $postalCodeInput = $('#shipping-data input#ship-postalCode')
 
       if (!$postalCodeInput.val()) {
-        _this.resetValidation()
+        _this.resetValidation() 
       }
 
       if (!$postalCodeInput.val().length < 9) {
@@ -223,31 +201,6 @@ class CustomShippingData {
 
   limitPostalCodeInput() {
     $('#shipping-data input#ship-postalCode').attr('maxlength', 9)
-  }
-
-  checkReceiverName(orderForm) {
-    if (!orderForm) return
-
-    const profileData = orderForm.clientProfileData
-
-    if (!profileData) return
-
-    try {
-      const receiverName = `${profileData.firstName} ${profileData.lastName}`
-      const $receiverNameInput = $('#ship-receiverName')
-
-      if ($.trim($receiverNameInput.val()) === $.trim(receiverName)) {
-        $receiverNameInput
-          .prev('label[for="ship-receiverName"]')
-          .text('Destinatário é o mesmo da entrega')
-      } else {
-        $receiverNameInput
-          .prev('label[for="ship-receiverName"]')
-          .text('Destinatário')
-      }
-    } catch (err) {
-      console.error(`Erro ao verificar campo destinatário: ${err}`)
-    }
   }
 
   toggleGoToPaymentDisabled() {
@@ -287,14 +240,6 @@ class CustomShippingData {
         _this.toggleGoToPaymentDisabled()
       }
     )
-
-    $(document).on('input', '#ship-receiverName', function () {
-      try {
-        _this.checkReceiverName(window.vtexjs.checkout.orderForm)
-      } catch (err) {
-        console.error(`Erro ao verificar campo destinatário: ${err}`)
-      }
-    })
   }
 }
 
