@@ -6,9 +6,15 @@ export default class TradeIn {
     const transport = JSON.parse(localStorage.getItem('transport') || '[]')
     const customData = window.vtexjs.checkout.orderForm.customData || null
 
+    const isSocialSelling = window.vtexjs.checkout.orderForm.marketingData
+      ? window.vtexjs.checkout.orderForm.marketingData.marketingTags.find(
+          item => item === 'vtexSocialSelling'
+        )
+      : false
+
     if (items.length && transport.length) {
       this.checkTradeIn(items, transport)
-    } else if (items.length && customData) {
+    } else if (items.length && customData && isSocialSelling) {
       const transportCustomData =
         customData.customApps[0].fields.trade_in_option_selected
 
@@ -141,7 +147,7 @@ export default class TradeIn {
     localStorage.setItem('transport', JSON.stringify(transport))
     $('#total-tradein-value').text(`${formatCurrencyBRL(total, false)}*`)
 
-    $.ajax({
+    await $.ajax({
       url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/domain`,
       type: 'PUT',
       crossDomain: true,
@@ -151,17 +157,17 @@ export default class TradeIn {
     })
   }
 
-  removeCustomDataTradeIn() {
+  async removeCustomDataTradeIn() {
     const { orderFormId } = window.vtexjs.checkout.orderForm
 
     localStorage.removeItem('transport')
 
-    $.ajax({
+    await $.ajax({
       url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain/trade_in_option_selected`,
       type: 'DELETE',
     })
 
-    $.ajax({
+    await $.ajax({
       url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain/trade_in_total_value`,
       type: 'DELETE',
     })

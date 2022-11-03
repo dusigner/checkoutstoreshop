@@ -133,13 +133,15 @@ class CustomShippingData {
       const { logisticsInfo } = orderForm.shippingData
 
       logisticsInfo.filter(item => {
-        const appendItem = item.slas.filter(sla => {
-          return sla.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
-        })
+        if (logisticsInfo[0].slas.length > 0) {
+          const appendItem = item.slas.every(sla => {
+            return sla.deliveryIds[0].warehouseId.indexOf('Virtual') > -1
+          })
 
-        if (appendItem.length > 0) {
-          if ($('.virtual-inventory-msg').length === 0) {
-            _this.addVirtualInventoryMessage()
+          if (appendItem) {
+            if ($('.virtual-inventory-msg').length === 0) {
+              _this.addVirtualInventoryMessage()
+            }
           }
         }
 
@@ -158,10 +160,6 @@ class CustomShippingData {
 
       if (!orderForm.shippingData.address) return
 
-      if (!orderForm.messages) return
-
-      if (!orderForm.messages[0].text) return
-
       const _this = this
 
       const { address } = orderForm.shippingData
@@ -169,17 +167,25 @@ class CustomShippingData {
       this.validateVirtualInventory(orderForm)
 
       const interval = setInterval(function () {
-        if (orderForm.messages[0].text.indexOf('CEP selecionado') > -1) {
-          if (!$('.invalid-postal-code-msg').length) {
-            _this.addInvalidPostalCodeMessage()
-            clearInterval(interval)
+        if (
+          orderForm.messages &&
+          orderForm.messages[0] &&
+          orderForm.messages[0].text
+        ) {
+          if (orderForm.messages[0].text.indexOf('CEP selecionado') > -1) {
+            if (!$('.invalid-postal-code-msg').length) {
+              _this.addInvalidPostalCodeMessage()
+              clearInterval(interval)
+            }
+          } else if (orderForm.messages[0].text.indexOf('coordenadas') > -1) {
+            _this.setInvalidPostalCode()
+            if (!$('.invalid-postal-inventory').length) {
+              _this.addInvalidInventoryCodeMessage()
+              clearInterval(interval)
+            }
           }
-        } else if (orderForm.messages[0].text.indexOf('coordenadas') > -1) {
-          _this.setInvalidPostalCode()
-          if (!$('.invalid-postal-inventory').length) {
-            _this.addInvalidInventoryCodeMessage()
-            clearInterval(interval)
-          }
+        } else {
+          clearInterval(interval)
         }
       }, 50)
 
@@ -225,6 +231,15 @@ class CustomShippingData {
     $('#shipping-data input#ship-postalCode').attr('maxlength', 9)
   }
 
+  toggleGoToPaymentDisabled() {
+    const disabled =
+      $('#shipping-data p.input.required input').filter(function () {
+        return $.trim($(this).val()).length === 0
+      }).length === 0
+
+    $('#btn-go-to-payment').prop('disabled', !disabled)
+  }
+
   checkReceiverName(orderForm) {
     if (!orderForm) return
 
@@ -248,15 +263,6 @@ class CustomShippingData {
     } catch (err) {
       console.error(`Erro ao verificar campo destinatário: ${err}`)
     }
-  }
-
-  toggleGoToPaymentDisabled() {
-    const disabled =
-      $('#shipping-data p.input.required input').filter(function () {
-        return $.trim($(this).val()).length === 0
-      }).length === 0
-
-    $('#btn-go-to-payment').prop('disabled', !disabled)
   }
 
   bindEvents() {
@@ -287,14 +293,6 @@ class CustomShippingData {
         _this.toggleGoToPaymentDisabled()
       }
     )
-
-    $(document).on('input', '#ship-receiverName', function () {
-      try {
-        _this.checkReceiverName(window.vtexjs.checkout.orderForm)
-      } catch (err) {
-        console.error(`Erro ao verificar campo destinatário: ${err}`)
-      }
-    })
   }
 }
 
