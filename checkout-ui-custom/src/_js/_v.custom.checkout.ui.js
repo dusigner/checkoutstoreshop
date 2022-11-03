@@ -652,7 +652,7 @@ class checkoutCustom {
     }
   }
 
-  enchancementSummaryCart(orderForm, path) {
+  async enchancementSummaryCart(orderForm, path) {
     try {
       if (orderForm.value == 0) {
         return
@@ -666,18 +666,27 @@ class checkoutCustom {
       ).installments[0].total
 
       // Encontra as installments para do cartao visa (código 2)
-      const installmentOption = orderForm.paymentData.installmentOptions.find(
-        item => item.paymentSystem == 2
-      ).installments
-
       // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-      const totalOnTerm = installmentOption.find(
-        install =>
-          install.count === Math.max(...installmentOption.map(ins => ins.count))
-      ).total
+      const priceAPrazo = await fetch(
+        `${this.rootPath()}/api/checkout/pub/orderForm/${
+          orderForm.orderFormId
+        }/installments?paymentSystem=2`
+      )
+        .then(response => response.json())
+        .then(data => {
+          const installmentOptions = data.installments
+
+          return (
+            installmentOptions.find(
+              install =>
+                install.count ===
+                Math.max(...installmentOptions.map(inst => inst.count))
+            ).total || 0
+          )
+        })
 
       const percentDiscount = Math.floor(
-        100 - (priceAVista / totalOnTerm) * 100
+        100 - (priceAVista / priceAPrazo) * 100
       )
 
       const _component = `
@@ -699,7 +708,7 @@ class checkoutCustom {
               Total a prazo
             </p>
             <p class="discount-total" style="font-weight: 700;">
-              ${formatCurrencyBRL(totalOnTerm)}
+              ${formatCurrencyBRL(priceAPrazo)}
             </p>
           </div>
         </div>
@@ -1405,6 +1414,10 @@ class checkoutCustom {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
           _this.shipping.limitPostalCodeInput()
+
+          if (window.location.hash === '#/shipping') {
+            _this.shipping.checkReceiverName(_this.orderForm)
+          }
         }
       })
 
@@ -1454,6 +1467,10 @@ class checkoutCustom {
           if (window.location.hash === '#/profile') {
             _this.profile.addTerms(_this.orderForm)
           }
+
+          if (window.location.hash === '#/shipping') {
+            _this.shipping.checkReceiverName(_this.orderForm)
+          }
         }
       })
 
@@ -1475,6 +1492,10 @@ class checkoutCustom {
           _this.profile.addTerms(orderForm)
         }
 
+        if (window.location.hash === '#/shipping') {
+          _this.shipping.checkReceiverName(orderForm)
+        }
+
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
         }
@@ -1493,6 +1514,14 @@ class checkoutCustom {
 
         if (window.location.hash === '#/email') {
           _this.preEmail.createElementSamsungAccountLogin()
+        }
+
+        if (window.location.hash === '#/shipping') {
+          try {
+            _this.shipping.checkReceiverName(window.vtexjs.checkout.orderForm)
+          } catch (err) {
+            console.error(`Erro ao verificar campo destinatário: ${err}`)
+          }
         }
 
         if (

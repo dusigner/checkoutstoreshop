@@ -4,17 +4,15 @@ export default class TradeIn {
   init() {
     const { items } = window.vtexjs.checkout.orderForm
     const transport = JSON.parse(localStorage.getItem('transport') || '[]')
-    const customData = vtexjs.checkout.orderForm.customData || null
+    const customData = window.vtexjs.checkout.orderForm.customData || null
 
     if (items.length && transport.length) {
       this.checkTradeIn(items, transport)
-      return
-    }
+    } else if (items.length && customData) {
+      const transportCustomData =
+        customData.customApps[0].fields.trade_in_option_selected
 
-    if (items.length && customData) {
-      const transportCustomData = customData.customApps[0].fields.trade_in_option_selected
       this.checkTradeIn(items, JSON.parse(transportCustomData))
-      return
     }
   }
 
@@ -175,6 +173,16 @@ export default class TradeIn {
     let total = 0
     const arrayPromise = []
     const arrayProductsTrocafone = []
+
+    const isSocialSelling = window.vtexjs.checkout.orderForm.marketingData
+      ? window.vtexjs.checkout.orderForm.marketingData.marketingTags.find(
+          item => item === 'vtexSocialSelling'
+        )
+      : false
+
+    if (isSocialSelling) {
+      return
+    }
 
     if (!!transport && transport.length > 0) {
       await transport.map(mainProduct => {
