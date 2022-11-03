@@ -876,7 +876,7 @@ class checkoutCustom {
 
       const _summaryOrder = `
         <div class="summaryOrder">
-          <h6> do pedido (${itemsQuantity} ${
+          <h6>Resumo do pedido (${itemsQuantity} ${
             quantitySelectedItems.length <= 1 ? 'item' : 'itens'
       })</h6>
           <ul>
