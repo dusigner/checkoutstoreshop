@@ -147,7 +147,7 @@ export default class TradeIn {
     localStorage.setItem('transport', JSON.stringify(transport))
     $('#total-tradein-value').text(`${formatCurrencyBRL(total, false)}*`)
 
-    $.ajax({
+    await $.ajax({
       url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/domain`,
       type: 'PUT',
       crossDomain: true,
