@@ -85,7 +85,9 @@
     #payment-group-customPrivate_501PaymentGroup {
       .payment-group-item-text {
         padding-left: 0px;
-        &:before {
+		font-size: 0;
+
+        &::before {
           content: "";
           margin-right: 25px;
           width: 24px;
@@ -96,6 +98,11 @@
           background-repeat: no-repeat;
           background-size: cover;
         }
+
+		&::after {
+			content: "Cartão Samsung Itaú";
+			font-size: 12px;
+		}
       }
     }
 
