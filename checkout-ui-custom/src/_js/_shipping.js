@@ -293,6 +293,14 @@ class CustomShippingData {
         _this.toggleGoToPaymentDisabled()
       }
     )
+
+    $(document).on('input', '#ship-receiverName', function () {
+      try {
+        _this.checkReceiverName(window.vtexjs.checkout.orderForm)
+      } catch (err) {
+        console.error(`Erro ao verificar campo destinatário: ${err}`)
+      }
+    })
   }
 }
 
