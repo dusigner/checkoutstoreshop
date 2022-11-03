@@ -12,7 +12,6 @@ export default class SendAttachment {
     let obsToOpenTextField = ''
 
     const { items } = window.vtexjs.checkout.orderForm
-    const of = window.vtexjs.checkout.orderForm
     const customData = window.vtexjs.checkout.orderForm.customData || false
     const transportCustomData =
       customData && customData.customApps[0].fields.trade_in_option_selected
@@ -115,11 +114,16 @@ export default class SendAttachment {
     }
 
     // IN STORE
-    if (of) {
-      const ofMarketingData = of.marketingData
+    const of = window.vtexjs.checkout.orderForm
 
-      if (ofMarketingData.marketingTags.length) {
-        const isInStore = ofMarketingData.marketingTags.some(
+    if (of) {
+      const ofMarketingData =
+        !!of.marketingData === false
+          ? false
+          : !!of.marketingData.marketingTags !== false
+
+      if (ofMarketingData) {
+        const isInStore = of.marketingData.marketingTags.some(
           tag => tag.toLowerCase() == 'instore'
         )
 
