@@ -65,7 +65,6 @@ class CustomProfileData {
 
   removePj() {
     $(".box-client-info-pj").remove();
-    console.log("class box-client-info-pj removed")
   }
   
   saveProfileData() {
