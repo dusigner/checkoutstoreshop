@@ -1448,6 +1448,7 @@ class checkoutCustom {
           _this.profile.addWhatsAppField()
           _this.profile.addDateBirthField()
           _this.profile.toggleGoToShippingDisabled()
+          _this.profile.removePj()
         }
 
         if (_this.orderForm) {
@@ -1515,6 +1516,8 @@ class checkoutCustom {
         if (window.location.hash === '#/email') {
           _this.preEmail.createElementSamsungAccountLogin()
         }
+
+        _this.profile.removePj()
 
         if (window.location.hash === '#/shipping') {
           try {
