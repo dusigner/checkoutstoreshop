@@ -63,6 +63,10 @@ class CustomProfileData {
     })
   }
 
+  removePj() {
+    $(".box-client-info-pj").remove();
+  }
+  
   saveProfileData() {
     this.insertPartialNewProfileData()
   }
