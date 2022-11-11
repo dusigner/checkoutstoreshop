@@ -100,7 +100,7 @@ class CustomShippingData {
       const $virtualInventoryMessage = $(
         `<div class="virtual-inventory-msg" style="max-width: 566px; margin-top: 16px;">
           <p class="invalid-postal-code-msg__message">
-            O prazo de entrega está acima do normal devido à reposição de estoque.
+            Este item está com prazo de entrega acima do normal.
           </p>
         </div>`
       )
