@@ -6,12 +6,12 @@
 const { _locale } = require('./_locale-infos.js')
 const { debounce, formatCurrencyBRL } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
-const CustomProfileData = require('./_profile')
-const CustomShippingData = require('./_shipping')
+const { default: CustomProfileData } = require('./_profile')
+const { default: CustomShippingData } = require('./_shipping')
 const { default: CustomHeader } = require('./_header.js')
 const { default: SamsungCarePlus } = require('./_samsungCarePlus.js')
 const { default: InstallationService } = require('./_installationService.js')
-const CustomPreEmail = require('./_pre-email.js')
+const { default: CustomPreEmail } = require('./_pre-email.js')
 const { default: TradeIn } = require('./_tradeIn.js')
 const { default: SendAttachment } = require('./_sendAttachment.js')
 const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
@@ -861,9 +861,11 @@ class checkoutCustom {
     try {
       const { items } = window.vtexjs.checkout.orderForm
       const itemsQuantity = items.length
-      
-      const quantitySelectedItems = items.map((item) => {item.quantity});
-      
+
+      const quantitySelectedItems = items.map(item => {
+        return item.quantity
+      })
+
       const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
 
       let listItems = ''
@@ -877,7 +879,7 @@ class checkoutCustom {
       const _summaryOrder = `
         <div class="summaryOrder">
           <h6>Resumo do pedido (${itemsQuantity} ${
-            quantitySelectedItems.length <= 1 ? 'item' : 'itens'
+        quantitySelectedItems.length <= 1 ? 'item' : 'itens'
       })</h6>
           <ul>
             ${listItems}
@@ -1404,7 +1406,10 @@ class checkoutCustom {
 
         // #profile
         _this.profile.bindEvents()
+
+        // #shipping
         _this.shipping.bindEvents()
+        _this.shipping.limitFieldsCharacters()
       })
 
       $(document).ajaxComplete(function (event, xhr, settings) {
@@ -1413,7 +1418,6 @@ class checkoutCustom {
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
-          _this.shipping.limitPostalCodeInput()
 
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)

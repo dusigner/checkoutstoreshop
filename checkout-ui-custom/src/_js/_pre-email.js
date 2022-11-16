@@ -2,7 +2,7 @@
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
 
-class CustomPreEmail {
+export default class CustomPreEmail {
   createElementSamsungAccountLogin() {
     $('#client-pre-email').attr('placeholder', 'Ex:.exemplo@mail.com')
 
@@ -58,5 +58,3 @@ class CustomPreEmail {
     })
   }
 }
-
-module.exports = CustomPreEmail
