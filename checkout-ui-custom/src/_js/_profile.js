@@ -2,7 +2,7 @@
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
 
-class CustomProfileData {
+export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
   }
@@ -64,9 +64,9 @@ class CustomProfileData {
   }
 
   removePj() {
-    $(".box-client-info-pj").remove();
+    $('.box-client-info-pj').remove()
   }
-  
+
   saveProfileData() {
     this.insertPartialNewProfileData()
   }
@@ -441,5 +441,3 @@ class CustomProfileData {
     )
   }
 }
-
-module.exports = CustomProfileData
