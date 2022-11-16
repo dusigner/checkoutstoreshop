@@ -2,7 +2,7 @@
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
 
-class CustomShippingData {
+export default class CustomShippingData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
   }
@@ -227,8 +227,39 @@ class CustomShippingData {
     }
   }
 
-  limitPostalCodeInput() {
-    $('#shipping-data input#ship-postalCode').attr('maxlength', 9)
+  limitFieldsCharacters() {
+    const fieldsToLimit = [
+      {
+        selector: '#ship-postalCode',
+        maxLength: 9,
+      },
+      {
+        selector: '#ship-street',
+        maxLength: 60,
+      },
+      {
+        selector: '#ship-number',
+        maxLength: 10,
+      },
+      {
+        selector: '#ship-complement',
+        maxLength: 10,
+      },
+    ]
+
+    try {
+      const context = '#shipping-data'
+
+      for (const field of fieldsToLimit) {
+        const { selector, maxLength } = field
+
+        $(document).on('focus', `${context} ${selector}`, function () {
+          $(this).attr('maxlength', maxLength)
+        })
+      }
+    } catch (err) {
+      console.error(`Erro ao limitar caracteres em campos de endereço: ${err}`)
+    }
   }
 
   toggleGoToPaymentDisabled() {
@@ -279,14 +310,6 @@ class CustomShippingData {
     )
 
     $(document).on(
-      'focus',
-      '#shipping-data input#ship-postalCode',
-      function () {
-        _this.limitPostalCodeInput()
-      }
-    )
-
-    $(document).on(
       'input',
       '#shipping-data p.input.required input',
       function () {
@@ -303,5 +326,3 @@ class CustomShippingData {
     })
   }
 }
-
-module.exports = CustomShippingData
