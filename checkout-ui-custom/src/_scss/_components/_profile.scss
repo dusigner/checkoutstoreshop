@@ -37,6 +37,10 @@
   .link-logout {
     font-weight: 400;
     text-decoration: underline;
+    @media (max-width: 768px) {
+      display: block;
+      margin: 10px 0;
+    }
   }
 
   .client-notice.notice {
