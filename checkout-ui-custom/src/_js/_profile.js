@@ -1,6 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
+import rewards from "./rewards"
 
 export default class CustomProfileData {
   rootPath() {
@@ -225,20 +226,6 @@ export default class CustomProfileData {
     $('.newsletter-optin').after($field)
   }
 
-  addRewardsBlock() {
-    if ($('.rewards-block').length) return
-
-    const $field = `<div class="rewards-block" id="RewardsBlock" style="display: none">
-      <h3>Samsung Rewards</h3>
-      <label class="inputOptIn __rewards">
-      <input type="checkbox" id="inputRewards" checked />
-      <span class="custom-checkbox-icon"></span>
-      <span>Participar do programa Samsung Rewards para ganhar pontos com este pedido.</span>
-      </label>
-    </div>`
-
-    $('.terms-and-policies').after($field)
-  }
 
   checkTerms() {
     if (!$('#inputTermAndPolicies').is(':checked')) {
@@ -253,7 +240,7 @@ export default class CustomProfileData {
 
     _this.addNewsletterOptIn()
     _this.addTermsAndPolicies()
-    _this.addRewardsBlock()
+    rewards.addTerms()
 
     if (
       orderForm.loggedIn ||
