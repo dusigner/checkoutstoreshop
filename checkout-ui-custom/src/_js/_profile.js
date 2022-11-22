@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
-import rewards from "./rewards"
+import rewards from './rewards'
 
 export default class CustomProfileData {
   rootPath() {
@@ -97,14 +97,20 @@ export default class CustomProfileData {
 
     if (inputDateVal.length === 0) {
       $('#error-client-date-birth-required').show()
-      $('#client-birth-date').addClass('error').removeClass('success')
+      $('#client-birth-date')
+        .addClass('error')
+        .removeClass('success')
     } else if (inputDateVal.length > 0 && inputDateVal.length < 10) {
       $('#client-birth-date').removeClass('error success')
     } else if (inputDateVal.length >= 10 && isValid) {
-      $('#client-birth-date').addClass('success').removeClass('error')
+      $('#client-birth-date')
+        .addClass('success')
+        .removeClass('error')
     } else {
       $('#error-client-date-birth').show()
-      $('#client-birth-date').addClass('error').removeClass('success')
+      $('#client-birth-date')
+        .addClass('error')
+        .removeClass('success')
     }
   }
 
@@ -149,7 +155,9 @@ export default class CustomProfileData {
       </span>
     </p>`
 
-    $('.client-document').first().after($dateBirthField)
+    $('.client-document')
+      .first()
+      .after($dateBirthField)
   }
 
   addWhatsAppField() {
@@ -161,7 +169,9 @@ export default class CustomProfileData {
       <span id="error-client-whatsapp-required" class="help error" style="display:none">Campo obrigatório.</span>
     </p>`
 
-    $('.client-phone').first().before($field)
+    $('.client-phone')
+      .first()
+      .before($field)
   }
 
   addPJInformation() {
@@ -226,10 +236,11 @@ export default class CustomProfileData {
     $('.newsletter-optin').after($field)
   }
 
-
   checkTerms() {
     if (!$('#inputTermAndPolicies').is(':checked')) {
-      $('#inputTermAndPolicies').closest('.checkbox-inline').addClass('error')
+      $('#inputTermAndPolicies')
+        .closest('.checkbox-inline')
+        .addClass('error')
     }
   }
 
@@ -240,7 +251,7 @@ export default class CustomProfileData {
 
     _this.addNewsletterOptIn()
     _this.addTermsAndPolicies()
-    rewards.addTerms()
+    rewards.addTerms
 
     if (
       orderForm.loggedIn ||
@@ -272,16 +283,24 @@ export default class CustomProfileData {
     $('body').on(
       'input',
       'input#client-first-name, input#client-last-name',
-      function () {
+      function() {
         const regexp = /[^A-Za-zÀ-ú\s]+$/
 
-        if ($(this).val().match(regexp)) {
-          $(this).val($(this).val().replace(regexp, ''))
+        if (
+          $(this)
+            .val()
+            .match(regexp)
+        ) {
+          $(this).val(
+            $(this)
+              .val()
+              .replace(regexp, '')
+          )
         }
       }
     )
 
-    $('body').on('keypress', '#client-phone', function (e) {
+    $('body').on('keypress', '#client-phone', function(e) {
       setTimeout(() => {
         const v = _this.mphone(e.target.value)
 
@@ -291,7 +310,7 @@ export default class CustomProfileData {
       }, 1)
     })
 
-    $('body').on('keyup', '#client-birth-date', function (e) {
+    $('body').on('keyup', '#client-birth-date', function(e) {
       const v = _this.mdata(e.target.value)
 
       if (v !== e.target.value) {
@@ -301,15 +320,17 @@ export default class CustomProfileData {
       _this.validateAge(e.target.value)
     })
 
-    $('body').on('blur', '#client-birth-date', function (e) {
+    $('body').on('blur', '#client-birth-date', function(e) {
       if (e.target.value.length < 10) {
         $('#error-client-date-birth').hide()
         $('#error-client-date-birth-required').show()
-        $('#client-birth-date').addClass('error').removeClass('success')
+        $('#client-birth-date')
+          .addClass('error')
+          .removeClass('success')
       }
     })
 
-    $('body').on('keypress', '#client-whatasapp', function (e) {
+    $('body').on('keypress', '#client-whatasapp', function(e) {
       setTimeout(() => {
         const v = _this.mphone(e.target.value)
 
@@ -319,7 +340,7 @@ export default class CustomProfileData {
       }, 1)
     })
 
-    $('body').on('input', '#client-whatasapp', function () {
+    $('body').on('input', '#client-whatasapp', function() {
       const $this = $(this)
       const isInvalidNumber = $this.val().length > 0 && $this.val().length < 15
 
@@ -339,7 +360,7 @@ export default class CustomProfileData {
       }
     })
 
-    $('body').on('blur', '#client-whatasapp', function () {
+    $('body').on('blur', '#client-whatasapp', function() {
       const $this = $(this)
 
       const isEmpty = $this.val().length === 0
@@ -370,17 +391,21 @@ export default class CustomProfileData {
       }
     })
 
-    $('body').on('change', '.checkbox-inline input:checkbox', function () {
+    $('body').on('change', '.checkbox-inline input:checkbox', function() {
       if ($(this).is(':checked')) {
-        $(this).closest('.checkbox-inline').removeClass('error')
+        $(this)
+          .closest('.checkbox-inline')
+          .removeClass('error')
       } else {
-        $(this).closest('.checkbox-inline').addClass('error')
+        $(this)
+          .closest('.checkbox-inline')
+          .addClass('error')
       }
 
       _this.checkTerms()
     })
 
-    $('body').on('change', '#inputWhatsapp', function () {
+    $('body').on('change', '#inputWhatsapp', function() {
       const isChecked = $(this).is(':checked')
       const $whatsAppInput = $('#client-whatasapp')
 
@@ -395,14 +420,17 @@ export default class CustomProfileData {
         }
       } else {
         $whatsAppInput.closest('p.client-whatsapp').removeClass('required')
-        $whatsAppInput.removeClass('error').addClass('success').val('')
+        $whatsAppInput
+          .removeClass('error')
+          .addClass('success')
+          .val('')
       }
     })
 
     $('body').on(
       'input blur keyup keypress',
       '#client-profile-data p.input input:visible',
-      function () {
+      function() {
         setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
       }
     )
@@ -410,19 +438,19 @@ export default class CustomProfileData {
     $('body').on(
       'change',
       '#client-profile-data input[type="checkbox"]',
-      function () {
+      function() {
         setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
       }
     )
 
-    $('body').on('click', '#edit-profile-data', function () {
+    $('body').on('click', '#edit-profile-data', function() {
       setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
     })
 
     $('body').on(
       'click',
       '#go-to-shipping, #client-profile-data #go-to-payment',
-      function () {
+      function() {
         _this.saveProfileData()
       }
     )
