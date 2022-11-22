@@ -1271,6 +1271,12 @@
     width: 100%;
   }
 
+	.App.iframe-custom-private-501-payment-group {
+		.ChangeNumberOfPayments.clearfix {
+			display: none;
+		}
+	}
+
   .PaymentInstallments select {
     width: 100% !important;
     max-width: 100% !important;
@@ -1413,3 +1419,4 @@
 
 
 }
+
