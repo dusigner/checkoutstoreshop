@@ -1,8 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
-import rewards from './rewards'
-
 export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -251,7 +249,7 @@ export default class CustomProfileData {
 
     _this.addNewsletterOptIn()
     _this.addTermsAndPolicies()
-    rewards.addTerms
+    rewards(orderForm)
 
     if (
       orderForm.loggedIn ||

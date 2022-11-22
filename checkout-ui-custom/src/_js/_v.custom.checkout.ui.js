@@ -16,6 +16,7 @@ const { default: TradeIn } = require('./_tradeIn.js')
 const { default: SendAttachment } = require('./_sendAttachment.js')
 const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 const { default: AdobeLaunchPixel } = require('./_adobeLaunchPixel.js')
+const { default: Rewards } = require('./_rewards.js')
 
 class checkoutCustom {
   constructor({
@@ -46,6 +47,7 @@ class checkoutCustom {
     this.TradeIn = new TradeIn()
     this.SendAttachment = new SendAttachment()
     this.adobeLaunchPixel = new AdobeLaunchPixel()
+    this.rewards = new Rewards()
   }
 
   rootPath() {
