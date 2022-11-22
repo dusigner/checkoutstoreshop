@@ -1,10 +1,14 @@
-
+import Rewards from './business_rules'
 
 const renderRewards = {
-
   addRewardsBlock: () => {
+    // console.log(
+    //   '\n\n\n+++++++++++++++++++addRewardsBlock+++++++++++++++++++\n\n\n'
+    // )
+    const rewards = new Rewards()
+
+    rewards.showPointsSimulation()
     if ($('.rewards-block').length) return
-  
     const $field = `<div class="rewards-block" id="RewardsBlock" style="display:none">
       <h3>Samsung Rewards</h3>
       <label class="inputOptIn __rewards">
@@ -13,12 +17,12 @@ const renderRewards = {
       <span>Participar do programa Samsung Rewards para ganhar pontos com este pedido.</span>
       </label>
     </div>`
-  
+
     $('.terms-and-policies').after($field)
   },
 
   createElementTotalPoints: (points, totalPointsCurrentOrder, userInfo) => {
-    if ($("#total-details-points").length == 0 && points > 0){
+    if ($('#total-details-points').length === 0 && points > 0) {
       $('.full-cart .accordion-inner .table').after(`
         <div id="total-details-points" style="margin-top: 15px; border-top: 1px solid #ebebeb;">
           <table style="width: 100%; margin-top: 15px;">
@@ -35,52 +39,66 @@ const renderRewards = {
         </div>
       `)
     }
-    if ($("#total-details-points-payment").length == 0 && points > 0 && userInfo.userSaGuid && userInfo.userAcceptedRewards){
-      if ($("#total-details-points-payment-notssgcare").length > 0){
-        $("#total-details-points-payment-notssgcare").remove();
+
+    if (
+      $('#total-details-points-payment').length === 0 &&
+      points > 0 &&
+      userInfo.userSaGuid &&
+      userInfo.userAcceptedRewards
+    ) {
+      if ($('#total-details-points-payment-notssgcare').length > 0) {
+        $('#total-details-points-payment-notssgcare').remove()
       }
-      $('.orderform-template .summary-template-holder .accordion-inner .table').after(`
-        <div id="total-details-points-payment" style="margin-top: 15px; border-top: 1px solid #ebebeb;">
-          <table style="width: 100%; margin-top: 15px;">
-            <tfoot>
-              <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
-                <td style="font-size: 14px; color: #373737; font-weight: 400">
-                  Pontos Rewards gerados<br />
-                </td>
-                <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${totalPointsCurrentOrder} Pontos</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      `)
-    } else if ($("#total-details-points-payment-notssgcare").length == 0 && points > 0 && !userInfo.userAcceptedRewards){
-      if ($("#total-details-points-payment").length > 0){
-        $("#total-details-points-payment").remove();
+
+      $('.orderform-template .summary-template-holder .accordion-inner .table')
+        .after(`
+          <div id="total-details-points-payment" style="margin-top: 15px; border-top: 1px solid #ebebeb;">
+            <table style="width: 100%; margin-top: 15px;">
+              <tfoot>
+                <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
+                  <td style="font-size: 14px; color: #373737; font-weight: 400">
+                    Pontos Rewards gerados<br />
+                  </td>
+                  <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${totalPointsCurrentOrder} Pontos</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        `)
+    } else if (
+      $('#total-details-points-payment-notssgcare').length === 0 &&
+      points > 0 &&
+      !userInfo.userAcceptedRewards
+    ) {
+      if ($('#total-details-points-payment').length > 0) {
+        $('#total-details-points-payment').remove()
       }
-      $('.orderform-template .summary-template-holder .accordion-inner .table').after(`
-        <div id="total-details-points-payment-notssgcare" style="margin-top: 15px; border-top: 1px solid #ebebeb;">
-          <table style="width: 100%; margin-top: 15px;">
-            <tfoot>
-              <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
-                <td style="font-size: 14px; color: #373737; font-weight: 400">
-                  Pontos Rewards gerados<br />
-                </td>
-                <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${totalPointsCurrentOrder} Pontos</td>
-              </tr>
-              <tr style="display: flex; font-family: 'SamsungOne'; margin-top: 10px;">
-                <td style="font-size: 12px; color: #373737; font-weight: 400; text-align: justify; line-height: normal;">
-                  Válido somente para membros do programa Samsung Rewards, em compras feitas através de uma Samsung Account.
-                </td>
-              </tr>	
-            </tfoot>
-          </table>
-        </div>
-      `)
+
+      $('.orderform-template .summary-template-holder .accordion-inner .table')
+        .after(`
+          <div id="total-details-points-payment-notssgcare" style="margin-top: 15px; border-top: 1px solid #ebebeb;">
+            <table style="width: 100%; margin-top: 15px;">
+              <tfoot>
+                <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
+                  <td style="font-size: 14px; color: #373737; font-weight: 400">
+                    Pontos Rewards gerados<br />
+                  </td>
+                  <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${totalPointsCurrentOrder} Pontos</td>
+                </tr>
+                <tr style="display: flex; font-family: 'SamsungOne'; margin-top: 10px;">
+                  <td style="font-size: 12px; color: #373737; font-weight: 400; text-align: justify; line-height: normal;">
+                    Válido somente para membros do programa Samsung Rewards, em compras feitas através de uma Samsung Account.
+                  </td>
+                </tr>	
+              </tfoot>
+            </table>
+          </div>
+        `)
     }
   },
 
-  createRewardsTotalDiscount: (discount) => {
-    if ($("#rewards-total-discount").length == 0){
+  createRewardsTotalDiscount: discount => {
+    if ($('#rewards-total-discount').length === 0) {
       $('.totalizers-list').append(`
         <tr id="rewards-total-discount">
           <td class="info">Rewards</td>
@@ -93,23 +111,28 @@ const renderRewards = {
   },
 
   showRewardsCalc: () => {
-    $('#group-all-rewards').show();
-    $('#show-rewards-group').first().hide();
-  
-    const rewards = orderForm.paymentData.giftCards[0];
-    if (rewards.value > 0 || rewards.inUse == true) {
-      $('#group-calc-rewards').hide();
-      $('#group-cancel-points').show();
-      createRewardsTotalDiscount(rewards.value/100)
+    $('#group-all-rewards').show()
+    $('#show-rewards-group')
+      .first()
+      .hide()
+
+    const { giftCards } = this.orderForm.paymentData
+    const [rewards] = giftCards
+    // console.log('giftCards', giftCards)
+
+    if (rewards.value > 0 || rewards.inUse === true) {
+      $('#group-calc-rewards').hide()
+      $('#group-cancel-points').show()
+      this.createRewardsTotalDiscount(rewards.value / 100)
     } else {
-      $('#group-cancel-points').hide();
-      $('#group-calc-rewards').show();
-      $('#rewards-total-discount').remove();
+      $('#group-cancel-points').hide()
+      $('#group-calc-rewards').show()
+      $('#rewards-total-discount').remove()
     }
   },
 
   createButtonRewards: () => {
-    if ($("#show-rewards-group").length == 0){
+    if ($('#show-rewards-group').length === 0) {
       $('#show-gift-card-group').after(`
         <a id="show-rewards-group" class="link-payment-discounts-cod" onclick='return showRewardsCalc()'>
           Resgatar pontos Samsung Rewards
@@ -119,7 +142,7 @@ const renderRewards = {
   },
 
   createGroupCalcRewards: (totalPointsUser, totalCurrencyUser) => {
-    if ($("#group-calc-rewards").length == 0){
+    if ($('#group-calc-rewards').length === 0) {
       $('.link-gift-card').after(`
         <div id="group-all-rewards" style="display: none">
           <div
@@ -207,14 +230,9 @@ const renderRewards = {
             </a>
           <div>
         </div>
-      `);
+      `)
     }
-  }
-
-
-
-
+  },
 }
 
 export default renderRewards
-
