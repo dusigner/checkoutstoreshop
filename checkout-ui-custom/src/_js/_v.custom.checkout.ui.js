@@ -47,7 +47,7 @@ class checkoutCustom {
     this.TradeIn = new TradeIn()
     this.SendAttachment = new SendAttachment()
     this.adobeLaunchPixel = new AdobeLaunchPixel()
-    this.rewards = new Rewards()
+    this.Rewards = new Rewards()
   }
 
   rootPath() {
@@ -1446,7 +1446,6 @@ class checkoutCustom {
         _this.defaultPaymentMethod()
 
         _this.shipping.toggleGoToPaymentDisabled()
-        _this.Rewards.showPointsSimulation()
 
         if (window.location.hash === '#/email') {
           _this.preEmail.createElementSamsungAccountLogin()
@@ -1480,6 +1479,8 @@ class checkoutCustom {
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
           }
+
+          _this.Rewards.showPointsSimulation()
         }
       })
 
@@ -1528,7 +1529,6 @@ class checkoutCustom {
         }
 
         _this.profile.removePj()
-        _this.Rewards.showPointsSimulation()
 
         if (window.location.hash === '#/shipping') {
           try {
@@ -1553,6 +1553,7 @@ class checkoutCustom {
 
         window.vtexjs.checkout.getOrderForm().done(function () {
           _this.addMedalliaScript()
+          _this.Rewards.showPointsSimulation()
         })
 
         _this.defaultPaymentMethod()

@@ -835,7 +835,7 @@
           (this.TradeIn = new c()),
           (this.SendAttachment = new u()),
           (this.adobeLaunchPixel = new g()),
-          (this.rewards = new y())
+          (this.Rewards = new y())
       }
       rootPath() {
         return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -1736,7 +1736,6 @@
                 e.fixLabels(),
                 e.defaultPaymentMethod(),
                 e.shipping.toggleGoToPaymentDisabled(),
-                e.Rewards.showPointsSimulation(),
                 '#/email' === window.location.hash &&
                   e.preEmail.createElementSamsungAccountLogin(),
                 '#/profile' === window.location.hash &&
@@ -1758,7 +1757,8 @@
                   '#/profile' === window.location.hash &&
                     e.profile.addTerms(e.orderForm),
                   '#/shipping' === window.location.hash &&
-                    e.shipping.checkReceiverName(e.orderForm))
+                    e.shipping.checkReceiverName(e.orderForm),
+                  e.Rewards.showPointsSimulation())
             }),
             $(window).on('orderFormUpdated.vtex', function (o, a) {
               e.update(a),
@@ -1789,7 +1789,6 @@
                 '#/email' === window.location.hash &&
                   e.preEmail.createElementSamsungAccountLogin(),
                 e.profile.removePj(),
-                e.Rewards.showPointsSimulation(),
                 '#/shipping' === window.location.hash)
               )
                 try {
@@ -1806,7 +1805,7 @@
                 e.changeShippingTimeInfoInit(),
                 e.indexedInItems(window.vtexjs.checkout.orderForm),
                 window.vtexjs.checkout.getOrderForm().done(function () {
-                  e.addMedalliaScript()
+                  e.addMedalliaScript(), e.Rewards.showPointsSimulation()
                 }),
                 e.defaultPaymentMethod(),
                 e.profile.toggleGoToShippingDisabled(),
@@ -11485,58 +11484,67 @@
       rootPath() {
         return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
       }
-      ajaxQuery(e, o) {
+      getRewardsData(e) {
+        this.emailUserRewards === e && this.userAcceptedRewards
+          ? this.userSaGuid && this.userAcceptedRewards
+          : $.ajax({
+              url: `${this.rootPath()}/_v/get/client/${e}`,
+              headers: {
+                Accept: 'application/vnd.vtex.ds.v10+json',
+                'Content-Type': 'application/json',
+              },
+              crossDomain: !0,
+              cache: !1,
+              type: 'GET',
+              success: o => {
+                this.emailUserRewards !== e &&
+                  (window.localStorage.setItem('saGuid', o[0].saGuid || ''),
+                  (this.userSaGuid = o[0].saGuid),
+                  (this.emailUserRewards = e)),
+                  !o[0].isRewardsAccepted && o[0].saGuid
+                    ? ((this.userAcceptedRewards = !1),
+                      this.alreadyRedirected ||
+                        ((window.location.href = '#/profile'),
+                        (this.alreadyRedirected = !0)))
+                    : o[0].isRewardsAccepted &&
+                      o[0].saGuid &&
+                      (this.userAcceptedRewards = !0)
+              },
+              error: e => () => {
+                console.error('get client rewards data error', e)
+              },
+            })
+      }
+      putRewardsOnCustomData(e, o) {
+        const a = { total_points_earned: o }
         $.ajax({
-          url: `${this.rootPath()}${e.path}`,
-          headers: {
-            Accept: 'application/vnd.vtex.ds.v10+json',
-            'Content-Type': 'application/json',
-          },
+          url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${e}/rewards`,
+          type: 'PUT',
           crossDomain: !0,
-          cache: !1,
-          type: e.method,
-          data: e.data,
-          success: e => o(e),
-          error: e => () => {
-            console.error('Error: \n', e)
-          },
+          accept: 'application/vnd.vtex.ds.v10+json',
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify(a),
         })
       }
-      getRewardsData(e) {
-        const o = () => {
-          $('#RewardsBlock').hide(),
-            $('#inputRewards').attr('checked', !0),
-            this.createButtonRewards(),
-            this.getPointsSearch()
-        }
-        if (this.emailUserRewards === e && this.userAcceptedRewards)
-          this.userSaGuid && this.userAcceptedRewards && o()
-        else {
-          const a = a => {
-            this.emailUserRewards !== e &&
-              (window.localStorage.setItem('saGuid', a[0].saGuid || ''),
-              (this.userSaGuid = a[0].saGuid),
-              (this.emailUserRewards = e)),
-              a[0].isRewardsAccepted ||
-              (!a[0].saGuid &&
-                !this.emailUserRewards.includes('@partner.sdslasupport.com'))
-                ? a[0].isRewardsAccepted &&
-                  (a[0].saGuid ||
-                    this.emailUserRewards.includes(
-                      '@partner.sdslasupport.com'
-                    )) &&
-                  (o(), (this.userAcceptedRewards = !0))
-                : ($('#RewardsBlock').show(),
-                  $('#inputRewards').attr('checked', !0),
-                  (this.userAcceptedRewards = !1),
-                  this.alreadyRedirected ||
-                    ((window.location.href = '#/profile'),
-                    (this.alreadyRedirected = !0)))
-          }
-          this.ajaxQuery(
-            { path: '/_v/get/client/' + e, method: 'GET', data: null },
-            a
-          )
+      createElementTotalPoints(e) {
+        try {
+          const o = $('.summary-totalizers .table'),
+            a = `\n        <tbody id="total-details-rewards" style="border-top: 1px solid #cbcbcb;">\n          <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">\n            <td id="td-text-rewards-total" style="font-size: 14px; color: #373737; font-weight: 400">\n              Pontos Rewards gerados<br />\n            </td>\n            <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${this.totalPointsCurrentOrder} Pontos</td>\n          </tr>\n        </tbody>\n      `,
+            t =
+              '\n        (<a href="https://account.samsung.com/" target="_blank" style="cursor: pointer; color: #373737; text-decoration: underline;">Somente para Samsung Account</a>)\n      ',
+            n =
+              '\n        <tr style="display: flex; font-family: \'SamsungOne\'; margin-top: 10px;">\n          <td style="font-size: 12px; color: #373737; font-weight: 400; text-align: justify; line-height: normal;">\n            Válido somente para membros do programa Samsung Rewards, em compras feitas através de uma Samsung Account.\n          </td>\n        </tr>\n      '
+          if (o.find('#total-details-rewards').length > 0) return
+          e > 0 && this.userSaGuid && this.userAcceptedRewards
+            ? o.append(a)
+            : e > 0 && !this.userSaGuid && !this.userAcceptedRewards
+            ? (o.append(a), $('#td-text-rewards-total').append(t))
+            : e > 0 &&
+              this.userSaGuid &&
+              !this.userAcceptedRewards &&
+              (o.append(a), $('#total-details-rewards').append(n))
+        } catch (e) {
+          console.error('showDetailsTradeIn error:', e)
         }
       }
       showPointsSimulation() {
@@ -11547,14 +11555,17 @@
         )
           return
         const o = []
-        e.items.map(e => {
-          o.push({
-            ObjectType: 'ESTORE_BR',
-            ObjectId: e.refId,
-            Amount: ((e.sellingPrice / 100) * e.quantity).toString(),
-            Quantity: e.quantity.toString(),
-          })
-        })
+        e.items.map(
+          e => (
+            o.push({
+              ObjectType: 'ESTORE_BR',
+              ObjectId: e.refId,
+              Amount: ((e.sellingPrice / 100) * e.quantity).toString(),
+              Quantity: e.quantity.toString(),
+            }),
+            ''
+          )
+        )
         const a = {
           Id: e.orderFormId,
           Timestamp: new Date().toISOString().split('Z')[0],
@@ -11563,142 +11574,21 @@
           CountryDescription: 'BR',
           ProductItems: o,
         }
-        this.ajaxQuery(
-          {
-            path: '/rewards/points/simulation',
-            method: 'POST',
-            data: JSON.stringify(a),
+        $.ajax({
+          url: this.rootPath() + '/rewards/points/simulation',
+          type: 'POST',
+          cache: !1,
+          data: JSON.stringify(a),
+          success: o => {
+            this.totalPointsCurrentOrder !== o.TotalPointAmount &&
+              ((this.totalPointsCurrentOrder = o.TotalPointAmount),
+              this.putRewardsOnCustomData(e.orderFormId, o.TotalPointAmount),
+              this.createElementTotalPoints(o.TotalPointAmount))
           },
-          t
-        )
-        const t = e => {
-          this.totalPointsCurrentOrder !== e.TotalPointAmount &&
-            ((this.totalPointsCurrentOrder = e.TotalPointAmount),
-            $('#total-details-points').remove(),
-            $('#total-details-points-payment').remove(),
-            $('#total-details-points-payment-notssgcare').remove())
-        }
-      }
-      getPointsSearch() {
-        if (!window.vtexjs.checkout.orderForm.orderFormId) return
-        const e = {
-          Id: window.vtexjs.checkout.orderForm.orderFormId,
-          Timestamp: new Date().toISOString().split('Z')[0],
-          RequestType: 'R',
-          SAGuid: this.userSaGuid,
-          CountryDescription: 'BR',
-        }
-        this.ajaxQuery(
-          '/rewards/points/search',
-          'POST',
-          JSON.stringify(e),
-          e => {
-            ;(this.totalPointsUser = e.PointBalance),
-              (this.totalCurrencyUser = e.ExchangedAmount),
-              (this.pricePerPoint = e.ExchangedAmount / e.PointBalance)
+          error: e => () => {
+            console.error('points simulation error', e)
           },
-          console.error('points search error')
-        ),
-          this.createGroupCalcRewards(
-            this.totalPointsUser,
-            this.totalCurrencyUser
-          )
-      }
-      calcDiscountValue(e) {
-        if (!(e <= this.totalPointsUser)) return
-        this.chosenDiscount = 1 * e
-        document.querySelector('#input-rewards-currency').value =
-          'R$ ' + this.chosenDiscount
-      }
-      setRewardsDiscount() {
-        const e = document.querySelector(
-            '.gift-card-provider-group-ssg_rewards .input-prepend input'
-          ),
-          o = new KeyboardEvent('keydown', { key: 'a' })
-        ;(e.value = 1e3), e.focus(), e.dispatchEvent(o)
-      }
-      cancelRewardsDiscount() {
-        document
-          .querySelector('.gift-card-provider-group-ssg_rewards .action a')
-          .click(),
-          $('#rewards-total-discount').remove()
-      }
-      putRewardsOnCustomData(e, o) {
-        const a = { total_points_earned: o }
-        this.ajaxQuery(
-          `/v1/pub/putCheckoutCustomData/${e}/rewards`,
-          'PUT',
-          JSON.stringify(a)
-        )
-      }
-      bindEvents() {
-        $('body').on('click', '#btn-add-gift-card', () => {
-          $('#show-gift-card-group').show()
         })
-      }
-      addRewardsBlock() {
-        if ($('.rewards-block').length) return
-        $('.terms-and-policies').after(
-          '<div class="rewards-block" id="RewardsBlock" style="display:none">\n      <h3>Samsung Rewards</h3>\n      <label class="inputOptIn __rewards">\n      <input type="checkbox" id="inputRewards" checked />\n      <span class="custom-checkbox-icon"></span>\n      <span>Participar do programa Samsung Rewards para ganhar pontos com este pedido.</span>\n      </label>\n    </div>'
-        )
-      }
-      createElementTotalPoints(e, o, a) {
-        0 === $('#total-details-points').length &&
-          e > 0 &&
-          $('.full-cart .accordion-inner .table').after(
-            `\n        <div id="total-details-points" style="margin-top: 15px; border-top: 1px solid #ebebeb;">\n          <table style="width: 100%; margin-top: 15px;">\n            <tfoot>\n              <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">\n                <td style="font-size: 14px; color: #373737; font-weight: 400">\n                  Pontos Rewards gerados<br />\n                  (<a style="cursor: pointer; color: #373737; target: _blank; text-decoration: underline;">Somente para Samsung Account</a>)\n                </td>\n                <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${o} Pontos</td>\n              </tr>\n            </tfoot>\n          </table>\n        </div>\n      `
-          ),
-          0 === $('#total-details-points-payment').length &&
-          e > 0 &&
-          a.userSaGuid &&
-          a.userAcceptedRewards
-            ? ($('#total-details-points-payment-notssgcare').length > 0 &&
-                $('#total-details-points-payment-notssgcare').remove(),
-              $(
-                '.orderform-template .summary-template-holder .accordion-inner .table'
-              ).after(
-                `\n          <div id="total-details-points-payment" style="margin-top: 15px; border-top: 1px solid #ebebeb;">\n            <table style="width: 100%; margin-top: 15px;">\n              <tfoot>\n                <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">\n                  <td style="font-size: 14px; color: #373737; font-weight: 400">\n                    Pontos Rewards gerados<br />\n                  </td>\n                  <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${o} Pontos</td>\n                </tr>\n              </tfoot>\n            </table>\n          </div>\n        `
-              ))
-            : 0 === $('#total-details-points-payment-notssgcare').length &&
-              e > 0 &&
-              !a.userAcceptedRewards &&
-              ($('#total-details-points-payment').length > 0 &&
-                $('#total-details-points-payment').remove(),
-              $(
-                '.orderform-template .summary-template-holder .accordion-inner .table'
-              ).after(
-                `\n          <div id="total-details-points-payment-notssgcare" style="margin-top: 15px; border-top: 1px solid #ebebeb;">\n            <table style="width: 100%; margin-top: 15px;">\n              <tfoot>\n                <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">\n                  <td style="font-size: 14px; color: #373737; font-weight: 400">\n                    Pontos Rewards gerados<br />\n                  </td>\n                  <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${o} Pontos</td>\n                </tr>\n                <tr style="display: flex; font-family: 'SamsungOne'; margin-top: 10px;">\n                  <td style="font-size: 12px; color: #373737; font-weight: 400; text-align: justify; line-height: normal;">\n                    Válido somente para membros do programa Samsung Rewards, em compras feitas através de uma Samsung Account.\n                  </td>\n                </tr>\n              </tfoot>\n            </table>\n          </div>\n        `
-              ))
-      }
-      createRewardsTotalDiscount(e) {
-        0 === $('#rewards-total-discount').length &&
-          $('.totalizers-list').append(
-            `\n        <tr id="rewards-total-discount">\n          <td class="info">Rewards</td>\n          <td class="space"></td>\n          <td class="monetary" style="color: #2189FF">- R$ ${e}</td>\n          <td class="empty"></td>\n        </tr>\n      `
-          )
-      }
-      showRewardsCalc() {
-        $('#group-all-rewards').show(), $('#show-rewards-group').first().hide()
-        const { giftCards: e } = this.orderForm.paymentData,
-          [o] = e
-        o.value > 0 || !0 === o.inUse
-          ? ($('#group-calc-rewards').hide(),
-            $('#group-cancel-points').show(),
-            this.createRewardsTotalDiscount(o.value / 100))
-          : ($('#group-cancel-points').hide(),
-            $('#group-calc-rewards').show(),
-            $('#rewards-total-discount').remove())
-      }
-      createButtonRewards() {
-        0 === $('#show-rewards-group').length &&
-          $('#show-gift-card-group').after(
-            '\n        <a id="show-rewards-group" class="link-payment-discounts-cod" onclick=\'return showRewardsCalc()\'>\n          Resgatar pontos Samsung Rewards\n        </a>\n      '
-          )
-      }
-      createGroupCalcRewards(e, o) {
-        0 === $('#group-calc-rewards').length &&
-          $('.link-gift-card').after(
-            `\n        <div id="group-all-rewards" style="display: none">\n          <div\n            id="group-calc-rewards"\n            style="width: auto; margin: 15px 0; padding: 25px 15px 10px 20px; background: #f4f4f4; font-family: SamsungOne; color: #000; font-size: 14px; font-weight: 400;"\n          >\n            <div\n              id="calc-header-rewards"\n              style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"\n            >\n              <span\n                id="calc-header-title"\n                style="flex-basis: 50%; font-size: 20px; font-weight: 700;"\n              >\n                Samsung Rewards\n              </span>\n              <span\n                id="calc-header-points"\n                style="flex-basis: 50%; text-align: end; color: #2189FF; font-size: 14px; font-weight: 700;"\n              >\n                Você tem ${e} pontos\n              </span>\n            </div>\n            <div\n              id="calc-content-rewards"\n              style="display: grid; grid-template-columns: repeat(auto-fill, 33.33%); margin-top: 20px"\n            >\n              <div\n                id="calc-content-first-column"\n                style="display: grid; grid-template-columns: 1fr;"\n              >\n                <span style="font-size: 12px; font-weight: 700;">QUANTIDADE DE PONTOS</span>\n                <input\n                  id="input-rewards-points"\n                  type="number"\n                  min="0"\n                  max="${e}"\n                  value="${e}"\n                  style="width: 150px; height: 35px; font-size: 14px;"\n                  oninput="calcDiscountValue(this.value)"\n                  onkeyup="if(this.value > ${e}) this.value = null;"\n                >\n              </div>\n              <div\n                id="calc-content-second-column"\n                style="display: grid; grid-template-columns: 1fr;"\n              >\n                <span style="font-size: 12px; font-weight: 700;">VALOR</span>\n                <input id="input-rewards-currency" type="text" value="R$ ${o}" style="width: 150px; height: 35px; font-size: 14px;" disabled>\n              </div>\n              <div\n                id="calc-content-third-column"\n                style="display: grid; grid-template-columns: 1fr;"\n              >\n                <button\n                  type="button"\n                  id="button-use-points-rewards"\n                  style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: end;"\n                  onclick="setRewardsDiscount()"\n                >\n                  APLICAR ESTE VALOR\n                </button>\n              </div>\n            </div>\n            <div\n              id="calc-footer-rewards"\n              style="margin-top: 20px"\n            >\n              <p id="footer-rewards-info" style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">\n                Pontos Samsung Rewards gerados nesta compra serão creditados apenas após o período legal de devolução do produto - 7 dias após o recebimento. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, seus pontos não serão utilizados.\n              </p>\n            </div>\n          </div>\n\n          <div id="group-cancel-points" style="display: flex; align-items: baseline; justify-content: flex-start; gap: 10px; padding-block: 10px;">\n            <p style="font-size: 20px; color: #2189FF; font-weight: 700; font-family: SamsungOne;">\n              1000 Pontos Rewards Aplicados\n            </p>\n            <a\n              id="button-cancel-points"\n              style="font-size: 12px; color: #000; font-weight: 400; cursor: pointer; text-decoration: underline;"\n              onclick="cancelRewardsDiscount()"\n            >\n              Não quero utilizar pontos\n            </a>\n          <div>\n        </div>\n      `
-          )
       }
     }
   },
