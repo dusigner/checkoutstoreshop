@@ -34,16 +34,16 @@ export default class Rewards {
           }
 
           if (!res[0].isRewardsAccepted && res[0].saGuid) {
-            // $('#RewardsBlock').show()
-            // $('#inputRewards').attr('checked', true)
+            $('#RewardsBlock').show()
+            $('#inputRewards').attr('checked', true)
             this.userAcceptedRewards = false
             if (!this.alreadyRedirected) {
               window.location.href = '#/profile'
               this.alreadyRedirected = true
             }
           } else if (res[0].isRewardsAccepted && res[0].saGuid) {
-            // $('#RewardsBlock').hide()
-            // $('#inputRewards').attr('checked', true)
+            $('#RewardsBlock').hide()
+            $('#inputRewards').attr('checked', true)
             this.userAcceptedRewards = true
             // this.getPointsSearch()
             // this.createButtonRewards()
@@ -56,8 +56,8 @@ export default class Rewards {
         },
       })
     } else if (this.userSaGuid && this.userAcceptedRewards) {
-      // $('#RewardsBlock').hide()
-      // $('#inputRewards').attr('checked', true)
+      $('#RewardsBlock').hide()
+      $('#inputRewards').attr('checked', true)
       // this.getPointsSearch()
       // this.createButtonRewards()
     }
