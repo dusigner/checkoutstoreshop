@@ -1,4 +1,3 @@
-// TODO: Mesclar os arquivos de rewards
 export default class Rewards {
   constructor() {
     this.userAcceptedRewards = false
@@ -17,7 +16,6 @@ export default class Rewards {
   }
 
   ajaxQuery(dataObj, callbackSuccess) {
-    console.log('\n\n\n+++++++++ajaxQuery+++++++++\n\n\n')
     $.ajax({
       url: `${this.rootPath()}${dataObj.path}`,
       headers: {
@@ -33,11 +31,9 @@ export default class Rewards {
       },
       error: error => {
         return () => {
-          console.log('Error: \n')
-          console.log(error)
-          console.log('\n\n\n')
+          console.error('Error: \n', error)
         }
-      }
+      },
     })
   }
 
@@ -51,7 +47,6 @@ export default class Rewards {
 
     if (this.emailUserRewards !== docId || !this.userAcceptedRewards) {
       const _getRewardsDataAjaxSuccess = data => {
-        console.log('\n\n\n++++_getRewardsDataAjaxSuccess++++\n\n\n')
         if (this.emailUserRewards !== docId) {
           window.localStorage.setItem('saGuid', data[0].saGuid || '')
           this.userSaGuid = data[0].saGuid
@@ -93,52 +88,56 @@ export default class Rewards {
     }
   }
 
-  showPointsSimulation(orderForm) {
-    // console.log('+++++++++++++showPointsSimulation+++++++++++++')
+  showPointsSimulation() {
+    const { orderForm } = window.vtexjs.checkout
+
     if (orderForm.loggedIn) {
       this.getRewardsData(orderForm.clientProfileData.email)
     }
 
     if (!orderForm.items) return
-    const productItems = orderForm.items.map(item => {
-      return {
+
+    const ProductItems = []
+
+    orderForm.items.map(item => {
+      ProductItems.push({
         ObjectType: 'ESTORE_BR',
-        ObjectId: item.id,
-        // AMOUNT É O VALOR UNITARIO OU TOTAL?
-        Amount: item.sellingPrice / 100,
-        // CASO PRECISE ENVIAR O VALOR TOTAL:
-        // Amount: (item.sellingPrice/100) * item.quantity,
-        Quantity: item.quantity,
-      }
+        ObjectId: item.refId,
+        Amount: ((item.sellingPrice / 100) * item.quantity).toString(),
+        Quantity: item.quantity.toString(),
+      })
+
+      return ''
     })
 
-    const data = {
+    const requestData = {
       Id: orderForm.orderFormId,
       Timestamp: new Date().toISOString().split('Z')[0],
       ContactIdOrigin: 'ESTORE',
       SAGuid: this.userSaGuid || 'GUEST',
       CountryDescription: 'BR',
-      productItems,
-    }
-
-    const _showPointsSimulationAjaxSuccess = res => {
-      if (this.totalPointsCurrentOrder === res.ExchangedAmount) return
-      this.totalPointsCurrentOrder = res.ExchangedAmount
-      this.putRewardsOnCustomData(orderForm.orderFormId, res.ExchangedAmount)
-      $('#total-details-points').remove()
-      $('#total-details-points-payment').remove()
-      $('#total-details-points-payment-notssgcare').remove
-      this.createElementTotalPoints(res.ExchangedAmount)
+      ProductItems,
     }
 
     this.ajaxQuery(
       {
-        path: '/rewards/points/simulation',
+        path: `/rewards/points/simulation`,
         method: 'POST',
-        data: JSON.stringify(data),
+        data: JSON.stringify(requestData),
       },
       _showPointsSimulationAjaxSuccess
     )
+
+    const _showPointsSimulationAjaxSuccess = data => {
+      if (this.totalPointsCurrentOrder === data.TotalPointAmount) return
+
+      this.totalPointsCurrentOrder = data.TotalPointAmount
+      // putRewardsOnCustomData(orderForm.orderFormId, res.TotalPointAmount);
+      $('#total-details-points').remove()
+      $('#total-details-points-payment').remove()
+      $('#total-details-points-payment-notssgcare').remove()
+      // createElementTotalPoints(res.TotalPointAmount)
+    }
   }
 
   getPointsSearch() {
@@ -224,10 +223,6 @@ export default class Rewards {
 
   // RENDER FUNCTIONS
   addRewardsBlock() {
-    console.log(
-      '\n\n\n+++++++++++++++++++addRewardsBlock+++++++++++++++++++\n\n\n'
-    )
-
     if ($('.rewards-block').length) return
     const $field = `<div class="rewards-block" id="RewardsBlock" style="display:none">
       <h3>Samsung Rewards</h3>
@@ -309,7 +304,7 @@ export default class Rewards {
                   <td style="font-size: 12px; color: #373737; font-weight: 400; text-align: justify; line-height: normal;">
                     Válido somente para membros do programa Samsung Rewards, em compras feitas através de uma Samsung Account.
                   </td>
-                </tr>	
+                </tr>
               </tfoot>
             </table>
           </div>
@@ -332,9 +327,7 @@ export default class Rewards {
 
   showRewardsCalc() {
     $('#group-all-rewards').show()
-    $('#show-rewards-group')
-      .first()
-      .hide()
+    $('#show-rewards-group').first().hide()
 
     const { giftCards } = this.orderForm.paymentData
     const [rewards] = giftCards
@@ -417,7 +410,7 @@ export default class Rewards {
                 id="calc-content-third-column"
                 style="display: grid; grid-template-columns: 1fr;"
               >
-                <button 
+                <button
                   type="button"
                   id="button-use-points-rewards"
                   style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: end;"
@@ -436,12 +429,12 @@ export default class Rewards {
               </p>
             </div>
           </div>
-  
+
           <div id="group-cancel-points" style="display: flex; align-items: baseline; justify-content: flex-start; gap: 10px; padding-block: 10px;">
             <p style="font-size: 20px; color: #2189FF; font-weight: 700; font-family: SamsungOne;">
               1000 Pontos Rewards Aplicados
             </p>
-            <a 
+            <a
               id="button-cancel-points"
               style="font-size: 12px; color: #000; font-weight: 400; cursor: pointer; text-decoration: underline;"
               onclick="cancelRewardsDiscount()"
@@ -454,6 +447,7 @@ export default class Rewards {
     }
   }
 }
+
 // .
 /* $("#show-gift-card-group").live('click',function(){
   $(".link-gift-card").show();
