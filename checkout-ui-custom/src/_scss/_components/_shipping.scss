@@ -25,6 +25,15 @@
         max-width: 448px;
     }
 
+    .vtex-omnishipping-1-x-deliveryGroup,
+    .vtex-omnishipping-1-x-addressForm {
+        display: none;
+
+        body.valid-postal-code & {
+            display: block;
+        }
+    }
+
     .vtex-omnishipping-1-x-option:hover,
     .vtex-omnishipping-1-x-leanShippingOptionActive {
         background:#F5F7FE !important;
