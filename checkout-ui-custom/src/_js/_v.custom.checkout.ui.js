@@ -1481,6 +1481,11 @@ class checkoutCustom {
           }
 
           _this.Rewards.showPointsSimulation()
+          
+          if (window.location.hash === '#/payment') {
+            _this.Rewards.getPointsSearch()
+            _this.Rewards.createButtonRewards()
+          }
         }
       })
 
@@ -1517,6 +1522,11 @@ class checkoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
+
+        if (window.location.hash === '#/payment') {
+          _this.Rewards.getPointsSearch()
+          _this.Rewards.createButtonRewards()
+        }
       })
 
       $(window).load(function () {
@@ -1554,6 +1564,12 @@ class checkoutCustom {
         window.vtexjs.checkout.getOrderForm().done(function () {
           _this.addMedalliaScript()
           _this.Rewards.showPointsSimulation()
+
+          if (window.location.hash === '#/payment') {
+            _this.Rewards.getPointsSearch()
+            _this.Rewards.createButtonRewards()
+          }
+
         })
 
         _this.defaultPaymentMethod()
