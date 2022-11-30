@@ -315,6 +315,8 @@ body {
   .modal-header{
     border: none;
     font-size: 18px;
+    display: flex;
+    justify-content: space-between;
   }
   .vtex-shipping-preview-0-x-modalCancelButton {
     cursor: pointer;
