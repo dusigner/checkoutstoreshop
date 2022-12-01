@@ -66,6 +66,7 @@ export default class Rewards {
   putRewardsOnCustomData(orderFormId, points) {
     const newData = {
       total_points_earned: points,
+      terms_accepted: this.userAcceptedRewards
     }
 
     $.ajax({
