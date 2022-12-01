@@ -123,19 +123,19 @@ export default class Rewards {
   }
 
   createButtonRewards() {
-    if ($("#show-rewards-group").length === 0) {
-      $('.link-gift-card').after(`
-        <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn">
-          <a id="show-rewards-group" class="link-payment-discounts-cod">
-            Resgatar pontos Rewards
-          </a>
-        </p>
-      `)
+    if ($("#show-rewards-group").length !== 0) return;
 
-      document.getElementById("show-rewards-group").addEventListener('click', () => {
-        this.showRewardsCalc()
-      })
-    }
+    $('.link-gift-card').after(`
+      <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn">
+        <a id="show-rewards-group" class="link-payment-discounts-cod">
+          Resgatar pontos Rewards
+        </a>
+      </p>
+    `)
+
+    document.getElementById("show-rewards-group").addEventListener('click', () => {
+      this.showRewardsCalc()
+    })
   }
 
   showRewardsCalc() {
@@ -173,7 +173,7 @@ export default class Rewards {
   }
 
   createGroupCalcRewards() {
-    if ($("#group-calc-rewards").length === 0) return;
+    if ($("#group-calc-rewards").length !== 0) return;
 
     $('.link-gift-card').after(`
       <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">
