@@ -1,4 +1,4 @@
-!(function (e) {
+!(function(e) {
   var o = {}
   function a(t) {
     if (o[t]) return o[t].exports
@@ -7,16 +7,16 @@
   }
   ;(a.m = e),
     (a.c = o),
-    (a.d = function (e, o, t) {
+    (a.d = function(e, o, t) {
       a.o(e, o) || Object.defineProperty(e, o, { enumerable: !0, get: t })
     }),
-    (a.r = function (e) {
+    (a.r = function(e) {
       'undefined' != typeof Symbol &&
         Symbol.toStringTag &&
         Object.defineProperty(e, Symbol.toStringTag, { value: 'Module' }),
         Object.defineProperty(e, '__esModule', { value: !0 })
     }),
-    (a.t = function (e, o) {
+    (a.t = function(e, o) {
       if ((1 & o && (e = a(e)), 8 & o)) return e
       if (4 & o && 'object' == typeof e && e && e.__esModule) return e
       var t = Object.create(null)
@@ -29,33 +29,33 @@
           a.d(
             t,
             n,
-            function (o) {
+            function(o) {
               return e[o]
             }.bind(null, n)
           )
       return t
     }),
-    (a.n = function (e) {
+    (a.n = function(e) {
       var o =
         e && e.__esModule
-          ? function () {
+          ? function() {
               return e.default
             }
-          : function () {
+          : function() {
               return e
             }
       return a.d(o, 'a', o), o
     }),
-    (a.o = function (e, o) {
+    (a.o = function(e, o) {
       return Object.prototype.hasOwnProperty.call(e, o)
     }),
     (a.p = ''),
     a((a.s = 2))
 })([
-  function (e, o) {
+  function(e, o) {
     ;(e.exports.debounce = (e, o) => {
       let a
-      return function (...t) {
+      return function(...t) {
         clearTimeout(a),
           (a = setTimeout(() => {
             clearTimeout(a), e(...t)
@@ -68,7 +68,7 @@
           currency: 'BRL',
         }))
   },
-  function (e, o) {
+  function(e, o) {
     e.exports._locale = {
       BRA: {
         couponInactive: 'Nenhum desconto aplicado. Confira as regras.',
@@ -746,10 +746,10 @@
       },
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     a(3), (e.exports = a(19))
   },
-  function (e, o, a) {
+  function(e, o, a) {
     const t = a(4),
       n = a(5)
     ;(window.vcustom = {
@@ -766,7 +766,7 @@
     }),
       window.vcustom.checkout.start()
   },
-  function (e, o) {
+  function(e, o) {
     e.exports = class {
       constructor({
         logo: e = '<img src="https://via.placeholder.com/160x60">',
@@ -793,7 +793,7 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     const { _locale: t } = a(1),
       { debounce: n, formatCurrencyBRL: r } = a(0),
       s = a(6),
@@ -845,7 +845,7 @@
           $('.cart-template.mini-cart .cart-fixed > *').wrapAll(
             '<div class="custom-cart-template-wrap">'
           ),
-          $('.table.cart-items tbody tr.product-item').each(function () {
+          $('.table.cart-items tbody tr.product-item').each(function() {
             $(this).find('.v-custom-product-item-wrap').length ||
               $(this)
                 .find('> *')
@@ -858,9 +858,9 @@
         callback: o,
         disconnectCondition: a = !0,
       }) {
-        const t = (function () {
+        const t = (function() {
             const e = window.MutationObserver || window.WebKitMutationObserver
-            return function (o, a) {
+            return function(o, a) {
               if (o && 1 === o.nodeType) {
                 if (e) {
                   const t = new e(a)
@@ -872,7 +872,7 @@
               }
             }
           })(),
-          n = new MutationObserver(function () {
+          n = new MutationObserver(function() {
             e && a && (n.disconnect(), t(e, () => o()))
           })
         n.observe(document.body, { childList: !0, subtree: !0 })
@@ -902,9 +902,10 @@
       addEditButtoninLogin() {
         $('#v-custom-edit-login-data').remove(),
           $('.client-pre-email h3.client-pre-email-h span').append(
-            `\n      <a id="v-custom-edit-login-data" class="link-box-edit btn btn-small" style="" title="${
-              !this.lang || this.lang.editLabel
-            }">\n        <i class="icon-edit"></i>\n        <i class="icon-spinner icon-spin icon-3x"></i>\n      </a>\n    `
+            `\n      <a id="v-custom-edit-login-data" class="link-box-edit btn btn-small" style="" title="${!this
+              .lang ||
+              this.lang
+                .editLabel}">\n        <i class="icon-edit"></i>\n        <i class="icon-spinner icon-spin icon-3x"></i>\n      </a>\n    `
           )
       }
       addStepsHeader() {
@@ -923,11 +924,11 @@
       }
       addAssemblies(e) {
         try {
-          $.each(e.items, function (e) {
+          $.each(e.items, function(e) {
             const o = this
             if (o.assemblies.length > 0) {
               let a = '<div class="v-custom-assemblies">'
-              $.each(o.assemblies, function () {
+              $.each(o.assemblies, function() {
                 const e = this.inputValues
                 ;(a += `<p>${this.id}</p>`),
                   (a += '<ul class="v-custom-assemblies__values">'),
@@ -957,7 +958,7 @@
       }
       bundleItems(e) {
         try {
-          $.each(e.items, function (e) {
+          $.each(e.items, function(e) {
             this.bundleItems.length > 0
               ? $(`.table.cart-items tbody tr.product-item:eq(${e})`)
                   .addClass('v-custom-bundles-in')
@@ -966,7 +967,7 @@
                   `.table.cart-items tbody tr.product-item:eq(${e})`
                 ).removeClass('v-custom-bundles-in')
           }),
-            $('.table.cart-items tbody tr.item-service').each(function () {
+            $('.table.cart-items tbody tr.item-service').each(function() {
               if ($(this).find('.v-custom-trservice-wrap').length > 0) return !1
               $(this)
                 .find('> *')
@@ -1005,7 +1006,7 @@
               ? 'Cupom inválido para essa compra.'
               : 'Para usar o cupom, você precisa estar logado.',
           t = $('.summary-template-holder'),
-          n = e.items.reduce(function (e, a) {
+          n = e.items.reduce(function(e, a) {
             return (
               e +
               (a.priceTags.length
@@ -1029,7 +1030,7 @@
             )
       }
       setParentIndex(e) {
-        $.each(e.items, function (e) {
+        $.each(e.items, function(e) {
           null !== this.parentItemIndex &&
             $(`.table.cart-items tbody > tr.product-item:eq(${e})`).attr(
               'data-parentItemIndex',
@@ -1129,9 +1130,10 @@
         try {
           $(
             '\n        .vtex-omnishipping-1-x-summaryPackage.shp-summary-package:not(.v-changeShippingTimeInfo-active),\n        .vtex-omnishipping-1-x-leanShippingOption,\n        .vtex-omnishipping-1-x-packageItem:not(.v-changeShippingTimeInfo-active),\n        .orderform-template .cart-template.mini-cart .item,\n        .vtex-pickup-points-modal-3-x-pickupPointSlaAvailability,\n        .srp-delivery-current-many,\n        td.shipping-date,\n        .srp-shipping-current-single\n      '
-          ).each(function () {
-            const [a] =
-                window.vtexjs.checkout.orderForm.shippingData.logisticsInfo,
+          ).each(function() {
+            const [
+                a,
+              ] = window.vtexjs.checkout.orderForm.shippingData.logisticsInfo,
               t = a.slas,
               { selectedSla: n } = a,
               r =
@@ -1176,7 +1178,7 @@
                 .split(':')[1]
                 .split(/,| and | e | y /),
               t = []
-            $.each(o, function (a) {
+            $.each(o, function(a) {
               const n = o[a]
               if ('' !== n && n.match(/(day)|(dia)|(día)/gm)) {
                 const o = parseInt(n.match(/\d+/), 10)
@@ -1210,12 +1212,15 @@
       enchancementTotalPrice(e) {
         if (this.quantityPriceCart)
           try {
-            $.each(e.items, function (e) {
+            $.each(e.items, function(e) {
               const o = $(`.table.cart-items tbody tr.product-item:eq(${e})`)
               if (0 === o.find('td.product-price').find('.best-price').length)
                 return
               const a = o.find('.total-price:eq(0)').text()
-              o.find('td.product-price').find('.vqc-ldelem').remove(),
+              o
+                .find('td.product-price')
+                .find('.vqc-ldelem')
+                .remove(),
                 o
                   .find('td.product-price')
                   .addClass('v-custom-quantity-price-active')
@@ -1229,7 +1234,7 @@
       }
       enchancementProductCart(e) {
         try {
-          $.each(e.items, function (o) {
+          $.each(e.items, function(o) {
             const a = $(`.table.cart-items tbody tr.product-item:eq(${o})`)
             if (1 === a.find('td.product-name').find('.more-info').length)
               return
@@ -1436,7 +1441,7 @@
           new p().init(),
           this.installationService.init(),
           this.TradeIn.init()
-        n(function () {
+        n(function() {
           e.marketingData && o.showCustomMsgCoupon(e)
         }, 250)()
       }
@@ -1506,11 +1511,11 @@
         if (e && 0 === $('.payment-group-item-cards').length && e.paymentData) {
           const a = ['debitCardPaymentGroup', 'creditCardPaymentGroup']
           let t = ''
-          $.each(a, function (n) {
+          $.each(a, function(n) {
             ;(t = '<span class="payment-group-item-cards">'),
               $.each(
                 e.paymentData.paymentSystems.filter(e => e.groupName === a[n]),
-                function () {
+                function() {
                   t += `<span class="card-flag ${this.name}">${this.name}</span>`
                 }
               ),
@@ -1527,14 +1532,14 @@
         )
           return !1
         $('body').addClass('v-custom-paymentBuilder-accordion'),
-          $('.payment-group-item').each(function () {
+          $('.payment-group-item').each(function() {
             $(this).wrap(
               `<div class='v-custom-payment-item-wrap ${
                 $(this).hasClass('active') ? 'active' : ''
               }'></div>`
             )
           }),
-          $('.payment-group-item').each(function () {
+          $('.payment-group-item').each(function() {
             $('#payment-data .steps-view > div:eq(0)').appendTo(
               $(this).closest('.v-custom-payment-item-wrap')
             )
@@ -1585,7 +1590,7 @@
           $('body').addClass('RTL-checkout')
       }
       fixLabels() {
-        $('p.input input').each(function (e, o) {
+        $('p.input input').each(function(e, o) {
           const a = $(o).closest('p.input')
           $(o).val() ? a.addClass('filled') : a.removeClass('filled')
         })
@@ -1600,13 +1605,13 @@
       }
       bind() {
         const e = this
-        $('body').on('click', '#v-custom-edit-login-data', function (o) {
+        $('body').on('click', '#v-custom-edit-login-data', function(o) {
           o.preventDefault(), $(this).addClass('active')
           const a = new XMLHttpRequest()
-          a.addEventListener('readystatechange', function () {
+          a.addEventListener('readystatechange', function() {
             this.readyState === this.DONE &&
               (window.location.reload(),
-              setTimeout(function () {
+              setTimeout(function() {
                 $('#v-custom-edit-login-data').removeClass('active')
               }, 1e3))
           }),
@@ -1618,20 +1623,20 @@
             a.setRequestHeader('accept', 'application/json'),
             a.send(null)
         }),
-          $('body').on('click', '.v-custom-payment-item-wrap', function () {
+          $('body').on('click', '.v-custom-payment-item-wrap', function() {
             $('.v-custom-payment-item-wrap').removeClass('active'),
               $(this).addClass('active')
           }),
           $('body').on(
             'click',
             '.vtex-pickup-points-modal-3-x-pickupDetailsHeaderButton, #map-canvas img, .vtex-omnishipping-1-x-pickupPointChange, .pkpmodal-pickup-point, .vtex-pickup-points-modal-3-x-modalDetailsBackLnk',
-            function () {
+            function() {
               setTimeout(() => {
                 e.changeShippingTimeInfoInit()
               }, 100)
             }
           ),
-          $('body').on('click', '.js-checkout-steps-item .text', function () {
+          $('body').on('click', '.js-checkout-steps-item .text', function() {
             window.location = $(this)
               .closest('.checkout-steps_item')
               .attr('data-url')
@@ -1639,7 +1644,7 @@
           $('body').on(
             'click',
             '.vtex-omnishipping-1-x-linkEdit.link-edit',
-            function () {
+            function() {
               setTimeout(() => {
                 e.updateLang(e.orderForm),
                   e.customAddressForm &&
@@ -1647,37 +1652,37 @@
               }, 50)
             }
           ),
-          $('body').on('click', '#btn-client-pre-email', function () {
-            setTimeout(function () {
+          $('body').on('click', '#btn-client-pre-email', function() {
+            setTimeout(function() {
               $('input#client-pre-email').hasClass('error') ||
                 $('input#client-email').focus()
             }, 1e3)
           }),
-          $('body').on('click', '#shipping-option-delivery', function () {
+          $('body').on('click', '#shipping-option-delivery', function() {
             e.customAddressFormInit(e.orderForm)
           }),
-          $('body').on('click', '.show-more-items-button', function () {
+          $('body').on('click', '.show-more-items-button', function() {
             e.general()
           }),
-          $('body').on('blur', 'p.input input', function () {
+          $('body').on('blur', 'p.input input', function() {
             const e = $(this).closest('p.input')
             $(this).val() ? e.addClass('filled') : e.removeClass('filled')
           }),
           $('body').on(
             'click',
             '.link-edit, .link-box-edit, #edit-address-button, #new-address-button',
-            function () {
+            function() {
               setTimeout(() => e.fixLabels(), 30)
             }
           ),
-          $('body').on('focus', 'input#ship-postalCode', function () {
+          $('body').on('focus', 'input#ship-postalCode', function() {
             $(this).attr('maxlength', 9)
           }),
-          $('body').on('input', '#ship-postalCode', function () {
+          $('body').on('input', '#ship-postalCode', function() {
             $.trim($(this).val().length) >= 9 &&
               setTimeout(() => $('#cart-shipping-calculate').click(), 10)
           }),
-          $('body').on('input', '#cart-coupon', function () {
+          $('body').on('input', '#cart-coupon', function() {
             const e = $(this)
             e.val()
               ? e.closest('span').addClass('has-value')
@@ -1704,7 +1709,7 @@
       start() {
         const e = this
         try {
-          $(function () {
+          $(function() {
             e.bind(),
               e.customAddressFormLoader(),
               e.rtlUI(),
@@ -1714,7 +1719,7 @@
               e.shipping.bindEvents(),
               e.shipping.limitFieldsCharacters()
           }),
-            $(document).ajaxComplete(function (o, a, t) {
+            $(document).ajaxComplete(function(o, a, t) {
               e.init(),
                 t.url.includes('/attachments/shippingData') &&
                   (e.shipping.validadePostalCode(
@@ -1724,7 +1729,7 @@
                   '#/shipping' === window.location.hash &&
                     e.shipping.checkReceiverName(e.orderForm))
             }),
-            $(window).on('hashchange', function () {
+            $(window).on('hashchange', function() {
               const o = document.querySelector('.cart-items')
               ;('#/payment' !== window.location.hash &&
                 '#/cart' !== window.location.hash) ||
@@ -1758,9 +1763,12 @@
                     e.profile.addTerms(e.orderForm),
                   '#/shipping' === window.location.hash &&
                     e.shipping.checkReceiverName(e.orderForm),
-                  e.Rewards.showPointsSimulation())
+                  e.Rewards.showPointsSimulation(),
+                  '#/payment' === window.location.hash &&
+                    (e.Rewards.getPointsSearch(),
+                    e.Rewards.createButtonRewards()))
             }),
-            $(window).on('orderFormUpdated.vtex', function (o, a) {
+            $(window).on('orderFormUpdated.vtex', function(o, a) {
               e.update(a),
                 e.customAddressFormInit(a),
                 e.URLHasIncludePayment(),
@@ -1779,11 +1787,13 @@
                   e.customAddressForm.loadScript(),
                 $('#postalCode-finished-loading + .mb5').length &&
                   e.shipping.resetValidation(),
-                e.shipping.toggleGoToPaymentDisabled()
+                e.shipping.toggleGoToPaymentDisabled(),
+                '#/payment' === window.location.hash &&
+                  (e.Rewards.getPointsSearch(), e.Rewards.createButtonRewards())
             }),
-            $(window).load(function () {
+            $(window).load(function() {
               if (
-                ($('#cart-to-orderform').on('click', function () {
+                ($('#cart-to-orderform').on('click', function() {
                   e.SendAttachment.sendOpenTextField()
                 }),
                 '#/email' === window.location.hash &&
@@ -1804,8 +1814,12 @@
                 e.checkProfileFocus(),
                 e.changeShippingTimeInfoInit(),
                 e.indexedInItems(window.vtexjs.checkout.orderForm),
-                window.vtexjs.checkout.getOrderForm().done(function () {
-                  e.addMedalliaScript(), e.Rewards.showPointsSimulation()
+                window.vtexjs.checkout.getOrderForm().done(function() {
+                  e.addMedalliaScript(),
+                    e.Rewards.showPointsSimulation(),
+                    '#/payment' === window.location.hash &&
+                      (e.Rewards.getPointsSearch(),
+                      e.Rewards.createButtonRewards())
                 }),
                 e.defaultPaymentMethod(),
                 e.profile.toggleGoToShippingDisabled(),
@@ -1828,7 +1842,7 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     const { _locale: t } = a(1),
       { _countries: n, _cities: r, _addressPlaceholder: s } = a(7)
     window.callbackMap = () => {
@@ -1995,7 +2009,7 @@
         ;(e.gPlacesAutocomplete = new window.google.maps.places.Autocomplete(
           o
         )),
-          e.gPlacesAutocomplete.addListener('place_changed', function () {
+          e.gPlacesAutocomplete.addListener('place_changed', function() {
             const o = e.gPlacesAutocomplete.getPlace()
             a.geocode({ address: o.formatted_address }),
               ~window.location.host.indexOf('myvtex') && console.log(o)
@@ -2075,12 +2089,12 @@
                 h
               )
           }),
-          $('body').on('keyup', '#v-custom-ship-street', function () {
+          $('body').on('keyup', '#v-custom-ship-street', function() {
             $(this).attr('autocomplete', 'none'),
               $(this).attr('data-number', ''),
               $(this).attr('data-street', $(this).context.value)
           }),
-          $('body').on('focus', '#v-custom-ship-street', function () {
+          $('body').on('focus', '#v-custom-ship-street', function() {
             $(this).attr('autocomplete', 'none')
           })
       }
@@ -2143,11 +2157,11 @@
             }
           )
             .then(e => e.json())
-            .then(function (m) {
+            .then(function(m) {
               m.error
                 ? ($('body').removeClass('js-v-custom-is-loading'),
                   alert('Something went wrong: ' + m.error.message))
-                : window.vtexjs.checkout.getOrderForm().done(function () {
+                : window.vtexjs.checkout.getOrderForm().done(function() {
                     l.updateAddress(
                       e,
                       n,
@@ -2208,10 +2222,9 @@
         const o = this,
           { shippingData: a } = e,
           t = n.find(e => e[1] === o.mainCountry),
-          r = `\n      <div class="vcustom--vtex-omnishipping-1-x-address step">\n        <div>\n        <form>\n            <p class="input v-custom-ship-street required text"><label id="address1-label" for="v-custom-ship-street">${
-            (o.locale && o.locale.address1Placeholder) ||
-            'Street address or P.O. Box'
-          }</label><input required autocomplete="none" id="v-custom-ship-street" type="text" name="v-custom-street" class="input-xlarge" data-hj-whitelist="true" value="${
+          r = `\n      <div class="vcustom--vtex-omnishipping-1-x-address step">\n        <div>\n        <form>\n            <p class="input v-custom-ship-street required text"><label id="address1-label" for="v-custom-ship-street">${(o.locale &&
+            o.locale.address1Placeholder) ||
+            'Street address or P.O. Box'}</label><input required autocomplete="none" id="v-custom-ship-street" type="text" name="v-custom-street" class="input-xlarge" data-hj-whitelist="true" value="${
             a.address && null !== a.address.street ? a.address.street : ''
           }" placeholder="Eg: 225 East 41st Street, New York"><span class="help error" style="">${
             o.locale.requiredField
@@ -2219,9 +2232,10 @@
               : 'This field is required.'
           }</span></p>\n            <div class="v-custom-ship-info">\n              <p class="input ship-number text ${
             'number' in o.addressrules ? 'required' : 'hide'
-          }"><label id="number-label" for="ship-complement">${
-            (o.locale.number && o.locale.number) || 'Number'
-          }</label><input ${
+          }"><label id="number-label" for="ship-complement">${(o.locale
+            .number &&
+            o.locale.number) ||
+            'Number'}</label><input ${
             'number' in o.addressrules ? 'required' : ''
           } autocomplete="on" id="ship-number" type="text" name="v-custom-number" maxlength="20" placeholder="${
             o.locale.number ? o.locale.number : ''
@@ -2229,10 +2243,9 @@
             a.address ? (null === a.address.number ? '' : a.address.number) : ''
           }"><span class="help error" style="">${
             o.locale ? o.locale.requiredField : 'This field is required.'
-          }</span></p>\n              <p class="input ship-complement text"><label id="address2-label" for="ship-complement">${
-            (o.locale && o.locale.address2Placeholder) ||
-            'Apartment number, unit, floor, etc.'
-          }</label><input autocomplete="on" id="ship-complement" type="text" name="v-custom-complement" maxlength="750" placeholder="${
+          }</span></p>\n              <p class="input ship-complement text"><label id="address2-label" for="ship-complement">${(o.locale &&
+            o.locale.address2Placeholder) ||
+            'Apartment number, unit, floor, etc.'}</label><input autocomplete="on" id="ship-complement" type="text" name="v-custom-complement" maxlength="750" placeholder="${
             o.locale.address2Placeholder ? o.locale.address2Placeholder : ''
           }" class="input-xlarge" data-hj-whitelist="true" value="${
             a.address
@@ -2246,17 +2259,17 @@
             .getCountries()
             .join(
               ''
-            )}</select></p>\n              <p class="input ship-city required text"><label id="city-label" for="ship-city">${
-            (o.locale && o.locale.city) || 'City'
-          }</label><input required autocomplete="on" id="ship-city" type="text" name="v-custom-city" maxlength="100" class="input-large" data-hj-whitelist="true" value="${
+            )}</select></p>\n              <p class="input ship-city required text"><label id="city-label" for="ship-city">${(o.locale &&
+            o.locale.city) ||
+            'City'}</label><input required autocomplete="on" id="ship-city" type="text" name="v-custom-city" maxlength="100" class="input-large" data-hj-whitelist="true" value="${
             a.address && null !== a.address.city ? a.address.city : ''
           }"><span class="help error" style="">${
             o.locale.requiredField
               ? o.locale.requiredField
               : 'This field is required.'
-          }</span></p>\n              <p class="input ship-state required text"><label id="state-label" for="ship-state">${
-            (o.locale && o.locale.state) || 'State'
-          }</label>\n                  <select name="v-custom-state" id="ship-state" class="input-large">\n                    <option value="" disabled selected>${
+          }</span></p>\n              <p class="input ship-state required text"><label id="state-label" for="ship-state">${(o.locale &&
+            o.locale.state) ||
+            'State'}</label>\n                  <select name="v-custom-state" id="ship-state" class="input-large">\n                    <option value="" disabled selected>${
             o.locale ? o.locale.state : 'State'
           }</option>\n                    ${o
             .getRegions(t[0])
@@ -2296,7 +2309,7 @@
         const s = $('.vcustom--vtex-omnishipping-1-x-address #ship-country'),
           d = s.val(),
           i = s.find('option')
-        i.sort(function (e, o) {
+        i.sort(function(e, o) {
           return $(e).text() > $(o).text() ? 1 : -1
         }),
           s.html('').append(i),
@@ -2306,7 +2319,7 @@
         const e = this
         ;(e.validate = !0),
           $('.vcustom--vtex-omnishipping-1-x-address input:required').each(
-            function () {
+            function() {
               '' === this.value
                 ? ($(this).addClass('error'), (e.validate = !1))
                 : $(this).removeClass('error')
@@ -2366,7 +2379,7 @@
         $('body').on(
           'click',
           '.step.shipping-data #edit-address-button, .step.shipping-data .vtex-omnishipping-1-x-linkEdit',
-          function () {
+          function() {
             if (
               !$('#shipping-option-pickup-in-point').hasClass(
                 'vtex-omnishipping-1-x-deliveryOptionActive'
@@ -2425,7 +2438,7 @@
           $('body').on(
             'click',
             '.vtex-omnishipping-1-x-buttonCreateAddress, .vtex-omnishipping-1-x-disclaimer a#remove-unavailable-items',
-            function () {
+            function() {
               $('#shipping-option-pickup-in-point').hasClass(
                 'vtex-omnishipping-1-x-deliveryOptionActive'
               ) ||
@@ -2434,17 +2447,13 @@
                 e.updateAddress(''))
             }
           ),
-          $('body').on(
-            'click',
-            '#shipping-option-pickup-in-point',
-            function () {
-              $('body').removeClass(e.BodyFormClasses.join(' '))
-            }
-          ),
+          $('body').on('click', '#shipping-option-pickup-in-point', function() {
+            $('body').removeClass(e.BodyFormClasses.join(' '))
+          }),
           $('body').on(
             'click',
             '.vtex-omnishipping-1-x-backToAddressList',
-            function () {
+            function() {
               $('body').removeClass(e.BodyFormClasses.join(' ')),
                 (e.address.addressId = '')
             }
@@ -2452,7 +2461,7 @@
           $('body').on(
             'click',
             '.vtex-omnishipping-1-x-addressItemOption',
-            function () {
+            function() {
               e.address.addressId = e.orderForm.shippingData.availableAddresses[
                 $(this).index()
               ]
@@ -2461,19 +2470,17 @@
                 : ''
             }
           ),
-          $('body').on(
-            'change',
-            "select[name='v-custom-country']",
-            function (o) {
-              o.stopImmediatePropagation()
-              try {
-                e.updateFormByCountry(this.value), e.updateAddress('')
-              } catch (e) {
-                console.error(`updateFormByCountry ${this.value} error:`, e)
-              }
+          $('body').on('change', "select[name='v-custom-country']", function(
+            o
+          ) {
+            o.stopImmediatePropagation()
+            try {
+              e.updateFormByCountry(this.value), e.updateAddress('')
+            } catch (e) {
+              console.error(`updateFormByCountry ${this.value} error:`, e)
             }
-          ),
-          $('body').on('click', '#btn-go-to-shippping-method', function (o) {
+          }),
+          $('body').on('click', '#btn-go-to-shippping-method', function(o) {
             o.preventDefault(),
               o.stopImmediatePropagation(),
               e.submitAddressForm()
@@ -2481,7 +2488,7 @@
           $('body').on(
             'keyup',
             '.vcustom--vtex-omnishipping-1-x-address input',
-            function () {
+            function() {
               '' !== this.value && $(this).removeClass('error')
             }
           )
@@ -2510,7 +2517,7 @@
       }
       events() {
         const e = this
-        $(window).on('orderFormUpdated.vtex', function (o, a) {
+        $(window).on('orderFormUpdated.vtex', function(o, a) {
           e.checkFirstLogin(a)
         })
       }
@@ -2558,7 +2565,7 @@
       }
     }
   },
-  function (e, o) {
+  function(e, o) {
     ;(e.exports._countriesrules = {
       ITA: {
         state: {
@@ -9273,10 +9280,10 @@
         RUS: 'Eg: Arbat St, 3 Moscow, Russia',
       })
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
@@ -9295,7 +9302,11 @@
         return m >= 18 && m <= 120
       }
       insertPartialNewProfileData() {
-        const e = $('#client-birth-date').val().split('/').reverse().join('-'),
+        const e = $('#client-birth-date')
+            .val()
+            .split('/')
+            .reverse()
+            .join('-'),
           o = new Date(e),
           a = {
             email: $('.email').text(),
@@ -9346,13 +9357,19 @@
         const n = e.trim()
         0 === n.length
           ? ($('#error-client-date-birth-required').show(),
-            $('#client-birth-date').addClass('error').removeClass('success'))
+            $('#client-birth-date')
+              .addClass('error')
+              .removeClass('success'))
           : n.length > 0 && n.length < 10
           ? $('#client-birth-date').removeClass('error success')
           : n.length >= 10 && o
-          ? $('#client-birth-date').addClass('success').removeClass('error')
+          ? $('#client-birth-date')
+              .addClass('success')
+              .removeClass('error')
           : ($('#error-client-date-birth').show(),
-            $('#client-birth-date').addClass('error').removeClass('success'))
+            $('#client-birth-date')
+              .addClass('error')
+              .removeClass('success'))
       }
       mphone(e) {
         let o = e.replace(/\D/g, '')
@@ -9446,35 +9463,44 @@
         $('body').on(
           'input',
           'input#client-first-name, input#client-last-name',
-          function () {
+          function() {
             const e = /[^A-Za-zÀ-ú\s]+$/
-            $(this).val().match(e) && $(this).val($(this).val().replace(e, ''))
+            $(this)
+              .val()
+              .match(e) &&
+              $(this).val(
+                $(this)
+                  .val()
+                  .replace(e, '')
+              )
           }
         ),
-          $('body').on('keypress', '#client-phone', function (o) {
+          $('body').on('keypress', '#client-phone', function(o) {
             setTimeout(() => {
               const a = e.mphone(o.target.value)
               a !== o.target.value && (o.target.value = a)
             }, 1)
           }),
-          $('body').on('keyup', '#client-birth-date', function (o) {
+          $('body').on('keyup', '#client-birth-date', function(o) {
             const a = e.mdata(o.target.value)
             a !== o.target.value && (o.target.value = a),
               e.validateAge(o.target.value)
           }),
-          $('body').on('blur', '#client-birth-date', function (e) {
+          $('body').on('blur', '#client-birth-date', function(e) {
             e.target.value.length < 10 &&
               ($('#error-client-date-birth').hide(),
               $('#error-client-date-birth-required').show(),
-              $('#client-birth-date').addClass('error').removeClass('success'))
+              $('#client-birth-date')
+                .addClass('error')
+                .removeClass('success'))
           }),
-          $('body').on('keypress', '#client-whatasapp', function (o) {
+          $('body').on('keypress', '#client-whatasapp', function(o) {
             setTimeout(() => {
               const a = e.mphone(o.target.value)
               a !== o.target.value && (o.target.value = a)
             }, 1)
           }),
-          $('body').on('input', '#client-whatasapp', function () {
+          $('body').on('input', '#client-whatasapp', function() {
             const e = $(this),
               o = e.val().length > 0 && e.val().length < 15
             $('#error-client-whatsapp-required').hide(),
@@ -9486,7 +9512,7 @@
                   $('#error-client-whatsapp-required').show())
                 : e.removeClass('error')
           }),
-          $('body').on('blur', '#client-whatasapp', function () {
+          $('body').on('blur', '#client-whatasapp', function() {
             const e = $(this),
               o = 0 === e.val().length,
               a = !o && e.val().length < 15,
@@ -9501,17 +9527,17 @@
               o && !t && r(),
               o && t && (n(), $('#error-client-whatsapp-required').show())
           }),
-          $('body').on(
-            'change',
-            '.checkbox-inline input:checkbox',
-            function () {
-              $(this).is(':checked')
-                ? $(this).closest('.checkbox-inline').removeClass('error')
-                : $(this).closest('.checkbox-inline').addClass('error'),
-                e.checkTerms()
-            }
-          ),
-          $('body').on('change', '#inputWhatsapp', function () {
+          $('body').on('change', '.checkbox-inline input:checkbox', function() {
+            $(this).is(':checked')
+              ? $(this)
+                  .closest('.checkbox-inline')
+                  .removeClass('error')
+              : $(this)
+                  .closest('.checkbox-inline')
+                  .addClass('error'),
+              e.checkTerms()
+          }),
+          $('body').on('change', '#inputWhatsapp', function() {
             const e = $(this).is(':checked'),
               o = $('#client-whatasapp')
             o.attr('required', e),
@@ -9522,39 +9548,42 @@
                     (o.removeClass('success').addClass('error'),
                     $('#error-client-whatsapp-required').show()))
                 : (o.closest('p.client-whatsapp').removeClass('required'),
-                  o.removeClass('error').addClass('success').val(''))
+                  o
+                    .removeClass('error')
+                    .addClass('success')
+                    .val(''))
           }),
           $('body').on(
             'input blur keyup keypress',
             '#client-profile-data p.input input:visible',
-            function () {
+            function() {
               setTimeout(() => e.toggleGoToShippingDisabled(), 1)
             }
           ),
           $('body').on(
             'change',
             '#client-profile-data input[type="checkbox"]',
-            function () {
+            function() {
               setTimeout(() => e.toggleGoToShippingDisabled(), 1)
             }
           ),
-          $('body').on('click', '#edit-profile-data', function () {
+          $('body').on('click', '#edit-profile-data', function() {
             setTimeout(() => e.toggleGoToShippingDisabled(), 1)
           }),
           $('body').on(
             'click',
             '#go-to-shipping, #client-profile-data #go-to-payment',
-            function () {
+            function() {
               e.saveProfileData()
             }
           )
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
@@ -9682,7 +9711,7 @@
             const o = this,
               { address: a } = e.shippingData
             this.validateVirtualInventory(e)
-            const t = setInterval(function () {
+            const t = setInterval(function() {
               e.messages && e.messages[0] && e.messages[0].text
                 ? e.messages[0].text.indexOf('CEP selecionado') > -1
                   ? $('.invalid-postal-code-msg').length ||
@@ -9709,7 +9738,7 @@
             !o.val().length < 9 && e.resetValidation(),
             $.getJSON(
               `${e.rootPath()}/api/checkout/pub/postal-code/BRA/${o.val()}`
-            ).done(function (o) {
+            ).done(function(o) {
               const a = o
               e.validadePostalCode(a), e.unlockPostalCodeInput()
             })
@@ -9728,7 +9757,7 @@
           const o = '#shipping-data'
           for (const a of e) {
             const { selector: e, maxLength: t } = a
-            $(document).on('focus', `${o} ${e}`, function () {
+            $(document).on('focus', `${o} ${e}`, function() {
               $(this).attr('maxlength', t)
             })
           }
@@ -9741,7 +9770,7 @@
       toggleGoToPaymentDisabled() {
         const e =
           0 ===
-          $('#shipping-data p.input.required input').filter(function () {
+          $('#shipping-data p.input.required input').filter(function() {
             return 0 === $.trim($(this).val()).length
           }).length
         $('#btn-go-to-payment').prop('disabled', !e)
@@ -9767,18 +9796,18 @@
         $(document).on(
           'input',
           '#shipping-data input#ship-postalCode',
-          function () {
+          function() {
             !$(this).val().length < 9 && e.resetValidation()
           }
         ),
           $(document).on(
             'input',
             '#shipping-data p.input.required input',
-            function () {
+            function() {
               e.toggleGoToPaymentDisabled()
             }
           ),
-          $(document).on('input', '#ship-receiverName', function () {
+          $(document).on('input', '#ship-receiverName', function() {
             try {
               e.checkReceiverName(window.vtexjs.checkout.orderForm)
             } catch (e) {
@@ -9788,10 +9817,10 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
@@ -9838,10 +9867,10 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
@@ -9887,10 +9916,10 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
@@ -9957,10 +9986,10 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
@@ -9974,7 +10003,7 @@
       }
       openSamsungAccountModal() {
         window.vtexid.start()
-        const e = setInterval(function () {
+        const e = setInterval(function() {
           $('#vtexIdUI-custom-oauth').length &&
             (clearInterval(e),
             $('#vtexIdContainer, #vtexIdUI-global-loader').hide(),
@@ -9988,16 +10017,16 @@
       }
       bindEvents() {
         const e = this
-        $(document).on('click', '#btn-samsung-account', function () {
+        $(document).on('click', '#btn-samsung-account', function() {
           e.openSamsungAccountModal()
         })
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return n
       })
     var t = a(0)
@@ -10166,10 +10195,10 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return n
       })
     var t = a(0)
@@ -10276,10 +10305,10 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
@@ -10358,14 +10387,18 @@
         $('body').on('click', '.bespokeRemove', e => {
           e.preventDefault()
           const o = window.vtexjs.checkout.orderForm.items,
-            a = $(e.target).parents('.product-item').data(),
+            a = $(e.target)
+              .parents('.product-item')
+              .data(),
             t = a ? a.sku : null
           $(e.target).remove(), t && this.removeBespoke(o, t, 0)
         }),
           $('body').on('click', '.editBespoke', e => {
             e.preventDefault()
             const o = window.vtexjs.checkout.orderForm.items,
-              a = $(e.target).parents('.product-item').data(),
+              a = $(e.target)
+                .parents('.product-item')
+                .data(),
               t = a ? a.sku : null
             $(e.target).remove(), t && this.clearBespokeRefrigerator(o, t, !0)
           })
@@ -10539,22 +10572,28 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
       constructor() {
         ;(this.dtmWatchPages = { checkout: 'main-header' }),
           (this.scriptFiles = {
-            ar: '//assets.adobedtm.com/72afb75f5516/510bc748cd99/launch-2ab05c7d16d3.min.js',
-            br: '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
-            cl: '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-2dc5f0c95eb9-development.min.js',
-            co: '//assets.adobedtm.com/72afb75f5516/666481c328a4/launch-d4f674a4f20e.min.js',
-            mx: '//assets.adobedtm.com/72afb75f5516/15c6fca01360/launch-eeaa88ea2df8.min.js',
-            pe: '//assets.adobedtm.com/72afb75f5516/e81c20aa5fa4/launch-8c7166247df8.min.js',
+            ar:
+              '//assets.adobedtm.com/72afb75f5516/510bc748cd99/launch-2ab05c7d16d3.min.js',
+            br:
+              '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
+            cl:
+              '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-2dc5f0c95eb9-development.min.js',
+            co:
+              '//assets.adobedtm.com/72afb75f5516/666481c328a4/launch-d4f674a4f20e.min.js',
+            mx:
+              '//assets.adobedtm.com/72afb75f5516/15c6fca01360/launch-eeaa88ea2df8.min.js',
+            pe:
+              '//assets.adobedtm.com/72afb75f5516/e81c20aa5fa4/launch-8c7166247df8.min.js',
             ar_staging:
               '//assets.adobedtm.com/94a07bb253a23a545fca071a500c666bbb8d4a94/satelliteLib-00602685fc5991db91c246c9ada0d0aff71599cc-staging.js',
             br_staging:
@@ -10597,9 +10636,9 @@
         ;(a.src = `${e.scriptFiles[t]}?v=${r}`),
           e.version2.indexOf(n) > -1 && a.setAttribute('async', ''),
           document.head.appendChild(a),
-          (a.onload = function () {
+          (a.onload = function() {
             e.waitForDataSend()
-            const o = setInterval(function () {
+            const o = setInterval(function() {
               if (document.body) {
                 if (document.getElementById('satelliteAA'))
                   return void clearInterval(o)
@@ -10621,14 +10660,14 @@
         const e = this
         window.location.href.indexOf('upselling') > -1 ||
           (!1 !== e.pageType &&
-            ((window.onhashchange = function () {
+            ((window.onhashchange = function() {
               e._populateDataLayer(), e.waitForDataSend(), e._pageTrack()
             }),
             null === e.observer &&
               (-1 === e.pagesWithMutation.indexOf(e.pageType)
                 ? e._populateProductLayer()
-                : ((e.observer = new MutationObserver(function (o) {
-                    o.forEach(function (o) {
+                : ((e.observer = new MutationObserver(function(o) {
+                    o.forEach(function(o) {
                       if (
                         null !==
                           document.querySelector(
@@ -10653,7 +10692,7 @@
                       'checkout' === e.pageType &&
                         $('.item-link-remove.data-omni-remove').on(
                           'click',
-                          function (o) {
+                          function(o) {
                             const { target: a } = o,
                               t = a.getAttribute('data-omni-variant')
                             t
@@ -10677,18 +10716,19 @@
             modelVariant: window.digitalData.product.modelVariant.split(','),
             model_name: window.digitalData.product.model_name.split(','),
             displayName: window.digitalData.product.displayName.split(';'),
-            productDivision:
-              window.digitalData.product.productDivision.split(','),
+            productDivision: window.digitalData.product.productDivision.split(
+              ','
+            ),
             productFamily: window.digitalData.product.productFamily.split(','),
             pimSubType: window.digitalData.product.pimSubType.split(','),
             listPrice: window.digitalData.product.listPrice.split(','),
           },
           a = o.modelVariant.indexOf(e)
-        Object.keys(o).forEach(function (e) {
+        Object.keys(o).forEach(function(e) {
           let t = ','
           'displayName' === e && (t = ';'),
             (o[e] = o[e]
-              .filter(function (e, o) {
+              .filter(function(e, o) {
                 return o !== a
               })
               .join(t))
@@ -10698,14 +10738,14 @@
       getPageType() {
         const e = this
         null === e.pageInterval &&
-          (e.pageInterval = setInterval(function () {
+          (e.pageInterval = setInterval(function() {
             if (document.body) {
               const o = document.querySelectorAll('body > div, body > header')
               for (let a = 0; a < o.length; a++)
                 if (
-                  (Object.keys(e.dtmWatchPages).forEach(function (t) {
+                  (Object.keys(e.dtmWatchPages).forEach(function(t) {
                     const n = e.dtmWatchPages[t]
-                    o[a].classList.forEach(function (o) {
+                    o[a].classList.forEach(function(o) {
                       'custom' === t && o.indexOf(n) > -1
                         ? (e.pageType = 'custom')
                         : o === n &&
@@ -10750,7 +10790,7 @@
             } else await r._fetchData(e, t.type, t.value, n)
           }
           null !== a &&
-            Object.keys(a).forEach(function (o) {
+            Object.keys(a).forEach(function(o) {
               let t = 'data-omni'
               const n = a[o]
               '' !== o && (t += '-' + o), e.setAttribute(t, n)
@@ -10766,11 +10806,11 @@
           'url' === e && ((e = 'productUrl'), o.endsWith('/p') || (o += '/p'))
         try {
           if ('name' === e)
-            return t.codesCache.find(function (a) {
+            return t.codesCache.find(function(a) {
               return a[e] === o
             })
           if (
-            ((n = t.codesCache.find(function (a) {
+            ((n = t.codesCache.find(function(a) {
               return a[e] === o
             })),
             !n)
@@ -10811,7 +10851,7 @@
           ('' !== r.type || '' !== r.searchValue) && -1 !== n.codesCache)
         ) {
           const o = new XMLHttpRequest()
-          o.addEventListener('load', function () {
+          o.addEventListener('load', function() {
             n._callbackFetch(this, e, t, s, d)
           }),
             o.open(
@@ -10943,7 +10983,7 @@
         null !== C &&
           null !== l &&
           (a.setElementOmni(C, 'data-omni-signin', { '': 'login_try:guest' }),
-          (l.onsubmit = function (e) {
+          (l.onsubmit = function(e) {
             e.preventDefault()
             let o = 'login_try:guest'
             l.checkValidity() || (o = 'login_try:guest'),
@@ -10952,7 +10992,7 @@
       }
       waitForDataSend() {
         const e = this
-        let o = setInterval(function () {
+        let o = setInterval(function() {
           if (!e.pageType || '' === window.digitalData.page.pageInfo.siteCode)
             return
           const { product: a } = window.digitalData
@@ -10989,9 +11029,9 @@
           for (
             let a = 0;
             a < o.length &&
-            (Object.keys(e.dtmWatchPages).forEach(function (t) {
+            (Object.keys(e.dtmWatchPages).forEach(function(t) {
               const n = e.dtmWatchPages[t]
-              o[a].classList.forEach(function (o) {
+              o[a].classList.forEach(function(o) {
                 o === n && (e.pageType = t)
               })
             }),
@@ -11019,17 +11059,17 @@
         const n = window.location.hash
           .replace('#/', '')
           .split('/')
-          .filter(function (e) {
+          .filter(function(e) {
             return '' !== e
           })
         let r = t
           .split('/')
-          .filter(function (e) {
+          .filter(function(e) {
             return '' !== e
           })
           .concat(n)
         e.countryCodes.indexOf(r[0]) > -1 && r.shift(),
-          (r = r.filter(function (e) {
+          (r = r.filter(function(e) {
             return '' !== e.trim()
           }))
         for (let e = 0; e <= 3; e++) {
@@ -11070,7 +11110,7 @@
             try {
               for (let t = 0; t < o.length; t++) {
                 const n = o[t],
-                  r = e.codesCache.findIndex(function (e) {
+                  r = e.codesCache.findIndex(function(e) {
                     return n.refId === e.modelCode
                   })
                 e.codesCache[r] &&
@@ -11087,7 +11127,7 @@
               (t[this._fetchSiteCode()] = e.codesCache),
               localStorage.setItem(e.cacheKey, JSON.stringify(t))
           }
-          document.querySelectorAll('tr.product-item').forEach(function (a) {
+          document.querySelectorAll('tr.product-item').forEach(function(a) {
             if (null !== a) {
               if (
                 null !== a.getAttribute('data-loading') &&
@@ -11118,7 +11158,7 @@
                   return
                 if (null === r) return
                 a.open('POST', t, !0),
-                  (a.onreadystatechange = function () {
+                  (a.onreadystatechange = function() {
                     4 === this.readyState &&
                       200 === this.status &&
                       ((d = JSON.parse(this.response)),
@@ -11142,7 +11182,7 @@
           r = [],
           s = [],
           d = [],
-          i = setInterval(function () {
+          i = setInterval(function() {
             try {
               if (
                 window.vtexjs &&
@@ -11211,14 +11251,14 @@
         let a, t
         for (a = 0; a < o; a++)
           -1 !==
-            (t =
-              'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž'.indexOf(
-                e[a]
-              )) &&
-            (e[a] =
-              'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz'[
-                t
-              ])
+            (t = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž'.indexOf(
+              e[a]
+            )) &&
+            (e[
+              a
+            ] = 'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz'[
+              t
+            ])
         return e.join('')
       }
       _fetchSiteCode() {
@@ -11289,7 +11329,7 @@
                 'https://ssg-checkout.linkapi.com.br/v1/products?apiKey=' + o[a]
             t.open('POST', n, !0),
               (e.codesCache = -1),
-              (t.onreadystatechange = function () {
+              (t.onreadystatechange = function() {
                 if (4 === this.readyState && 200 === this.status) {
                   const o = {}
                   ;(o[a] = this.response),
@@ -11360,25 +11400,25 @@
       }
       _hasServicesInAttachment(e, o) {
         return 'linkscplus' === e
-          ? o.find(function (o) {
+          ? o.find(function(o) {
               return (
                 o.name.toLowerCase() === e.toLowerCase() &&
                 '0' !== o.content.idsku
               )
             })
-          : o.find(function (o) {
+          : o.find(function(o) {
               return o.name.toLowerCase() === e.toLowerCase()
             })
       }
       _mountDataBuyNow(e, o) {
         const a = this
         let t = ''
-        const n = window.vtexjs.checkout.orderForm.items.find(function (e) {
+        const n = window.vtexjs.checkout.orderForm.items.find(function(e) {
           return e.id === o
         })
         if (!n) return ''
         try {
-          const o = a.codesCache.find(function (e) {
+          const o = a.codesCache.find(function(e) {
             return e.sku === n.id
           })
           o
@@ -11426,10 +11466,9 @@
               (n =
                 a.more.resultData.Products.Product.BasicInfo[0].PviCategories
                   .ProductSubTypeName),
-              (r =
-                a.more.resultData.Products.Product.BasicInfo[0].Categories.Category[0].CategoryEnglishNamePath.split(
-                  '|'
-                )),
+              (r = a.more.resultData.Products.Product.BasicInfo[0].Categories.Category[0].CategoryEnglishNamePath.split(
+                '|'
+              )),
               (s = r.length > 2 ? r[2] : ''),
               0 === Object.values(a).length || a.message)
             ) {
@@ -11463,10 +11502,10 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     'use strict'
     a.r(o),
-      a.d(o, 'default', function () {
+      a.d(o, 'default', function() {
         return t
       })
     class t {
@@ -11486,7 +11525,9 @@
       }
       getRewardsData(e) {
         this.emailUserRewards === e && this.userAcceptedRewards
-          ? this.userSaGuid && this.userAcceptedRewards
+          ? this.userSaGuid &&
+            this.userAcceptedRewards &&
+            (this.getPointsSearch(), this.createButtonRewards())
           : $.ajax({
               url: `${this.rootPath()}/_v/get/client/${e}`,
               headers: {
@@ -11508,7 +11549,9 @@
                         (this.alreadyRedirected = !0)))
                     : o[0].isRewardsAccepted &&
                       o[0].saGuid &&
-                      (this.userAcceptedRewards = !0)
+                      ((this.userAcceptedRewards = !0),
+                      this.getPointsSearch(),
+                      this.createButtonRewards())
               },
               error: e => () => {
                 console.error('get client rewards data error', e)
@@ -11546,6 +11589,117 @@
         } catch (e) {
           console.error('showDetailsTradeIn error:', e)
         }
+      }
+      createButtonRewards() {
+        0 == $('#show-rewards-group').length &&
+          ($('.link-gift-card').after(
+            '\n        <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn">\n          <a id="show-rewards-group" class="link-payment-discounts-cod">\n            Resgatar pontos Rewards\n          </a>\n        </p>\n      '
+          ),
+          document
+            .getElementById('show-rewards-group')
+            .addEventListener('click', () => {
+              this.showRewardsCalc()
+            }))
+      }
+      showRewardsCalc() {
+        $('#group-all-rewards').show(),
+          $('#show-rewards-parent')
+            .first()
+            .hide()
+        const e = vtexjs.checkout.orderForm.paymentData.giftCards[0]
+        e &&
+          (e.value > 0 || 1 == e.inUse
+            ? ($('#group-calc-rewards').hide(),
+              $('#group-cancel-points').show(),
+              this.createRewardsTotalDiscount(e.value / 100))
+            : ($('#group-cancel-points').hide(),
+              $('#group-calc-rewards').show(),
+              $('#rewards-total-discount').remove()))
+      }
+      createRewardsTotalDiscount(e) {
+        0 == $('#rewards-total-discount').length &&
+          $('.totalizers-list').append(
+            `\n        <tr id="rewards-total-discount">\n          <td class="info">Rewards</td>\n          <td class="space"></td>\n          <td class="monetary" style="color: #2189FF">- ${e.toLocaleString(
+              'pt-BR',
+              { style: 'currency', currency: 'BRL' }
+            )}</td>\n          <td class="empty"></td>\n        </tr>\n      `
+          )
+      }
+      createGroupCalcRewards() {
+        0 == $('#group-calc-rewards').length &&
+          ($('.link-gift-card').after(
+            `\n        <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">\n          <div\n            id="group-calc-rewards"\n            style="width: auto; margin: 15px 0; padding: 25px 15px 10px 20px; background: #f4f4f4; font-family: SamsungOne; color: #000; font-size: 14px; font-weight: 400;"\n          >\n            <div\n              id="calc-header-rewards"\n              style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"\n            >\n              <span\n                id="calc-header-title"\n                style="flex-basis: 50%; font-size: 20px; font-weight: 700;"\n              >\n                Samsung Rewards\n              </span>\n              <span\n                id="calc-header-points"\n                style="flex-basis: 50%; text-align: end; color: #2189FF; font-size: 14px; font-weight: 700;"\n              >\n                Você tem ${
+              this.totalPointsUser
+            } pontos\n              </span>\n            </div>\n            <div\n              id="calc-content-rewards"\n              style="display: grid; grid-template-columns: 2fr 1fr; margin-top: 20px"\n            >\n              <div\n                id="calc-content-first-column"\n                style="display: grid; grid-template-columns: 1fr;"\n              >\n                Seus pontos valem descontos de até 50% na compra de produtos Samsung.\n              </div>\n              <div\n                id="calc-content-third-column"\n                style="display: flex; flex-direction: column; align-items: center"\n              >\n                <p style="font-weight: 500">Use os seus pontos para ter um desconto de até ${this.chosenDiscount.toLocaleString(
+              'pt-BR',
+              { style: 'currency', currency: 'BRL' }
+            )}</p>\n                <button \n                  type="button"\n                  id="button-use-points-rewards"\n                  style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center;"\n                >\n                  APLICAR ESTE VALOR\n                </button>\n              </div>\n            </div>\n            <div\n              id="calc-footer-rewards"\n              style="margin-top: 20px"\n            >\n              <p id="footer-rewards-info" style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">\n                Pontos Samsung Rewards gerados nesta compra serão creditados apenas após o período legal de devolução do produto - 7 dias após o recebimento. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, seus pontos não serão utilizados.\n              </p>\n            </div>\n          </div>\n  \n          <div id="group-cancel-points" style="display: flex; align-items: baseline; justify-content: flex-start; gap: 10px; padding-block: 10px;">\n            <p id="group-cancel-points-p" style="font-size: 20px; color: #2189FF; font-weight: 700; font-family: SamsungOne;"></p>\n            <a \n              id="button-cancel-points"\n              style="font-size: 12px; color: #000; font-weight: 400; cursor: pointer; text-decoration: underline;"\n            >\n              Não quero utilizar pontos\n            </a>\n          <div>\n        </div>\n      `
+          ),
+          document
+            .getElementById('button-use-points-rewards')
+            .addEventListener('click', () => {
+              this.setRewardsDiscount()
+            }),
+          document
+            .getElementById('button-cancel-points')
+            .addEventListener('click', () => {
+              this.cancelRewardsDiscount()
+            }))
+      }
+      clamp(e, o, a) {
+        return Math.min(Math.max(e, o), a)
+      }
+      getPointsSearch() {
+        const { orderForm: e } = window.vtexjs.checkout
+        if (e.orderFormId) {
+          let o = {
+            Id: e.orderFormId,
+            Timestamp: new Date().toISOString().split('Z')[0],
+            RequestType: 'R',
+            SAGuid: this.userSaGuid,
+            CountryDescription: 'BR',
+          }
+          $.ajax({
+            url: this.rootPath() + '/rewards/points/search',
+            type: 'POST',
+            data: JSON.stringify(o),
+            dataType: 'json',
+            contentType: 'application/json',
+            success: o => {
+              ;(this.totalPointsUser = o.PointBalance),
+                (this.totalCurrencyUser = o.ExchangedAmount),
+                (this.pricePerPoint = o.ExchangedAmount / o.PointBalance),
+                (this.chosenDiscount = Math.min(
+                  Math.max(o.ExchangedAmount, 0),
+                  e.value / 100 / 2
+                )),
+                this.createGroupCalcRewards(),
+                this.totalPointsUser > 0 &&
+                  $('#show-rewards-parent').css('display', 'block')
+            },
+            error: function() {
+              console.error('points search error')
+            },
+          })
+        }
+      }
+      setRewardsDiscount() {
+        let e = document.querySelector(
+            '.gift-card-provider-group-ssg_rewards .input-prepend input'
+          ),
+          o = new KeyboardEvent('keydown', { key: 'a' })
+        ;(e.value = this.chosenDiscount.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        })),
+          e.focus(),
+          e.dispatchEvent(o)
+      }
+      cancelRewardsDiscount() {
+        document
+          .querySelector('.gift-card-provider-group-ssg_rewards .action a')
+          .click(),
+          $('#rewards-total-discount').remove()
       }
       showPointsSimulation() {
         const { orderForm: e } = window.vtexjs.checkout
@@ -11592,7 +11746,7 @@
       }
     }
   },
-  function (e, o, a) {
+  function(e, o, a) {
     e.exports = a.p + 'checkout6-custom.css'
   },
 ])

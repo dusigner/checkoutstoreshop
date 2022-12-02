@@ -45,8 +45,8 @@ export default class Rewards {
             $('#RewardsBlock').hide()
             $('#inputRewards').attr('checked', true)
             this.userAcceptedRewards = true
-            // this.getPointsSearch()
-            // this.createButtonRewards()
+            this.getPointsSearch()
+            this.createButtonRewards()
           }
         },
         error: err => {
@@ -56,16 +56,17 @@ export default class Rewards {
         },
       })
     } else if (this.userSaGuid && this.userAcceptedRewards) {
-      $('#RewardsBlock').hide()
-      $('#inputRewards').attr('checked', true)
-      // this.getPointsSearch()
-      // this.createButtonRewards()
+      // $('#RewardsBlock').hide()
+      // $('#inputRewards').attr('checked', true)
+      this.getPointsSearch()
+      this.createButtonRewards()
     }
   }
 
   putRewardsOnCustomData(orderFormId, points) {
     const newData = {
       total_points_earned: points,
+      terms_accepted: this.userAcceptedRewards,
     }
 
     $.ajax({
@@ -120,6 +121,217 @@ export default class Rewards {
     } catch (e) {
       console.error('showDetailsTradeIn error:', e)
     }
+  }
+
+  createButtonRewards() {
+    if ($('#show-rewards-group').length !== 0) return
+
+    $('.link-gift-card').after(`
+      <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn">
+        <a id="show-rewards-group" class="link-payment-discounts-cod">
+          Resgatar pontos Rewards
+        </a>
+      </p>
+    `)
+
+    document
+      .getElementById('show-rewards-group')
+      .addEventListener('click', () => {
+        this.showRewardsCalc()
+      })
+  }
+
+  showRewardsCalc() {
+    $('#group-all-rewards').show()
+    $('#show-rewards-parent')
+      .first()
+      .hide()
+
+    const { giftCards } = window.vtexjs.checkout.orderForm.paymentData
+
+    if (giftCards.length) {
+      const { value, inUse } = giftCards[0]
+
+      if (value > 0 || inUse === true) {
+        $('#group-calc-rewards').hide()
+        $('#group-cancel-points').show()
+        this.createRewardsTotalDiscount(value / 100)
+      } else {
+        $('#group-cancel-points').hide()
+        $('#group-calc-rewards').show()
+        $('#rewards-total-discount').remove()
+      }
+    }
+  }
+
+  createRewardsTotalDiscount(discount) {
+    if ($('#rewards-total-discount').length === 0) {
+      $('.totalizers-list').append(`
+        <tr id="rewards-total-discount">
+          <td class="info">Rewards</td>
+          <td class="space"></td>
+          <td class="monetary" style="color: #2189FF">- ${discount.toLocaleString(
+            'pt-BR',
+            { style: 'currency', currency: 'BRL' }
+          )}</td>
+          <td class="empty"></td>
+        </tr>
+      `)
+    }
+  }
+
+  createGroupCalcRewards() {
+    if ($('#group-calc-rewards').length !== 0) return
+
+    $('.link-gift-card').after(`
+      <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">
+        <div
+          id="group-calc-rewards"
+          style="width: auto; margin: 15px 0; padding: 25px 15px 10px 20px; background: #f4f4f4; font-family: SamsungOne; color: #000; font-size: 14px; font-weight: 400;"
+        >
+          <div
+            id="calc-header-rewards"
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
+          >
+            <span
+              id="calc-header-title"
+              style="flex-basis: 50%; font-size: 20px; font-weight: 700;"
+            >
+              Samsung Rewards
+            </span>
+            <span
+              id="calc-header-points"
+              style="flex-basis: 50%; text-align: end; color: #2189FF; font-size: 14px; font-weight: 700;"
+            >
+              Você tem ${this.totalPointsUser} pontos
+            </span>
+          </div>
+          <div
+            id="calc-content-rewards"
+            style="display: grid; grid-template-columns: 2fr 1fr; margin-top: 20px"
+          >
+            <div
+              id="calc-content-first-column"
+              style="display: grid; grid-template-columns: 1fr;"
+            >
+              Seus pontos valem descontos de até 50% na compra de produtos Samsung.
+            </div>
+            <div
+              id="calc-content-third-column"
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <p style="font-weight: 500">Use os seus pontos para ter um desconto de até ${this.chosenDiscount.toLocaleString(
+                'pt-BR',
+                { style: 'currency', currency: 'BRL' }
+              )}</p>
+              <button 
+                type="button"
+                id="button-use-points-rewards"
+                style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center;"
+              >
+                APLICAR ESTE VALOR
+              </button>
+            </div>
+          </div>
+          <div
+            id="calc-footer-rewards"
+            style="margin-top: 20px"
+          >
+            <p id="footer-rewards-info" style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
+              Pontos Samsung Rewards gerados nesta compra serão creditados apenas após o período legal de devolução do produto - 7 dias após o recebimento. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, seus pontos não serão utilizados.
+            </p>
+          </div>
+        </div>
+
+        <div id="group-cancel-points" style="display: flex; align-items: baseline; justify-content: flex-start; gap: 10px; padding-block: 10px;">
+          <p id="group-cancel-points-p" style="font-size: 20px; color: #2189FF; font-weight: 700; font-family: SamsungOne;"></p>
+          <a 
+            id="button-cancel-points"
+            style="font-size: 12px; color: #000; font-weight: 400; cursor: pointer; text-decoration: underline;"
+          >
+            Não quero utilizar pontos
+          </a>
+        <div>
+      </div>
+    `)
+
+    document
+      .getElementById('button-use-points-rewards')
+      .addEventListener('click', () => {
+        this.setRewardsDiscount()
+      })
+
+    document
+      .getElementById('button-cancel-points')
+      .addEventListener('click', () => {
+        this.cancelRewardsDiscount()
+      })
+  }
+
+  clamp(num, min, max) {
+    return Math.min(Math.max(num, min), max)
+  }
+
+  getPointsSearch() {
+    const { orderForm } = window.vtexjs.checkout
+
+    if (orderForm.orderFormId) {
+      const data = {
+        Id: orderForm.orderFormId,
+        Timestamp: new Date().toISOString().split('Z')[0],
+        RequestType: 'R',
+        SAGuid: this.userSaGuid,
+        CountryDescription: 'BR',
+      }
+
+      $.ajax({
+        url: `${this.rootPath()}/rewards/points/search`,
+        type: 'POST',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        contentType: 'application/json',
+        success: res => {
+          this.totalPointsUser = res.PointBalance
+          this.totalCurrencyUser = res.ExchangedAmount
+          this.pricePerPoint = res.ExchangedAmount / res.PointBalance
+          this.chosenDiscount = Math.min(
+            Math.max(res.ExchangedAmount, 0),
+            orderForm.value / 100 / 2
+          )
+          this.createGroupCalcRewards()
+          if (this.totalPointsUser > 0) {
+            $('#show-rewards-parent').css('display', 'block')
+          }
+        },
+        error() {
+          console.error('points search error')
+        },
+      })
+    }
+  }
+
+  setRewardsDiscount() {
+    const element = document.querySelector(
+      '.gift-card-provider-group-ssg_rewards .input-prepend input'
+    )
+
+    const evt = new KeyboardEvent('keydown', { key: 'a' })
+
+    element.value = this.chosenDiscount.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    })
+    element.focus()
+    element.dispatchEvent(evt)
+  }
+
+  cancelRewardsDiscount() {
+    const element = document.querySelector(
+      '.gift-card-provider-group-ssg_rewards .action a'
+    )
+
+    element.click()
+    $('#rewards-total-discount').remove()
   }
 
   showPointsSimulation() {

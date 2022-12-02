@@ -61,9 +61,11 @@ class checkoutCustom {
       )
     }
 
-    $('.table.cart-items tbody tr.product-item').each(function () {
+    $('.table.cart-items tbody tr.product-item').each(function() {
       if (!$(this).find('.v-custom-product-item-wrap').length) {
-        $(this).find('> *').wrapAll(`<div class="v-custom-product-item-wrap">`)
+        $(this)
+          .find('> *')
+          .wrapAll(`<div class="v-custom-product-item-wrap">`)
       }
     })
 
@@ -71,11 +73,11 @@ class checkoutCustom {
   }
 
   onDomMutation({ targetNode, callback, disconnectCondition = true }) {
-    const observeDOM = (function () {
+    const observeDOM = (function() {
       const MutationObserver =
         window.MutationObserver || window.WebKitMutationObserver
 
-      return function (obj, callback1) {
+      return function(obj, callback1) {
         if (!obj || obj.nodeType !== 1) return
 
         if (MutationObserver) {
@@ -96,7 +98,7 @@ class checkoutCustom {
       }
     })()
 
-    const observer = new MutationObserver(function () {
+    const observer = new MutationObserver(function() {
       if (targetNode && disconnectCondition) {
         observer.disconnect()
 
@@ -198,13 +200,13 @@ class checkoutCustom {
 
   addAssemblies(orderForm) {
     try {
-      $.each(orderForm.items, function (i) {
+      $.each(orderForm.items, function(i) {
         const _item = this
 
         if (_item.assemblies.length > 0) {
           let _assembliesHtml = `<div class="v-custom-assemblies">`
 
-          $.each(_item.assemblies, function () {
+          $.each(_item.assemblies, function() {
             const _assemblies = this
 
             const inptValues = _assemblies.inputValues
@@ -241,7 +243,7 @@ class checkoutCustom {
 
   bundleItems(orderForm) {
     try {
-      $.each(orderForm.items, function (i) {
+      $.each(orderForm.items, function(i) {
         if (this.bundleItems.length > 0) {
           $(`.table.cart-items tbody tr.product-item:eq(${i})`)
             .addClass('v-custom-bundles-in')
@@ -252,9 +254,11 @@ class checkoutCustom {
           )
         }
       })
-      $('.table.cart-items tbody tr.item-service').each(function () {
+      $('.table.cart-items tbody tr.item-service').each(function() {
         if ($(this).find('.v-custom-trservice-wrap').length > 0) return false
-        $(this).find('> *').wrapAll(`<div class="v-custom-trservice-wrap">`)
+        $(this)
+          .find('> *')
+          .wrapAll(`<div class="v-custom-trservice-wrap">`)
       })
     } catch (e) {
       console.error('bundleItems error:', e)
@@ -315,7 +319,7 @@ class checkoutCustom {
       : 'Para usar o cupom, você precisa estar logado.'
 
     const _trElem = $(`.summary-template-holder`)
-    const couponItemsCount = orderForm.items.reduce(function (
+    const couponItemsCount = orderForm.items.reduce(function(
       accumulator,
       item
     ) {
@@ -352,7 +356,7 @@ class checkoutCustom {
   }
 
   setParentIndex(orderForm) {
-    $.each(orderForm.items, function (i) {
+    $.each(orderForm.items, function(i) {
       if (this.parentItemIndex !== null) {
         $(`.table.cart-items tbody > tr.product-item:eq(${i})`).attr(
           'data-parentItemIndex',
@@ -490,9 +494,10 @@ class checkoutCustom {
         .srp-delivery-current-many,
         td.shipping-date,
         .srp-shipping-current-single
-      `).each(function () {
-        const [logisticsInfo] =
-          window.vtexjs.checkout.orderForm.shippingData.logisticsInfo
+      `).each(function() {
+        const [
+          logisticsInfo,
+        ] = window.vtexjs.checkout.orderForm.shippingData.logisticsInfo
 
         const availableSlas = logisticsInfo.slas
 
@@ -558,7 +563,7 @@ class checkoutCustom {
 
         const deliveryDates = []
 
-        $.each(a, function (i) {
+        $.each(a, function(i) {
           const txtselectin = a[i]
 
           if (txtselectin !== '' && txtselectin.match(/(day)|(dia)|(día)/gm)) {
@@ -608,7 +613,7 @@ class checkoutCustom {
 
     if (!_this.quantityPriceCart) return
     try {
-      $.each(orderForm.items, function (i) {
+      $.each(orderForm.items, function(i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
 
         if (_trElem.find('td.product-price').find('.best-price').length === 0) {
@@ -617,7 +622,10 @@ class checkoutCustom {
 
         const totalValue = _trElem.find('.total-price:eq(0)').text()
 
-        _trElem.find('td.product-price').find('.vqc-ldelem').remove()
+        _trElem
+          .find('td.product-price')
+          .find('.vqc-ldelem')
+          .remove()
 
         _trElem
           .find('td.product-price')
@@ -633,7 +641,7 @@ class checkoutCustom {
 
   enchancementProductCart(orderForm) {
     try {
-      $.each(orderForm.items, function (i) {
+      $.each(orderForm.items, function(i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
 
         if (_trElem.find('td.product-name').find('.more-info').length === 1) {
@@ -972,7 +980,7 @@ class checkoutCustom {
     this.TradeIn.init()
 
     // debounce to prevent append from default script
-    const updateDebounce = debounce(function () {
+    const updateDebounce = debounce(function() {
       if (orderForm.marketingData) {
         _this.showCustomMsgCoupon(orderForm)
       }
@@ -1096,13 +1104,13 @@ class checkoutCustom {
 
         let paymentGroupCardsHtml = ``
 
-        $.each(paymentGroups, function (p) {
+        $.each(paymentGroups, function(p) {
           paymentGroupCardsHtml = `<span class="payment-group-item-cards">`
           $.each(
             orderForm.paymentData.paymentSystems.filter(
               item => item.groupName === paymentGroups[p]
             ),
-            function () {
+            function() {
               paymentGroupCardsHtml += `<span class="card-flag ${this.name}">${this.name}</span>`
             }
           )
@@ -1132,7 +1140,7 @@ class checkoutCustom {
 
     $('body').addClass('v-custom-paymentBuilder-accordion')
 
-    $('.payment-group-item').each(function () {
+    $('.payment-group-item').each(function() {
       $(this).wrap(
         `<div class='v-custom-payment-item-wrap ${
           $(this).hasClass('active') ? 'active' : ''
@@ -1140,7 +1148,7 @@ class checkoutCustom {
       )
     })
 
-    $('.payment-group-item').each(function () {
+    $('.payment-group-item').each(function() {
       $(`#payment-data .steps-view > div:eq(${0})`).appendTo(
         $(this).closest('.v-custom-payment-item-wrap')
       )
@@ -1220,7 +1228,7 @@ class checkoutCustom {
   }
 
   fixLabels() {
-    $('p.input input').each(function (index, el) {
+    $('p.input input').each(function(index, el) {
       const $context = $(el).closest('p.input')
       const isFilled = $(el).val()
 
@@ -1253,7 +1261,7 @@ class checkoutCustom {
   bind() {
     const _this = this
 
-    $('body').on('click', '#v-custom-edit-login-data', function (e) {
+    $('body').on('click', '#v-custom-edit-login-data', function(e) {
       e.preventDefault()
 
       $(this).addClass('active')
@@ -1261,10 +1269,10 @@ class checkoutCustom {
       const data = null
       const xhr = new XMLHttpRequest()
 
-      xhr.addEventListener('readystatechange', function () {
+      xhr.addEventListener('readystatechange', function() {
         if (this.readyState === this.DONE) {
           window.location.reload()
-          setTimeout(function () {
+          setTimeout(function() {
             $('#v-custom-edit-login-data').removeClass('active')
           }, 1000)
         }
@@ -1280,7 +1288,7 @@ class checkoutCustom {
       xhr.send(data)
     })
 
-    $('body').on('click', '.v-custom-payment-item-wrap', function () {
+    $('body').on('click', '.v-custom-payment-item-wrap', function() {
       $('.v-custom-payment-item-wrap').removeClass('active')
       $(this).addClass('active')
     })
@@ -1288,21 +1296,23 @@ class checkoutCustom {
     $('body').on(
       'click',
       '.vtex-pickup-points-modal-3-x-pickupDetailsHeaderButton, #map-canvas img, .vtex-omnishipping-1-x-pickupPointChange, .pkpmodal-pickup-point, .vtex-pickup-points-modal-3-x-modalDetailsBackLnk',
-      function () {
+      function() {
         setTimeout(() => {
           _this.changeShippingTimeInfoInit()
         }, 100)
       }
     )
 
-    $('body').on('click', '.js-checkout-steps-item .text', function () {
-      window.location = $(this).closest('.checkout-steps_item').attr('data-url')
+    $('body').on('click', '.js-checkout-steps-item .text', function() {
+      window.location = $(this)
+        .closest('.checkout-steps_item')
+        .attr('data-url')
     })
 
     $('body').on(
       'click',
       '.vtex-omnishipping-1-x-linkEdit.link-edit',
-      function () {
+      function() {
         setTimeout(() => {
           _this.updateLang(_this.orderForm)
           if (_this.customAddressForm) {
@@ -1312,23 +1322,23 @@ class checkoutCustom {
       }
     )
 
-    $('body').on('click', '#btn-client-pre-email', function () {
-      setTimeout(function () {
+    $('body').on('click', '#btn-client-pre-email', function() {
+      setTimeout(function() {
         if (!$('input#client-pre-email').hasClass('error')) {
           $('input#client-email').focus()
         }
       }, 1000)
     })
 
-    $('body').on('click', '#shipping-option-delivery', function () {
+    $('body').on('click', '#shipping-option-delivery', function() {
       _this.customAddressFormInit(_this.orderForm)
     })
 
-    $('body').on('click', '.show-more-items-button', function () {
+    $('body').on('click', '.show-more-items-button', function() {
       _this.general()
     })
 
-    $('body').on('blur', 'p.input input', function () {
+    $('body').on('blur', 'p.input input', function() {
       const $context = $(this).closest('p.input')
       const isFilled = $(this).val()
 
@@ -1342,22 +1352,22 @@ class checkoutCustom {
     $('body').on(
       'click',
       '.link-edit, .link-box-edit, #edit-address-button, #new-address-button',
-      function () {
+      function() {
         setTimeout(() => _this.fixLabels(), 30)
       }
     )
 
-    $('body').on('focus', 'input#ship-postalCode', function () {
+    $('body').on('focus', 'input#ship-postalCode', function() {
       $(this).attr('maxlength', 9)
     })
 
-    $('body').on('input', '#ship-postalCode', function () {
+    $('body').on('input', '#ship-postalCode', function() {
       if ($.trim($(this).val().length) >= 9) {
         setTimeout(() => $('#cart-shipping-calculate').click(), 10)
       }
     })
 
-    $('body').on('input', '#cart-coupon', function () {
+    $('body').on('input', '#cart-coupon', function() {
       const $this = $(this)
 
       if ($this.val()) {
@@ -1397,7 +1407,7 @@ class checkoutCustom {
     const _this = this
 
     try {
-      $(function () {
+      $(function() {
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
@@ -1415,7 +1425,7 @@ class checkoutCustom {
         _this.shipping.limitFieldsCharacters()
       })
 
-      $(document).ajaxComplete(function (event, xhr, settings) {
+      $(document).ajaxComplete(function(event, xhr, settings) {
         _this.init()
 
         if (settings.url.includes('/attachments/shippingData')) {
@@ -1428,7 +1438,7 @@ class checkoutCustom {
         }
       })
 
-      $(window).on('hashchange', function () {
+      $(window).on('hashchange', function() {
         const cartItems = document.querySelector('.cart-items')
 
         if (
@@ -1481,10 +1491,15 @@ class checkoutCustom {
           }
 
           _this.Rewards.showPointsSimulation()
+
+          if (window.location.hash === '#/payment') {
+            _this.Rewards.getPointsSearch()
+            _this.Rewards.createButtonRewards()
+          }
         }
       })
 
-      $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {
+      $(window).on('orderFormUpdated.vtex', function(evt, orderForm) {
         _this.update(orderForm)
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
@@ -1517,10 +1532,15 @@ class checkoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
+
+        if (window.location.hash === '#/payment') {
+          _this.Rewards.getPointsSearch()
+          _this.Rewards.createButtonRewards()
+        }
       })
 
-      $(window).load(function () {
-        $('#cart-to-orderform').on('click', function () {
+      $(window).load(function() {
+        $('#cart-to-orderform').on('click', function() {
           _this.SendAttachment.sendOpenTextField()
         })
 
@@ -1551,9 +1571,14 @@ class checkoutCustom {
         _this.changeShippingTimeInfoInit()
         _this.indexedInItems(window.vtexjs.checkout.orderForm)
 
-        window.vtexjs.checkout.getOrderForm().done(function () {
+        window.vtexjs.checkout.getOrderForm().done(function() {
           _this.addMedalliaScript()
           _this.Rewards.showPointsSimulation()
+
+          if (window.location.hash === '#/payment') {
+            _this.Rewards.getPointsSearch()
+            _this.Rewards.createButtonRewards()
+          }
         })
 
         _this.defaultPaymentMethod()

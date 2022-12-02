@@ -1189,6 +1189,12 @@
 
 }
 
+/* hide default rewards calculator */
+.gift-card-section:nth-of-type(1) {
+	display: none !important;
+}
+
+
 // counting steps
 
 	@if $countingSteps {
@@ -1201,6 +1207,8 @@
       grid-template-columns: auto 1fr;
       grid-template-areas:
           'gift gift'
+		  'rewards-btn rewards-btn'
+		  'rewards-calc rewards-calc'
           'payment-group steps';
 		}
 
@@ -1219,6 +1227,8 @@
         grid-template-columns: 1fr;
         grid-template-areas:
         'gift'
+		'rewards-btn'
+		'rewards-calc'
         'payment-group'
         'steps';
       }

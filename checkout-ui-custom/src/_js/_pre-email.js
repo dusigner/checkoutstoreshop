@@ -13,15 +13,23 @@ export default class CustomPreEmail {
       $('.client-pre-email-h').after(`
             <div class="samsung-account-container">
               <div class="samsung-account-image">
-                <button 
+                <button
                   id="btn-samsung-account"
                   type="submit"
                   style="background: black; border-radius: 20px; border: none; padding-inline: 60px; padding-block: 11px;"
                 >
-                  <img src="https://samsungbr.vteximg.com.br/arquivos/logo-ssg-account.svg"/>
+                  <img src="https://samsungbr.vteximg.com.br/arquivos/logo-ssg-account.svg?v=1"/>
                 </button>
               </div>
-              <div class="samsung-account-label" style="font-size:14px; font-family:'SamsungOne'; margin-top: 30px;">Ou informe seu e-mail:</div>
+              <div style="margin-top: 30px">
+                <img style="padding-right: 11px; border-right: 1px solid #cbcbcb" src="https://samsungbr.vteximg.com.br/arquivos/logo-rewards.png?v=1" />
+                <img style="margin-left: 10px" src="https://samsungbr.vteximg.com.br/arquivos/logo-frete.png?v=1" />
+              </div>
+              <div class="samsung-account-label" style="font-size:14px; font-family:'SamsungOne'; margin-top: 30px; justify-content: center; display: flex;">
+                <p style="max-width: 326px">
+                  Suas compras podem valer pontos para utilização como desconto na loja Samsung. Participe agora.
+                </p>
+              </div>
             </div>
         `)
     }
@@ -30,7 +38,7 @@ export default class CustomPreEmail {
   openSamsungAccountModal() {
     window.vtexid.start()
 
-    const checkCustomButtonInterval = setInterval(function () {
+    const checkCustomButtonInterval = setInterval(function() {
       if ($('#vtexIdUI-custom-oauth').length) {
         clearInterval(checkCustomButtonInterval)
 
@@ -53,7 +61,7 @@ export default class CustomPreEmail {
   bindEvents() {
     const _this = this
 
-    $(document).on('click', '#btn-samsung-account', function () {
+    $(document).on('click', '#btn-samsung-account', function() {
       _this.openSamsungAccountModal()
     })
   }
