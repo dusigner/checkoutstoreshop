@@ -38,7 +38,7 @@ export default class CustomPreEmail {
   openSamsungAccountModal() {
     window.vtexid.start()
 
-    const checkCustomButtonInterval = setInterval(function () {
+    const checkCustomButtonInterval = setInterval(function() {
       if ($('#vtexIdUI-custom-oauth').length) {
         clearInterval(checkCustomButtonInterval)
 
@@ -61,7 +61,7 @@ export default class CustomPreEmail {
   bindEvents() {
     const _this = this
 
-    $(document).on('click', '#btn-samsung-account', function () {
+    $(document).on('click', '#btn-samsung-account', function() {
       _this.openSamsungAccountModal()
     })
   }

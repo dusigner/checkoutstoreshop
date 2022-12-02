@@ -34,16 +34,16 @@ export default class Rewards {
           }
 
           if (!res[0].isRewardsAccepted && res[0].saGuid) {
-            // $('#RewardsBlock').show()
-            // $('#inputRewards').attr('checked', true)
+            $('#RewardsBlock').show()
+            $('#inputRewards').attr('checked', true)
             this.userAcceptedRewards = false
             if (!this.alreadyRedirected) {
               window.location.href = '#/profile'
               this.alreadyRedirected = true
             }
           } else if (res[0].isRewardsAccepted && res[0].saGuid) {
-            // $('#RewardsBlock').hide()
-            // $('#inputRewards').attr('checked', true)
+            $('#RewardsBlock').hide()
+            $('#inputRewards').attr('checked', true)
             this.userAcceptedRewards = true
             this.getPointsSearch()
             this.createButtonRewards()
@@ -66,7 +66,7 @@ export default class Rewards {
   putRewardsOnCustomData(orderFormId, points) {
     const newData = {
       total_points_earned: points,
-      terms_accepted: this.userAcceptedRewards
+      terms_accepted: this.userAcceptedRewards,
     }
 
     $.ajax({
@@ -124,7 +124,7 @@ export default class Rewards {
   }
 
   createButtonRewards() {
-    if ($("#show-rewards-group").length !== 0) return;
+    if ($('#show-rewards-group').length !== 0) return
 
     $('.link-gift-card').after(`
       <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn">
@@ -134,39 +134,46 @@ export default class Rewards {
       </p>
     `)
 
-    document.getElementById("show-rewards-group").addEventListener('click', () => {
-      this.showRewardsCalc()
-    })
+    document
+      .getElementById('show-rewards-group')
+      .addEventListener('click', () => {
+        this.showRewardsCalc()
+      })
   }
 
   showRewardsCalc() {
-    $('#group-all-rewards').show();
-    $('#show-rewards-parent').first().hide();
-  
-    const { giftCards } = window.vtexjs.checkout.orderForm.paymentData;
+    $('#group-all-rewards').show()
+    $('#show-rewards-parent')
+      .first()
+      .hide()
+
+    const { giftCards } = window.vtexjs.checkout.orderForm.paymentData
 
     if (giftCards.length) {
-      const {value, inUse} = giftCards[0]
-  
+      const { value, inUse } = giftCards[0]
+
       if (value > 0 || inUse === true) {
-        $('#group-calc-rewards').hide();
-        $('#group-cancel-points').show();
-        this.createRewardsTotalDiscount(value/100)
+        $('#group-calc-rewards').hide()
+        $('#group-cancel-points').show()
+        this.createRewardsTotalDiscount(value / 100)
       } else {
-        $('#group-cancel-points').hide();
-        $('#group-calc-rewards').show();
-        $('#rewards-total-discount').remove();
+        $('#group-cancel-points').hide()
+        $('#group-calc-rewards').show()
+        $('#rewards-total-discount').remove()
       }
     }
   }
 
   createRewardsTotalDiscount(discount) {
-    if ($("#rewards-total-discount").length === 0){
+    if ($('#rewards-total-discount').length === 0) {
       $('.totalizers-list').append(`
         <tr id="rewards-total-discount">
           <td class="info">Rewards</td>
           <td class="space"></td>
-          <td class="monetary" style="color: #2189FF">- ${discount.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</td>
+          <td class="monetary" style="color: #2189FF">- ${discount.toLocaleString(
+            'pt-BR',
+            { style: 'currency', currency: 'BRL' }
+          )}</td>
           <td class="empty"></td>
         </tr>
       `)
@@ -174,7 +181,7 @@ export default class Rewards {
   }
 
   createGroupCalcRewards() {
-    if ($("#group-calc-rewards").length !== 0) return;
+    if ($('#group-calc-rewards').length !== 0) return
 
     $('.link-gift-card').after(`
       <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">
@@ -213,7 +220,10 @@ export default class Rewards {
               id="calc-content-third-column"
               style="display: flex; flex-direction: column; align-items: center"
             >
-              <p style="font-weight: 500">Use os seus pontos para ter um desconto de até ${this.chosenDiscount.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
+              <p style="font-weight: 500">Use os seus pontos para ter um desconto de até ${this.chosenDiscount.toLocaleString(
+                'pt-BR',
+                { style: 'currency', currency: 'BRL' }
+              )}</p>
               <button 
                 type="button"
                 id="button-use-points-rewards"
@@ -243,18 +253,22 @@ export default class Rewards {
           </a>
         <div>
       </div>
-    `);
+    `)
 
-    document.getElementById("button-use-points-rewards").addEventListener('click', () => {
-      this.setRewardsDiscount()
-    })
+    document
+      .getElementById('button-use-points-rewards')
+      .addEventListener('click', () => {
+        this.setRewardsDiscount()
+      })
 
-    document.getElementById("button-cancel-points").addEventListener('click', () => {
-      this.cancelRewardsDiscount()
-    })
+    document
+      .getElementById('button-cancel-points')
+      .addEventListener('click', () => {
+        this.cancelRewardsDiscount()
+      })
   }
 
-  clamp (num, min, max)  {
+  clamp(num, min, max) {
     return Math.min(Math.max(num, min), max)
   }
 
@@ -262,49 +276,62 @@ export default class Rewards {
     const { orderForm } = window.vtexjs.checkout
 
     if (orderForm.orderFormId) {
-      let data = {
+      const data = {
         Id: orderForm.orderFormId,
         Timestamp: new Date().toISOString().split('Z')[0],
         RequestType: 'R',
         SAGuid: this.userSaGuid,
         CountryDescription: 'BR',
       }
-  
+
       $.ajax({
         url: `${this.rootPath()}/rewards/points/search`,
         type: 'POST',
         data: JSON.stringify(data),
-          dataType: 'json',
-          contentType:  'application/json',
-        success: (res) => {
-          this.totalPointsUser = res.PointBalance;
-          this.totalCurrencyUser = res.ExchangedAmount;
-          this.pricePerPoint = res.ExchangedAmount/res.PointBalance;
-          this.chosenDiscount = Math.min(Math.max(res.ExchangedAmount, 0), (orderForm.value / 100) / 2);
+        dataType: 'json',
+        contentType: 'application/json',
+        success: res => {
+          this.totalPointsUser = res.PointBalance
+          this.totalCurrencyUser = res.ExchangedAmount
+          this.pricePerPoint = res.ExchangedAmount / res.PointBalance
+          this.chosenDiscount = Math.min(
+            Math.max(res.ExchangedAmount, 0),
+            orderForm.value / 100 / 2
+          )
           this.createGroupCalcRewards()
           if (this.totalPointsUser > 0) {
-            $("#show-rewards-parent").css("display", "block");
+            $('#show-rewards-parent').css('display', 'block')
           }
         },
-        error: function() {
-          console.error('points search error');
-        }
+        error() {
+          console.error('points search error')
+        },
       })
     }
   }
+
   setRewardsDiscount() {
-    let element = document.querySelector(".gift-card-provider-group-ssg_rewards .input-prepend input");
-    let evt = new KeyboardEvent('keydown', { key: "a" });
-  
-    element.value = this.chosenDiscount.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-    element.focus();
-    element.dispatchEvent(evt);
+    const element = document.querySelector(
+      '.gift-card-provider-group-ssg_rewards .input-prepend input'
+    )
+
+    const evt = new KeyboardEvent('keydown', { key: 'a' })
+
+    element.value = this.chosenDiscount.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    })
+    element.focus()
+    element.dispatchEvent(evt)
   }
-  
-  cancelRewardsDiscount(){
-    let element = document.querySelector(".gift-card-provider-group-ssg_rewards .action a");
-    element.click();
-    $('#rewards-total-discount').remove();
+
+  cancelRewardsDiscount() {
+    const element = document.querySelector(
+      '.gift-card-provider-group-ssg_rewards .action a'
+    )
+
+    element.click()
+    $('#rewards-total-discount').remove()
   }
 
   showPointsSimulation() {
