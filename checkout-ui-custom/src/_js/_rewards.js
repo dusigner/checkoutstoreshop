@@ -154,10 +154,10 @@ export default class Rewards {
 
       if (value > 0 || inUse === true) {
         $('#group-calc-rewards').hide()
-        $('#group-cancel-points').show()
+        //$('#group-cancel-points').show()
         this.createRewardsTotalDiscount(value / 100)
       } else {
-        $('#group-cancel-points').hide()
+        //$('#group-cancel-points').hide()
         $('#group-calc-rewards').show()
         $('#rewards-total-discount').remove()
       }
@@ -187,21 +187,21 @@ export default class Rewards {
       <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">
         <div
           id="group-calc-rewards"
-          style="width: auto; margin: 15px 0; padding: 25px 15px 10px 20px; background: #f4f4f4; font-family: SamsungOne; color: #000; font-size: 14px; font-weight: 400;"
+          style="width: auto; margin: 15px 0; padding: 25px 15px 10px 20px; background: #F5F7FE; font-family: SamsungOne; color: #000; font-size: 14px; font-weight: 400; border-radius: 12px;"
         >
           <div
             id="calc-header-rewards"
-            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"
+            style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #d6d6d6; padding-bottom: 15px"
           >
             <span
               id="calc-header-title"
-              style="flex-basis: 50%; font-size: 20px; font-weight: 700;"
+              style="margin-right: 0.5vw; font-size: 20px; font-weight: 700"
             >
-              Samsung Rewards
+              Samsung Rewards: 
             </span>
             <span
               id="calc-header-points"
-              style="flex-basis: 50%; text-align: end; color: #2189FF; font-size: 14px; font-weight: 700;"
+              style=" color: #006BEA; font-size: 20px; font-weight: 700;"
             >
               Você tem ${this.totalPointsUser} pontos
             </span>
@@ -214,44 +214,34 @@ export default class Rewards {
               id="calc-content-first-column"
               style="display: grid; grid-template-columns: 1fr;"
             >
+            <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
               Seus pontos valem descontos de até 50% na compra de produtos Samsung.
+            </p>
+            <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
+              Pontos Samsung Rewards pendentes serão creditados 14 dias após o pedido entrega. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados.
+            </p>
             </div>
             <div
               id="calc-content-third-column"
               style="display: flex; flex-direction: column; align-items: center"
             >
-              <p style="font-weight: 500">Use os seus pontos para ter um desconto de até ${this.chosenDiscount.toLocaleString(
-                'pt-BR',
-                { style: 'currency', currency: 'BRL' }
-              )}</p>
               <button 
                 type="button"
                 id="button-use-points-rewards"
-                style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center;"
+                style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center; margin-bottom: 20px"
               >
-                APLICAR ESTE VALOR
+                Aplicar desconto
               </button>
+              <button 
+              type="button"
+              id="button-cancel-points"
+              style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center;"
+            >
+              Acumular pontos
+            </button>
             </div>
           </div>
-          <div
-            id="calc-footer-rewards"
-            style="margin-top: 20px"
-          >
-            <p id="footer-rewards-info" style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
-              Pontos Samsung Rewards gerados nesta compra serão creditados apenas após o período legal de devolução do produto - 7 dias após o recebimento. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, seus pontos não serão utilizados.
-            </p>
-          </div>
         </div>
-
-        <div id="group-cancel-points" style="display: flex; align-items: baseline; justify-content: flex-start; gap: 10px; padding-block: 10px;">
-          <p id="group-cancel-points-p" style="font-size: 20px; color: #2189FF; font-weight: 700; font-family: SamsungOne;"></p>
-          <a 
-            id="button-cancel-points"
-            style="font-size: 12px; color: #000; font-weight: 400; cursor: pointer; text-decoration: underline;"
-          >
-            Não quero utilizar pontos
-          </a>
-        <div>
       </div>
     `)
 
