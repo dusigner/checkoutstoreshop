@@ -60,7 +60,8 @@
 
 						@media screen and (max-width: 1024px) {
 							flex-wrap: wrap;
-							justify-content: end;
+							justify-content: center;
+							row-gap: 10px;
 
 							svg {
 								margin-left: 10px;
