@@ -191,6 +191,7 @@ export default class CustomShippingData {
 
       if (address.postalCode && !address.city) {
         this.setInvalidPostalCode()
+        this.addInvalidPostalCodeMessage()
       } else {
         // console.log('cep válido');
         this.setValidPostalCode()

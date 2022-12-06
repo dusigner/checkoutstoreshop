@@ -125,14 +125,14 @@ export default class CustomProfileData {
   }
 
   mdata(v) {
-    let r = v.trim()
-
-    if (v.match(/^\d{2}$/) !== null) {
-      r += '/'
-    } else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-      r += '/'
+    let r = v.trim().replace(/\//g, '')
+    
+    if(r.length > 4){
+      r = r.slice(0,2) + "/" + r.slice(2,4) + "/" + r.slice(4)
+    }else if(r.length > 2){
+      r = r.slice(0,2) + "/" + r.slice(2)
     }
-
+    
     return r
   }
 
