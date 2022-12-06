@@ -1315,14 +1315,16 @@ class checkoutCustom {
       fetch(`${rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`)
       .then(response => response.json())
       .then(response => {
-        let isInstallation = response[0]?.skuSpecifications.filter(item => item.field.name === 'Serviço de Instalação')
-        if(isInstallation.length > 0) {
-          let nameInstallation = isInstallation[0].values[0].name 
-          $('.product-item').each(function(){
-            if($(this).find('.product-item .ref-id').text() === nameInstallation) {
-              $(this).find('.item-remove .item-link-remove').click()
-            }
-          })
+        if(response[0].length) {
+          let isInstallation = response[0].skuSpecifications.filter(item => item.field.name === 'Serviço de Instalação')
+          if(isInstallation.length > 0) {
+            let nameInstallation = isInstallation[0].values[0].name 
+            $('.product-item').each(function(){
+              if($(this).find('.product-item .ref-id').text() === nameInstallation) {
+                $(this).find('.item-remove .item-link-remove').click()
+              }
+            })
+          }
         }
       })
     })
@@ -1335,8 +1337,6 @@ class checkoutCustom {
         }
       }, 1000)
     })
-
-
 
     $('body').on('click', '#shipping-option-delivery', function () {
       _this.customAddressFormInit(_this.orderForm)
