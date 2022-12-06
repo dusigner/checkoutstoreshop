@@ -90,6 +90,12 @@ body {
   display: flex;
   justify-content: center;
 
+  &.row-fluid {
+    &.checkout-container{
+      position: initial;
+    }
+  }
+
   @media(max-width: 768px) {
     margin-bottom: 30px;
   }
@@ -289,4 +295,74 @@ body {
       display: none;
     }
   }
+}
+
+.vtex-shipping-preview-0-x-removeConfirmationModal {
+  max-width: 440px !important;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  .modal-footer{
+    display: flex;
+    background: #FFF;
+    border: none;
+    gap: 20px;
+  }
+  .modal-body{
+    font-size: 18px;
+    color: #000;
+  }
+  .modal-header{
+    border: none;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .vtex-shipping-preview-0-x-modalCancelButton {
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 25px;
+    outline: none;
+    width: 100%;
+    transition: background-color .2s ease;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #000;
+    background-color: #fff;
+    color: #000;
+    text-decoration: none;
+  }
+  .vtex-shipping-preview-0-x-modalCancelButton:hover {
+    text-decoration: none;
+    color: #555;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: #555;
+  }
+  .vtex-shipping-preview-0-x-modalConfirmButton {
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 25px;
+    outline: none;
+    width: 100%;
+    transition: background-color .2s ease;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    background-color: #000 !important;
+    color: #fff;
+    border: 1px solid #000;
+  }
+  .vtex-shipping-preview-0-x-modalConfirmButton:hover{
+    color: #EEEEEE;
+    background-color: #555555 !important;
+    border: 1px solid #555555 !important;
+  }
+
+}
+
+.modal-backdrop {
+  background: #000;
 }
