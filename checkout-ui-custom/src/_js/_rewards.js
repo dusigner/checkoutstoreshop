@@ -45,8 +45,10 @@ export default class Rewards {
             $('#RewardsBlock').hide()
             $('#inputRewards').attr('checked', true)
             this.userAcceptedRewards = true
-            this.getPointsSearch()
-            this.createButtonRewards()
+            if (window.location.hash === '#/payment') {
+              this.getPointsSearch()
+              this.createButtonRewards()
+            }
           }
         },
         error: err => {
@@ -58,8 +60,10 @@ export default class Rewards {
     } else if (this.userSaGuid && this.userAcceptedRewards) {
       // $('#RewardsBlock').hide()
       // $('#inputRewards').attr('checked', true)
-      this.getPointsSearch()
-      this.createButtonRewards()
+      if (window.location.hash === '#/payment') {
+        this.getPointsSearch()
+        this.createButtonRewards()
+      }
     }
   }
 
@@ -124,42 +128,38 @@ export default class Rewards {
   }
 
   createButtonRewards() {
-    if ($('#show-rewards-group').length !== 0) return
+    if ($("#show-rewards-parent").length !== 0) return;
 
     $('.link-gift-card').after(`
-      <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn">
+      <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn; margin-left: 20px">
         <a id="show-rewards-group" class="link-payment-discounts-cod">
           Resgatar pontos Rewards
         </a>
       </p>
     `)
 
-    document
-      .getElementById('show-rewards-group')
-      .addEventListener('click', () => {
-        this.showRewardsCalc()
-      })
+    $('body').on('click', '#show-rewards-group', () => {
+      this.showRewardsCalc();
+    });
   }
 
   showRewardsCalc() {
-    $('#group-all-rewards').show()
-    $('#show-rewards-parent')
-      .first()
-      .hide()
-
-    const { giftCards } = window.vtexjs.checkout.orderForm.paymentData
+    $('#group-all-rewards').show();
+    $('#show-rewards-parent').addClass("disabled")
+  
+    const { giftCards } = window.vtexjs.checkout.orderForm.paymentData;
 
     if (giftCards.length) {
-      const { value, inUse } = giftCards[0]
+      const {value, inUse} = giftCards[0]
+  
+      console.log(value, inUse)
 
       if (value > 0 || inUse === true) {
-        $('#group-calc-rewards').hide()
-        //$('#group-cancel-points').show()
-        this.createRewardsTotalDiscount(value / 100)
+        $('#group-calc-rewards').hide();
+        this.createRewardsTotalDiscount(value/100)
       } else {
-        //$('#group-cancel-points').hide()
-        $('#group-calc-rewards').show()
-        $('#rewards-total-discount').remove()
+        $('#group-calc-rewards').show();
+        $('#rewards-total-discount').remove();
       }
     }
   }
