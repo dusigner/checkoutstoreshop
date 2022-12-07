@@ -1194,6 +1194,19 @@
 	display: none !important;
 }
 
+.box-step-content .gift-card-section:nth-of-type(n+1) {
+	grid-area: giftcard-content;
+}
+
+#show-rewards-parent.disabled {
+	cursor: not-allowed;
+	pointer-events:none;
+  	border: 1px solid #DDDDDD !important;
+}
+
+#show-rewards-parent.disabled .link-payment-discounts-cod {
+  	color: #DDDDDD !important;
+}
 
 // counting steps
 
@@ -1206,8 +1219,8 @@
       display: grid;
       grid-template-columns: auto 1fr;
       grid-template-areas:
-          'gift gift'
-		  'rewards-btn rewards-btn'
+          'gift rewards-btn'
+		  'giftcard-content giftcard-content'
 		  'rewards-calc rewards-calc'
           'payment-group steps';
 		}
@@ -1228,6 +1241,7 @@
         grid-template-areas:
         'gift'
 		'rewards-btn'
+		'giftcard-content'
 		'rewards-calc'
         'payment-group'
         'steps';
