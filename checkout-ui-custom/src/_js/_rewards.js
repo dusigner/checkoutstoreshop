@@ -89,46 +89,41 @@ export default class Rewards {
       const _component = `
         <tbody id="total-details-rewards" style="border-top: 1px solid #cbcbcb;">
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
-            <td id="td-text-rewards-total" style="font-size: 14px; color: #373737; font-weight: 400">
-              Pontos Rewards gerados<br />
+            <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
+              Pontos Rewards gerados para sua próxima compra**
             </td>
-            <td id="total-points-value" style="font-size: 14px; color: #0077C8; font-weight: 800; text-align: right">${this.totalPointsCurrentOrder} Pontos</td>
+            <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right">${this.totalPointsCurrentOrder} Pontos</td>
           </tr>
         </tbody>
       `
 
-      const _tdNotAcceptedTermsAndNotSaGuid = `
-        (<a href="https://account.samsung.com/" target="_blank" style="cursor: pointer; color: #373737; text-decoration: underline;">Somente para Samsung Account</a>)
-      `
-
-      const _trNotAcceptedTerms = `
-        <tr style="display: flex; font-family: 'SamsungOne'; margin-top: 10px;">
-          <td style="font-size: 12px; color: #373737; font-weight: 400; text-align: justify; line-height: normal;">
-            Válido somente para membros do programa Samsung Rewards, em compras feitas através de uma Samsung Account.
+      const _componentVtexId = `
+      <tbody id="total-details-rewards" style="border-top: 1px solid #cbcbcb;">
+        <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
+          <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
+            **Pontos Rewards (Gerados apenas quando utilizado Samsung Account)
           </td>
+          <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right">${this.totalPointsCurrentOrder} Pontos</td>
         </tr>
+      </tbody>
       `
 
       if (_checkoutElem.find('#total-details-rewards').length > 0) {
-        return
+        _checkoutElem.find('#total-details-rewards').remove()
       }
 
-      if (points > 0 && this.userSaGuid && this.userAcceptedRewards) {
+      if (points > 0 && this.userSaGuid) {
         _checkoutElem.append(_component)
-      } else if (points > 0 && !this.userSaGuid && !this.userAcceptedRewards) {
-        _checkoutElem.append(_component)
-        $(`#td-text-rewards-total`).append(_tdNotAcceptedTermsAndNotSaGuid)
-      } else if (points > 0 && this.userSaGuid && !this.userAcceptedRewards) {
-        _checkoutElem.append(_component)
-        $(`#total-details-rewards`).append(_trNotAcceptedTerms)
+      } else if (points > 0 && !this.userSaGuid) {
+        _checkoutElem.append(_componentVtexId)
       }
     } catch (e) {
-      console.error('showDetailsTradeIn error:', e)
+      console.error('createElementTotalPoints error:', e)
     }
   }
 
   createButtonRewards() {
-    if ($("#show-rewards-parent").length !== 0) return;
+    if ($('#show-rewards-parent').length !== 0) return
 
     $('.link-gift-card').after(`
       <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn; margin-left: 20px">
@@ -139,27 +134,25 @@ export default class Rewards {
     `)
 
     $('body').on('click', '#show-rewards-group', () => {
-      this.showRewardsCalc();
-    });
+      this.showRewardsCalc()
+    })
   }
 
   showRewardsCalc() {
-    $('#group-all-rewards').show();
-    $('#show-rewards-parent').addClass("disabled")
-  
-    const { giftCards } = window.vtexjs.checkout.orderForm.paymentData;
+    $('#group-all-rewards').show()
+    $('#show-rewards-parent').addClass('disabled')
+
+    const { giftCards } = window.vtexjs.checkout.orderForm.paymentData
 
     if (giftCards.length) {
-      const {value, inUse} = giftCards[0]
-  
-      console.log(value, inUse)
+      const { value, inUse } = giftCards[0]
 
       if (value > 0 || inUse === true) {
-        $('#group-calc-rewards').hide();
-        this.createRewardsTotalDiscount(value/100)
+        $('#group-calc-rewards').hide()
+        this.createRewardsTotalDiscount(value / 100)
       } else {
-        $('#group-calc-rewards').show();
-        $('#rewards-total-discount').remove();
+        $('#group-calc-rewards').show()
+        $('#rewards-total-discount').remove()
       }
     }
   }
@@ -180,6 +173,35 @@ export default class Rewards {
     }
   }
 
+  showObsRewards() {
+    try {
+      const { orderForm } = window.vtexjs.checkout
+
+      if (orderForm.items.length === 0) return
+
+      const _checkoutElem = $(`.cart-fixed`)
+      const _cartElem = $(`.summary-to-new-components`)
+      const _component = `
+        <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
+          <p>**Pontos Samsung Rewards pendentes serão creditados em 14 dias após o pedido entregue. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados. Pontos Samsung Rewards são gerados somente em compras realizadas por meio de uma Samsung Account com adesão ao programa Samsung Rewards.
+          </p>
+        </div>
+      `
+
+      if (
+        _checkoutElem.find('#text-details-rewards').length > 0 ||
+        _cartElem.find('#text-details-rewards').length > 0
+      ) {
+        return
+      }
+
+      _cartElem.append(_component)
+      _checkoutElem.append(_component)
+    } catch (e) {
+      console.error('showObsRewards error:', e)
+    }
+  }
+
   createGroupCalcRewards() {
     if ($('#group-calc-rewards').length !== 0) return
 
@@ -197,7 +219,7 @@ export default class Rewards {
               id="calc-header-title"
               style="margin-right: 0.5vw; font-size: 20px; font-weight: 700"
             >
-              Samsung Rewards: 
+              Samsung Rewards:
             </span>
             <span
               id="calc-header-points"
@@ -225,14 +247,14 @@ export default class Rewards {
               id="calc-content-third-column"
               style="display: flex; flex-direction: column; align-items: center"
             >
-              <button 
+              <button
                 type="button"
                 id="button-use-points-rewards"
                 style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center; margin-bottom: 20px"
               >
                 Aplicar desconto
               </button>
-              <button 
+              <button
               type="button"
               id="button-cancel-points"
               style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center;"
@@ -327,19 +349,62 @@ export default class Rewards {
   showPointsSimulation() {
     const { orderForm } = window.vtexjs.checkout
 
+    if (orderForm.items.length === 0) return
+
     if (orderForm.loggedIn) {
       this.getRewardsData(orderForm.clientProfileData.email)
     }
 
-    if (!orderForm.items) return
+    const TotalItems =
+      orderForm.totalizers.find(item => {
+        return item.id === 'Items'
+      }).value / 100
+
+    let TotalDisc = 0
+
+    if (
+      orderForm.totalizers.find(item => {
+        return item.id === 'Discounts'
+      })
+    ) {
+      TotalDisc =
+        orderForm.totalizers.find(item => {
+          return item.id === 'Discounts'
+        }).value / 100
+    }
+
+    let TotalShipping = 0
+
+    if (
+      orderForm.totalizers.find(item => {
+        return item.id === 'Shipping'
+      })
+    ) {
+      TotalShipping =
+        orderForm.totalizers.find(item => {
+          return item.id === 'Shipping'
+        }).value / 100
+    }
 
     const ProductItems = []
 
     orderForm.items.map(item => {
+      const MultProporcional =
+        ((item.sellingPrice / 100) * item.quantity) / (TotalItems - TotalDisc)
+
+      let TotalShippingCurrentItem = 0
+
+      if (TotalShipping > 0) {
+        TotalShippingCurrentItem = MultProporcional * TotalShipping
+      }
+
       ProductItems.push({
         ObjectType: 'ESTORE_BR',
         ObjectId: item.refId,
-        Amount: ((item.sellingPrice / 100) * item.quantity).toString(),
+        Amount: (
+          (item.sellingPrice / 100) * item.quantity +
+          TotalShippingCurrentItem
+        ).toString(),
         Quantity: item.quantity.toString(),
       })
 
