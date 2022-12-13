@@ -621,7 +621,11 @@ class checkoutCustom {
           .find('td.product-price')
           .addClass('v-custom-quantity-price-active')
           .prepend(
-            `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p></div>`
+            `
+            <div class="v-custom-quantity-price vqc-ldelem">
+              <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p>
+            </div>
+            `
           )
       })
     } catch (e) {
@@ -866,7 +870,7 @@ class checkoutCustom {
         return item.quantity
       })
 
-      const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
+      const _accordionElem = $($('.summary-template-holder')[1])
 
       let listItems = ''
 
@@ -888,10 +892,10 @@ class checkoutCustom {
       `
 
       if (!$('.summaryOrder').length) {
-        _accordionElem.append(_summaryOrder)
+        _accordionElem.prepend(_summaryOrder)
       } else {
         $('.summaryOrder').remove()
-        _accordionElem.append(_summaryOrder)
+        _accordionElem.prepend(_summaryOrder)
       }
     } catch (e) {
       console.error('summaryCustom error:', e)

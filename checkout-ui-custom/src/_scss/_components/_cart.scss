@@ -579,6 +579,28 @@ h1#cart-title {display:none !important;}
 
 	border: $bordersContainers;
 
+  display: grid;
+  grid-template-areas: 'products'
+             'coupon'
+             'price'
+             'finish_payment';
+
+  .cart-total {
+    grid-area: price;
+  }
+
+  .row-fluid.summary {
+    grid-area: coupon;
+  }
+
+  .cart-links-bottom {
+    grid-area: finish_payment;
+  }
+
+  .summaryOrder{ 
+    grid-area: products
+  }
+
   @media(max-width: $mobileWidth) {
     .best-price{
       font-size: 18px !important;

@@ -897,21 +897,16 @@
 			border: none;
 			padding: 0;
 
-      .best-price {
-        @media screen and (max-width: 768px) {
-          .estimate-shipping,
-          .ref-id {
-            font-size: 18px;
-          }
-        }
-      }
+			.best-price {
+				@media screen and (max-width: 768px) {
+					.estimate-shipping,
+					.ref-id {
+						font-size: 18px;
+					}
+				}
+			}
 
 			.accordion-inner {margin-top: 0px;}
-
-			.summary > .summary-coupon-wrap,
-			.summary-coupon-wrap > .summary-coupon {
-				display: block !important;
-			}
 
 			.summary-coupon p {
 				margin:0;
