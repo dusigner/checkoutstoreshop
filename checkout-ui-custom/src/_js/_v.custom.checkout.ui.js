@@ -642,7 +642,7 @@ class checkoutCustom {
 
         _trElem.find('td.product-name').append(
           `<div class="more-info">
-            <p class="ref-id" style="font-size: 12px">${refId}</p>
+            <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
             <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>
           </div>`
         )
@@ -1248,9 +1248,42 @@ class checkoutCustom {
     }
   }
 
+
+  // Remove sku de serviços quando o produto atrelado for excluido
+  removeInstallationProduct()  {
+    const _this = this
+    $('body').on('click', '.item-link-remove', async function () {
+      let dataSku = $(this).closest('tr').attr('data-sku')
+      await fetch(`${_this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`)
+      .then(response => response.json())
+      .then(response => { 
+        if(response[0] && response[0].skuSpecifications !== 'undefined') {
+          let isInstallation = response[0].skuSpecifications.filter(item => item.field.name === 'Serviço de Instalação')
+          if(isInstallation.length > 0) {
+            let nameInstallation = isInstallation[0].values[0].name 
+            setTimeout(function(){
+              const removeList = []
+              vtexjs.checkout.orderForm.items.forEach((el, i) => {
+                if(el.refId === nameInstallation)
+                removeList.push({
+                  index: i,
+                  quantity: 0
+                })
+              })
+              const itemsToRemove = removeList
+              if (itemsToRemove.length > 0) {
+                  return window.vtexjs.checkout.removeItems(itemsToRemove).then(() => {})
+              }
+            }, 2000)
+          }
+        }
+      })
+    })
+  }
+
   bind() {
     const _this = this
-
+    _this.removeInstallationProduct() 
     $('body').on('click', '#v-custom-edit-login-data', function (e) {
       e.preventDefault()
 
@@ -1309,26 +1342,6 @@ class checkoutCustom {
         }, 50)
       }
     )
-
-    $('body').on('click', '.item-link-remove', function () {
-      let dataSku = $(this).closest('tr').next('tr').attr('data-sku')
-      fetch(`${rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`)
-      .then(response => response.json())
-      .then(response => {
-        if(response[0].length) {
-          let isInstallation = response[0].skuSpecifications.filter(item => item.field.name === 'Serviço de Instalação')
-          if(isInstallation.length > 0) {
-            let nameInstallation = isInstallation[0].values[0].name 
-            $('.product-item').each(function(){
-              if($(this).find('.product-item .ref-id').text() === nameInstallation) {
-                $(this).find('.item-remove .item-link-remove').click()
-              }
-            })
-          }
-        }
-      })
-    })
-
 
     $('body').on('click', '#btn-client-pre-email', function () {
       setTimeout(function () {
