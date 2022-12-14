@@ -1335,10 +1335,6 @@ h1#cart-title {
                 margin-bottom: -7px; } }
           .table.cart-items tbody tr td.product-price.v-custom-quantity-price-active > .list-price, .table.cart-items tbody tr td.quantity-price.v-custom-quantity-price-active > .list-price {
             display: none !important; }
-          .table.cart-items tbody tr td.product-price > span.list-price,
-          .table.cart-items tbody tr td.product-price > span.best-price, .table.cart-items tbody tr td.quantity-price > span.list-price,
-          .table.cart-items tbody tr td.quantity-price > span.best-price {
-            display: none; }
           .table.cart-items tbody tr td.product-price span.product-manualprice,
           .table.cart-items tbody tr td.product-price a.manualprice-link-remove, .table.cart-items tbody tr td.quantity-price span.product-manualprice,
           .table.cart-items tbody tr td.quantity-price a.manualprice-link-remove {
@@ -2135,6 +2131,10 @@ h1#cart-title {
 #client-profile-data .link-logout {
   font-weight: 400;
   text-decoration: underline; }
+  @media (max-width: 768px) {
+    #client-profile-data .link-logout {
+      display: block;
+      margin: 10px 0; } }
 
 #client-profile-data .client-notice.notice {
   display: none; }
@@ -3482,6 +3482,8 @@ body.v-custom-step-payment #shipping-data .shipping-summary-info {
         width: -webkit-fill-available; } }
   #app-container select {
     width: 100%; }
+  #app-container .App.iframe-custom-private-501-payment-group .ChangeNumberOfPayments.clearfix {
+    display: none; }
   #app-container .PaymentInstallments select {
     width: 100% !important;
     max-width: 100% !important; }
