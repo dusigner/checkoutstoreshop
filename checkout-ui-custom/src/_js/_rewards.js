@@ -141,35 +141,32 @@ export default class Rewards {
   showRewardsCalc() {
     $('#group-all-rewards').show()
     $('#show-rewards-parent').addClass('disabled')
-
-    const { giftCards } = window.vtexjs.checkout.orderForm.paymentData
-
-    if (giftCards.length) {
-      const { value, inUse } = giftCards[0]
-
-      if (value > 0 || inUse === true) {
-        $('#group-calc-rewards').hide()
-        this.createRewardsTotalDiscount(value / 100)
-      } else {
-        $('#group-calc-rewards').show()
-        $('#rewards-total-discount').remove()
-      }
-    }
   }
 
   createRewardsTotalDiscount(discount) {
-    if ($('#rewards-total-discount').length === 0) {
+    if ($('.rewards-total-discount').length === 0) {
       $('.totalizers-list').append(`
-        <tr id="rewards-total-discount">
+        <tr class="rewards-total-discount">
           <td class="info">Rewards</td>
           <td class="space"></td>
           <td class="monetary" style="color: #2189FF">- ${discount.toLocaleString(
             'pt-BR',
             { style: 'currency', currency: 'BRL' }
           )}</td>
-          <td class="empty"></td>
+          <td class="empty">
+            <a id="rewards-remove-discount" style="text-decoration: none; color #000; margin-left: 10px">
+              <svg id="Icon_-_Bold_-_Action_-_Cancel" data-name="Icon - Bold - Action - Cancel" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <rect id="Container" width="16" height="16" fill="none"/>
+                <path id="Icon_Bold_Action_Cancel" data-name="Icon / Bold / Action / Cancel" d="M7.583,15.167h0a7.583,7.583,0,1,1,7.584-7.583A7.533,7.533,0,0,1,7.582,15.167ZM7.466,8.29h0l2.651,2.652.825-.825L8.29,7.465l2.652-2.652-.825-.825L7.466,6.64,4.814,3.988l-.825.825L6.641,7.465,3.989,10.117l.825.825L7.465,8.29Z" transform="translate(0.417 0.417)"/>
+              </svg>
+            </a>
+          </td>
         </tr>
       `)
+
+      $('body').on('click', '#rewards-remove-discount', () => {
+        this.cancelRewardsDiscount()
+      })
     }
   }
 
@@ -225,7 +222,7 @@ export default class Rewards {
               id="calc-header-points"
               style=" color: #006BEA; font-size: 20px; font-weight: 700;"
             >
-              Você tem ${this.totalPointsUser} pontos
+              Você tem ${parseFloat(this.totalPointsUser)} pontos
             </span>
           </div>
           <div
@@ -343,7 +340,6 @@ export default class Rewards {
     )
 
     element.click()
-    $('#rewards-total-discount').remove()
   }
 
   showPointsSimulation() {
@@ -353,6 +349,18 @@ export default class Rewards {
 
     if (orderForm.loggedIn) {
       this.getRewardsData(orderForm.clientProfileData.email)
+    }
+    
+    if (orderForm.paymentData.giftCards) {
+      const giftRewards = orderForm.paymentData.giftCards.filter(g => g.provider === "SSG_REWARDS")
+
+      if (giftRewards.length && giftRewards[0].inUse && giftRewards[0].value > 0) {
+        this.createRewardsTotalDiscount(giftRewards[0].value / 100)
+      } else {
+        $('.rewards-total-discount').remove();
+      }
+    } else {
+      $('.rewards-total-discount').remove();
     }
 
     const TotalItems =
