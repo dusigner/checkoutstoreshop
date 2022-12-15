@@ -35,7 +35,7 @@ export default class Rewards {
 
           if (!res[0].isRewardsAccepted && res[0].saGuid) {
             $('#RewardsBlock').show()
-            $('#inputRewards').attr('checked', true)
+            $('#inputRewards').attr('checked', false)
             this.userAcceptedRewards = false
             if (!this.alreadyRedirected) {
               window.location.href = '#/profile'
@@ -92,7 +92,7 @@ export default class Rewards {
             <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
               Pontos Rewards gerados para sua próxima compra**
             </td>
-            <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right">${this.totalPointsCurrentOrder} Pontos</td>
+            <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important">${this.totalPointsCurrentOrder} Pontos</td>
           </tr>
         </tbody>
       `
@@ -103,7 +103,7 @@ export default class Rewards {
           <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
             **Pontos Rewards (Gerados apenas quando utilizado Samsung Account)
           </td>
-          <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right">${this.totalPointsCurrentOrder} Pontos</td>
+          <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important">${this.totalPointsCurrentOrder} Pontos</td>
         </tr>
       </tbody>
       `
@@ -149,7 +149,7 @@ export default class Rewards {
         <tr class="rewards-total-discount">
           <td class="info">Rewards</td>
           <td class="space"></td>
-          <td class="monetary" style="color: #2189FF">- ${discount.toLocaleString(
+          <td class="monetary" style="color: #000">- ${discount.toLocaleString(
             'pt-BR',
             { style: 'currency', currency: 'BRL' }
           )}</td>
