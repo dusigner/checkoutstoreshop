@@ -115,7 +115,7 @@ export default class TradeIn {
     try {
       const _checkoutElem = $(`.summary-totalizers .table`)
       const _component = `
-        <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">
+        <tbody id="total-details-tradein" >
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
             <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart - Dinheiro em  <br />Conta</td>
             <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(

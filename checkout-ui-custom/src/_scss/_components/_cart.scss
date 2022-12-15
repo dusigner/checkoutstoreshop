@@ -817,6 +817,46 @@ h1#cart-title {display:none !important;}
 	}
 
 	.summary-totalizers {
+    .totalizers-list {
+      display: grid;
+      grid-template-areas:
+        'subtotal'
+        'descontos_total'
+        'cupom'
+        'cupom_desconto'
+        'cupom_instantaneo'
+        'entrega';
+
+      .Items {
+        grid-area: subtotal;
+      }
+
+      .coupon-applied {
+        grid-area: cupom;
+      }
+
+      .Discounts {
+        grid-area: descontos_total;
+      }
+
+      .srp-summary-result {
+        grid-area: entrega;
+      }
+    }
+
+    .table {
+      display: grid;
+      grid-template-areas:
+          'total-details-tradein'
+          'totalizers-list';
+
+          .totalizers-list {
+            grid-area: totalizers-list;
+            border-bottom: 1px solid #cbcbcb;
+            margin-bottom: 16px;
+          }
+    }
+
 		.table td.space,
 		.table td.empty,
 		tbody.shipping-calculate {

@@ -4,7 +4,7 @@
 /* eslint eqeqeq: 0 */
 
 const { _locale } = require('./_locale-infos.js')
-const { debounce, formatCurrencyBRL } = require('./_utils.js')
+const { debounce, formatCurrencyBRL, formatNegativeValue } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const { default: CustomProfileData } = require('./_profile')
 const { default: CustomShippingData } = require('./_shipping')
@@ -278,7 +278,7 @@ class checkoutCustom {
 
         _trElem.find('.totalizers-list .Items').after(
           `<tr class="coupon-applied" style="height: 23px;">
-            <td>Cupom</td>
+            <td style="margin-left: 10px;">Cupom</td>
             <td>
               <p class="using-coupon-text" style="font-weight: 700">
                 ${orderForm.marketingData.coupon}
@@ -294,6 +294,93 @@ class checkoutCustom {
       console.error('ApplyCoupon error:', e)
     }
   }
+
+showCustomDiscounts(){
+  try {
+    const { items } = window.vtexjs.checkout.orderForm
+    const _trElem = $(`.Discounts`)
+  
+    if(items.length){
+      const itemsDiscounts = items.map(function(item){
+        return item.priceTags
+      }).flat()
+  
+      const uniqueDiscounts = itemsDiscounts.filter(function(discount) {
+
+        return itemsDiscounts.findIndex(i => i.name === discount.name || i.ratesAndBenefitsIdentifier.name.toLowerCase().includes('desconto à vista') && discount.ratesAndBenefitsIdentifier.name.toLowerCase().includes('desconto à vista') ) === itemsDiscounts.indexOf(discount);
+      });
+  
+      const discountsTotal = uniqueDiscounts.map(function(discount){
+        const name = discount.ratesAndBenefitsIdentifier ? discount.ratesAndBenefitsIdentifier.name : ''
+        const total = itemsDiscounts.reduce(function(acc, current){
+          const isDiscountInCash = current.ratesAndBenefitsIdentifier.name.toLowerCase().includes('desconto à vista') && name.toLowerCase().includes('desconto à vista')
+          if(current.name === discount.name || isDiscountInCash){
+            return acc += current.value
+          }
+  
+          return acc;
+        }, 0)
+  
+        
+  
+        return {
+          name,
+          value: total
+        }
+      })
+  
+      const elements = discountsTotal.map(function(discount){
+        if(discount.name.toLowerCase().includes('desconto à vista')){
+          const selectedPaymentSystem = vtexjs.checkout.orderForm.paymentData.payments[0].paymentSystem
+          const paymentSystemName = vtexjs.checkout.orderForm.paymentData.paymentSystems.find(paymentSystem => {
+            return paymentSystem.id == selectedPaymentSystem
+          }).name
+          return (
+            `
+            <tr class="discount discount_in_cash" style="height: 23px;">
+              <td style="margin-left: 10px;">Desconto ${paymentSystemName}</td>
+              <td>
+                <span style="font-weight: 700">${formatNegativeValue(formatCurrencyBRL(discount.value))}</span>
+              </td>
+            </tr>`
+          )
+        }else if(discount.name.toLowerCase().includes('cupom instantâneo')){
+          return (
+              `
+              <tr class="discount instant_voucher" style="height: 23px;">
+                <td style="margin-left: 10px;">Desc. Cupom Instantâneo</td>
+                <td>
+                  <span style="font-weight: 700" >${formatNegativeValue(formatCurrencyBRL(discount.value))}</span>
+                </td>
+              </tr>`
+            )
+        }else {
+          return (
+            `
+            <tr class="discount cupon" style="height: 23px;">
+              <td style="margin-left: 10px;">Desc. Cupom</td>
+              <td>
+                <span style="font-weight: 700" >${formatNegativeValue(formatCurrencyBRL(discount.value))}</span>
+              </td>
+            </tr>`
+          )
+        }
+      });
+  
+      if ($('.totalizers-list .discount').length > 0) {
+        $('.totalizers-list .discount').remove()
+        _trElem.after(elements.join())
+      }else {
+        _trElem.after(elements.join())
+      }
+  
+    }  
+
+  }catch(e){
+    console.error("showCustomDiscounts error", e)
+  }
+}
+
 
   showCustomMsgCoupon(orderForm) {
     const _thereIsCoupon =
@@ -661,62 +748,84 @@ class checkoutCustom {
       if (orderForm.value == 0) {
         return
       }
-
       const _trElem = $(`.summary-template-holder`)
 
-      // Pega o valor do pix (código 125)
-      const priceAVista = orderForm.paymentData.installmentOptions.find(
-        item => item.paymentSystem == 125
-      ).installments[0].total
 
-      // Encontra as installments para do cartao visa (código 2)
-      // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-      const priceAPrazo = await fetch(
-        `${this.rootPath()}/api/checkout/pub/orderForm/${
-          orderForm.orderFormId
-        }/installments?paymentSystem=2`
-      )
-        .then(response => response.json())
-        .then(data => {
-          const installmentOptions = data.installments
 
-          return (
-            installmentOptions.find(
-              install =>
-                install.count ===
-                Math.max(...installmentOptions.map(inst => inst.count))
-            ).total || 0
-          )
-        })
+      if(path === '#/payment'){
+        const selectedPaymentMethod = vtexjs.checkout.orderForm.paymentData.payments[0]
 
-      const percentDiscount = Math.floor(
-        100 - (priceAVista / priceAPrazo) * 100
-      )
+        const _component = `
+          <div class="cart-total" style="margin-bottom: 20px; color: #000">
+            <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
+              <p class="ref-id">Total</p>
+              <p class="estimate-shipping">${formatCurrencyBRL(selectedPaymentMethod.value)}</p>
+            </div>
+          </div> 
+        `
 
-      const _component = `
-        <div class="cart-total" style="margin-bottom: 20px; color: #000">
-          <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
-            <p class="ref-id">Total à vista</p>
-            <p class="estimate-shipping">${formatCurrencyBRL(priceAVista)}</p>
-          </div>
-          ${
-            percentDiscount > 0
-              ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
-                  <p>(${percentDiscount}% de desconto)</p>
-                </div>`
-              : ''
-          }
+        if (_trElem.find('.cart-total').length === 0) {
+          _trElem.prepend(_component)
+        } else {
+          _trElem.find('.cart-total').remove()
+          _trElem.prepend(_component)
+        }
 
-          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-            <p class="gross-total">
-              Total a prazo
-            </p>
-            <p class="discount-total" style="font-weight: 700;">
-              ${formatCurrencyBRL(priceAPrazo)}
-            </p>
-          </div>
-        </div>
-      `
+        return 
+      }
+        // Pega o valor do pix (código 125)
+        const inCashPrice = orderForm.paymentData.installmentOptions.find(
+          item => item.paymentSystem == 125
+        ).installments[0].total
+
+        // Encontra as installments para do cartao visa (código 2)
+        // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
+        const termPrice = await fetch(
+          `${this.rootPath()}/api/checkout/pub/orderForm/${
+            orderForm.orderFormId
+          }/installments?paymentSystem=2`
+        )
+          .then(response => response.json())
+          .then(data => {
+            const installmentOptions = data.installments
+
+            return (
+              installmentOptions.find(
+                install =>
+                  install.count ===
+                  Math.max(...installmentOptions.map(inst => inst.count))
+              ).total || 0
+            )
+          })
+
+        const percentDiscount = Math.floor(
+          100 - (inCashPrice / termPrice) * 100
+        )
+
+        const _component = `
+          <div class="cart-total" style="margin-bottom: 20px; color: #000">
+            <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
+              <p class="ref-id">Total</p>
+              <p class="estimate-shipping">${formatCurrencyBRL(inCashPrice)}</p>
+            </div>
+            ${
+              percentDiscount > 0
+                ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
+                    <p>(${percentDiscount}% de desconto)</p>
+                  </div>`
+                : ''
+            }
+
+            <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
+                <p class="gross-total">
+                  Ou parcelado em até 12x
+                </p>
+                <p class="discount-total" style="font-weight: 700;">
+                  ${formatCurrencyBRL(termPrice)}
+                </p>
+            </div>
+          </div> 
+        `
 
       if (path !== '#/cart') {
         if (_trElem.find('.cart-total').length === 0) {
@@ -966,6 +1075,7 @@ class checkoutCustom {
     this.condensedTaxes(orderForm)
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
+    this.showCustomDiscounts()
     this.summaryCustom()
     new CustomHeader().init()
     new SamsungCarePlus().init()
