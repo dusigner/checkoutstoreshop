@@ -176,6 +176,8 @@ export default class Rewards {
 
       if (orderForm.items.length === 0) return
 
+      if (orderForm.totalizers.length === 0) return
+
       const _checkoutElem = $(`.cart-fixed`)
       const _cartElem = $(`.summary-to-new-components`)
       const _component = `
@@ -347,20 +349,28 @@ export default class Rewards {
 
     if (orderForm.items.length === 0) return
 
+    if (orderForm.totalizers.length === 0) return
+
     if (orderForm.loggedIn) {
       this.getRewardsData(orderForm.clientProfileData.email)
     }
-    
-    if (orderForm.paymentData.giftCards) {
-      const giftRewards = orderForm.paymentData.giftCards.filter(g => g.provider === "SSG_REWARDS")
 
-      if (giftRewards.length && giftRewards[0].inUse && giftRewards[0].value > 0) {
+    if (orderForm.paymentData.giftCards) {
+      const giftRewards = orderForm.paymentData.giftCards.filter(
+        g => g.provider === 'SSG_REWARDS'
+      )
+
+      if (
+        giftRewards.length &&
+        giftRewards[0].inUse &&
+        giftRewards[0].value > 0
+      ) {
         this.createRewardsTotalDiscount(giftRewards[0].value / 100)
       } else {
-        $('.rewards-total-discount').remove();
+        $('.rewards-total-discount').remove()
       }
     } else {
-      $('.rewards-total-discount').remove();
+      $('.rewards-total-discount').remove()
     }
 
     const TotalItems =
