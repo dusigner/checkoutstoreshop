@@ -613,7 +613,9 @@ class checkoutCustom {
           return
         }
 
-        const totalValue = _trElem.find('.total-price:eq(0)').text()
+        const totalValue = this.priceDefinition.calculatedSellingPrice ? 
+        formatCurrencyBRL(this.priceDefinition.calculatedSellingPrice) : 
+          _trElem.find('.total-price:eq(0)').text()
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
