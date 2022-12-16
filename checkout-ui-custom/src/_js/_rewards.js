@@ -247,14 +247,14 @@ export default class Rewards {
               <button
                 type="button"
                 id="button-use-points-rewards"
-                style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center; margin-bottom: 20px"
+                style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center; margin-bottom: 25px"
               >
                 Aplicar desconto
               </button>
               <button
               type="button"
               id="button-cancel-points"
-              style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center;"
+              style="font-size: 12px; color: #000; font-weight: 700; max-width: 188px; font-family: SamsungOne; max-height: 30px; align-self: center; border: 0; border-bottom: 1px solid #000; background: transparent; padding: 0;"
             >
               Acumular pontos
             </button>
@@ -310,6 +310,8 @@ export default class Rewards {
           this.createGroupCalcRewards()
           if (this.totalPointsUser > 0) {
             $('#show-rewards-parent').css('display', 'block')
+          } else {
+            $('.payment-discounts-alert-wrap').css('display', 'none')
           }
         },
         error() {
@@ -332,6 +334,9 @@ export default class Rewards {
     })
     element.focus()
     element.dispatchEvent(evt)
+
+    $('#show-rewards-parent').addClass('disabled')
+    $('#group-all-rewards').hide()
   }
 
   cancelRewardsDiscount() {
@@ -340,6 +345,8 @@ export default class Rewards {
     )
 
     element.click()
+
+    $('#show-rewards-parent').removeClass('disabled')
   }
 
   showPointsSimulation() {
