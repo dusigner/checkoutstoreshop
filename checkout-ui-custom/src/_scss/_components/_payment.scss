@@ -136,10 +136,13 @@
 				}
 			}
 
+			&:hover {
+				cursor: pointer;
+			}
+
 			&.active,
 			&:hover {
-				border-bottom:1px solid #D6D6D6;
-        background:#F7F7F7;
+        		background:#F7F7F7;
 			}
 		}
 
@@ -1196,6 +1199,10 @@
 
 .box-step-content .gift-card-section:nth-of-type(n+1) {
 	grid-area: giftcard-content;
+}
+
+#rewards-remove-discount:hover {
+	cursor: pointer;
 }
 
 #show-rewards-parent.disabled {
