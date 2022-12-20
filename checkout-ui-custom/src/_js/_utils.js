@@ -20,3 +20,10 @@ module.exports.formatCurrencyBRL = (_value, _division = true) => {
 
   return price
 }
+
+module.exports.formatNegativeValue = (_value) => {
+  let price = _value.replace("-", "")
+  price = price.replace(" ", " - ")
+
+  return price
+}
