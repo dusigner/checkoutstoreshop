@@ -4,7 +4,11 @@
 /* eslint eqeqeq: 0 */
 
 const { _locale } = require('./_locale-infos.js')
-const { debounce, formatCurrencyBRL, formatNegativeValue } = require('./_utils.js')
+const {
+  debounce,
+  formatCurrencyBRL,
+  formatNegativeValue,
+} = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const { default: CustomProfileData } = require('./_profile')
 const { default: CustomShippingData } = require('./_shipping')
@@ -280,7 +284,7 @@ class checkoutCustom {
           `<tr class="coupon-applied" style="height: 23px;">
             <td style="margin-left: 10px;">Cupom</td>
             <td>
-              <p class="using-coupon-text" style="font-weight: 700">
+              <p class="using-coupon-text" style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;">
                 ${orderForm.marketingData.coupon}
               </p>
             </td>
@@ -295,92 +299,131 @@ class checkoutCustom {
     }
   }
 
-showCustomDiscounts(){
-  try {
-    const { items } = window.vtexjs.checkout.orderForm
-    const _trElem = $(`.Discounts`)
-  
-    if(items.length){
-      const itemsDiscounts = items.map(function(item){
-        return item.priceTags
-      }).flat()
-  
-      const uniqueDiscounts = itemsDiscounts.filter(function(discount) {
+  showCustomDiscounts() {
+    try {
+      const { items } = window.vtexjs.checkout.orderForm
+      const _trElem = $(`.Discounts`)
 
-        return itemsDiscounts.findIndex(i => i.name === discount.name || i.ratesAndBenefitsIdentifier.name.toLowerCase().includes('desconto à vista') && discount.ratesAndBenefitsIdentifier.name.toLowerCase().includes('desconto à vista') ) === itemsDiscounts.indexOf(discount);
-      });
-  
-      const discountsTotal = uniqueDiscounts.map(function(discount){
-        const name = discount.ratesAndBenefitsIdentifier ? discount.ratesAndBenefitsIdentifier.name : ''
-        const total = itemsDiscounts.reduce(function(acc, current){
-          const isDiscountInCash = current.ratesAndBenefitsIdentifier.name.toLowerCase().includes('desconto à vista') && name.toLowerCase().includes('desconto à vista')
-          if(current.name === discount.name || isDiscountInCash){
-            return acc += current.value
-          }
-  
-          return acc;
-        }, 0)
-  
-        
-  
-        return {
-          name,
-          value: total
-        }
-      })
-  
-      const elements = discountsTotal.map(function(discount){
-        if(discount.name.toLowerCase().includes('desconto à vista')){
-          const selectedPaymentSystem = vtexjs.checkout.orderForm.paymentData.payments[0].paymentSystem
-          const paymentSystemName = vtexjs.checkout.orderForm.paymentData.paymentSystems.find(paymentSystem => {
-            return paymentSystem.id == selectedPaymentSystem
-          }).name
+      if (items.length) {
+        const itemsDiscounts = items
+          .map(function (item) {
+            return item.priceTags
+          })
+          .flat()
+          .filter(item => item.value < 0)
+
+        const uniqueDiscounts = itemsDiscounts.filter(function (discount) {
           return (
-            `
+            itemsDiscounts.findIndex(
+              i =>
+                i.name === discount.name ||
+                (i.ratesAndBenefitsIdentifier &&
+                  i.ratesAndBenefitsIdentifier.name
+                    .toLowerCase()
+                    .includes('desconto à vista') &&
+                  discount.ratesAndBenefitsIdentifier &&
+                  discount.ratesAndBenefitsIdentifier.name
+                    .toLowerCase()
+                    .includes('desconto à vista'))
+            ) === itemsDiscounts.indexOf(discount)
+          )
+        })
+
+        const discountsTotal = uniqueDiscounts.map(function (discount) {
+          const name = discount.ratesAndBenefitsIdentifier
+            ? discount.ratesAndBenefitsIdentifier.name
+            : ''
+
+          const total = itemsDiscounts.reduce(function (acc, current) {
+            const isDiscountInCash = current.ratesAndBenefitsIdentifier
+              ? current.ratesAndBenefitsIdentifier.name
+                  .toLowerCase()
+                  .includes('desconto à vista') &&
+                name.toLowerCase().includes('desconto à vista')
+              : ''
+
+            if (current.name === discount.name || isDiscountInCash) {
+              return (acc += current.value)
+            }
+
+            return acc
+          }, 0)
+
+          return {
+            name,
+            value: total,
+          }
+        })
+
+        const elements = discountsTotal.map(function (discount) {
+          if (discount.name.toLowerCase().includes('desconto à vista')) {
+            const selectedPaymentSystem =
+              window.vtexjs.checkout.orderForm.paymentData.payments[0]
+                .paymentSystem
+
+            const paymentSystemName =
+              window.vtexjs.checkout.orderForm.paymentData.paymentSystems.find(
+                paymentSystem => {
+                  return paymentSystem.id == selectedPaymentSystem
+                }
+              ).name
+
+            return `
             <tr class="discount discount_in_cash" style="height: 23px;">
               <td style="margin-left: 10px;">Desconto ${paymentSystemName}</td>
               <td>
-                <span style="font-weight: 700">${formatNegativeValue(formatCurrencyBRL(discount.value))}</span>
+                <span style="font-weight: 700">${formatNegativeValue(
+                  formatCurrencyBRL(discount.value)
+                )}</span>
               </td>
             </tr>`
-          )
-        }else if(discount.name.toLowerCase().includes('cupom instantâneo')){
-          return (
-              `
+          }
+
+          if (
+            discount.name.toLowerCase().includes('cupom instantâneo') ||
+            discount.name.toLowerCase().includes('cupom instantâneo')
+          ) {
+            return `
               <tr class="discount instant_voucher" style="height: 23px;">
                 <td style="margin-left: 10px;">Desc. Cupom Instantâneo</td>
                 <td>
-                  <span style="font-weight: 700" >${formatNegativeValue(formatCurrencyBRL(discount.value))}</span>
+                  <span style="font-weight: 700" >${formatNegativeValue(
+                    formatCurrencyBRL(discount.value)
+                  )}</span>
                 </td>
               </tr>`
-            )
-        }else {
-          return (
-            `
+          }
+
+          if (discount.name.toLowerCase().includes('seguro')) {
+            return `
+              <tr class="discount sc" style="height: 23px;">
+                <td style="margin-left: 10px;">Desc. Samsung Care+</td>
+                <td>
+                  <span style="font-weight: 700" >${formatNegativeValue(
+                    formatCurrencyBRL(discount.value)
+                  )}</span>
+                </td>
+              </tr>`
+          }
+
+          return `
             <tr class="discount cupon" style="height: 23px;">
               <td style="margin-left: 10px;">Desc. Cupom</td>
               <td>
-                <span style="font-weight: 700" >${formatNegativeValue(formatCurrencyBRL(discount.value))}</span>
+                <span style="font-weight: 700" >${formatNegativeValue(
+                  formatCurrencyBRL(discount.value)
+                )}</span>
               </td>
             </tr>`
-          )
-        }
-      });
-  
-      if ($('.totalizers-list .discount').length > 0) {
+        })
+
         $('.totalizers-list .discount').remove()
-        _trElem.after(elements.join())
-      }else {
-        _trElem.after(elements.join())
+        _trElem.before(`${elements.join()}`)
       }
-  
-    }  
-
-  }catch(e){
-    console.error("showCustomDiscounts error", e)
+    } catch (e) {
+      console.error('showCustomDiscounts error', e)
+    }
   }
-}
-
 
   showCustomMsgCoupon(orderForm) {
     const _thereIsCoupon =
@@ -429,7 +472,7 @@ showCustomDiscounts(){
       _trElem.find('.totalizers-list .coupon-applied').after(
         `<tr class="coupon-applied-message" style="height: 23px;">
             <td>
-              <span style="color: #D62E2E; font-size: 12px;">${_message}</span>
+              <span style="color: #D62E2E; font-size: 12px; margin-left: 10px;">${_message}</span>
             </td>
         </tr>`
       )
@@ -748,20 +791,22 @@ showCustomDiscounts(){
       if (orderForm.value == 0) {
         return
       }
+
       const _trElem = $(`.summary-template-holder`)
 
-
-
-      if(path === '#/payment'){
-        const selectedPaymentMethod = vtexjs.checkout.orderForm.paymentData.payments[0]
+      if (path === '#/payment') {
+        const selectedPaymentMethod =
+          window.vtexjs.checkout.orderForm.paymentData.payments[0]
 
         const _component = `
           <div class="cart-total" style="margin-bottom: 20px; color: #000">
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
-              <p class="estimate-shipping">${formatCurrencyBRL(selectedPaymentMethod.value)}</p>
+              <p class="estimate-shipping">${formatCurrencyBRL(
+                selectedPaymentMethod.value
+              )}</p>
             </div>
-          </div> 
+          </div>
         `
 
         if (_trElem.find('.cart-total').length === 0) {
@@ -771,38 +816,37 @@ showCustomDiscounts(){
           _trElem.prepend(_component)
         }
 
-        return 
+        return
       }
-        // Pega o valor do pix (código 125)
-        const inCashPrice = orderForm.paymentData.installmentOptions.find(
-          item => item.paymentSystem == 125
-        ).installments[0].total
 
-        // Encontra as installments para do cartao visa (código 2)
-        // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-        const termPrice = await fetch(
-          `${this.rootPath()}/api/checkout/pub/orderForm/${
-            orderForm.orderFormId
-          }/installments?paymentSystem=2`
-        )
-          .then(response => response.json())
-          .then(data => {
-            const installmentOptions = data.installments
+      // Pega o valor do pix (código 125)
+      const inCashPrice = orderForm.paymentData.installmentOptions.find(
+        item => item.paymentSystem == 125
+      ).installments[0].total
 
-            return (
-              installmentOptions.find(
-                install =>
-                  install.count ===
-                  Math.max(...installmentOptions.map(inst => inst.count))
-              ).total || 0
-            )
-          })
+      // Encontra as installments para do cartao visa (código 2)
+      // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
+      const termPrice = await fetch(
+        `${this.rootPath()}/api/checkout/pub/orderForm/${
+          orderForm.orderFormId
+        }/installments?paymentSystem=2`
+      )
+        .then(response => response.json())
+        .then(data => {
+          const installmentOptions = data.installments
 
-        const percentDiscount = Math.floor(
-          100 - (inCashPrice / termPrice) * 100
-        )
+          return (
+            installmentOptions.find(
+              install =>
+                install.count ===
+                Math.max(...installmentOptions.map(inst => inst.count))
+            ).total || 0
+          )
+        })
 
-        const _component = `
+      const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
+
+      const _component = `
           <div class="cart-total" style="margin-bottom: 20px; color: #000">
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
@@ -824,7 +868,7 @@ showCustomDiscounts(){
                   ${formatCurrencyBRL(termPrice)}
                 </p>
             </div>
-          </div> 
+          </div>
         `
 
       if (path !== '#/cart') {
@@ -909,7 +953,7 @@ showCustomDiscounts(){
         }
 
         _trElem.find('.coupon-fields').append(
-          `<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">
+          `<div class="div-coupon-info" style="margin-bottom: 20px; text-align: left">
             <p style="font-size: 12px; color: #555555;">
               Digite o cupom de desconto
             </p>
@@ -1425,24 +1469,33 @@ showCustomDiscounts(){
     )
 
     $('body').on('click', '.item-link-remove', function () {
-      let dataSku = $(this).closest('tr').next('tr').attr('data-sku')
-      fetch(`${rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`)
-      .then(response => response.json())
-      .then(response => {
-        if(response[0].length) {
-          let isInstallation = response[0].skuSpecifications.filter(item => item.field.name === 'Serviço de Instalação')
-          if(isInstallation.length > 0) {
-            let nameInstallation = isInstallation[0].values[0].name 
-            $('.product-item').each(function(){
-              if($(this).find('.product-item .ref-id').text() === nameInstallation) {
-                $(this).find('.item-remove .item-link-remove').click()
-              }
-            })
-          }
-        }
-      })
-    })
+      const dataSku = $(this).closest('tr').next('tr').attr('data-sku')
 
+      fetch(
+        `${this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`
+      )
+        .then(response => response.json())
+        .then(response => {
+          if (response[0].length) {
+            const isInstallation = response[0].skuSpecifications.filter(
+              item => item.field.name === 'Serviço de Instalação'
+            )
+
+            if (isInstallation.length > 0) {
+              const nameInstallation = isInstallation[0].values[0].name
+
+              $('.product-item').each(function () {
+                if (
+                  $(this).find('.product-item .ref-id').text() ===
+                  nameInstallation
+                ) {
+                  $(this).find('.item-remove .item-link-remove').click()
+                }
+              })
+            }
+          }
+        })
+    })
 
     $('body').on('click', '#btn-client-pre-email', function () {
       setTimeout(function () {

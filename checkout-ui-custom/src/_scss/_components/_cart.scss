@@ -597,7 +597,7 @@ h1#cart-title {display:none !important;}
     grid-area: finish_payment;
   }
 
-  .summaryOrder{ 
+  .summaryOrder{
     grid-area: products
   }
 
@@ -837,10 +837,7 @@ h1#cart-title {display:none !important;}
 
       .Discounts {
         grid-area: descontos_total;
-      }
-
-      .srp-summary-result {
-        grid-area: entrega;
+        max-height: 23px;
       }
     }
 
