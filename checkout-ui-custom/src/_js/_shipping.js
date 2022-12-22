@@ -94,34 +94,28 @@ export default class CustomShippingData {
   }
 
   addVirtualInventoryMessage() {
-    try {
-      const $postalCodeForm = $('.vtex-omnishipping-1-x-addressFormPart1')
-      const $postalCodeField = $postalCodeForm.find('p.ship-postalCode')
-      const $virtualInventoryMessage = $(
-        `<div class="virtual-inventory-msg" style="max-width: 566px; margin-top: 16px;">
+    $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {
+      try {
+        const $postalCodeForm = $('#shipping-preview-container')
+        const $virtualInventoryMessage = $(
+          `<div class="virtual-inventory-msg prazo-acima" style="max-width: 566px; margin-top: 16px;">
           <p class="invalid-postal-code-msg__message">
             Este item está com prazo de entrega acima do normal.
           </p>
         </div>`
-      )
+        )
 
-      if (
-        $postalCodeField.find('small').length &&
-        $postalCodeField.find('.virtual-inventory-msg').length === 0
-      ) {
-        $postalCodeField.find('small').before($virtualInventoryMessage)
+        if($('.prazo-acima').length === 0){
+          if ($postalCodeForm.find('.shp-alert-shipping-unavailable').length === 1) {
+            $postalCodeForm.find('.shp-alert-shipping-unavailable').before($virtualInventoryMessage)
+          }
+        }
+      } catch (err) {
+        console.error(
+          `Ocorreu um erro ao adicionar mensagem de prazo acima do normal: ${err}`
+        )
       }
-
-      if (
-        $('.srp-delivery-header').find('.virtual-inventory-msg').length === 0
-      ) {
-        $('.srp-delivery-header').append($virtualInventoryMessage)
-      }
-    } catch (err) {
-      console.error(
-        `Ocorreu um erro ao adicionar mensagem de prazo acima do normal: ${err}`
-      )
-    }
+    })
   }
 
   validateVirtualInventory(orderForm) {
@@ -188,15 +182,6 @@ export default class CustomShippingData {
           clearInterval(interval)
         }
       }, 50)
-
-      if (address.postalCode && !address.city) {
-        this.setInvalidPostalCode()
-        this.addInvalidPostalCodeMessage()
-      } else {
-        // console.log('cep válido');
-        this.setValidPostalCode()
-        this.removeInvalidPostalCodeMessage()
-      }
     } catch (err) {
       console.error(`Ocorreu um erro ao validar CEP: ${err}`)
     }

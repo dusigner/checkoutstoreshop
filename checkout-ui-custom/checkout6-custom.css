@@ -594,6 +594,8 @@ body {
   z-index: 2;
   display: flex;
   justify-content: center; }
+  .checkout-container.row-fluid.checkout-container {
+    position: initial; }
   @media (max-width: 768px) {
     .checkout-container {
       margin-bottom: 30px; } }
@@ -760,6 +762,68 @@ h1#orderform-title {
     #shipping-data .link-box-edit i,
     #payment-data .link-box-edit i {
       display: none; }
+
+.vtex-front-messages-detail {
+  word-break: break-all; }
+
+.vtex-shipping-preview-0-x-removeConfirmationModal {
+  max-width: 440px !important;
+  padding-left: 16px;
+  padding-right: 16px; }
+  .vtex-shipping-preview-0-x-removeConfirmationModal .modal-footer {
+    display: flex;
+    background: #FFF;
+    border: none;
+    gap: 20px; }
+  .vtex-shipping-preview-0-x-removeConfirmationModal .modal-body {
+    font-size: 18px;
+    color: #000; }
+  .vtex-shipping-preview-0-x-removeConfirmationModal .modal-header {
+    border: none;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between; }
+  .vtex-shipping-preview-0-x-removeConfirmationModal .vtex-shipping-preview-0-x-modalCancelButton {
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 25px;
+    outline: none;
+    width: 100%;
+    transition: background-color .2s ease;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #000;
+    background-color: #fff;
+    color: #000;
+    text-decoration: none; }
+  .vtex-shipping-preview-0-x-removeConfirmationModal .vtex-shipping-preview-0-x-modalCancelButton:hover {
+    text-decoration: none;
+    color: #555;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: #555; }
+  .vtex-shipping-preview-0-x-removeConfirmationModal .vtex-shipping-preview-0-x-modalConfirmButton {
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 25px;
+    outline: none;
+    width: 100%;
+    transition: background-color .2s ease;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    background-color: #000 !important;
+    color: #fff;
+    border: 1px solid #000; }
+  .vtex-shipping-preview-0-x-removeConfirmationModal .vtex-shipping-preview-0-x-modalConfirmButton:hover {
+    color: #EEEEEE;
+    background-color: #555555 !important;
+    border: 1px solid #555555 !important; }
+
+.modal-backdrop {
+  background: #000; }
 
 .client-pre-email h3.client-pre-email-h span:before,
 .client-profile-data .accordion-toggle > span:before,
@@ -1105,7 +1169,8 @@ body #go-to-cart-button-custom {
         @media screen and (max-width: 1024px) {
           .checkout-footer .container > div .checkout-footer-payment-flag .checkout-footer-payment-text ~ div {
             flex-wrap: wrap;
-            justify-content: end; }
+            justify-content: center;
+            row-gap: 10px; }
             .checkout-footer .container > div .checkout-footer-payment-flag .checkout-footer-payment-text ~ div svg {
               margin-left: 10px;
               margin-right: 0px;
@@ -1254,7 +1319,7 @@ h1#cart-title {
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 5fr 1fr;
-        grid-template-areas: "image name price" "image quantity item-remove";
+        grid-template-areas: "image name price" "image quantity item-remove";
         position: relative;
         padding: 20px 0; }
         @media (max-width: 690px) {
@@ -1262,7 +1327,7 @@ h1#cart-title {
             display: grid;
             grid-template-columns: 4fr 1fr;
             grid-template-rows: 2fr 8fr 2fr;
-            grid-template-areas: "item-remove item-remove" "name image" "quantity price";
+            grid-template-areas: "item-remove item-remove" "name image" "quantity price";
             padding: 10px 0; } }
       .table.cart-items tbody tr td {
         width: auto;
@@ -1335,10 +1400,6 @@ h1#cart-title {
                 margin-bottom: -7px; } }
           .table.cart-items tbody tr td.product-price.v-custom-quantity-price-active > .list-price, .table.cart-items tbody tr td.quantity-price.v-custom-quantity-price-active > .list-price {
             display: none !important; }
-          .table.cart-items tbody tr td.product-price > span.list-price,
-          .table.cart-items tbody tr td.product-price > span.best-price, .table.cart-items tbody tr td.quantity-price > span.list-price,
-          .table.cart-items tbody tr td.quantity-price > span.best-price {
-            display: none; }
           .table.cart-items tbody tr td.product-price span.product-manualprice,
           .table.cart-items tbody tr td.product-price a.manualprice-link-remove, .table.cart-items tbody tr td.quantity-price span.product-manualprice,
           .table.cart-items tbody tr td.quantity-price a.manualprice-link-remove {
@@ -1583,7 +1644,17 @@ h1#cart-title {
   text-align: left;
   box-sizing: border-box;
   border-radius: 20px;
-  border: none; }
+  border: none;
+  display: grid;
+  grid-template-areas: 'products' 'coupon' 'price' 'finish_payment'; }
+  .summary-template-holder .cart-total {
+    grid-area: price; }
+  .summary-template-holder .row-fluid.summary {
+    grid-area: coupon; }
+  .summary-template-holder .cart-links-bottom {
+    grid-area: finish_payment; }
+  .summary-template-holder .summaryOrder {
+    grid-area: products; }
   @media (max-width: 690px) {
     .summary-template-holder .best-price {
       font-size: 18px !important; } }
@@ -1715,6 +1786,23 @@ h1#cart-title {
         z-index: 10000; }
         .summary-template-holder .cart-links-bottom a {
           border-radius: 0; } }
+  .summary-template-holder .summary-totalizers .totalizers-list {
+    display: grid;
+    grid-template-areas: 'subtotal' 'descontos_total' 'cupom' 'cupom_desconto' 'cupom_instantaneo' 'entrega'; }
+    .summary-template-holder .summary-totalizers .totalizers-list .Items {
+      grid-area: subtotal; }
+    .summary-template-holder .summary-totalizers .totalizers-list .coupon-applied {
+      grid-area: cupom; }
+    .summary-template-holder .summary-totalizers .totalizers-list .Discounts {
+      grid-area: descontos_total;
+      max-height: 23px; }
+  .summary-template-holder .summary-totalizers .table {
+    display: grid;
+    grid-template-areas: 'total-details-tradein' 'totalizers-list'; }
+    .summary-template-holder .summary-totalizers .table .totalizers-list {
+      grid-area: totalizers-list;
+      border-bottom: 1px solid #cbcbcb;
+      margin-bottom: 16px; }
   .summary-template-holder .summary-totalizers .table td.space,
   .summary-template-holder .summary-totalizers .table td.empty,
   .summary-template-holder .summary-totalizers tbody.shipping-calculate {
@@ -2135,6 +2223,10 @@ h1#cart-title {
 #client-profile-data .link-logout {
   font-weight: 400;
   text-decoration: underline; }
+  @media (max-width: 768px) {
+    #client-profile-data .link-logout {
+      display: block;
+      margin: 10px 0; } }
 
 #client-profile-data .client-notice.notice {
   display: none; }
@@ -2372,6 +2464,13 @@ h1#cart-title {
 #shipping-data .vtex-omnishipping-1-x-deliveryGroup,
 #shipping-data .vtex-omnishipping-1-x-addressForm {
   max-width: 448px; }
+
+#shipping-data .vtex-omnishipping-1-x-deliveryGroup,
+#shipping-data .vtex-omnishipping-1-x-addressForm {
+  display: none; }
+  body.valid-postal-code #shipping-data .vtex-omnishipping-1-x-deliveryGroup, body.valid-postal-code
+  #shipping-data .vtex-omnishipping-1-x-addressForm {
+    display: block; }
 
 #shipping-data .vtex-omnishipping-1-x-option:hover,
 #shipping-data .vtex-omnishipping-1-x-leanShippingOptionActive {
@@ -3230,9 +3329,6 @@ svg.vtex-omnishipping-1-x-svg {
           font-size: 18px; } }
       .orderform-template .cart-template.mini-cart .summary-template-holder .accordion-inner {
         margin-top: 0px; }
-      .orderform-template .cart-template.mini-cart .summary-template-holder .summary > .summary-coupon-wrap,
-      .orderform-template .cart-template.mini-cart .summary-template-holder .summary-coupon-wrap > .summary-coupon {
-        display: block !important; }
       .orderform-template .cart-template.mini-cart .summary-template-holder .summary-coupon p {
         margin: 0; }
       .orderform-template .cart-template.mini-cart .summary-template-holder .summary > .summary-coupon-wrap {
@@ -3308,7 +3404,7 @@ svg.vtex-omnishipping-1-x-svg {
     .orderform-template .cart-template.mini-cart .summary-totalizers tbody {
       border-top: 1px solid #cbcbcb;
       padding: 14px 0;
-      display: block; }
+      display: grid; }
       .orderform-template .cart-template.mini-cart .summary-totalizers tbody tr.CustomTax:not(.CustomTax--total) {
         display: none !important; }
       .orderform-template .cart-template.mini-cart .summary-totalizers tbody td {
@@ -3405,7 +3501,8 @@ svg.vtex-omnishipping-1-x-svg {
     box-sizing: border-box;
     border-radius: 20px;
     max-width: 424px;
-    border: none; }
+    border: none;
+    width: 100%; }
     @media screen and (max-width: 979px) {
       .orderform-template .custom-cart-template-wrap {
         border-radius: 0;
@@ -3482,6 +3579,8 @@ body.v-custom-step-payment #shipping-data .shipping-summary-info {
         width: -webkit-fill-available; } }
   #app-container select {
     width: 100%; }
+  #app-container .App.iframe-custom-private-501-payment-group .ChangeNumberOfPayments.clearfix {
+    display: none; }
   #app-container .PaymentInstallments select {
     width: 100% !important;
     max-width: 100% !important; }
@@ -3583,6 +3682,19 @@ body.v-custom-step-payment #shipping-data .shipping-summary-info {
       order: 4; }
     #app-container .AddressForm .PostalCode {
       order: 5; }
+
+.totalizers-list .Discounts .info {
+  font-weight: bold;
+  font-size: 0 !important; }
+  .totalizers-list .Discounts .info::after {
+    content: "Descontos Totais";
+    font-size: 14px; }
+
+.srp-summary-result .info {
+  font-size: 0px !important; }
+  .srp-summary-result .info::after {
+    content: "Frete";
+    font-size: 14px; }
 
 .orderform-template .summary-note.js-active {
   display: block !important; }
