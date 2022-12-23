@@ -1441,6 +1441,20 @@ class checkoutCustom {
     })
   }
 
+  // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
+  customizeLogOut(){
+    const accountbr =  __RUNTIME__.account == 'samsungbr'
+    const notMyvtex = window.location.href.indexOf("myvtex") == -1
+
+    if(($('.link-logout-container').is(':visible')) && (accountbr) && (notMyvtex)) {
+      $('#is-not-me').removeAttr('href')
+      $('body').on('click', '#is-not-me', function () {
+        const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${vtexjs.checkout.orderForm.orderFormId}`
+        window.location.assign(`https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbr&returnUrl=${returnUrl}`)
+      })
+    }
+  }
+
   bind() {
     const _this = this
     _this.removeInstallationProduct()
@@ -1627,6 +1641,7 @@ class checkoutCustom {
         ) {
           _this.TradeIn.validateTradeinCustomData()
           _this.displayHideSuperChat(window.location.hash)
+          _this.customizeLogOut()
         }
 
         _this.updateStep()
@@ -1646,6 +1661,7 @@ class checkoutCustom {
           _this.profile.addDateBirthField()
           _this.profile.toggleGoToShippingDisabled()
           _this.profile.removePj()
+          _this.customizeLogOut()
         }
 
         if (_this.orderForm) {
@@ -1668,6 +1684,7 @@ class checkoutCustom {
 
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
+            _this.customizeLogOut()
           }
         }
       })
@@ -1676,7 +1693,7 @@ class checkoutCustom {
         _this.update(orderForm)
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
-
+        _this.customizeLogOut()
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
           _this.preEmail.createElementSamsungAccountLogin()
         }

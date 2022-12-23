@@ -37,6 +37,7 @@
   .link-logout {
     font-weight: 400;
     text-decoration: underline;
+    cursor: pointer;
     @media (max-width: 768px) {
       display: block;
       margin: 10px 0;
