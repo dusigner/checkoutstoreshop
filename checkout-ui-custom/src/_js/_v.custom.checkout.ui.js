@@ -50,6 +50,7 @@ class checkoutCustom {
     this.TradeIn = new TradeIn()
     this.SendAttachment = new SendAttachment()
     this.adobeLaunchPixel = new AdobeLaunchPixel()
+    this.hasSelectedDefaultPaymentMethod = false;
   }
 
   rootPath() {
@@ -355,8 +356,9 @@ class checkoutCustom {
           }
         })
 
-        const elements = discountsTotal.map(function (discount) {
+        const elements = discountsTotal.map((discount) => {
           if (discount.name.toLowerCase().includes('desconto à vista')) {
+            this.hasSelectedDefaultPaymentMethod = true;
             const selectedPaymentSystem =
               window.vtexjs.checkout.orderForm.paymentData.payments[0]
                 .paymentSystem
@@ -796,7 +798,7 @@ class checkoutCustom {
 
       const _trElem = $(`.summary-template-holder`)
 
-      if (path === '#/payment') {
+      if (path === '#/payment' || this.hasSelectedDefaultPaymentMethod) {
         const selectedPaymentMethod =
           window.vtexjs.checkout.orderForm.paymentData.payments[0]
 
@@ -805,7 +807,7 @@ class checkoutCustom {
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
               <p class="estimate-shipping">${formatCurrencyBRL(
-                selectedPaymentMethod.value
+                selectedPaymentMethod ?  selectedPaymentMethod.value : 0
               )}</p>
             </div>
           </div>
@@ -1403,7 +1405,9 @@ class checkoutCustom {
       ) {
         $defaultPaymentMethod.trigger('click')
       }
+      this.hasSelectedDefaultPaymentMethod = true;
     } catch (err) {
+      this.hasSelectedDefaultPaymentMethod = false;
       console.error(`Erro ao definir método de pagamento padrão: ${err}`)
     }
   }
@@ -1648,7 +1652,10 @@ class checkoutCustom {
         _this.changeShippingTimeInfoInit()
         _this.checkProfileFocus()
         _this.fixLabels()
-        _this.defaultPaymentMethod()
+
+        if (window.location.hash === '#/payment') {
+          _this.defaultPaymentMethod()
+        }
 
         _this.shipping.toggleGoToPaymentDisabled()
 
@@ -1758,7 +1765,9 @@ class checkoutCustom {
           _this.addMedalliaScript()
         })
 
-        _this.defaultPaymentMethod()
+        if (window.location.hash === '#/payment') {
+          _this.defaultPaymentMethod()
+        }
 
         // #shipping
         _this.profile.toggleGoToShippingDisabled()
