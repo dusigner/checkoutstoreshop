@@ -20,3 +20,6 @@ module.exports.formatCurrencyBRL = (_value, _division = true) => {
 
   return price
 }
+
+module.exports.formatNumberBRL = _value =>
+  new Intl.NumberFormat('pt-BR').format(_value)

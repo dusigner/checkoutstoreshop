@@ -1,3 +1,5 @@
+import { formatNumberBRL } from './_utils'
+
 export default class Rewards {
   constructor() {
     this.userAcceptedRewards = false
@@ -92,7 +94,9 @@ export default class Rewards {
             <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
               Pontos Rewards gerados para sua próxima compra**
             </td>
-            <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important">${this.totalPointsCurrentOrder} Pontos</td>
+            <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important">${formatNumberBRL(
+              this.totalPointsCurrentOrder
+            )} Pontos</td>
           </tr>
         </tbody>
       `
@@ -103,7 +107,9 @@ export default class Rewards {
           <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
             **Pontos Rewards (Gerados apenas quando utilizado Samsung Account)
           </td>
-          <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important">${this.totalPointsCurrentOrder} Pontos</td>
+          <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important">${formatNumberBRL(
+            this.totalPointsCurrentOrder
+          )} Pontos</td>
         </tr>
       </tbody>
       `
@@ -224,7 +230,7 @@ export default class Rewards {
               id="calc-header-points"
               style=" color: #006BEA; font-size: 20px; font-weight: 700;"
             >
-              Você tem ${parseFloat(this.totalPointsUser)} pontos
+              Você tem ${formatNumberBRL(this.totalPointsUser)} pontos
             </span>
           </div>
           <div
