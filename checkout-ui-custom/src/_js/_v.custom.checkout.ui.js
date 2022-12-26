@@ -1500,6 +1500,10 @@ class checkoutCustom {
           _this.Rewards.cancelRewardsDiscount()
         }
 
+        if (window.location.hash === '#/payment') {
+          _this.Rewards.verifyRewardsDiscount()
+        }
+
         if (window.location.hash === '#/profile') {
           _this.profile.addWhatsAppField()
           _this.profile.addDateBirthField()

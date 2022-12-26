@@ -348,10 +348,15 @@ export default class Rewards {
   }
 
   cancelRewardsDiscount() {
-    const rewardsDiscount =
-      window.vtexjs.checkout.orderForm.paymentData.giftCards[0].value || 0
+    if (window.vtexjs.checkout.orderForm.paymentData.giftCards) {
+      const rewardsDiscount =
+        window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
+          g => g.provider === 'SSG_REWARDS'
+        )
 
-    if (rewardsDiscount === 0) return
+      if (!rewardsDiscount) return
+      if (rewardsDiscount[0].value === 0) return
+    }
 
     const element = document.querySelector(
       '.gift-card-provider-group-ssg_rewards .action a'
@@ -363,6 +368,37 @@ export default class Rewards {
 
     if ($('#show-rewards-parent').length) {
       $('#show-rewards-parent').removeClass('disabled')
+    }
+  }
+
+  verifyRewardsDiscount() {
+    if (window.vtexjs.checkout.orderForm.paymentData.giftCards) {
+      const rewardsDiscount =
+        window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
+          g => g.provider === 'SSG_REWARDS'
+        )
+
+      if (!rewardsDiscount) return
+      if (rewardsDiscount[0].value === 0) return
+    }
+
+    const rewardsOrder =
+      window.vtexjs.checkout.orderForm.paymentData.giftCards[0].value
+
+    const totalOrder = window.vtexjs.checkout.orderForm.value
+
+    const element = document.querySelector(
+      '.gift-card-provider-group-ssg_rewards .action a'
+    )
+
+    if (totalOrder / 2 < rewardsOrder) {
+      if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
+        element.click()
+      }
+
+      if ($('#show-rewards-parent').length) {
+        $('#show-rewards-parent').removeClass('disabled')
+      }
     }
   }
 
