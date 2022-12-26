@@ -348,13 +348,22 @@ export default class Rewards {
   }
 
   cancelRewardsDiscount() {
+    const rewardsDiscount =
+      window.vtexjs.checkout.orderForm.paymentData.giftCards[0].value || 0
+
+    if (rewardsDiscount === 0) return
+
     const element = document.querySelector(
       '.gift-card-provider-group-ssg_rewards .action a'
     )
 
-    element.click()
+    if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
+      element.click()
+    }
 
-    $('#show-rewards-parent').removeClass('disabled')
+    if ($('#show-rewards-parent').length) {
+      $('#show-rewards-parent').removeClass('disabled')
+    }
   }
 
   showPointsSimulation() {
@@ -368,7 +377,7 @@ export default class Rewards {
       this.getRewardsData(orderForm.clientProfileData.email)
     }
 
-    let rewardsDiscountApplied = 0;
+    let rewardsDiscountApplied = 0
 
     if (orderForm.paymentData.giftCards) {
       const giftRewards = orderForm.paymentData.giftCards.filter(
@@ -380,7 +389,7 @@ export default class Rewards {
         giftRewards[0].inUse &&
         giftRewards[0].value > 0
       ) {
-        rewardsDiscountApplied = giftRewards[0].value / 100;
+        rewardsDiscountApplied = giftRewards[0].value / 100
         this.createRewardsTotalDiscount(giftRewards[0].value / 100)
       } else {
         $('.rewards-total-discount').remove()
@@ -436,8 +445,8 @@ export default class Rewards {
         ObjectType: 'ESTORE_BR',
         ObjectId: item.refId,
         Amount: (
-          ((item.sellingPrice / 100) * item.quantity) +
-          TotalShippingCurrentItem - 
+          (item.sellingPrice / 100) * item.quantity +
+          TotalShippingCurrentItem -
           rewardsDiscountApplied
         ).toString(),
         Quantity: item.quantity.toString(),
