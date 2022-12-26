@@ -368,6 +368,8 @@ export default class Rewards {
       this.getRewardsData(orderForm.clientProfileData.email)
     }
 
+    let rewardsDiscountApplied = 0;
+
     if (orderForm.paymentData.giftCards) {
       const giftRewards = orderForm.paymentData.giftCards.filter(
         g => g.provider === 'SSG_REWARDS'
@@ -378,6 +380,7 @@ export default class Rewards {
         giftRewards[0].inUse &&
         giftRewards[0].value > 0
       ) {
+        rewardsDiscountApplied = giftRewards[0].value / 100;
         this.createRewardsTotalDiscount(giftRewards[0].value / 100)
       } else {
         $('.rewards-total-discount').remove()
@@ -433,8 +436,9 @@ export default class Rewards {
         ObjectType: 'ESTORE_BR',
         ObjectId: item.refId,
         Amount: (
-          (item.sellingPrice / 100) * item.quantity +
-          TotalShippingCurrentItem
+          ((item.sellingPrice / 100) * item.quantity) +
+          TotalShippingCurrentItem - 
+          rewardsDiscountApplied
         ).toString(),
         Quantity: item.quantity.toString(),
       })
