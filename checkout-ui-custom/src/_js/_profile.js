@@ -332,6 +332,21 @@ export default class CustomProfileData {
       }, 1)
     })
 
+    $('body').on('keypress', '#ship-number', function (e) {
+      function checkChar(e) {
+          var char = String.fromCharCode(e.keyCode);
+          var pattern = /^[0-9\s]*$/;
+          if (char.match(pattern)) {
+            return true;
+        }
+      }
+      if(!checkChar(e)) {
+          e.preventDefault();
+      }
+    });
+    
+
+
     $('body').on('input', '#client-whatasapp', function () {
       const $this = $(this)
       const isInvalidNumber = $this.val().length > 0 && $this.val().length < 15
