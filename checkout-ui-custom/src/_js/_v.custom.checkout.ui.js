@@ -1501,7 +1501,7 @@ class checkoutCustom {
         }
 
         if (window.location.hash === '#/payment') {
-          _this.Rewards.verifyRewardsDiscount()
+          _this.Rewards.cancelRewardsDiscount(true)
         }
 
         if (window.location.hash === '#/profile') {

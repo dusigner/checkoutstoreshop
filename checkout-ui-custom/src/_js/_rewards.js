@@ -118,9 +118,12 @@ export default class Rewards {
         _checkoutElem.find('#total-details-rewards').remove()
       }
 
-      if (points > 0 && this.userSaGuid) {
+      if (points > 0 && this.userSaGuid && this.userAcceptedRewards) {
         _checkoutElem.append(_component)
-      } else if (points > 0 && !this.userSaGuid) {
+      } else if (
+        points > 0 &&
+        (!this.userSaGuid || !this.userAcceptedRewards)
+      ) {
         _checkoutElem.append(_componentVtexId)
       }
     } catch (e) {
@@ -347,7 +350,7 @@ export default class Rewards {
     $('#group-all-rewards').hide()
   }
 
-  cancelRewardsDiscount() {
+  cancelRewardsDiscount(verify = false) {
     if (window.vtexjs.checkout.orderForm.paymentData.giftCards) {
       const rewardsDiscount =
         window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
@@ -355,6 +358,7 @@ export default class Rewards {
         )
 
       if (!rewardsDiscount) return
+      if (!rewardsDiscount[0]) return
       if (rewardsDiscount[0].value === 0) return
     }
 
@@ -362,24 +366,16 @@ export default class Rewards {
       '.gift-card-provider-group-ssg_rewards .action a'
     )
 
-    if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
-      element.click()
-    }
+    if (!verify) {
+      if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
+        element.click()
+      }
 
-    if ($('#show-rewards-parent').length) {
-      $('#show-rewards-parent').removeClass('disabled')
-    }
-  }
+      if ($('#show-rewards-parent').length) {
+        $('#show-rewards-parent').removeClass('disabled')
+      }
 
-  verifyRewardsDiscount() {
-    if (window.vtexjs.checkout.orderForm.paymentData.giftCards) {
-      const rewardsDiscount =
-        window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
-          g => g.provider === 'SSG_REWARDS'
-        )
-
-      if (!rewardsDiscount) return
-      if (rewardsDiscount[0].value === 0) return
+      return
     }
 
     const rewardsOrder =
@@ -387,11 +383,8 @@ export default class Rewards {
 
     const totalOrder = window.vtexjs.checkout.orderForm.value
 
-    const element = document.querySelector(
-      '.gift-card-provider-group-ssg_rewards .action a'
-    )
-
-    if (totalOrder / 2 < rewardsOrder) {
+    // verify if value of rewards is more than 50% of order's total
+    if (verify && totalOrder / 2 < rewardsOrder) {
       if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
         element.click()
       }
