@@ -238,12 +238,19 @@ export default class Rewards {
           </div>
           <div
             id="calc-content-rewards"
-            style="display: grid; grid-template-columns: 2fr 1fr; margin-top: 20px"
+            style="margin-top: 10px"
           >
             <div
               id="calc-content-first-column"
               style="display: grid; grid-template-columns: 1fr;"
             >
+            <div class="container-switch-rewards">
+              <label class="switch-rewards">
+                <input type="checkbox">
+                <span class="slider"></span>
+              </label>
+              <span class="text-switch-rewards"></span>
+            </div>
             <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
               Seus pontos valem descontos de até 50% na compra de produtos Samsung.
             </p>
@@ -251,41 +258,46 @@ export default class Rewards {
               Pontos Samsung Rewards pendentes serão creditados 14 dias após o pedido entrega. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados.
             </p>
             </div>
-            <div
-              id="calc-content-third-column"
-              style="display: flex; flex-direction: column; align-items: center"
-            >
-              <button
-                type="button"
-                id="button-use-points-rewards"
-                style="font-size: 14px; color: #fff; font-weight: 700; padding-block: 10px; border-radius: 20px; background: #2189FF; border: none; width: 188px; font-family: SamsungOne; max-height: 40px; align-self: center; margin-bottom: 25px"
-              >
-                Aplicar desconto
-              </button>
-              <button
-              type="button"
-              id="button-cancel-points"
-              style="font-size: 12px; color: #000; font-weight: 700; max-width: 188px; font-family: SamsungOne; max-height: 30px; align-self: center; border: 0; border-bottom: 1px solid #000; background: transparent; padding: 0;"
-            >
-              Acumular pontos
-            </button>
-            </div>
           </div>
         </div>
       </div>
     `)
 
-    document
-      .getElementById('button-use-points-rewards')
-      .addEventListener('click', () => {
-        this.setRewardsDiscount()
-      })
+    const { orderForm } = window.vtexjs.checkout
+    if (orderForm.paymentData.giftCards) {
+      const giftRewards = orderForm.paymentData.giftCards.filter(
+        g => g.provider === 'SSG_REWARDS'
+      )
 
-    document
-      .getElementById('button-cancel-points')
-      .addEventListener('click', () => {
+      if (
+        giftRewards.length &&
+        giftRewards[0].inUse &&
+        giftRewards[0].value > 0
+      ) {
+        $(".switch-rewards input")[0].checked = true
+        this.showRewardsCalc()
+      }
+    }
+
+    if (!!$(".switch-rewards input")[0].checked) {
+      $(".text-switch-rewards").text("Utilizar os pontos nesta compra")
+    } else {
+      $(".text-switch-rewards").text("Acumular pontos para as próximas compras")
+    }
+
+    $(document).on("change", ".switch-rewards input", () => {
+      const inputChecked = $(".switch-rewards input")[0].checked
+      console.log("inputChecked", inputChecked);
+      $(".switch-rewards input").prop("disabled", true)
+
+      if (!!inputChecked) {
+        $(".text-switch-rewards").text("Utilizar os pontos nesta compra")
+        this.setRewardsDiscount()
+      } else {
+        $(".text-switch-rewards").text("Acumular pontos para as próximas compras")
         this.cancelRewardsDiscount()
-      })
+      }
+    })
   }
 
   clamp(num, min, max) {
@@ -347,7 +359,6 @@ export default class Rewards {
     element.dispatchEvent(evt)
 
     $('#show-rewards-parent').addClass('disabled')
-    $('#group-all-rewards').hide()
   }
 
   cancelRewardsDiscount(verify = false) {
@@ -367,12 +378,12 @@ export default class Rewards {
     )
 
     if (!verify) {
-      if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
-        element.click()
+      if ($(".switch-rewards input").length > 0) {
+        $(".switch-rewards input")[0].checked = false
       }
 
-      if ($('#show-rewards-parent').length) {
-        $('#show-rewards-parent').removeClass('disabled')
+      if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
+        element.click()
       }
 
       return
@@ -425,6 +436,10 @@ export default class Rewards {
       }
     } else {
       $('.rewards-total-discount').remove()
+    }
+
+    if ($(".switch-rewards input").length > 0) {
+      $(".switch-rewards input").prop("disabled", false)
     }
 
     const TotalItems =
