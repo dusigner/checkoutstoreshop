@@ -73,6 +73,7 @@ export default class Rewards {
     const newData = {
       total_points_earned: points,
       terms_accepted: this.userAcceptedRewards,
+      saguid: this.userSaGuid,
     }
 
     $.ajax({
