@@ -73,7 +73,7 @@ export default class Rewards {
     const newData = {
       total_points_earned: points,
       terms_accepted: this.userAcceptedRewards,
-      saguid: this.userSaGuid,
+      saguid: this.userSaGuid || '0',
     }
 
     $.ajax({
@@ -265,6 +265,7 @@ export default class Rewards {
     `)
 
     const { orderForm } = window.vtexjs.checkout
+
     if (orderForm.paymentData.giftCards) {
       const giftRewards = orderForm.paymentData.giftCards.filter(
         g => g.provider === 'SSG_REWARDS'
@@ -275,27 +276,29 @@ export default class Rewards {
         giftRewards[0].inUse &&
         giftRewards[0].value > 0
       ) {
-        $(".switch-rewards input")[0].checked = true
+        $('.switch-rewards input')[0].checked = true
         this.showRewardsCalc()
       }
     }
 
-    if (!!$(".switch-rewards input")[0].checked) {
-      $(".text-switch-rewards").text("Utilizar os pontos nesta compra")
+    if ($('.switch-rewards input')[0].checked) {
+      $('.text-switch-rewards').text('Utilizar os pontos nesta compra')
     } else {
-      $(".text-switch-rewards").text("Acumular pontos para as próximas compras")
+      $('.text-switch-rewards').text('Acumular pontos para as próximas compras')
     }
 
-    $(document).on("change", ".switch-rewards input", () => {
-      const inputChecked = $(".switch-rewards input")[0].checked
-      console.log("inputChecked", inputChecked);
-      $(".switch-rewards input").prop("disabled", true)
+    $(document).on('change', '.switch-rewards input', () => {
+      const inputChecked = $('.switch-rewards input')[0].checked
 
-      if (!!inputChecked) {
-        $(".text-switch-rewards").text("Utilizar os pontos nesta compra")
+      $('.switch-rewards input').prop('disabled', true)
+
+      if (inputChecked) {
+        $('.text-switch-rewards').text('Utilizar os pontos nesta compra')
         this.setRewardsDiscount()
       } else {
-        $(".text-switch-rewards").text("Acumular pontos para as próximas compras")
+        $('.text-switch-rewards').text(
+          'Acumular pontos para as próximas compras'
+        )
         this.cancelRewardsDiscount()
       }
     })
@@ -379,8 +382,8 @@ export default class Rewards {
     )
 
     if (!verify) {
-      if ($(".switch-rewards input").length > 0) {
-        $(".switch-rewards input")[0].checked = false
+      if ($('.switch-rewards input').length > 0) {
+        $('.switch-rewards input')[0].checked = false
       }
 
       if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
@@ -439,8 +442,8 @@ export default class Rewards {
       $('.rewards-total-discount').remove()
     }
 
-    if ($(".switch-rewards input").length > 0) {
-      $(".switch-rewards input").prop("disabled", false)
+    if ($('.switch-rewards input').length > 0) {
+      $('.switch-rewards input').prop('disabled', false)
     }
 
     const TotalItems =
