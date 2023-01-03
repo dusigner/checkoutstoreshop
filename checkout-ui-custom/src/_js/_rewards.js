@@ -256,7 +256,7 @@ export default class Rewards {
               Seus pontos valem descontos de até 50% na compra de produtos Samsung.
             </p>
             <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
-              Pontos Samsung Rewards pendentes serão creditados 14 dias após o pedido entrega. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados.
+              Pontos Samsung Rewards pendentes serão creditados 14 dias após o pedido entregue. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados.
             </p>
             </div>
           </div>
