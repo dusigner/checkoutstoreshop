@@ -98,16 +98,17 @@ export default class CustomShippingData {
       try {
         const $postalCodeForm = $('#shipping-preview-container')
         const $virtualInventoryMessage = $(
-          `<div class="virtual-inventory-msg" style="max-width: 566px; margin-top: 16px;">
+          `<div class="virtual-inventory-msg prazo-acima" style="max-width: 566px; margin-top: 16px;">
           <p class="invalid-postal-code-msg__message">
             Este item está com prazo de entrega acima do normal.
           </p>
         </div>`
         )
-        if (
-          $postalCodeForm.find('.shp-alert-shipping-unavailable').length === 1
-        ) {
-          $postalCodeForm.find('.shp-alert-shipping-unavailable').before($virtualInventoryMessage)
+
+        if($('.prazo-acima').length === 0){
+          if ($postalCodeForm.find('.shp-alert-shipping-unavailable').length === 1) {
+            $postalCodeForm.find('.shp-alert-shipping-unavailable').before($virtualInventoryMessage)
+          }
         }
       } catch (err) {
         console.error(
@@ -181,14 +182,6 @@ export default class CustomShippingData {
           clearInterval(interval)
         }
       }, 50)
-
-      if (address.postalCode && !address.city) {
-        this.setInvalidPostalCode()
-        this.addInvalidPostalCodeMessage()
-      } else {
-        this.setValidPostalCode()
-        this.removeInvalidPostalCodeMessage()
-      }
     } catch (err) {
       console.error(`Ocorreu um erro ao validar CEP: ${err}`)
     }
