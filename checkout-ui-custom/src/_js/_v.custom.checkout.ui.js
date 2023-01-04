@@ -839,6 +839,11 @@ class checkoutCustom {
       _trElem
         .find('> .summary-template-holder')
         .wrap(`<div class="summary-to-new-components"></div>`)
+
+      // Corrigir bug que o botão, em alguns momentos, fica fora do wrapper
+      $('.clearfix.pull-right.cart-links.cart-links-bottom.hide').appendTo(
+        '.summary-template-holder'
+      )
     } catch (e) {
       console.error('WrapSummary error:', e)
     }
@@ -1248,42 +1253,55 @@ class checkoutCustom {
     }
   }
 
-
   // Remove sku de serviços quando o produto atrelado for excluido
-  removeInstallationProduct()  {
+  removeInstallationProduct() {
     const _this = this
+
     $('body').on('click', '.item-link-remove', async function () {
-      let dataSku = $(this).closest('tr').attr('data-sku')
-      await fetch(`${_this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`)
-      .then(response => response.json())
-      .then(response => { 
-        if(response[0] && response[0].skuSpecifications !== 'undefined') {
-          let isInstallation = response[0].skuSpecifications.filter(item => item.field.name === 'Serviço de Instalação')
-          if(isInstallation.length > 0) {
-            let nameInstallation = isInstallation[0].values[0].name 
-            setTimeout(function(){
-              const removeList = []
-              vtexjs.checkout.orderForm.items.forEach((el, i) => {
-                if(el.refId === nameInstallation)
-                removeList.push({
-                  index: i,
-                  quantity: 0
+      const dataSku = $(this).closest('tr').attr('data-sku')
+
+      await fetch(
+        `${_this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`
+      )
+        .then(response => response.json())
+        .then(response => {
+          if (response[0] && response[0].skuSpecifications !== 'undefined') {
+            const isInstallation = response[0].skuSpecifications.filter(
+              item => item.field.name === 'Serviço de Instalação'
+            )
+
+            if (isInstallation.length > 0) {
+              const nameInstallation = isInstallation[0].values[0].name
+
+              setTimeout(function () {
+                const removeList = []
+
+                vtexjs.checkout.orderForm.items.forEach((el, i) => {
+                  if (el.refId === nameInstallation) {
+                    removeList.push({
+                      index: i,
+                      quantity: 0,
+                    })
+                  }
                 })
-              })
-              const itemsToRemove = removeList
-              if (itemsToRemove.length > 0) {
-                  return window.vtexjs.checkout.removeItems(itemsToRemove).then(() => {})
-              }
-            }, 2000)
+                const itemsToRemove = removeList
+
+                if (itemsToRemove.length > 0) {
+                  return window.vtexjs.checkout
+                    .removeItems(itemsToRemove)
+                    .then(() => {})
+                }
+              }, 2000)
+            }
           }
-        }
-      })
+        })
     })
   }
 
   bind() {
     const _this = this
-    _this.removeInstallationProduct() 
+
+    _this.removeInstallationProduct()
     $('body').on('click', '#v-custom-edit-login-data', function (e) {
       e.preventDefault()
 
