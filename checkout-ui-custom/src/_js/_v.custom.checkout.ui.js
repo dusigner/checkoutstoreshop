@@ -4,7 +4,11 @@
 /* eslint eqeqeq: 0 */
 
 const { _locale } = require('./_locale-infos.js')
-const { debounce, formatCurrencyBRL } = require('./_utils.js')
+const {
+  debounce,
+  formatCurrencyBRL,
+  formatNegativeValue,
+} = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const { default: CustomProfileData } = require('./_profile')
 const { default: CustomShippingData } = require('./_shipping')
@@ -46,6 +50,7 @@ class checkoutCustom {
     this.TradeIn = new TradeIn()
     this.SendAttachment = new SendAttachment()
     this.adobeLaunchPixel = new AdobeLaunchPixel()
+    this.hasSelectedDefaultPaymentMethod = false;
   }
 
   rootPath() {
@@ -278,9 +283,9 @@ class checkoutCustom {
 
         _trElem.find('.totalizers-list .Items').after(
           `<tr class="coupon-applied" style="height: 23px;">
-            <td>Cupom</td>
+            <td style="margin-left: 10px;">Cupom</td>
             <td>
-              <p class="using-coupon-text" style="font-weight: 700">
+              <p class="using-coupon-text" style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;">
                 ${orderForm.marketingData.coupon}
               </p>
             </td>
@@ -292,6 +297,133 @@ class checkoutCustom {
       }
     } catch (e) {
       console.error('ApplyCoupon error:', e)
+    }
+  }
+
+  showCustomDiscounts() {
+    try {
+      const { items } = window.vtexjs.checkout.orderForm
+      const _trElem = $(`.Discounts`)
+
+      if (items.length) {
+        const itemsDiscounts = items
+          .map(function (item) {
+            return item.priceTags
+          })
+          .flat()
+          .filter(item => item.value < 0)
+
+        const uniqueDiscounts = itemsDiscounts.filter(function (discount) {
+          return (
+            itemsDiscounts.findIndex(
+              i =>
+                i.name === discount.name ||
+                (i.ratesAndBenefitsIdentifier &&
+                  i.ratesAndBenefitsIdentifier.name
+                    .toLowerCase()
+                    .includes('desconto à vista') &&
+                  discount.ratesAndBenefitsIdentifier &&
+                  discount.ratesAndBenefitsIdentifier.name
+                    .toLowerCase()
+                    .includes('desconto à vista'))
+            ) === itemsDiscounts.indexOf(discount)
+          )
+        })
+
+        const discountsTotal = uniqueDiscounts.map(function (discount) {
+          const name = discount.ratesAndBenefitsIdentifier
+            ? discount.ratesAndBenefitsIdentifier.name
+            : ''
+
+          const total = itemsDiscounts.reduce(function (acc, current) {
+            const isDiscountInCash = current.ratesAndBenefitsIdentifier
+              ? current.ratesAndBenefitsIdentifier.name
+                  .toLowerCase()
+                  .includes('desconto à vista') &&
+                name.toLowerCase().includes('desconto à vista')
+              : ''
+
+            if (current.name === discount.name || isDiscountInCash) {
+              return (acc += current.value)
+            }
+
+            return acc
+          }, 0)
+
+          return {
+            name,
+            value: total,
+          }
+        })
+
+        const elements = discountsTotal.map((discount) => {
+          if (discount.name.toLowerCase().includes('desconto à vista')) {
+            this.hasSelectedDefaultPaymentMethod = true;
+            const selectedPaymentSystem =
+              window.vtexjs.checkout.orderForm.paymentData.payments[0]
+                .paymentSystem
+
+            const paymentSystemName =
+              window.vtexjs.checkout.orderForm.paymentData.paymentSystems.find(
+                paymentSystem => {
+                  return paymentSystem.id == selectedPaymentSystem
+                }
+              ).name
+
+            return `
+            <tr class="discount discount_in_cash" style="height: 23px;">
+              <td style="margin-left: 10px;">Desconto ${paymentSystemName}</td>
+              <td>
+                <span style="font-weight: 700">${formatNegativeValue(
+                  formatCurrencyBRL(discount.value)
+                )}</span>
+              </td>
+            </tr>`
+          }
+
+          if (
+            discount.name.toLowerCase().includes('cupom instantâneo') ||
+            discount.name.toLowerCase().includes('cupom instantâneo')
+          ) {
+            return `
+              <tr class="discount instant_voucher" style="height: 23px;">
+                <td style="margin-left: 10px;">Desc. Cupom Instantâneo</td>
+                <td>
+                  <span style="font-weight: 700" >${formatNegativeValue(
+                    formatCurrencyBRL(discount.value)
+                  )}</span>
+                </td>
+              </tr>`
+          }
+
+          if (discount.name.toLowerCase().includes('seguro')) {
+            return `
+              <tr class="discount sc" style="height: 23px;">
+                <td style="margin-left: 10px;">Desc. Samsung Care+</td>
+                <td>
+                  <span style="font-weight: 700" >${formatNegativeValue(
+                    formatCurrencyBRL(discount.value)
+                  )}</span>
+                </td>
+              </tr>`
+          }
+
+          return `
+            <tr class="discount cupon" style="height: 23px;">
+              <td style="margin-left: 10px;">Desc. Cupom</td>
+              <td>
+                <span style="font-weight: 700" >${formatNegativeValue(
+                  formatCurrencyBRL(discount.value)
+                )}</span>
+              </td>
+            </tr>`
+        })
+
+        $('.totalizers-list .discount').remove()
+        _trElem.before(`${elements.join()}`)
+      }
+    } catch (e) {
+      console.error('showCustomDiscounts error', e)
     }
   }
 
@@ -342,7 +474,7 @@ class checkoutCustom {
       _trElem.find('.totalizers-list .coupon-applied').after(
         `<tr class="coupon-applied-message" style="height: 23px;">
             <td>
-              <span style="color: #D62E2E; font-size: 12px;">${_message}</span>
+              <span style="color: #D62E2E; font-size: 12px; margin-left: 10px;">${_message}</span>
             </td>
         </tr>`
       )
@@ -621,7 +753,11 @@ class checkoutCustom {
           .find('td.product-price')
           .addClass('v-custom-quantity-price-active')
           .prepend(
-            `<div class="v-custom-quantity-price vqc-ldelem"><p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p></div>`
+            `
+            <div class="v-custom-quantity-price vqc-ldelem">
+              <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p>
+            </div>
+            `
           )
       })
     } catch (e) {
@@ -660,14 +796,39 @@ class checkoutCustom {
 
       const _trElem = $(`.summary-template-holder`)
 
+      if (path === '#/payment' || this.hasSelectedDefaultPaymentMethod) {
+        const selectedPaymentMethod =
+          window.vtexjs.checkout.orderForm.paymentData.payments[0]
+
+        const _component = `
+          <div class="cart-total" style="margin-bottom: 20px; color: #000">
+            <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
+              <p class="ref-id">Total</p>
+              <p class="estimate-shipping">${formatCurrencyBRL(
+                selectedPaymentMethod ?  selectedPaymentMethod.value : 0
+              )}</p>
+            </div>
+          </div>
+        `
+
+        if (_trElem.find('.cart-total').length === 0) {
+          _trElem.prepend(_component)
+        } else {
+          _trElem.find('.cart-total').remove()
+          _trElem.prepend(_component)
+        }
+
+        return
+      }
+
       // Pega o valor do pix (código 125)
-      const priceAVista = orderForm.paymentData.installmentOptions.find(
+      const inCashPrice = orderForm.paymentData.installmentOptions.find(
         item => item.paymentSystem == 125
       ).installments[0].total
 
       // Encontra as installments para do cartao visa (código 2)
       // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-      const priceAPrazo = await fetch(
+      const termPrice = await fetch(
         `${this.rootPath()}/api/checkout/pub/orderForm/${
           orderForm.orderFormId
         }/installments?paymentSystem=2`
@@ -685,34 +846,32 @@ class checkoutCustom {
           )
         })
 
-      const percentDiscount = Math.floor(
-        100 - (priceAVista / priceAPrazo) * 100
-      )
+      const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
 
       const _component = `
-        <div class="cart-total" style="margin-bottom: 20px; color: #000">
-          <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
-            <p class="ref-id">Total à vista</p>
-            <p class="estimate-shipping">${formatCurrencyBRL(priceAVista)}</p>
-          </div>
-          ${
-            percentDiscount > 0
-              ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
-                  <p>(${percentDiscount}% de desconto)</p>
-                </div>`
-              : ''
-          }
+          <div class="cart-total" style="margin-bottom: 20px; color: #000">
+            <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
+              <p class="ref-id">Total</p>
+              <p class="estimate-shipping">${formatCurrencyBRL(inCashPrice)}</p>
+            </div>
+            ${
+              percentDiscount > 0
+                ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
+                    <p>(${percentDiscount}% de desconto)</p>
+                  </div>`
+                : ''
+            }
 
-          <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-            <p class="gross-total">
-              Total a prazo
-            </p>
-            <p class="discount-total" style="font-weight: 700;">
-              ${formatCurrencyBRL(priceAPrazo)}
-            </p>
+            <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
+                <p class="gross-total">
+                  Ou parcelado em até 12x
+                </p>
+                <p class="discount-total" style="font-weight: 700;">
+                  ${formatCurrencyBRL(termPrice)}
+                </p>
+            </div>
           </div>
-        </div>
-      `
+        `
 
       if (path !== '#/cart') {
         if (_trElem.find('.cart-total').length === 0) {
@@ -796,7 +955,7 @@ class checkoutCustom {
         }
 
         _trElem.find('.coupon-fields').append(
-          `<div class="div-coupon-info" style="margin-bottom: 25px; text-align: left">
+          `<div class="div-coupon-info" style="margin-bottom: 20px; text-align: left">
             <p style="font-size: 12px; color: #555555;">
               Digite o cupom de desconto
             </p>
@@ -871,7 +1030,7 @@ class checkoutCustom {
         return item.quantity
       })
 
-      const _accordionElem = $($('.summary-totalizers .accordion-inner')[1])
+      const _accordionElem = $($('.summary-template-holder')[1])
 
       let listItems = ''
 
@@ -893,10 +1052,10 @@ class checkoutCustom {
       `
 
       if (!$('.summaryOrder').length) {
-        _accordionElem.append(_summaryOrder)
+        _accordionElem.prepend(_summaryOrder)
       } else {
         $('.summaryOrder').remove()
-        _accordionElem.append(_summaryOrder)
+        _accordionElem.prepend(_summaryOrder)
       }
     } catch (e) {
       console.error('summaryCustom error:', e)
@@ -967,6 +1126,7 @@ class checkoutCustom {
     this.condensedTaxes(orderForm)
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
+    this.showCustomDiscounts()
     this.summaryCustom()
     new CustomHeader().init()
     new SamsungCarePlus().init()
@@ -1248,7 +1408,9 @@ class checkoutCustom {
       ) {
         $defaultPaymentMethod.trigger('click')
       }
+      this.hasSelectedDefaultPaymentMethod = true;
     } catch (err) {
+      this.hasSelectedDefaultPaymentMethod = false;
       console.error(`Erro ao definir método de pagamento padrão: ${err}`)
     }
   }
@@ -1258,31 +1420,21 @@ class checkoutCustom {
     const _this = this
 
     $('body').on('click', '.item-link-remove', async function () {
-      const dataSku = $(this).closest('tr').attr('data-sku')
-
-      await fetch(
-        `${_this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`
-      )
-        .then(response => response.json())
-        .then(response => {
-          if (response[0] && response[0].skuSpecifications !== 'undefined') {
-            const isInstallation = response[0].skuSpecifications.filter(
-              item => item.field.name === 'Serviço de Instalação'
-            )
-
-            if (isInstallation.length > 0) {
-              const nameInstallation = isInstallation[0].values[0].name
-
-              setTimeout(function () {
-                const removeList = []
-
-                vtexjs.checkout.orderForm.items.forEach((el, i) => {
-                  if (el.refId === nameInstallation) {
-                    removeList.push({
-                      index: i,
-                      quantity: 0,
-                    })
-                  }
+      let dataSku = $(this).closest('tr').attr('data-sku')
+      await fetch(`${_this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`)
+      .then(response => response.json())
+      .then(response => {
+        if(response[0] && response[0].skuSpecifications !== 'undefined') {
+          let isInstallation = response[0].skuSpecifications.filter(item => item.field.name === 'Serviço de Instalação')
+          if(isInstallation.length > 0) {
+            let nameInstallation = isInstallation[0].values[0].name
+            setTimeout(function(){
+              const removeList = []
+              vtexjs.checkout.orderForm.items.forEach((el, i) => {
+                if(el.refId === nameInstallation)
+                removeList.push({
+                  index: i,
+                  quantity: 0
                 })
                 const itemsToRemove = removeList
 
@@ -1298,9 +1450,22 @@ class checkoutCustom {
     })
   }
 
+  // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
+  customizeLogOut(){
+    const accountbr =  __RUNTIME__.account == 'samsungbr'
+    const notMyvtex = window.location.href.indexOf("myvtex") == -1
+
+    if(($('.link-logout-container').is(':visible')) && (accountbr) && (notMyvtex)) {
+      $('#is-not-me').removeAttr('href')
+      $('body').on('click', '#is-not-me', function () {
+        const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${vtexjs.checkout.orderForm.orderFormId}`
+        window.location.assign(`https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbr&returnUrl=${returnUrl}`)
+      })
+    }
+  }
+
   bind() {
     const _this = this
-
     _this.removeInstallationProduct()
     $('body').on('click', '#v-custom-edit-login-data', function (e) {
       e.preventDefault()
@@ -1485,13 +1650,17 @@ class checkoutCustom {
         ) {
           _this.TradeIn.validateTradeinCustomData()
           _this.displayHideSuperChat(window.location.hash)
+          _this.customizeLogOut()
         }
 
         _this.updateStep()
         _this.changeShippingTimeInfoInit()
         _this.checkProfileFocus()
         _this.fixLabels()
-        _this.defaultPaymentMethod()
+
+        if (window.location.hash === '#/payment') {
+          _this.defaultPaymentMethod()
+        }
 
         _this.shipping.toggleGoToPaymentDisabled()
 
@@ -1504,6 +1673,7 @@ class checkoutCustom {
           _this.profile.addDateBirthField()
           _this.profile.toggleGoToShippingDisabled()
           _this.profile.removePj()
+          _this.customizeLogOut()
         }
 
         if (_this.orderForm) {
@@ -1526,6 +1696,7 @@ class checkoutCustom {
 
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
+            _this.customizeLogOut()
           }
         }
       })
@@ -1534,7 +1705,7 @@ class checkoutCustom {
         _this.update(orderForm)
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
-
+        _this.customizeLogOut()
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
           _this.preEmail.createElementSamsungAccountLogin()
         }
@@ -1599,7 +1770,9 @@ class checkoutCustom {
           _this.addMedalliaScript()
         })
 
-        _this.defaultPaymentMethod()
+        if (window.location.hash === '#/payment') {
+          _this.defaultPaymentMethod()
+        }
 
         // #shipping
         _this.profile.toggleGoToShippingDisabled()
