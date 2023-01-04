@@ -1416,7 +1416,7 @@ class checkoutCustom {
   }
 
   // Remove sku de serviços quando o produto atrelado for excluido
-  removeInstallationProduct() {
+  removeInstallationProduct()  {
     const _this = this
 
     $('body').on('click', '.item-link-remove', async function () {
@@ -1443,10 +1443,11 @@ class checkoutCustom {
                     .removeItems(itemsToRemove)
                     .then(() => {})
                 }
-              }, 2000)
-            }
+              })
+            }, 2000)
           }
-        })
+        }
+      })
     })
   }
 
