@@ -182,6 +182,13 @@ export default class CustomShippingData {
           clearInterval(interval)
         }
       }, 50)
+      if (address.postalCode && !address.city) {
+        this.setInvalidPostalCode()
+        this.addInvalidPostalCodeMessage()
+      } else {
+        this.setValidPostalCode()
+        this.removeInvalidPostalCodeMessage()
+      }
     } catch (err) {
       console.error(`Ocorreu um erro ao validar CEP: ${err}`)
     }
