@@ -27,7 +27,7 @@ export default class CustomPreEmail {
               </div>
               <div class="samsung-account-label" style="font-size:14px; font-family:'SamsungOne'; margin-top: 30px; justify-content: center; display: flex;">
                 <p style="max-width: 326px">
-                  Suas compras podem valer pontos para utilização como desconto na loja Samsung. Participe agora.
+                  Suas compras podem valer pontos para utilização como desconto na loja Samsung. Participe agora para garantir sua pontuação.
                 </p>
               </div>
             </div>
