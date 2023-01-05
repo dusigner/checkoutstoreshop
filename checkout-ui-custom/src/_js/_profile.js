@@ -192,16 +192,8 @@ export default class CustomProfileData {
 
     // moves emails and offers into this context
     $('.newsletter-text').before('<span class="custom-checkbox-icon"></span>')
-    // $('#newsletter-text-span').show()
-    // $('.newsletter-text').hide()
+    // troca texto do newsletter
     $('.newsletter-label').append('<span class="newsletter-text-correct">Desejo receber comunicações, ofertas e novidades sobre a Samsung.</span>');
-    // Troca de texto do newsletter
-    // $(".newsletter-label").html('<p class="text-success">Teste</p>');
-    // $('.checkbox newsletter-label').append('<span class="newsletter-text" data-i18n="global.optinNewsLetter">Desejo receber comunicações, ofertas e novidades sobre a Samsung.</span>');
-    // const element = $(".newsletter-text");
-    // const textToReplace = element.text();
-    // const newText = textToReplace.replace("Quero receber e-mails com promoções.", "Desejo receber comunicações, ofertas e novidades sobre a Samsung.");
-    // element.text(newText); 
     const $infoEmail = $('.box-client-info .newsletter').detach()
     $('.box-client-info .__newsletter').after($($infoEmail))
 
