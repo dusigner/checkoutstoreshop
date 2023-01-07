@@ -1662,7 +1662,7 @@ class checkoutCustom {
         }
 
         if (window.location.hash === '#/profile') {
-          _this.profile.addWhatsAppField()
+          // _this.profile.addWhatsAppField()
           _this.profile.addDateBirthField()
           _this.profile.addMsgPhone()
           _this.profile.toggleGoToShippingDisabled()
@@ -1707,7 +1707,7 @@ class checkoutCustom {
 
         if (window.location.hash === '#/profile') {
           // Add WhatsApp
-          _this.profile.addWhatsAppField()
+          // _this.profile.addWhatsAppField()
           // Insere o campo data de nascimento
           _this.profile.addDateBirthField()
           _this.profile.addMsgPhone()
