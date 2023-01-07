@@ -440,4 +440,57 @@ export default class CustomProfileData {
       }
     )
   }
+
+  addMsgPhone() {
+    if ($('small.textMsgPhone').length) return
+
+    const $textMsgPhone = `<small class="textMsgPhone">O número correto garante que possamos entrar em contato em caso de algum problema na entrega.</small>`
+
+    $('p.client-phone').first().after($textMsgPhone)
+  }
+
+  addFieldsProfile(orderForm) {
+    const _this = this
+    const documentCpf = orderForm.clientProfileData.document
+
+    const $documentCpfField = `<p id="documentCpfField" class="client-profile-summary cpf-field">
+          <span class="name-label" style="">CPF:</span>
+          <span class="name">${documentCpf}</span>
+          <br>
+          </p>`
+
+    $('#documentCpfField').empty()
+    $('.client-profile-summary').first().after($documentCpfField)
+
+    $.ajax({
+      url: `${_this.rootPath()}/_v/get/client/${
+        orderForm.clientProfileData.email
+      }`,
+      headers: {
+        Accept: 'application/vnd.vtex.ds.v10+json',
+        'Content-Type': 'application/json',
+      },
+      crossDomain: true,
+      type: 'GET',
+      success(data) {
+        const dataBirthDate = data[0].birthDate
+
+        if (data[0].birthDate) {
+          const clientDateBirth = new Date(dataBirthDate).toLocaleDateString(
+            'pt-BR',
+            { timeZone: 'UTC' }
+          )
+
+          const $dateBirthField = `<p id='dateBirthField' class="client-profile-summary date-birth-field">
+                <span class="name-label" style="">Data de Nascimento:</span>
+                <span class="name">${clientDateBirth}</span>
+                <br>
+                </p>`
+
+          $('#dateBirthField').empty()
+          $('.client-profile-summary.cpf-field').first().after($dateBirthField)
+        }
+      },
+    })
+  }
 }
