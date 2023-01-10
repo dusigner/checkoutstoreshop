@@ -3492,12 +3492,15 @@ body.v-custom-step-payment #shipping-data .shipping-summary-info {
   display: block; }
 
 .container-switch-rewards {
+  display: flex;
+  align-items: center;
   margin-bottom: 10px; }
 
 .switch-rewards {
   position: relative;
   display: inline-block;
   width: 36px;
+  min-width: 36px;
   height: 16px; }
   .switch-rewards input {
     opacity: 0;

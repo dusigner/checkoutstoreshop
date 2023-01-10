@@ -1267,6 +1267,8 @@
 // end counting steps
 
 .container-switch-rewards {
+	display: flex;
+	align-items: center;
 	margin-bottom: 10px;
 }
 
@@ -1274,6 +1276,7 @@
 	position: relative;
 	display: inline-block;
 	width: 36px;
+	min-width: 36px;
 	height: 16px;
 
 	input {

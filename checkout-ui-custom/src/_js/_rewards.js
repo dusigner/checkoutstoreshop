@@ -192,7 +192,7 @@ export default class Rewards {
       const _cartElem = $(`.summary-to-new-components`)
       const _component = `
         <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
-          <p>**Pontos Samsung Rewards pendentes serão creditados em 14 dias após o pedido entregue. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados. Pontos Samsung Rewards são gerados somente em compras realizadas por meio de uma Samsung Account com adesão ao programa Samsung Rewards.
+          <p>**Pontos Samsung Rewards são gerados somente em compras realizadas por meio de uma Samsung Account participante do programa. Pontos Samsung Rewards pendentes serão creditados 14 dias após a entrega do pedido. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados. Ao utilizar seus pontos já existentes do Samsung Rewards as promoções de meios de pagamento vigentes não serão aplicadas.
           </p>
         </div>
       `
@@ -254,9 +254,6 @@ export default class Rewards {
             </div>
             <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
               Seus pontos valem descontos de até 50% na compra de produtos Samsung.
-            </p>
-            <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
-              Pontos Samsung Rewards pendentes serão creditados 14 dias após o pedido entregue. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados.
             </p>
             </div>
           </div>
