@@ -163,13 +163,13 @@ export default class TradeIn {
     localStorage.removeItem('transport')
 
     await $.ajax({
-      url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain/trade_in_option_selected`,
-      type: 'DELETE',
+      url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
+      type: 'POST',
     })
 
     await $.ajax({
-      url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain/trade_in_total_value`,
-      type: 'DELETE',
+      url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
+      type: 'POST',
     })
   }
 
