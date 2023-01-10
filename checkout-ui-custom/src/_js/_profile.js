@@ -332,20 +332,17 @@ export default class CustomProfileData {
       }, 1)
     })
 
-    $('body').on('keypress', '#ship-number', function (e) {
-      function checkChar(e) {
-          var char = String.fromCharCode(e.keyCode);
-          var pattern = /^[0-9\s]*$/;
-          if (char.match(pattern)) {
-            return true;
+    $('body').on(
+      'input',
+      'input#ship-number',
+      function () {
+        const regexp = /[^0-9]/g;
+
+        if ($(this).val().match(regexp)) {
+          $(this).val($(this).val().replace(regexp, ''))
         }
       }
-      if(!checkChar(e)) {
-          e.preventDefault();
-      }
-    });
-    
-
+    )
 
     $('body').on('input', '#client-whatasapp', function () {
       const $this = $(this)
