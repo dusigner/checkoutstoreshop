@@ -760,6 +760,8 @@ class checkoutCustom {
 
         const totalValue = _trElem.find('.total-price:eq(0)').text()
 
+        totalValue === 'R$ 0,01' ? _trElem.addClass('gratuito') : null
+
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
         _trElem
@@ -767,7 +769,7 @@ class checkoutCustom {
           .addClass('v-custom-quantity-price-active')
           .prepend(
             `
-            <div class="v-custom-quantity-price vqc-ldelem ${totalValue === 'R$ 0,01' ? 'gratis' : ''}">
+            <div class="v-custom-quantity-price vqc-ldelem">
               <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue === 'R$ 0,01' ? 'Grátis' : totalValue}</p>
             </div>
             `

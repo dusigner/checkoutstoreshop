@@ -90,7 +90,16 @@ h1#cart-title {display:none !important;}
       display: flex;
       flex-wrap:wrap;
       border-bottom:1px solid  $muted5;
-
+      &.gratuito {
+        .best-price {
+          .new-product-price {
+            display: none;
+          }
+        }
+        .quantity {
+          display: none;
+        }
+      }
       &.hide {
         display:none;
       }
@@ -221,9 +230,6 @@ h1#cart-title {display:none !important;}
                   margin-bottom:-7px;
                 }
               }
-            }
-            &.gratis ~ .best-price .new-product-price  {
-              display: none;
             }
           }
 
