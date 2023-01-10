@@ -222,7 +222,9 @@ h1#cart-title {display:none !important;}
                 }
               }
             }
-
+            &.gratis ~ .best-price .new-product-price  {
+              display: none;
+            }
           }
 
           &.v-custom-quantity-price-active {

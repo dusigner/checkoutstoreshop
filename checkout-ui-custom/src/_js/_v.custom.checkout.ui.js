@@ -767,8 +767,8 @@ class checkoutCustom {
           .addClass('v-custom-quantity-price-active')
           .prepend(
             `
-            <div class="v-custom-quantity-price vqc-ldelem">
-              <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p>
+            <div class="v-custom-quantity-price vqc-ldelem ${totalValue === 'R$ 0,01' ? 'gratis' : ''}">
+              <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue === 'R$ 0,01' ? 'Grátis' : totalValue}</p>
             </div>
             `
           )
