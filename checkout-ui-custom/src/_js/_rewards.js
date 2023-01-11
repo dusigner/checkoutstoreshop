@@ -308,6 +308,18 @@ export default class Rewards {
   getPointsSearch() {
     const { orderForm } = window.vtexjs.checkout
 
+    let TotalShipping = 0
+
+    if (
+      orderForm.totalizers.find(item => {
+        return item.id === 'Shipping'
+      })
+    ) {
+      TotalShipping = orderForm.totalizers.find(item => {
+        return item.id === 'Shipping'
+      }).value
+    }
+
     if (orderForm.orderFormId) {
       const data = {
         Id: orderForm.orderFormId,
@@ -329,7 +341,7 @@ export default class Rewards {
           this.pricePerPoint = res.ExchangedAmount / res.PointBalance
           this.chosenDiscount = Math.min(
             Math.max(res.ExchangedAmount, 0),
-            orderForm.value / 100 / 2
+            (orderForm.value - TotalShipping) / 100 / 2
           )
           this.createGroupCalcRewards()
           if (this.totalPointsUser > 0) {
@@ -378,6 +390,18 @@ export default class Rewards {
       '.gift-card-provider-group-ssg_rewards .action a'
     )
 
+    let TotalShipping = 0
+
+    if (
+      window.vtexjs.checkout.orderForm.totalizers.find(item => {
+        return item.id === 'Shipping'
+      })
+    ) {
+      TotalShipping = window.vtexjs.checkout.orderForm.totalizers.find(item => {
+        return item.id === 'Shipping'
+      }).value
+    }
+
     if (!verify) {
       if ($('.switch-rewards input').length > 0) {
         $('.switch-rewards input')[0].checked = false
@@ -396,13 +420,13 @@ export default class Rewards {
     const totalOrder = window.vtexjs.checkout.orderForm.value
 
     // verify if value of rewards is more than 50% of order's total
-    if (verify && totalOrder / 2 < rewardsOrder) {
-      if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
-        element.click()
+    if (verify && (totalOrder - TotalShipping) / 2 < rewardsOrder) {
+      if ($('.switch-rewards input').length > 0) {
+        $('.switch-rewards input')[0].checked = false
       }
 
-      if ($('#show-rewards-parent').length) {
-        $('#show-rewards-parent').removeClass('disabled')
+      if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
+        element.click()
       }
     }
   }
@@ -478,12 +502,19 @@ export default class Rewards {
 
     orderForm.items.map(item => {
       const MultProporcional =
-        ((item.sellingPrice / 100) * item.quantity) / (TotalItems - TotalDisc)
+        ((item.sellingPrice / 100) * item.quantity) / (TotalItems + TotalDisc)
 
       let TotalShippingCurrentItem = 0
 
       if (TotalShipping > 0) {
         TotalShippingCurrentItem = MultProporcional * TotalShipping
+      }
+
+      let TotalRewardsDiscountCurrentItem = 0
+
+      if (rewardsDiscountApplied > 0) {
+        TotalRewardsDiscountCurrentItem =
+          MultProporcional * rewardsDiscountApplied
       }
 
       ProductItems.push({
@@ -492,7 +523,7 @@ export default class Rewards {
         Amount: (
           (item.sellingPrice / 100) * item.quantity +
           TotalShippingCurrentItem -
-          rewardsDiscountApplied
+          TotalRewardsDiscountCurrentItem
         ).toString(),
         Quantity: item.quantity.toString(),
       })
