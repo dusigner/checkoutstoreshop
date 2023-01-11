@@ -12,10 +12,10 @@ body {
   &.v-custom-step-profile,
   &.v-custom-step-shipping,
   &.v-custom-step-payment {
-    padding-top: 263px;
+    padding-top: 127px;
 
     .cart-template.mini-cart {
-      top: 263px;
+      top: 127px;
 
       @media(max-width: $mobileWidth) {
         top: 0;
@@ -23,7 +23,7 @@ body {
     }
 
     @media(max-width: $mobileWidth) {
-      padding-top: 180px;
+      padding-top: 127;
     }
   }
 
@@ -31,7 +31,6 @@ body {
     text-align: center;
     position: fixed;
     background-color: #FFF;
-    margin-bottom:40px;
     color: #000;
     box-sizing: border-box;
 
@@ -43,9 +42,7 @@ body {
     .container {
       display: grid;
       grid-template-areas:
-        'logo secure'
-        'backtocart backtocart'
-        'steps steps';
+        'logo steps steps secure';
       align-items: center;
       justify-content: space-between;
 
@@ -53,6 +50,10 @@ body {
         width: auto;
         margin-left: 16px;
         margin-right: 16px;
+        row-gap: 6px;
+        grid-template-areas:
+          'logo secure'
+          'steps steps';
       }
     }
 
@@ -65,10 +66,12 @@ body {
       font-weight: bold;
       text-align: right;
       grid-area: secure;
+      @media (max-width: $mobileWidth) {
+        padding: 15px 10px;
+      }
     }
 
     @media (max-width: $mobileWidth) {
-      padding: 15px 10px;
       margin-bottom: 15px;
     }
 
@@ -79,6 +82,7 @@ body {
 
       @media (max-width: $mobileWidth) {
         min-height: 28px;
+        padding: 15px 10px;
       }
     }
 
@@ -87,10 +91,10 @@ body {
       grid-area: steps;
       max-width: 540px;
       margin: 0 auto;
-      min-height: 68px;
 
       @media (max-width: $mobileWidth) {
         min-height: auto;
+        margin-bottom: 16px;
       }
     }
 
@@ -106,15 +110,16 @@ body {
 
   #go-to-cart-button-custom {
     display: none;
-    grid-area: backtocart;
     max-height: 34px;
     gap: 4px;
     max-width: 1280px;
     width: 100%;
     margin: 0 auto;
+    position: inherit;
+    margin-bottom: 32px;
 
     @media (max-width: $mobileWidth) {
-    margin: 16px auto;
+    margin: 16px 24px;
     }
 
     &:before {

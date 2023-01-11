@@ -24,10 +24,18 @@ export default class CustomHeader {
 
       const showHeader = ['#/payment', '#/shipping', '#/profile']
 
+      $(window).scroll(function(){
+        const scroll = $(window).scrollTop();
+        if(scroll > 0) {
+          $("header").css("box-shadow", "0px 1px 3px #00000033");
+        }else {
+          $("header").css("box-shadow", "0px 0px 0px #FFFFFF");
+        }
+      })
+
       if (showHeader.includes(hash)) {
         _stepElem.css('display', 'block')
         _gotoCartElem.css('display', 'flex')
-        _headerElem.css('box-shadow', '0px 4px 10px #00000033')
       } else {
         _stepElem.css('display', 'none')
         _gotoCartElem.css('display', 'none')
@@ -38,15 +46,14 @@ export default class CustomHeader {
 
   _backToCartLink() {
     try {
-      const _stepElem = $(`.checkout-steps`)
-      const _containerElem = $(`.main-header .container`)
+      const _containerElem = $(`.container-order-form`)
 
       if (_containerElem.find('#go-to-cart-button-custom').length > 0) {
         return
       }
 
-      _stepElem.before(`
-        <p id="go-to-cart-button-custom" class="link link-cart pull-right" data-bind="if: !window.router.sac.isActive()">
+      _containerElem.before(`
+        <p id="go-to-cart-button-custom" data-bind="if: !window.router.sac.isActive()">
           <small>
             <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="${window.checkout.cartURL()}">Voltar para o carrinho</a>
           </small>
