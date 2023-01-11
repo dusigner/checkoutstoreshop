@@ -11,26 +11,35 @@ export default class CustomPreEmail {
       $('.client-pre-email-h').length > 0
     ) {
       $('.client-pre-email-h').after(`
-            <div class="samsung-account-container">
-              <div class="samsung-account-image">
-                <button
-                  id="btn-samsung-account"
-                  type="submit"
-                  style="background: black; border-radius: 20px; border: none; padding-inline: 60px; padding-block: 11px;"
-                >
-                  <img src="https://samsungbr.vteximg.com.br/arquivos/logo-ssg-account.svg?v=1"/>
-                </button>
-              </div>
-              <div style="margin-top: 30px">
-                <img style="padding-right: 11px; border-right: 1px solid #cbcbcb" src="https://samsungbr.vteximg.com.br/arquivos/logo-rewards.png?v=1" />
-                <img style="margin-left: 10px" src="https://samsungbr.vteximg.com.br/arquivos/logo-frete.png?v=1" />
-              </div>
-              <div class="samsung-account-label" style="font-size:14px; font-family:'SamsungOne'; margin-top: 30px; justify-content: center; display: flex;">
-                <p style="max-width: 326px">
-                  Suas compras podem valer pontos para utilização como desconto na loja Samsung. Participe agora para garantir sua pontuação.
-                </p>
-              </div>
+          <div class="samsung-account-container">
+            <img
+              style="margin-bottom: 15px"
+              src="https://samsungbr.vteximg.com.br/arquivos/logo-ssg-account-black.svg"
+            />
+            <div class="samsung-account-image">
+              <button
+                id="btn-samsung-account"
+                type="submit"
+              >
+                Login
+              </button>
             </div>
+            <div style="margin-top: 20px">
+              <img style="padding-right: 11px; border-right: 1px solid #cbcbcb" src="https://samsungbr.vteximg.com.br/arquivos/logo-rewards.png?v=1" />
+              <img style="margin-left: 10px" src="https://samsungbr.vteximg.com.br/arquivos/logo-frete.png?v=1" />
+            </div>
+            <div class="samsung-account-label" style="font-size:12px; font-family:'SamsungOne'; margin-top: 20px; justify-content: center; display: flex;">
+              <p style="max-width: 326px">
+                Suas compras podem valer pontos para utilização como desconto na loja Samsung. Participe agora para garantir sua pontuação.
+              </p>
+            </div>
+            <div class="samsung-account-create" style="font-size:12px; font-family:'SamsungOne'; justify-content: center; display: flex;">
+              <p style="max-width: 326px">
+                Não tem uma Samsung Account?
+                <a href="https://account.samsung.com/membership" target="_blank" style="color: black; text-decoration: underline">Registre-se agora</a>.
+              </p>
+            </div>
+          </div>
         `)
     }
   }
@@ -38,7 +47,7 @@ export default class CustomPreEmail {
   openSamsungAccountModal() {
     window.vtexid.start()
 
-    const checkCustomButtonInterval = setInterval(function() {
+    const checkCustomButtonInterval = setInterval(function () {
       if ($('#vtexIdUI-custom-oauth').length) {
         clearInterval(checkCustomButtonInterval)
 
@@ -61,7 +70,7 @@ export default class CustomPreEmail {
   bindEvents() {
     const _this = this
 
-    $(document).on('click', '#btn-samsung-account', function() {
+    $(document).on('click', '#btn-samsung-account', function () {
       _this.openSamsungAccountModal()
     })
   }
