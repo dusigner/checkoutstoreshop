@@ -336,7 +336,7 @@ export default class CustomProfileData {
       'input',
       'input#ship-number',
       function () {
-        const regexp = /[^0-9]/g;
+        const regexp = /[^0-9\s]+$/
 
         if ($(this).val().match(regexp)) {
           $(this).val($(this).val().replace(regexp, ''))
@@ -349,7 +349,7 @@ export default class CustomProfileData {
       'input',
       'input#ship-street, input#ship-complement, input#ship-neighborhood',
       function () {
-        const regexp = /[^a-z0-9]/g;
+        const regexp = /[^a-z0-9\s]+$/
 
         if ($(this).val().match(regexp)) {
           $(this).val($(this).val().replace(regexp, ''))
