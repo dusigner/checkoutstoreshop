@@ -1193,6 +1193,10 @@
 	display: none !important;
 }
 
+.payment-discounts-alert-wrap{
+  display: none;
+}
+
 .box-step-content .gift-card-section:nth-of-type(n+1) {
 	grid-area: giftcard-content;
 }
