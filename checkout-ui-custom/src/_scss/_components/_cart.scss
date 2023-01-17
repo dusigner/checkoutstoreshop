@@ -579,6 +579,28 @@ h1#cart-title {display:none !important;}
 
 	border: $bordersContainers;
 
+  display: grid;
+  grid-template-areas: 'products'
+             'coupon'
+             'price'
+             'finish_payment';
+
+  .cart-total {
+    grid-area: price;
+  }
+
+  .row-fluid.summary {
+    grid-area: coupon;
+  }
+
+  .cart-links-bottom {
+    grid-area: finish_payment;
+  }
+
+  .summaryOrder{
+    grid-area: products
+  }
+
   @media(max-width: $mobileWidth) {
     .best-price{
       font-size: 18px !important;
@@ -795,6 +817,43 @@ h1#cart-title {display:none !important;}
 	}
 
 	.summary-totalizers {
+    .totalizers-list {
+      display: grid;
+      grid-template-areas:
+        'subtotal'
+        'descontos_total'
+        'cupom'
+        'cupom_desconto'
+        'cupom_instantaneo'
+        'entrega';
+
+      .Items {
+        grid-area: subtotal;
+      }
+
+      .coupon-applied {
+        grid-area: cupom;
+      }
+
+      .Discounts {
+        grid-area: descontos_total;
+        max-height: 23px;
+      }
+    }
+
+    .table {
+      display: grid;
+      grid-template-areas:
+          'total-details-tradein'
+          'totalizers-list';
+
+          .totalizers-list {
+            grid-area: totalizers-list;
+            border-bottom: 1px solid #cbcbcb;
+            margin-bottom: 16px;
+          }
+    }
+
 		.table td.space,
 		.table td.empty,
 		tbody.shipping-calculate {

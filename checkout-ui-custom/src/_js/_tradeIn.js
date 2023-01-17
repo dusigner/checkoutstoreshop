@@ -115,9 +115,9 @@ export default class TradeIn {
     try {
       const _checkoutElem = $(`.summary-totalizers .table`)
       const _component = `
-        <tbody id="total-details-tradein" style="border-top: 1px solid #cbcbcb;">
+        <tbody id="total-details-tradein" >
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
-            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart <br /> Dinheiro em Conta</td>
+            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart - Dinheiro em  <br />Conta</td>
             <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(
               totalTradeIn,
               false
@@ -163,13 +163,13 @@ export default class TradeIn {
     localStorage.removeItem('transport')
 
     await $.ajax({
-      url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain/trade_in_option_selected`,
-      type: 'DELETE',
+      url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
+      type: 'POST',
     })
 
     await $.ajax({
-      url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain/trade_in_total_value`,
-      type: 'DELETE',
+      url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
+      type: 'POST',
     })
   }
 
