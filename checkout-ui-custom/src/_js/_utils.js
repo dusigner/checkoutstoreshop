@@ -28,3 +28,6 @@ module.exports.formatNegativeValue = _value => {
 
   return price
 }
+
+module.exports.formatNumberBRL = _value =>
+  new Intl.NumberFormat('pt-BR').format(_value)
