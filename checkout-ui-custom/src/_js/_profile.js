@@ -1,7 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
-
 export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -47,7 +46,7 @@ export default class CustomProfileData {
       whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
         ? $('.whatsapp_phone').val()
         : '',
-      isRewardsAccepted: false,
+      isRewardsAccepted: $('#inputRewards').is(':checked'),
     }
 
     $.ajax({
@@ -61,6 +60,17 @@ export default class CustomProfileData {
         window.localStorage.setItem('doc', data.DocumentId)
       },
     })
+
+    const saGuid = localStorage.getItem('saGuid')
+    const rewardsAccepted = $('#inputRewards').is(':checked')
+
+    if (saGuid && rewardsAccepted) {
+      $.ajax({
+        url: `${_this.rootPath()}/rewards/accept-terms/${saGuid}`,
+        type: 'POST',
+        crossDomain: true,
+      })
+    }
   }
 
   removePj() {
@@ -125,14 +135,14 @@ export default class CustomProfileData {
   }
 
   mdata(v) {
-    let r = v.trim().replace(/\//g, '')
-    
-    if(r.length > 4){
-      r = r.slice(0,2) + "/" + r.slice(2,4) + "/" + r.slice(4)
-    }else if(r.length > 2){
-      r = r.slice(0,2) + "/" + r.slice(2)
+    let r = v.trim()
+
+    if (v.match(/^\d{2}$/) !== null) {
+      r += '/'
+    } else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
+      r += '/'
     }
-    
+
     return r
   }
 
@@ -225,25 +235,26 @@ export default class CustomProfileData {
     $('.newsletter-optin').after($field)
   }
 
-  addRewardsBlock() {
-    if ($('.rewards-block').length) return
-
-    const $field = `<div class="rewards-block" id="RewardsBlock" style="display: none">
-      <h3>Samsung Rewards</h3>
-      <label class="inputOptIn __rewards">
-      <input type="checkbox" id="inputRewards" checked />
-      <span class="custom-checkbox-icon"></span>
-      <span>Participar do programa Samsung Rewards para ganhar pontos com este pedido.</span>
-      </label>
-    </div>`
-
-    $('.terms-and-policies').after($field)
-  }
-
   checkTerms() {
     if (!$('#inputTermAndPolicies').is(':checked')) {
       $('#inputTermAndPolicies').closest('.checkbox-inline').addClass('error')
     }
+  }
+
+  addRewardsBlock() {
+    // rewards
+    $('.box-client-info .newsletter').after(
+      `<div id="RewardsBlock" style="display: none">
+        <h3 style="color:black;font-size:15px;">Samsung Rewards</h3>
+        <label class="inputOptIn __rewards">
+          <input type="checkbox" id="inputRewards" checked />
+          <span class="custom-checkbox-icon"></span>
+          <span>
+            Participar do programa Samsung Rewards para ganhar pontos com este pedido.
+          </span>
+        </label>
+      </div>`
+    )
   }
 
   addTerms(orderForm) {

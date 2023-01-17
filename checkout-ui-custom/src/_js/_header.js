@@ -24,12 +24,13 @@ export default class CustomHeader {
 
       const showHeader = ['#/payment', '#/shipping', '#/profile']
 
-      $(window).scroll(function(){
-        const scroll = $(window).scrollTop();
-        if(scroll > 0) {
-          $("header").css("box-shadow", "0px 1px 3px #00000033");
-        }else {
-          $("header").css("box-shadow", "0px 0px 0px #FFFFFF");
+      $(window).scroll(function () {
+        const scroll = $(window).scrollTop()
+
+        if (scroll > 0) {
+          $('header').css('box-shadow', '0px 1px 3px #00000033')
+        } else {
+          $('header').css('box-shadow', '0px 0px 0px #FFFFFF')
         }
       })
 

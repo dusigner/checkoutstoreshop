@@ -2012,10 +2012,19 @@ h1#cart-title {
       .body-cart-vertical .cart-template.full-cart.active .summary-to-new-components {
         top: 0px; } }
 
+fieldset.pre-email.row-fluid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; }
+
+h3.client-pre-email-h {
+  flex-basis: 100%;
+  padding-bottom: 50px; }
+
 .client-pre-email {
   border: none;
   left: 0; }
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: 690px) {
     .client-pre-email {
       padding-left: 10px;
       padding-right: 10px;
@@ -2028,13 +2037,17 @@ h1#cart-title {
     color: #000;
     text-transform: uppercase;
     text-decoration: underline; }
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 690px) {
       .client-pre-email #orderform-to-cart {
         display: none; } }
   .client-pre-email .samsung-account-container {
     display: inline-block;
-    width: 100%; }
-    @media screen and (max-width: 1024px) {
+    flex-basis: 50%;
+    color: #000; }
+    @media screen and (max-width: 690px) {
+      .client-pre-email .samsung-account-container {
+        flex-basis: 100%; } }
+    @media screen and (max-width: 480px) {
       .client-pre-email .samsung-account-container #btn-samsung-account {
         width: 100%; } }
   .client-pre-email .client-pre-email .client-pre-email-h span {
@@ -2053,10 +2066,10 @@ h1#cart-title {
       font-size: 20px;
       font-weight: bold;
       text-align: center;
-      color: #373737;
       margin-bottom: 15px;
-      content: 'Para finalizar a compra, utilize sua'; }
-      @media screen and (max-width: 1024px) {
+      color: #000;
+      content: 'Escolha uma op\E7\E3o de identifica\E7\E3o para finalizar sua compra'; }
+      @media screen and (max-width: 690px) {
         .client-pre-email .client-pre-email-h span:after {
           font-size: 17px;
           margin-bottom: 5px; } }
@@ -2065,13 +2078,19 @@ h1#cart-title {
   .client-pre-email .samsung-account-label {
     margin: 12px 0px; }
   .client-pre-email .client-email {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    color: #000;
     margin: 0;
-    width: 100%; }
-    @media screen and (max-width: 1024px) {
+    flex-basis: calc(50% - 1px);
+    border-left: 1px solid #cbcbcb; }
+    .client-pre-email .client-email:before {
+      content: 'Ou informe seu e-mail:';
+      display: block;
+      padding-bottom: 25px; }
+    @media screen and (max-width: 690px) {
+      .client-pre-email .client-email {
+        flex-basis: 100%;
+        border-left: none; } }
+    @media screen and (max-width: 690px) {
       .client-pre-email .client-email {
         padding: 0; } }
     .client-pre-email .client-email .loading-inline {
@@ -2085,29 +2104,29 @@ h1#cart-title {
       border-bottom: 1px solid #000;
       border-radius: 0;
       box-shadow: none;
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 300;
       color: #7b7b7b;
       height: 35px;
       background: #0000;
       width: 326px; }
-      @media screen and (max-width: 1024px) {
+      @media screen and (max-width: 480px) {
         .client-pre-email .client-email #client-pre-email {
           width: 100%; } }
     .client-pre-email .client-email #btn-client-pre-email {
       position: unset;
       height: 40px;
       border-radius: 20px;
-      background: #2189ff;
+      background: #fff;
       font-size: 14px;
       font-weight: 700;
-      color: #fff;
+      color: #000;
       width: 326px;
       outline: none;
-      border: none;
+      border: 1px solid #000;
       font-family: 'SamsungOne';
-      margin-top: 12px; }
-      @media screen and (max-width: 1024px) {
+      margin-top: 30px; }
+      @media screen and (max-width: 480px) {
         .client-pre-email .client-email #btn-client-pre-email {
           width: 100%; } }
     .client-pre-email .client-email #btn-client-pre-email:hover {
@@ -2116,7 +2135,7 @@ h1#cart-title {
       border-color: #555; }
     .client-pre-email .client-email .help.error {
       font-size: 13px;
-      text-align: right;
+      text-align: center;
       color: #1428a0; }
       .client-pre-email .client-email .help.error:before {
         content: '*'; }
@@ -2126,16 +2145,16 @@ h1#cart-title {
     margin: 50px auto 0;
     border: none;
     background: none; }
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 690px) {
       .client-pre-email .emailInfo {
         padding: 0; } }
     .client-pre-email .emailInfo h3 {
       margin: 0 0 34px;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: normal;
       text-align: center;
-      color: #363636; }
-      @media screen and (max-width: 1024px) {
+      color: #000; }
+      @media screen and (max-width: 690px) {
         .client-pre-email .emailInfo h3 {
           font-size: 14px;
           margin-bottom: 15px; } }
@@ -2143,7 +2162,6 @@ h1#cart-title {
       display: flex;
       width: 100%;
       margin: 0;
-      background-color: #f9f9f9;
       padding: 20px 0; }
       @media screen and (max-width: 1024px) {
         .client-pre-email .emailInfo ul.unstyled {
@@ -2153,10 +2171,9 @@ h1#cart-title {
         .client-pre-email .emailInfo ul.unstyled li .icon-ok {
           display: none; }
         .client-pre-email .emailInfo ul.unstyled li span {
-          font-size: 13.5px;
-          font-weight: bold;
+          font-size: 12px;
           text-align: center;
-          color: #363636;
+          color: #000;
           display: block; }
           @media screen and (max-width: 1024px) {
             .client-pre-email .emailInfo ul.unstyled li span {
@@ -2794,10 +2811,12 @@ svg.vtex-omnishipping-1-x-svg {
       color: #000;
       font-weight: bold;
       font-size: 12px; }
+  .orderform-template-holder #payment-data p.link.link-gift-card:hover,
+  .orderform-template-holder #payment-data .payment-group-item:hover {
+    cursor: pointer; }
   .orderform-template-holder #payment-data p.link.link-gift-card.active, .orderform-template-holder #payment-data p.link.link-gift-card:hover,
   .orderform-template-holder #payment-data .payment-group-item.active,
   .orderform-template-holder #payment-data .payment-group-item:hover {
-    border-bottom: 1px solid #D6D6D6;
     background: #F7F7F7; }
 
 .orderform-template-holder #payment-data p.link.link-gift-card,
@@ -3524,13 +3543,31 @@ svg.vtex-omnishipping-1-x-svg {
       .orderform-template .custom-cart-template-wrap .summaryOrder li {
         font-size: 12px; }
 
+/* hide default rewards calculator */
+.gift-card-section:nth-of-type(1) {
+  display: none !important; }
+
+.box-step-content .gift-card-section:nth-of-type(n+1) {
+  grid-area: giftcard-content; }
+
+#rewards-remove-discount:hover {
+  cursor: pointer; }
+
+#show-rewards-parent.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  border: 1px solid #DDDDDD !important; }
+
+#show-rewards-parent.disabled .link-payment-discounts-cod {
+  color: #DDDDDD !important; }
+
 .step.client-profile-data.active .box-step .form-step[style*="display: block"],
 .step.shipping-data.active .accordion-inner.shipping-container,
 #payment-data .box-step form.form-step {
   padding-top: 20px !important;
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-template-areas: 'gift gift' 'payment-group steps'; }
+  grid-template-areas: 'gift rewards-btn' 'giftcard-content giftcard-content' 'rewards-calc rewards-calc' 'payment-group steps'; }
 
 @media screen and (max-width: 1200px) {
   .step.client-profile-data.active .box-step .form-step[style*="display: block"],
@@ -3543,7 +3580,7 @@ svg.vtex-omnishipping-1-x-svg {
   .step.shipping-data.active .accordion-inner.shipping-container,
   #payment-data .box-step form.form-step {
     grid-template-columns: 1fr;
-    grid-template-areas: 'gift' 'payment-group' 'steps'; } }
+    grid-template-areas: 'gift' 'rewards-btn' 'giftcard-content' 'rewards-calc' 'payment-group' 'steps'; } }
 
 .client-pre-email + .client-profile-data .accordion-body:before {
   display: none; }
@@ -3551,6 +3588,62 @@ svg.vtex-omnishipping-1-x-svg {
 body.v-custom-step-shipping #shipping-data .shipping-summary-info,
 body.v-custom-step-payment #shipping-data .shipping-summary-info {
   display: block; }
+
+.container-switch-rewards {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; }
+
+.switch-rewards {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  min-width: 36px;
+  height: 16px; }
+  .switch-rewards input {
+    opacity: 0;
+    width: 0;
+    height: 0; }
+    .switch-rewards input:checked + .slider {
+      background: #2189FF;
+      border-color: #2189FF; }
+    .switch-rewards input:checked + .slider:before {
+      -webkit-transform: translate(12px, 50%);
+      -ms-transform: translate(12px, 50%);
+      transform: translate(12px, 50%);
+      border: 1px solid #2189FF; }
+    .switch-rewards input:disabled + .slider {
+      opacity: 0.7;
+      cursor: not-allowed; }
+  .switch-rewards .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    border: 1px solid #8F8F8F;
+    border-radius: 8px;
+    -webkit-transition: .4s;
+    transition: .4s; }
+    .switch-rewards .slider:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: -2px;
+      bottom: 50%;
+      transform: translateY(50%);
+      background-color: #fff;
+      border: 1px solid #8F8F8F;
+      border-radius: 50%;
+      -webkit-transition: .4s;
+      transition: .4s; }
+
+.text-switch-rewards {
+  font-weight: bold;
+  margin-left: 8px; }
 
 .steps-view, .gift-card-section,
 .App.iframe-credit-card-payment-group {
@@ -3580,8 +3673,6 @@ body.v-custom-step-payment #shipping-data .shipping-summary-info {
         width: -webkit-fill-available; } }
   #app-container select {
     width: 100%; }
-  #app-container .App.iframe-custom-private-501-payment-group .ChangeNumberOfPayments.clearfix {
-    display: none; }
   #app-container .PaymentInstallments select {
     width: 100% !important;
     max-width: 100% !important; }

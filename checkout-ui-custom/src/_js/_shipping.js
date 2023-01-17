@@ -94,7 +94,7 @@ export default class CustomShippingData {
   }
 
   addVirtualInventoryMessage() {
-    $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {
+    $(window).on('orderFormUpdated.vtex', function () {
       try {
         const $postalCodeForm = $('#shipping-preview-container')
         const $virtualInventoryMessage = $(
@@ -105,9 +105,13 @@ export default class CustomShippingData {
         </div>`
         )
 
-        if($('.prazo-acima').length === 0){
-          if ($postalCodeForm.find('.shp-alert-shipping-unavailable').length === 1) {
-            $postalCodeForm.find('.shp-alert-shipping-unavailable').before($virtualInventoryMessage)
+        if ($('.prazo-acima').length === 0) {
+          if (
+            $postalCodeForm.find('.shp-alert-shipping-unavailable').length === 1
+          ) {
+            $postalCodeForm
+              .find('.shp-alert-shipping-unavailable')
+              .before($virtualInventoryMessage)
           }
         }
       } catch (err) {
@@ -182,6 +186,7 @@ export default class CustomShippingData {
           clearInterval(interval)
         }
       }, 50)
+
       if (address.postalCode && !address.city) {
         this.setInvalidPostalCode()
         this.addInvalidPostalCodeMessage()

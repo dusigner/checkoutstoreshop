@@ -1,8 +1,19 @@
+fieldset.pre-email.row-fluid{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+h3.client-pre-email-h {
+  flex-basis: 100%;
+  padding-bottom: 30px;
+}
+
 .client-pre-email {
   border: none;
   left: 0;
 
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: $mobileWidth) {
     padding-left: 10px;
     padding-right: 10px;
     box-sizing: border-box;
@@ -17,17 +28,31 @@
     text-transform: uppercase;
     text-decoration: underline;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: $mobileWidth) {
       display: none;
     }
   }
 
   .samsung-account-container {
     display: inline-block;
-    width: 100%;
-    
+    flex-basis: 50%;
+    color: #000;
+
+    @media screen and (max-width: $mobileWidth) {
+      flex-basis: 100%;
+    }
+
     #btn-samsung-account {
-      @media screen and (max-width: 1024px) {
+      font-family:'SamsungOne';
+      font-size:14px;
+      background: #2189FF;
+      color: white;
+      border-radius: 20px;
+      border: none;
+      padding-block: 10px;
+      font-weight: 700;
+      width: 330px;
+      @media screen and (max-width: 480px) {
         width: 100%;
       }
     }
@@ -55,12 +80,13 @@
         font-size: 20px;
         font-weight: bold;
         text-align: center;
-        color: #373737;
         margin-bottom: 15px;
-        content: 'Para finalizar a compra, utilize sua';
+        color: #000;
+        content: 'Escolha uma opção de identificação para finalizar sua compra';
 
-        @media screen and (max-width: 1024px) {
+        @media screen and (max-width: $mobileWidth) {
           font-size: 17px;
+          line-height: 1.5;
           margin-bottom: 5px;
         }
       }
@@ -75,15 +101,31 @@
     margin: 12px 0px;
   }
 
-  .client-email {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin: 0;
-    width: 100%;
+  .samsung-account-create {
+    @media screen and (max-width: $mobileWidth) {
+      margin-bottom: 10px;
+      border-bottom: 1px solid $muted4;
+    }
+  }
 
-    @media screen and (max-width: 1024px) {
+  .client-email {
+    color: #000;
+    &:before {
+      content: 'Ou informe seu e-mail:';
+      display: block;
+      padding-bottom: 25px;
+      font-size: 12px;
+    }
+    margin: 0;
+    flex-basis: calc(50% - 1px);
+    border-left: 1px solid $muted4;
+
+    @media screen and (max-width: $mobileWidth) {
+      flex-basis: 100%;
+      border-left: none;
+    }
+
+    @media screen and (max-width: $mobileWidth) {
       padding: 0;
     }
 
@@ -100,14 +142,13 @@
       border-bottom: 1px solid #000;
       border-radius: 0;
       box-shadow: none;
-      font-size: 14px;
-      font-weight: 300;
+      font-size: 18px;
       color: #7b7b7b;
       height: 35px;
       background: #0000;
       width: 326px;
 
-      @media screen and (max-width: 1024px) {
+      @media screen and (max-width: 480px) {
         width: 100%;
       }
     }
@@ -116,17 +157,17 @@
       position: unset;
       height: 40px;
       border-radius: 20px;
-      background: #2189ff;
+      background: #fff;
       font-size: 14px;
       font-weight: 700;
-      color: #fff;
+      color: #000;
       width: 326px;
       outline: none;
-      border: none;
+      border:1px solid #000;
       font-family: 'SamsungOne';
-      margin-top: 12px;
+      margin-top: 30px;
 
-      @media screen and (max-width: 1024px) {
+      @media screen and (max-width: 480px) {
         width: 100%;
       }
     }
@@ -139,7 +180,7 @@
 
     .help.error {
       font-size: 13px;
-      text-align: right;
+      text-align: center;
       color: #1428a0;
 
       &:before {
@@ -155,18 +196,18 @@
     border: none;
     background: none;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: $mobileWidth) {
       padding: 0;
     }
 
     h3 {
       margin: 0 0 34px;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: normal;
       text-align: center;
-      color: #363636;
+      color: #000;
 
-      @media screen and (max-width: 1024px) {
+      @media screen and (max-width: $mobileWidth) {
         font-size: 14px;
         margin-bottom: 15px;
       }
@@ -176,7 +217,6 @@
       display: flex;
       width: 100%;
       margin: 0;
-      background-color: #f9f9f9;
       padding: 20px 0;
 
       @media screen and (max-width: 1024px) {
@@ -190,10 +230,9 @@
           display: none;
         }
         span {
-          font-size: 13.5px;
-          font-weight: bold;
+          font-size: 12px;
           text-align: center;
-          color: #363636;
+          color: #000;
           display: block;
 
           @media screen and (max-width: 1024px) {

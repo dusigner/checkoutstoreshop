@@ -136,10 +136,13 @@
 				}
 			}
 
+			&:hover {
+				cursor: pointer;
+			}
+
 			&.active,
 			&:hover {
-				border-bottom:1px solid #D6D6D6;
-        background:#F7F7F7;
+        		background:#F7F7F7;
 			}
 		}
 
@@ -1185,6 +1188,29 @@
 
 }
 
+/* hide default rewards calculator */
+.gift-card-section:nth-of-type(1) {
+	display: none !important;
+}
+
+.box-step-content .gift-card-section:nth-of-type(n+1) {
+	grid-area: giftcard-content;
+}
+
+#rewards-remove-discount:hover {
+	cursor: pointer;
+}
+
+#show-rewards-parent.disabled {
+	cursor: not-allowed;
+	pointer-events:none;
+  	border: 1px solid #DDDDDD !important;
+}
+
+#show-rewards-parent.disabled .link-payment-discounts-cod {
+  	color: #DDDDDD !important;
+}
+
 // counting steps
 
 	@if $countingSteps {
@@ -1196,7 +1222,9 @@
       display: grid;
       grid-template-columns: auto 1fr;
       grid-template-areas:
-          'gift gift'
+          'gift rewards-btn'
+		  'giftcard-content giftcard-content'
+		  'rewards-calc rewards-calc'
           'payment-group steps';
 		}
 
@@ -1215,6 +1243,9 @@
         grid-template-columns: 1fr;
         grid-template-areas:
         'gift'
+		'rewards-btn'
+		'giftcard-content'
+		'rewards-calc'
         'payment-group'
         'steps';
       }
@@ -1230,6 +1261,77 @@
 	}
 
 // end counting steps
+
+.container-switch-rewards {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.switch-rewards {
+	position: relative;
+	display: inline-block;
+	width: 36px;
+	min-width: 36px;
+	height: 16px;
+
+	input {
+		opacity: 0;
+		width: 0;
+		height: 0;
+
+		&:checked + .slider {
+			background: #2189FF;
+			border-color: #2189FF;
+		}
+
+		&:checked + .slider:before {
+			-webkit-transform: translate(12px, 50%);
+			-ms-transform: translate(12px, 50%);
+			transform: translate(12px, 50%);
+			border: 1px solid #2189FF;
+		}
+
+		&:disabled + .slider {
+			opacity: 0.7;
+			cursor: not-allowed;
+		}
+	}
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #fff;
+		border: 1px solid #8F8F8F;
+		border-radius: 8px;
+		-webkit-transition: .4s;
+		transition: .4s;
+
+		&:before {
+			position: absolute;
+			content: "";
+			height: 24px;
+			width: 24px;
+			left: -2px;
+			bottom: 50%;
+			transform: translateY(50%);
+			background-color: #fff;
+			border: 1px solid #8F8F8F;
+			border-radius: 50%;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+	}
+}
+
+.text-switch-rewards {
+	font-weight: bold;
+    margin-left: 8px;
+}
 
 //iframe
 
@@ -1266,12 +1368,6 @@
   select {
     width: 100%;
   }
-
-	.App.iframe-custom-private-501-payment-group {
-		.ChangeNumberOfPayments.clearfix {
-			display: none;
-		}
-	}
 
   .PaymentInstallments select {
     width: 100% !important;
@@ -1421,11 +1517,11 @@
 		.info {
 			font-weight: bold;
 			font-size: 0 !important;
-			
+
 			&::after {
 				content: "Descontos Totais";
 				font-size: 14px;
-			} 
+			}
 		}
 	}
 }
