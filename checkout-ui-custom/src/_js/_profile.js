@@ -295,7 +295,7 @@ export default class CustomProfileData {
 
     $('body').on(
       'input',
-      'input#client-first-name, input#client-last-name',
+      'input#client-first-name, input#client-last-name, input#ship-receiverName',
       function () {
         const regexp = /[^A-Za-zÀ-ú\s]+$/
 
@@ -342,6 +342,31 @@ export default class CustomProfileData {
         }
       }, 1)
     })
+
+    $('body').on(
+      'input',
+      'input#ship-number',
+      function () {
+        const regexp = /[^0-9\s]+$/
+
+        if ($(this).val().match(regexp)) {
+          $(this).val($(this).val().replace(regexp, ''))
+        }
+      }
+    )
+
+
+    $('body').on(
+      'input',
+      'input#ship-street, input#ship-complement, input#ship-neighborhood',
+      function () {
+        const regexp = /[^a-z0-9\s]+$/
+
+        if ($(this).val().match(regexp)) {
+          $(this).val($(this).val().replace(regexp, ''))
+        }
+      }
+    )
 
     $('body').on('input', '#client-whatasapp', function () {
       const $this = $(this)
