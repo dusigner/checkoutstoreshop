@@ -195,25 +195,20 @@ export default class CustomProfileData {
 
     const $field = `<div class="newsletter-optin">
       <h3>Newsletter e Promoções (opcional)</h3>
-      <label class="inputOptIn __whatsapp">
-          <input type="checkbox" id="inputWhatsapp" />
-          <span class="custom-checkbox-icon"></span>
-          <span>Desejo receber ofertas e notificações por WhatsApp.</span>
-          <span class="form-tooltip">
-              <img alt="info" class="info-img form-tooltip__initiator"
-                  src="https://samsungbrtest.vteximg.com.br/arquivos/info.png" />
-              <span class="form-tooltip__item">Você receberá atualizações do seu pedido e mensagens sobre ofertas.</span>
-          </span>
-      </label>
+      <label class="inputOptIn __newsletter" />
     </div>`
 
     $('#client-profile-data p.save-data').after($field)
 
     // moves emails and offers into this context
     $('.newsletter-text').before('<span class="custom-checkbox-icon"></span>')
+    // troca texto do newsletter
+    $('.newsletter-label').append(
+      '<span class="newsletter-text-correct">Desejo receber comunicações, ofertas e novidades sobre a Samsung.</span>'
+    )
     const $infoEmail = $('.box-client-info .newsletter').detach()
 
-    $('.box-client-info .__whatsapp').after($($infoEmail))
+    $('.box-client-info .__newsletter').after($($infoEmail))
   }
 
   addTermsAndPolicies() {
@@ -295,7 +290,7 @@ export default class CustomProfileData {
 
     $('body').on(
       'input',
-      'input#client-first-name, input#client-last-name',
+      'input#client-first-name, input#client-last-name, input#ship-receiverName',
       function () {
         const regexp = /[^A-Za-zÀ-ú\s]+$/
 
@@ -342,6 +337,26 @@ export default class CustomProfileData {
         }
       }, 1)
     })
+
+    $('body').on('input', 'input#ship-number', function () {
+      const regexp = /[^0-9\s]+$/
+
+      if ($(this).val().match(regexp)) {
+        $(this).val($(this).val().replace(regexp, ''))
+      }
+    })
+
+    $('body').on(
+      'input',
+      'input#ship-street, input#ship-complement, input#ship-neighborhood',
+      function () {
+        const regexp = /[^a-z0-9\s]+$/
+
+        if ($(this).val().match(regexp)) {
+          $(this).val($(this).val().replace(regexp, ''))
+        }
+      }
+    )
 
     $('body').on('input', '#client-whatasapp', function () {
       const $this = $(this)
@@ -450,5 +465,58 @@ export default class CustomProfileData {
         _this.saveProfileData()
       }
     )
+  }
+
+  addMsgPhone() {
+    if ($('small.textMsgPhone').length) return
+
+    const $textMsgPhone = `<small class="textMsgPhone">O número correto garante que possamos entrar em contato em caso de algum problema na entrega.</small>`
+
+    $('p.client-phone').first().after($textMsgPhone)
+  }
+
+  addFieldsProfile(orderForm) {
+    const _this = this
+    const documentCpf = orderForm.clientProfileData.document
+
+    const $documentCpfField = `<p id="documentCpfField" class="client-profile-summary cpf-field">
+          <span class="name-label" style="">CPF:</span>
+          <span class="name">${documentCpf}</span>
+          <br>
+          </p>`
+
+    $('#documentCpfField').empty()
+    $('.client-profile-summary').first().after($documentCpfField)
+
+    $.ajax({
+      url: `${_this.rootPath()}/_v/get/client/${
+        orderForm.clientProfileData.email
+      }`,
+      headers: {
+        Accept: 'application/vnd.vtex.ds.v10+json',
+        'Content-Type': 'application/json',
+      },
+      crossDomain: true,
+      type: 'GET',
+      success(data) {
+        const dataBirthDate = data[0].birthDate
+
+        if (data[0].birthDate) {
+          const clientDateBirth = new Date(dataBirthDate).toLocaleDateString(
+            'pt-BR',
+            { timeZone: 'UTC' }
+          )
+
+          const $dateBirthField = `<p id='dateBirthField' class="client-profile-summary date-birth-field">
+                <span class="name-label" style="">Data de Nascimento:</span>
+                <span class="name">${clientDateBirth}</span>
+                <br>
+                </p>`
+
+          $('#dateBirthField').empty()
+          $('.client-profile-summary.cpf-field').first().after($dateBirthField)
+        }
+      },
+    })
   }
 }

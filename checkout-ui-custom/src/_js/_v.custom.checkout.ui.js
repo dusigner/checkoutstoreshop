@@ -1000,6 +1000,11 @@ class checkoutCustom {
       _trElem
         .find('> .summary-template-holder')
         .wrap(`<div class="summary-to-new-components"></div>`)
+
+      // Corrigir bug que o botão, em alguns momentos, fica fora do wrapper
+      $('.clearfix.pull-right.cart-links.cart-links-bottom.hide').appendTo(
+        '.summary-template-holder'
+      )
     } catch (e) {
       console.error('WrapSummary error:', e)
     }
@@ -1682,8 +1687,9 @@ class checkoutCustom {
         }
 
         if (window.location.hash === '#/profile') {
-          _this.profile.addWhatsAppField()
+          // _this.profile.addWhatsAppField()
           _this.profile.addDateBirthField()
+          _this.profile.addMsgPhone()
           _this.profile.toggleGoToShippingDisabled()
           _this.profile.removePj()
           _this.customizeLogOut()
@@ -1721,6 +1727,7 @@ class checkoutCustom {
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
         _this.customizeLogOut()
+        _this.profile.addFieldsProfile(orderForm)
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
           _this.preEmail.createElementSamsungAccountLogin()
         }
@@ -1737,10 +1744,10 @@ class checkoutCustom {
 
         if (window.location.hash === '#/profile') {
           // Add WhatsApp
-          _this.profile.addWhatsAppField()
+          // _this.profile.addWhatsAppField()
           // Insere o campo data de nascimento
           _this.profile.addDateBirthField()
-
+          _this.profile.addMsgPhone()
           _this.profile.addTerms(orderForm)
         }
 

@@ -77,8 +77,7 @@
     }
 
     &.client-last-name,
-    &.client-date-birth,
-    &.client-phone {
+    &.client-date-birth {
       margin-left: 24px !important;
     }
 
@@ -176,7 +175,14 @@
       }
     }
   }
-
+  .newsletter-optin{
+    .newsletter-text{
+      display: none;
+    }
+    .newsletter-text-correct{
+      display: block;
+    }
+  }
   .form-tooltip {
     position: relative;
     display: inline-block;
