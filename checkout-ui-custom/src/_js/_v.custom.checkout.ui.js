@@ -1727,7 +1727,7 @@ class checkoutCustom {
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
         _this.customizeLogOut()
-        _this.profile.addFieldsProfile(orderForm)
+
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
           _this.preEmail.createElementSamsungAccountLogin()
         }
@@ -1739,6 +1739,7 @@ class checkoutCustom {
         }
 
         if (window.location.hash === '#/payment') {
+          _this.profile.addFieldsProfile(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
         }
 
