@@ -11643,7 +11643,6 @@
       constructor() {
         ;(this.userAcceptedRewards = !1),
           (this.emailUserRewards = ''),
-          (this.alreadyRedirected = !1),
           (this.userSaGuid = ''),
           (this.totalPointsCurrentOrder = 0),
           (this.totalPointsUser = 0),
@@ -11677,10 +11676,7 @@
                   !o[0].isRewardsAccepted && o[0].saGuid
                     ? ($('#RewardsBlock').show(),
                       $('#inputRewards').attr('checked', !1),
-                      (this.userAcceptedRewards = !1),
-                      this.alreadyRedirected ||
-                        ((window.location.href = '#/profile'),
-                        (this.alreadyRedirected = !0)))
+                      (this.userAcceptedRewards = !1))
                     : o[0].isRewardsAccepted &&
                       o[0].saGuid &&
                       ($('#RewardsBlock').hide(),
@@ -11849,9 +11845,8 @@
                   (e.value - o) / 100 / 2
                 )),
                 this.createGroupCalcRewards(),
-                this.totalPointsUser > 0
-                  ? $('#show-rewards-parent').css('display', 'block')
-                  : $('.payment-discounts-alert-wrap').css('display', 'none')
+                this.totalPointsUser > 0 &&
+                  $('#show-rewards-parent').css('display', 'block')
             },
             error() {
               console.error('points search error')

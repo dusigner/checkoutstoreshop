@@ -4,7 +4,6 @@ export default class Rewards {
   constructor() {
     this.userAcceptedRewards = false
     this.emailUserRewards = ''
-    this.alreadyRedirected = false
     this.userSaGuid = ''
     this.totalPointsCurrentOrder = 0
     this.totalPointsUser = 0
@@ -39,10 +38,6 @@ export default class Rewards {
             $('#RewardsBlock').show()
             $('#inputRewards').attr('checked', false)
             this.userAcceptedRewards = false
-            if (!this.alreadyRedirected) {
-              window.location.href = '#/profile'
-              this.alreadyRedirected = true
-            }
           } else if (res[0].isRewardsAccepted && res[0].saGuid) {
             $('#RewardsBlock').hide()
             $('#inputRewards').attr('checked', true)
@@ -346,8 +341,6 @@ export default class Rewards {
           this.createGroupCalcRewards()
           if (this.totalPointsUser > 0) {
             $('#show-rewards-parent').css('display', 'block')
-          } else {
-            $('.payment-discounts-alert-wrap').css('display', 'none')
           }
         },
         error() {
