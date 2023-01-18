@@ -998,6 +998,11 @@ class checkoutCustom {
       _trElem
         .find('> .summary-template-holder')
         .wrap(`<div class="summary-to-new-components"></div>`)
+
+      // Corrigir bug que o botão, em alguns momentos, fica fora do wrapper
+      $('.clearfix.pull-right.cart-links.cart-links-bottom.hide').appendTo(
+        '.summary-template-holder'
+      )
     } catch (e) {
       console.error('WrapSummary error:', e)
     }
@@ -1410,10 +1415,10 @@ class checkoutCustom {
     }
   }
 
-
   // Remove sku de serviços quando o produto atrelado for excluido
   removeInstallationProduct()  {
     const _this = this
+
     $('body').on('click', '.item-link-remove', async function () {
       let dataSku = $(this).closest('tr').attr('data-sku')
       await fetch(`${_this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`)
@@ -1431,11 +1436,14 @@ class checkoutCustom {
                   index: i,
                   quantity: 0
                 })
+                const itemsToRemove = removeList
+
+                if (itemsToRemove.length > 0) {
+                  return window.vtexjs.checkout
+                    .removeItems(itemsToRemove)
+                    .then(() => {})
+                }
               })
-              const itemsToRemove = removeList
-              if (itemsToRemove.length > 0) {
-                  return window.vtexjs.checkout.removeItems(itemsToRemove).then(() => {})
-              }
             }, 2000)
           }
         }
