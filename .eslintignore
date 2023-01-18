@@ -4,3 +4,4 @@ coverage/
 node/templates/
 checkout-ui-custom/checkout6-custom.js
 checkout-ui-custom/checkout6-custom.css
+*.drawio

@@ -20,6 +20,7 @@ const { default: TradeIn } = require('./_tradeIn.js')
 const { default: SendAttachment } = require('./_sendAttachment.js')
 const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 const { default: AdobeLaunchPixel } = require('./_adobeLaunchPixel.js')
+const { default: Rewards } = require('./_rewards.js')
 
 class checkoutCustom {
   constructor({
@@ -50,7 +51,8 @@ class checkoutCustom {
     this.TradeIn = new TradeIn()
     this.SendAttachment = new SendAttachment()
     this.adobeLaunchPixel = new AdobeLaunchPixel()
-    this.hasSelectedDefaultPaymentMethod = false;
+    this.hasSelectedDefaultPaymentMethod = false
+    this.Rewards = new Rewards()
   }
 
   rootPath() {
@@ -356,9 +358,9 @@ class checkoutCustom {
           }
         })
 
-        const elements = discountsTotal.map((discount) => {
+        const elements = discountsTotal.map(discount => {
           if (discount.name.toLowerCase().includes('desconto à vista')) {
-            this.hasSelectedDefaultPaymentMethod = true;
+            this.hasSelectedDefaultPaymentMethod = true
             const selectedPaymentSystem =
               window.vtexjs.checkout.orderForm.paymentData.payments[0]
                 .paymentSystem
@@ -805,7 +807,7 @@ class checkoutCustom {
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
               <p class="estimate-shipping">${formatCurrencyBRL(
-                selectedPaymentMethod ?  selectedPaymentMethod.value : 0
+                selectedPaymentMethod ? selectedPaymentMethod.value : 0
               )}</p>
             </div>
           </div>
@@ -1133,6 +1135,7 @@ class checkoutCustom {
     new BespokeRefrigerator().init()
     this.installationService.init()
     this.TradeIn.init()
+    this.Rewards.showObsRewards()
 
     // debounce to prevent append from default script
     const updateDebounce = debounce(function () {
@@ -1408,33 +1411,44 @@ class checkoutCustom {
       ) {
         $defaultPaymentMethod.trigger('click')
       }
-      this.hasSelectedDefaultPaymentMethod = true;
+
+      this.hasSelectedDefaultPaymentMethod = true
     } catch (err) {
-      this.hasSelectedDefaultPaymentMethod = false;
+      this.hasSelectedDefaultPaymentMethod = false
       console.error(`Erro ao definir método de pagamento padrão: ${err}`)
     }
   }
 
   // Remove sku de serviços quando o produto atrelado for excluido
-  removeInstallationProduct()  {
+  removeInstallationProduct() {
     const _this = this
 
     $('body').on('click', '.item-link-remove', async function () {
-      let dataSku = $(this).closest('tr').attr('data-sku')
-      await fetch(`${_this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`)
-      .then(response => response.json())
-      .then(response => {
-        if(response[0] && response[0].skuSpecifications !== 'undefined') {
-          let isInstallation = response[0].skuSpecifications.filter(item => item.field.name === 'Serviço de Instalação')
-          if(isInstallation.length > 0) {
-            let nameInstallation = isInstallation[0].values[0].name
-            setTimeout(function(){
-              const removeList = []
-              vtexjs.checkout.orderForm.items.forEach((el, i) => {
-                if(el.refId === nameInstallation)
-                removeList.push({
-                  index: i,
-                  quantity: 0
+      const dataSku = $(this).closest('tr').attr('data-sku')
+
+      await fetch(
+        `${_this.rootPath()}/api/catalog_system/pub/products/search?fq=skuId:${dataSku}`
+      )
+        .then(response => response.json())
+        .then(response => {
+          if (response[0] && response[0].skuSpecifications !== 'undefined') {
+            const isInstallation = response[0].skuSpecifications.filter(
+              item => item.field.name === 'Serviço de Instalação'
+            )
+
+            if (isInstallation.length > 0) {
+              const nameInstallation = isInstallation[0].values[0].name
+
+              setTimeout(function () {
+                const removeList = []
+
+                window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
+                  if (el.refId === nameInstallation) {
+                    removeList.push({
+                      index: i,
+                      quantity: 0,
+                    })
+                  }
                 })
                 const itemsToRemove = removeList
 
@@ -1443,30 +1457,33 @@ class checkoutCustom {
                     .removeItems(itemsToRemove)
                     .then(() => {})
                 }
-              })
-            }, 2000)
+              }, 2000)
+            }
           }
-        }
-      })
+        })
     })
   }
 
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
-  customizeLogOut(){
-    const accountbr =  __RUNTIME__.account == 'samsungbr'
-    const notMyvtex = window.location.href.indexOf("myvtex") == -1
+  customizeLogOut() {
+    const accountbr = window.__RUNTIME__.account == 'samsungbr'
+    const notMyvtex = window.location.href.indexOf('myvtex') == -1
 
-    if(($('.link-logout-container').is(':visible')) && (accountbr) && (notMyvtex)) {
+    if ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) {
       $('#is-not-me').removeAttr('href')
       $('body').on('click', '#is-not-me', function () {
-        const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${vtexjs.checkout.orderForm.orderFormId}`
-        window.location.assign(`https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbr&returnUrl=${returnUrl}`)
+        const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId}`
+
+        window.location.assign(
+          `https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbr&returnUrl=${returnUrl}`
+        )
       })
     }
   }
 
   bind() {
     const _this = this
+
     _this.removeInstallationProduct()
     $('body').on('click', '#v-custom-edit-login-data', function (e) {
       e.preventDefault()
@@ -1700,6 +1717,8 @@ class checkoutCustom {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.customizeLogOut()
           }
+
+          _this.Rewards.showPointsSimulation()
         }
       })
 
@@ -1711,6 +1730,16 @@ class checkoutCustom {
         _this.profile.addFieldsProfile(orderForm)
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
           _this.preEmail.createElementSamsungAccountLogin()
+        }
+
+        _this.Rewards.showPointsSimulation()
+
+        if (window.location.hash === '#/cart') {
+          _this.Rewards.cancelRewardsDiscount()
+        }
+
+        if (window.location.hash === '#/payment') {
+          _this.Rewards.cancelRewardsDiscount(true)
         }
 
         if (window.location.hash === '#/profile') {
@@ -1771,6 +1800,7 @@ class checkoutCustom {
 
         window.vtexjs.checkout.getOrderForm().done(function () {
           _this.addMedalliaScript()
+          _this.Rewards.showPointsSimulation()
         })
 
         if (window.location.hash === '#/payment') {
