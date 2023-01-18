@@ -477,6 +477,11 @@ export default class CustomProfileData {
 
   addFieldsProfile(orderForm) {
     const _this = this
+
+    const { clientProfileData } = orderForm
+
+    if (!clientProfileData) return
+
     const documentCpf = orderForm.clientProfileData.document
 
     const $documentCpfField = `<p id="documentCpfField" class="client-profile-summary cpf-field">

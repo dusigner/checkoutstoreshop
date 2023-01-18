@@ -5,8 +5,8 @@ export default class TradeIn {
     const { items } = window.vtexjs.checkout.orderForm
 
     const getTransport = localStorage.getItem('transport')
-    const transport = getTransport ? JSON.parse(getTransport) : []
-    const customData = window.vtexjs.checkout.orderForm.customData.customApps
+    const transport = getTransport ? JSON.parse(getTransport) : ''
+    const customData = window.vtexjs.checkout.orderForm.customData
       ? window.vtexjs.checkout.orderForm.customData.customApps.find(
           item => item.id === 'domain'
         )
@@ -24,6 +24,8 @@ export default class TradeIn {
       const transportCustomData = customData.fields.trade_in_option_selected
 
       this.checkTradeIn(items, JSON.parse(transportCustomData))
+    } else {
+      return ''
     }
   }
 
@@ -179,7 +181,8 @@ export default class TradeIn {
   }
 
   async validateTradeinCustomData() {
-    const transport = JSON.parse(localStorage.getItem('transport'))
+    const getTransport = localStorage.getItem('transport')
+    const transport = getTransport ? JSON.parse(getTransport) : ''
 
     let total = 0
     const arrayPromise = []
