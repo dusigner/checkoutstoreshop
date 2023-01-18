@@ -176,7 +176,14 @@
       }
     }
   }
-
+  .newsletter-optin{
+    .newsletter-text{
+      display: none;
+    }
+    .newsletter-text-correct{
+      display: block;
+    }
+  }
   .form-tooltip {
     position: relative;
     display: inline-block;

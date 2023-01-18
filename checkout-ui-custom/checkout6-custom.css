@@ -2339,6 +2339,12 @@ h1#cart-title {
       transform: rotate(-45deg);
       width: 10px; }
 
+#client-profile-data .newsletter-optin .newsletter-text {
+  display: none; }
+
+#client-profile-data .newsletter-optin .newsletter-text-correct {
+  display: block; }
+
 #client-profile-data .form-tooltip {
   position: relative;
   display: inline-block;

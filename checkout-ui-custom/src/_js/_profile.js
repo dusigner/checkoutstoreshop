@@ -185,25 +185,18 @@ export default class CustomProfileData {
 
     const $field = `<div class="newsletter-optin">
       <h3>Newsletter e Promoções (opcional)</h3>
-      <label class="inputOptIn __whatsapp">
-          <input type="checkbox" id="inputWhatsapp" />
-          <span class="custom-checkbox-icon"></span>
-          <span>Desejo receber ofertas e notificações por WhatsApp.</span>
-          <span class="form-tooltip">
-              <img alt="info" class="info-img form-tooltip__initiator"
-                  src="https://samsungbrtest.vteximg.com.br/arquivos/info.png" />
-              <span class="form-tooltip__item">Você receberá atualizações do seu pedido e mensagens sobre ofertas.</span>
-          </span>
-      </label>
+      <label class="inputOptIn __newsletter" />
     </div>`
 
     $('#client-profile-data p.save-data').after($field)
 
     // moves emails and offers into this context
     $('.newsletter-text').before('<span class="custom-checkbox-icon"></span>')
+    // troca texto do newsletter
+    $('.newsletter-label').append('<span class="newsletter-text-correct">Desejo receber comunicações, ofertas e novidades sobre a Samsung.</span>');
     const $infoEmail = $('.box-client-info .newsletter').detach()
+    $('.box-client-info .__newsletter').after($($infoEmail))
 
-    $('.box-client-info .__whatsapp').after($($infoEmail))
   }
 
   addTermsAndPolicies() {
