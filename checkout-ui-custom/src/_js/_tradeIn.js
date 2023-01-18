@@ -3,8 +3,14 @@ import { formatCurrencyBRL } from './_utils'
 export default class TradeIn {
   init() {
     const { items } = window.vtexjs.checkout.orderForm
-    const transport = JSON.parse(localStorage.getItem('transport') || '[]')
-    const customData = window.vtexjs.checkout.orderForm.customData || null
+
+    const getTransport = localStorage.getItem('transport')
+    const transport = getTransport ? JSON.parse(getTransport) : []
+    const customData = window.vtexjs.checkout.orderForm.customData.customApps
+      ? window.vtexjs.checkout.orderForm.customData.customApps.find(
+          item => item.id === 'domain'
+        )
+      : false
 
     const isSocialSelling = window.vtexjs.checkout.orderForm.marketingData
       ? window.vtexjs.checkout.orderForm.marketingData.marketingTags.find(
@@ -15,8 +21,7 @@ export default class TradeIn {
     if (items.length && transport.length) {
       this.checkTradeIn(items, transport)
     } else if (items.length && customData && isSocialSelling) {
-      const transportCustomData =
-        customData.customApps[0].fields.trade_in_option_selected
+      const transportCustomData = customData.fields.trade_in_option_selected
 
       this.checkTradeIn(items, JSON.parse(transportCustomData))
     }

@@ -9617,7 +9617,7 @@
         const e = this
         $('body').on(
           'input',
-          'input#client-first-name, input#client-last-name',
+          'input#client-first-name, input#client-last-name, input#ship-receiverName',
           function () {
             const e = /[^A-Za-zÀ-ú\s]+$/
             $(this).val().match(e) && $(this).val($(this).val().replace(e, ''))
@@ -9646,6 +9646,19 @@
               a !== o.target.value && (o.target.value = a)
             }, 1)
           }),
+          $('body').on('input', 'input#ship-number', function () {
+            const e = /[^0-9\s]+$/
+            $(this).val().match(e) && $(this).val($(this).val().replace(e, ''))
+          }),
+          $('body').on(
+            'input',
+            'input#ship-street, input#ship-complement, input#ship-neighborhood',
+            function () {
+              const e = /[^a-z0-9\s]+$/
+              $(this).val().match(e) &&
+                $(this).val($(this).val().replace(e, ''))
+            }
+          ),
           $('body').on('input', '#client-whatasapp', function () {
             const e = $(this),
               o = e.val().length > 0 && e.val().length < 15
@@ -10173,17 +10186,25 @@
     class n {
       init() {
         const { items: e } = window.vtexjs.checkout.orderForm,
-          o = JSON.parse(localStorage.getItem('transport') || '[]'),
-          a = window.vtexjs.checkout.orderForm.customData || null,
+          o = localStorage.getItem('transport'),
+          a = o ? JSON.parse(o) : [],
           t =
+            !!window.vtexjs.checkout.orderForm.customData.customApps &&
+            window.vtexjs.checkout.orderForm.customData.customApps.find(
+              e => 'domain' === e.id
+            ),
+          n =
             !!window.vtexjs.checkout.orderForm.marketingData &&
             window.vtexjs.checkout.orderForm.marketingData.marketingTags.find(
               e => 'vtexSocialSelling' === e
             )
-        if (e.length && o.length) this.checkTradeIn(e, o)
-        else if (e.length && a && t) {
-          const o = a.customApps[0].fields.trade_in_option_selected
-          this.checkTradeIn(e, JSON.parse(o))
+        if (e.length && a.length) this.checkTradeIn(e, a)
+        else {
+          if (!(e.length && t && n)) return
+          {
+            const o = t.fields.trade_in_option_selected
+            this.checkTradeIn(e, JSON.parse(o))
+          }
         }
       }
       rootPath() {
