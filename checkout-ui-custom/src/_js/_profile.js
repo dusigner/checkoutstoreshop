@@ -203,10 +203,12 @@ export default class CustomProfileData {
     // moves emails and offers into this context
     $('.newsletter-text').before('<span class="custom-checkbox-icon"></span>')
     // troca texto do newsletter
-    $('.newsletter-label').append('<span class="newsletter-text-correct">Desejo receber comunicações, ofertas e novidades sobre a Samsung.</span>');
+    $('.newsletter-label').append(
+      '<span class="newsletter-text-correct">Desejo receber comunicações, ofertas e novidades sobre a Samsung.</span>'
+    )
     const $infoEmail = $('.box-client-info .newsletter').detach()
-    $('.box-client-info .__newsletter').after($($infoEmail))
 
+    $('.box-client-info .__newsletter').after($($infoEmail))
   }
 
   addTermsAndPolicies() {
@@ -336,18 +338,13 @@ export default class CustomProfileData {
       }, 1)
     })
 
-    $('body').on(
-      'input',
-      'input#ship-number',
-      function () {
-        const regexp = /[^0-9\s]+$/
+    $('body').on('input', 'input#ship-number', function () {
+      const regexp = /[^0-9\s]+$/
 
-        if ($(this).val().match(regexp)) {
-          $(this).val($(this).val().replace(regexp, ''))
-        }
+      if ($(this).val().match(regexp)) {
+        $(this).val($(this).val().replace(regexp, ''))
       }
-    )
-
+    })
 
     $('body').on(
       'input',
