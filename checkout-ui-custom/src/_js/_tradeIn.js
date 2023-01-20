@@ -209,7 +209,7 @@ export default class TradeIn {
 
       arrayProductsTrocafone.map(item => {
         const request = fetch(
-          `${this.rootPath()}/p4v1/tradeinCheckImei/${item.imei}`
+          `${this.rootPath()}/p4v1/tradeinCheckImei/${item.imei}/${item.boosted}`
         )
           .then(response => response.json())
           .then(response => {
