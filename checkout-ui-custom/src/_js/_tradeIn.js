@@ -55,7 +55,7 @@ export default class TradeIn {
             } else {
               totalItemTradeIn +=
                 itemLinkTradeIn.evaluatedProducts[k].price +
-                parseInt(itemLinkTradeIn.boostSSG, 10)
+                parseFloat(itemLinkTradeIn.boostSSG)
             }
           }
         }
