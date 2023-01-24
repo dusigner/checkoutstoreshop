@@ -73,12 +73,85 @@ export default class CustomProfileData {
     }
   }
 
+  getClientProfileData(email) {
+    const _this = this
+
+    return $.ajax({
+      url: `${_this.rootPath()}/_v/get/client/${email}`,
+      headers: {
+        Accept: 'application/vnd.vtex.ds.v10+json',
+        'Content-Type': 'application/json',
+      },
+      cache: false,
+      crossDomain: true,
+      type: 'GET',
+    })
+  }
+
+  convertDateToLocaleDateString(birthDate) {
+    return new Date(birthDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+  }
+
+  fillClientProfileData({
+    birthDate,
+    isNewsletterOptIn,
+    acceptTermsAndPrivacyPolicy,
+  }) {
+    try {
+      const clientDateBirth = this.convertDateToLocaleDateString(birthDate)
+
+      $('#client-birth-date').addClass('success').val(clientDateBirth)
+      $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
+      $('#inputTermAndPolicies').prop('checked', acceptTermsAndPrivacyPolicy)
+
+      this.toggleGoToShippingDisabled()
+    } catch (err) {
+      console.error(`Erro ao preencher dados de perfil de usuário: ${err}`)
+    }
+  }
+
+  persistClientProfileData() {
+    const _this = this
+
+    try {
+      const { email } = window.vtexjs.checkout.orderForm.clientProfileData
+
+      this.getClientProfileData(email).done(function (data) {
+        try {
+          const profileDataToPersist = {
+            birthDate: data[0].birthDate,
+            acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
+            isNewsletterOptIn: data[0].isNewsletterOptIn,
+          }
+
+          _this.fillClientProfileData(profileDataToPersist)
+          setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
+        } catch (err) {
+          console.error(`Erro ao recuperar dados de perfil de usuário: ${err}`)
+          setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
+        }
+      })
+    } catch (err) {
+      console.error(`Erro ao recuperar dados de perfil de usuário: ${err}`)
+      setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
+    }
+  }
+
   removePj() {
     $('.box-client-info-pj').remove()
   }
 
+  updateBirthDateOnSummary() {
+    const birthDateInputVal = $('#client-birth-date').val()
+
+    if (birthDateInputVal) {
+      $('#dateBirthField span.name').text(birthDateInputVal)
+    }
+  }
+
   saveProfileData() {
     this.insertPartialNewProfileData()
+    this.updateBirthDateOnSummary()
   }
 
   validateAge(dataUser) {
@@ -454,9 +527,13 @@ export default class CustomProfileData {
       }
     )
 
-    $('body').on('click', '#edit-profile-data', function () {
-      setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
-    })
+    $('body').on(
+      'click',
+      '#edit-profile-data, #cart-to-orderform, #btn-client-pre-email, .checkout-steps_item_identification',
+      function () {
+        _this.persistClientProfileData()
+      }
+    )
 
     $('body').on(
       'click',
@@ -475,7 +552,7 @@ export default class CustomProfileData {
     $('p.client-phone').first().after($textMsgPhone)
   }
 
-  addFieldsProfile(orderForm) {
+  addFieldsProfileToSummary(orderForm) {
     const _this = this
 
     const { clientProfileData } = orderForm
@@ -484,44 +561,46 @@ export default class CustomProfileData {
 
     const documentCpf = orderForm.clientProfileData.document
 
-    const $documentCpfField = `<p id="documentCpfField" class="client-profile-summary cpf-field">
-          <span class="name-label" style="">CPF:</span>
-          <span class="name">${documentCpf}</span>
-          <br>
-          </p>`
+    const $documentCpfField = `
+      <p id="documentCpfField" class="client-profile-summary cpf-field">
+        <span class="name-label" style="">CPF:</span>
+        <span class="name">${documentCpf}</span>
+        <br>
+      </p>
+      `
 
     $('#documentCpfField').empty()
     $('.client-profile-summary').first().after($documentCpfField)
 
-    $.ajax({
-      url: `${_this.rootPath()}/_v/get/client/${
-        orderForm.clientProfileData.email
-      }`,
-      headers: {
-        Accept: 'application/vnd.vtex.ds.v10+json',
-        'Content-Type': 'application/json',
-      },
-      crossDomain: true,
-      type: 'GET',
-      success(data) {
+    const $dateBirthField = $(`
+      <p id='dateBirthField' class="client-profile-summary date-birth-field">
+        <span class="name-label" style="">Data de Nascimento:</span>
+        <span class="name"></span>
+        <br>
+      </p>
+    `)
+
+    if (!$('#dateBirthField').length) {
+      $('.client-profile-summary.cpf-field').first().after($dateBirthField)
+    }
+
+    const $birthDateFieldValue = $('#dateBirthField span.name')
+
+    if ($birthDateFieldValue.is(':empty')) {
+      const { email } = orderForm.clientProfileData
+
+      _this.getClientProfileData(email).done(function (data) {
+        if (!data) return
+
         const dataBirthDate = data[0].birthDate
 
-        if (data[0].birthDate) {
-          const clientDateBirth = new Date(dataBirthDate).toLocaleDateString(
-            'pt-BR',
-            { timeZone: 'UTC' }
-          )
+        if (dataBirthDate) {
+          const clientDateBirth =
+            _this.convertDateToLocaleDateString(dataBirthDate)
 
-          const $dateBirthField = `<p id='dateBirthField' class="client-profile-summary date-birth-field">
-                <span class="name-label" style="">Data de Nascimento:</span>
-                <span class="name">${clientDateBirth}</span>
-                <br>
-                </p>`
-
-          $('#dateBirthField').empty()
-          $('.client-profile-summary.cpf-field').first().after($dateBirthField)
+          $birthDateFieldValue.text(clientDateBirth)
         }
-      },
-    })
+      })
+    }
   }
 }
