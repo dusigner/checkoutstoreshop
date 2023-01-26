@@ -62,14 +62,6 @@ export default class CustomPreEmail {
     window.vtexid.start()
 
     const checkCustomButtonInterval = setInterval(function () {
-      // if ($('#vtexIdUI-custom-oauth').length) {
-      //   clearInterval(checkCustomButtonInterval)
-
-      //   $('#vtexIdContainer, #vtexIdUI-global-loader').hide()
-      //   $('#vtexIdUI-custom-oauth').trigger('click')
-      // }
-
-      // test environment
       if ($('#vtexIdUI-').length) {
         clearInterval(checkCustomButtonInterval)
 
