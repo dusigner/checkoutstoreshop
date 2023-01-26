@@ -1070,7 +1070,8 @@ body #go-to-cart-button-custom {
   top: 100vh; }
   @media screen and (max-width: 1024px) {
     .checkout-footer {
-      padding: 30px 20px; }
+      padding: 30px 20px;
+      margin-top: 13rem; }
       .checkout-footer .flex {
         display: block; } }
   .checkout-footer .container > div {
@@ -1986,7 +1987,8 @@ h3.client-pre-email-h {
     color: #000; }
     @media screen and (max-width: 690px) {
       .client-pre-email .samsung-account-container {
-        flex-basis: 100%; } }
+        flex-basis: 100%;
+        margin-bottom: 15px; } }
     .client-pre-email .samsung-account-container #btn-samsung-account {
       font-family: "SamsungOne";
       font-size: 14px;
@@ -2031,12 +2033,14 @@ h3.client-pre-email-h {
   @media screen and (max-width: 690px) {
     .client-pre-email .samsung-account-create {
       margin-bottom: 10px;
-      border-bottom: 1px solid #cbcbcb; } }
+      border-bottom: 1px solid #cbcbcb;
+      padding-bottom: 15px; } }
   .client-pre-email .client-email {
     color: #000;
     margin: 0;
     flex-basis: calc(50% - 1px);
-    border-left: 1px solid #cbcbcb; }
+    border-left: 1px solid #cbcbcb;
+    padding-top: 25px; }
     .client-pre-email .client-email:before {
       content: "Ou informe seu e-mail:";
       display: block;
@@ -2177,11 +2181,16 @@ h3.client-pre-email-h {
   position: absolute;
   visibility: visible;
   transition: 0.8s;
-  flex-direction: column; }
+  flex-direction: column;
+  padding-top: 40px; }
+  @media screen and (max-width: 690px) {
+    .samsung-toggle-button-container {
+      padding-top: 0; } }
 
 .samsung-visitante-title {
   display: block;
-  font-size: 12px; }
+  font-size: 12px;
+  padding-bottom: 1rem; }
 
 .samsung-button-login {
   position: unset;
@@ -2194,7 +2203,8 @@ h3.client-pre-email-h {
   width: 326px;
   outline: none;
   border: 1px solid #000;
-  font-family: "SamsungOne"; }
+  font-family: "SamsungOne";
+  padding: 10px 0px; }
 
 .samsung-message-rewards {
   max-width: 330px;
@@ -2207,8 +2217,9 @@ h3.client-pre-email-h {
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  margin-top: 30px;
-  padding: 0 15px; }
+  margin-top: 10px;
+  padding: 0 15px;
+  font-weight: bold; }
 
 #client-profile-data p.link-cart {
   display: flex;

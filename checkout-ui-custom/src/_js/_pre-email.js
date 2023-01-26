@@ -18,7 +18,7 @@ export default class CustomPreEmail {
 
         <p class="samsung-visitante-title">Entrar como visitante:</p>
 
-        <button class="samsung-button-login" id="toggleButtonLogin" type="button">informe seu e-mail</button>
+        <button class="samsung-button-login" id="toggleButtonLogin" type="button">Informe seu e-mail</button>
 
         <p class="samsung-message-rewards">Ao entrar como visitante não será possível pontuar no programa Samsung Rewards</p>
       </div>
@@ -40,7 +40,7 @@ export default class CustomPreEmail {
                 id="btn-samsung-account"
                 type="submit"
               >
-                Login
+              Entrar
               </button>
             </div>
             <div style="margin-top: 20px">
@@ -62,21 +62,19 @@ export default class CustomPreEmail {
     window.vtexid.start()
 
     const checkCustomButtonInterval = setInterval(function () {
-      if ($('#vtexIdUI-custom-oauth').length) {
+      // if ($('#vtexIdUI-custom-oauth').length) {
+      //   clearInterval(checkCustomButtonInterval)
+
+      //   $('#vtexIdContainer, #vtexIdUI-global-loader').hide()
+      //   $('#vtexIdUI-custom-oauth').trigger('click')
+      // }
+
+      // test environment
+      if ($('#vtexIdUI-').length) {
         clearInterval(checkCustomButtonInterval)
 
         $('#vtexIdContainer, #vtexIdUI-global-loader').hide()
-        $('#vtexIdUI-custom-oauth').trigger('click')
-      }
-
-      // test environment
-      if (window.location.href.includes('samsungbrtest')) {
-        if ($('#vtexIdUI-').length) {
-          clearInterval(checkCustomButtonInterval)
-
-          $('#vtexIdContainer, #vtexIdUI-global-loader').hide()
-          $('#vtexIdUI-').trigger('click')
-        }
+        $('#vtexIdUI-').trigger('click')
       }
     }, 100)
   }
