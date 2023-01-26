@@ -1189,8 +1189,11 @@
 }
 
 /* hide default rewards calculator */
-.gift-card-section:nth-of-type(1) {
-	display: none !important;
+.gift-card-provider-options.text.input.span7 {
+	label,
+	select {
+		display: none;
+	}
 }
 
 .payment-discounts-alert-wrap{
