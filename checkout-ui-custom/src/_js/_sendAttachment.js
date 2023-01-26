@@ -44,7 +44,7 @@ export default class SendAttachment {
             } else {
               totalItemTradeIn +=
                 itemLinkTradeIn.evaluatedProducts[k].price +
-                parseFloat(itemLinkTradeIn.boostSSG) * 100
+                parseFloat(itemLinkTradeIn.boostSSG)
             }
           }
 
