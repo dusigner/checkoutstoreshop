@@ -1070,8 +1070,7 @@ body #go-to-cart-button-custom {
   top: 100vh; }
   @media screen and (max-width: 1024px) {
     .checkout-footer {
-      padding: 30px 20px;
-      margin-top: 13rem; }
+      padding: 30px 20px; }
       .checkout-footer .flex {
         display: block; } }
   .checkout-footer .container > div {
@@ -2042,10 +2041,11 @@ h3.client-pre-email-h {
     border-left: 1px solid #cbcbcb;
     padding-top: 25px; }
     .client-pre-email .client-email:before {
-      content: "Ou informe seu e-mail:";
+      content: "Digite seu e-mail para finalizar sua compra";
       display: block;
       padding-bottom: 25px;
-      font-size: 12px; }
+      font-size: 14px;
+      font-weight: bold; }
     @media screen and (max-width: 690px) {
       .client-pre-email .client-email {
         flex-basis: 100%;
@@ -2200,7 +2200,8 @@ h3.client-pre-email-h {
   font-size: 14px;
   font-weight: 700;
   color: #000;
-  width: 326px;
+  max-width: 326px;
+  width: 100%;
   outline: none;
   border: 1px solid #000;
   font-family: "SamsungOne";

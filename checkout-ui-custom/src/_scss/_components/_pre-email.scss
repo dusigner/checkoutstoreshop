@@ -113,10 +113,11 @@ h3.client-pre-email-h {
   .client-email {
     color: #000;
     &:before {
-      content: "Ou informe seu e-mail:";
+      content: "Digite seu e-mail para finalizar sua compra";
       display: block;
       padding-bottom: 25px;
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: bold;
     }
     margin: 0;
     flex-basis: calc(50% - 1px);
@@ -322,7 +323,8 @@ h3.client-pre-email-h {
   font-size: 14px;
   font-weight: 700;
   color: #000;
-  width: 326px;
+  max-width: 326px;
+  width: 100%;
   outline: none;
   border: 1px solid #000;
   font-family: "SamsungOne";
