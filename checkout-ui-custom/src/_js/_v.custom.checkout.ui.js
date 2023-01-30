@@ -868,23 +868,6 @@ class checkoutCustom {
 
       vtexjs.checkout.sendAttachment('paymentData', data)
 
-      // const inCashPrice = await fetch(
-      //   `${this.rootPath()}/api/checkout/pub/orderForm/${
-      //     orderForm.orderFormId
-      //   }/installments?paymentSystem=2`
-      // )
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     const installmentOptions = data.installments
-
-      //     const maxInstallment = installmentOptions[0]
-
-      //     return maxInstallment ? maxInstallment.total : ''
-      //   })
-      // .catch(e => {
-      //   console.log("inCashPrice Price error", e)
-      // })
-
       const inCashPrice = orderForm.paymentData.installmentOptions.find(
         item => item.paymentSystem == 125
       ).installments[0].total
