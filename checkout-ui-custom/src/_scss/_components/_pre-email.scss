@@ -1,4 +1,4 @@
-fieldset.pre-email.row-fluid{
+fieldset.pre-email.row-fluid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -40,12 +40,13 @@ h3.client-pre-email-h {
 
     @media screen and (max-width: $mobileWidth) {
       flex-basis: 100%;
+      margin-bottom: 15px;
     }
 
     #btn-samsung-account {
-      font-family:'SamsungOne';
-      font-size:14px;
-      background: #2189FF;
+      font-family: "SamsungOne";
+      font-size: 14px;
+      background: #2189ff;
       color: white;
       border-radius: 20px;
       border: none;
@@ -82,7 +83,7 @@ h3.client-pre-email-h {
         text-align: center;
         margin-bottom: 15px;
         color: #000;
-        content: 'Escolha uma opção de identificação para finalizar sua compra';
+        content: "Escolha uma opção de identificação para finalizar sua compra";
 
         @media screen and (max-width: $mobileWidth) {
           font-size: 17px;
@@ -105,20 +106,23 @@ h3.client-pre-email-h {
     @media screen and (max-width: $mobileWidth) {
       margin-bottom: 10px;
       border-bottom: 1px solid $muted4;
+      padding-bottom: 15px;
     }
   }
 
   .client-email {
     color: #000;
     &:before {
-      content: 'Ou informe seu e-mail:';
+      content: "Digite seu e-mail para finalizar sua compra";
       display: block;
       padding-bottom: 25px;
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: bold;
     }
     margin: 0;
     flex-basis: calc(50% - 1px);
     border-left: 1px solid $muted4;
+    padding-top: 25px;
 
     @media screen and (max-width: $mobileWidth) {
       flex-basis: 100%;
@@ -163,8 +167,8 @@ h3.client-pre-email-h {
       color: #000;
       width: 326px;
       outline: none;
-      border:1px solid #000;
-      font-family: 'SamsungOne';
+      border: 1px solid #000;
+      font-family: "SamsungOne";
       margin-top: 30px;
 
       @media screen and (max-width: 480px) {
@@ -184,7 +188,7 @@ h3.client-pre-email-h {
       color: #1428a0;
 
       &:before {
-        content: '*';
+        content: "*";
       }
     }
   }
@@ -239,40 +243,36 @@ h3.client-pre-email-h {
             margin-bottom: 40px;
           }
 
-          &[data-i18n='clientProfileData.bullet1WhyEmail']:before {
-            content: '';
-            background: url(https://samsungar.vteximg.com.br/arquivos/fingerprint.png?v=1)
-              no-repeat;
+          &[data-i18n="clientProfileData.bullet1WhyEmail"]:before {
+            content: "";
+            background: url(https://samsungar.vteximg.com.br/arquivos/fingerprint.png?v=1) no-repeat;
             width: 44px;
             height: 46px;
             display: block;
             margin: 0px auto 15px;
           }
 
-          &[data-i18n='clientProfileData.bullet2WhyEmail']:before {
-            content: '';
-            background: url(https://samsungar.vteximg.com.br/arquivos/notification.png?v=1)
-              no-repeat;
+          &[data-i18n="clientProfileData.bullet2WhyEmail"]:before {
+            content: "";
+            background: url(https://samsungar.vteximg.com.br/arquivos/notification.png?v=1) no-repeat;
             width: 38px;
             height: 46px;
             display: block;
             margin: 0px auto 15px;
           }
 
-          &[data-i18n='clientProfileData.bullet3WhyEmail']:before {
-            content: '';
-            background: url(https://samsungar.vteximg.com.br/arquivos/return-to-the-past.png?v=1)
-              no-repeat;
+          &[data-i18n="clientProfileData.bullet3WhyEmail"]:before {
+            content: "";
+            background: url(https://samsungar.vteximg.com.br/arquivos/return-to-the-past.png?v=1) no-repeat;
             width: 43px;
             height: 46px;
             display: block;
             margin: 0px auto 15px;
           }
 
-          &[data-i18n='clientProfileData.bullet4WhyEmail']:before {
-            content: '';
-            background: url(https://samsungar.vteximg.com.br/arquivos/list.png?v=1)
-              no-repeat;
+          &[data-i18n="clientProfileData.bullet4WhyEmail"]:before {
+            content: "";
+            background: url(https://samsungar.vteximg.com.br/arquivos/list.png?v=1) no-repeat;
             width: 36px;
             height: 46px;
             display: block;
@@ -286,4 +286,63 @@ h3.client-pre-email-h {
       display: none;
     }
   }
+}
+
+.samsung-toggle-button-container {
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffff;
+  position: absolute;
+  visibility: visible;
+  transition: 0.8s;
+  flex-direction: column;
+  padding-top: 40px;
+
+  @media screen and (max-width: $mobileWidth) {
+    padding-top: 0;
+  }
+}
+
+.samsung-visitante-title {
+  display: block;
+  font-size: 12px;
+  padding-bottom: 1rem;
+}
+
+.samsung-button-login {
+  position: unset;
+  height: 40px;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  max-width: 326px;
+  width: 100%;
+  outline: none;
+  border: 1px solid #000;
+  font-family: "SamsungOne";
+  padding: 10px 0px;
+}
+
+.samsung-message-rewards {
+  max-width: 330px;
+  min-height: 69px;
+  background: #fef6f3 0% 0% no-repeat padding-box;
+  border-radius: 6px;
+  opacity: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding: 0 15px;
+  font-weight: bold;
 }
