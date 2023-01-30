@@ -849,9 +849,26 @@ class checkoutCustom {
       }
 
       // Pega o valor do pix (código 125)
-      const inCashPrice = orderForm.paymentData.installmentOptions.find(
-        item => item.paymentSystem == 125
-      ).installments[0].total
+      const inCashPrice = await fetch(
+        `${this.rootPath()}/api/checkout/pub/orderForm/${
+          orderForm.orderFormId
+        }/installments?paymentSystem=2`
+      )
+        .then(response => response.json())
+        .then(data => {
+          const installmentOptions = data.installments
+
+          const maxInstallment = installmentOptions[0]
+
+          return maxInstallment ? maxInstallment.total : ''
+        })
+      .catch(e => {
+        console.log("inCashPrice Price error", e)
+      })
+
+      // const inCashPrice = orderForm.paymentData.installmentOptions.find(
+      //   item => item.paymentSystem == 125
+      // ).installments[0].total
 
       // Encontra as installments para do cartao visa (código 2)
       // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
@@ -864,13 +881,16 @@ class checkoutCustom {
         .then(data => {
           const installmentOptions = data.installments
 
-          return (
-            installmentOptions.find(
-              install =>
-                install.count ===
-                Math.max(...installmentOptions.map(inst => inst.count))
-            ).total || 0
+          const maxInstallment = installmentOptions.find(
+            install =>
+              install.count ===
+              Math.max(...installmentOptions.map(inst => inst.count))
           )
+
+          return maxInstallment ? maxInstallment.total : ''
+        })
+        .catch(e => {
+          console.log("onTerm Price error", e)
         })
 
       const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
@@ -913,6 +933,7 @@ class checkoutCustom {
         }
       }
     } catch (e) {
+      alert("error")
       console.error('enchancementSummaryCart error:', e)
     }
   }
