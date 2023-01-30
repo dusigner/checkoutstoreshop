@@ -760,11 +760,14 @@ class checkoutCustom {
           return
         }
 
-        const totalValue = _trElem.find('.total-price:eq(0)').text()
+        const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
+        const onTermValue = _trElem.find('.total-price:eq(0)').text()
 
         const free = orderForm.items[i].sellingPrice == 1 || orderForm.items[i].sellingPrice == 0
 
         free ? _trElem.addClass('gratuito') : null
+
+        _trElem.find('.new-product-price').text(onTermValue)
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
