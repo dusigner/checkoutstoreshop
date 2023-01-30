@@ -823,7 +823,7 @@ class checkoutCustom {
 
       const _trElem = $(`.summary-template-holder`)
 
-      if (path === '#/payment' || this.hasSelectedDefaultPaymentMethod) {
+      if (path === '#/payment') {
         const selectedPaymentMethod =
           window.vtexjs.checkout.orderForm.paymentData.payments[0]
 
@@ -849,26 +849,42 @@ class checkoutCustom {
       }
 
       // Pega o valor do pix (código 125)
-      const inCashPrice = await fetch(
-        `${this.rootPath()}/api/checkout/pub/orderForm/${
-          orderForm.orderFormId
-        }/installments?paymentSystem=2`
-      )
-        .then(response => response.json())
-        .then(data => {
-          const installmentOptions = data.installments
-
-          const maxInstallment = installmentOptions[0]
-
-          return maxInstallment ? maxInstallment.total : ''
-        })
-      .catch(e => {
-        console.log("inCashPrice Price error", e)
+      const pay = orderForm.paymentData.installmentOptions.filter((payment) => {
+          return payment.paymentSystem === '125';
       })
 
-      // const inCashPrice = orderForm.paymentData.installmentOptions.find(
-      //   item => item.paymentSystem == 125
-      // ).installments[0].total
+      const data = {
+          payments: [
+              {
+                  paymentSystem: 125,
+                  installments: 1,
+                  referenceValue: pay[0].value
+              }
+          ]
+      }
+
+      vtexjs.checkout.sendAttachment('paymentData', data)
+
+      // const inCashPrice = await fetch(
+      //   `${this.rootPath()}/api/checkout/pub/orderForm/${
+      //     orderForm.orderFormId
+      //   }/installments?paymentSystem=2`
+      // )
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     const installmentOptions = data.installments
+
+      //     const maxInstallment = installmentOptions[0]
+
+      //     return maxInstallment ? maxInstallment.total : ''
+      //   })
+      // .catch(e => {
+      //   console.log("inCashPrice Price error", e)
+      // })
+
+      const inCashPrice = orderForm.paymentData.installmentOptions.find(
+        item => item.paymentSystem == 125
+      ).installments[0].total
 
       // Encontra as installments para do cartao visa (código 2)
       // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
@@ -933,7 +949,6 @@ class checkoutCustom {
         }
       }
     } catch (e) {
-      alert("error")
       console.error('enchancementSummaryCart error:', e)
     }
   }
