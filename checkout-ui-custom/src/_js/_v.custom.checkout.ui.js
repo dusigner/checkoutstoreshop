@@ -422,6 +422,23 @@ class checkoutCustom {
         })
 
         $('.totalizers-list .discount').remove()
+        const hasService = window.vtexjs.checkout.orderForm.items.every(
+          item => {
+            return item.detailUrl.indexOf('/install-service/p') == -1
+          }
+        )
+
+        if (!hasService) {
+          $(`<tr class="discount install-service" style="height: 23px;">
+              <td>Serviço de instalação</td>
+              <td>
+                <span style="font-weight: 700">
+                  Grátis
+                </span>
+              </td>
+            </tr>`).insertBefore(_trElem)
+        }
+
         _trElem.before(`${elements.join()}`)
       }
     } catch (e) {
@@ -749,6 +766,12 @@ class checkoutCustom {
 
         const totalValue = _trElem.find('.total-price:eq(0)').text()
 
+        const free =
+          orderForm.items[i].sellingPrice == 1 ||
+          orderForm.items[i].sellingPrice == 0
+
+        free ? _trElem.addClass('gratuito') : null
+
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
         _trElem
@@ -757,7 +780,9 @@ class checkoutCustom {
           .prepend(
             `
             <div class="v-custom-quantity-price vqc-ldelem">
-              <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${totalValue}</p>
+              <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${
+                free ? 'Grátis' : totalValue
+              }</p>
             </div>
             `
           )
@@ -778,12 +803,21 @@ class checkoutCustom {
 
         const refId = orderForm.items[i].refId || ''
 
-        _trElem.find('td.product-name').append(
-          `<div class="more-info">
-            <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
-            <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>
-          </div>`
-        )
+        if (orderForm.items[i].detailUrl.indexOf('/install-service/p') == -1) {
+          _trElem.find('td.product-name').append(
+            `<div class="more-info">
+              <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>
+            </div>`
+          )
+        } else {
+          _trElem.find('td.product-name').append(
+            `<div class="more-info">
+              <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="estimate-shipping">Após a entrega do produto</p>
+            </div>`
+          )
+        }
       })
     } catch (e) {
       console.error('enchancementProductName error:', e)
@@ -1739,7 +1773,7 @@ class checkoutCustom {
         }
 
         if (window.location.hash === '#/payment') {
-          _this.profile.addFieldsProfile(orderForm)
+          _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
         }
 

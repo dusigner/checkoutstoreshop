@@ -160,7 +160,7 @@ export default class CustomShippingData {
 
       const _this = this
 
-      const { address } = orderForm.shippingData
+      const { address: orderFormAddress } = orderForm.shippingData
 
       this.validateVirtualInventory(orderForm)
 
@@ -187,12 +187,29 @@ export default class CustomShippingData {
         }
       }, 50)
 
-      if (address.postalCode && !address.city) {
-        this.setInvalidPostalCode()
-        this.addInvalidPostalCodeMessage()
-      } else {
-        this.setValidPostalCode()
-        this.removeInvalidPostalCodeMessage()
+      if (orderFormAddress.city) {
+        _this.setValidPostalCode()
+        _this.removeInvalidPostalCodeMessage()
+
+        return
+      }
+
+      if (orderFormAddress.postalCode) {
+        $.getJSON(
+          `${_this.rootPath()}/api/checkout/pub/postal-code/BRA/${
+            orderFormAddress.postalCode
+          }`
+        ).done(function (data) {
+          const address = data
+
+          if (address.postalCode && !address.city) {
+            _this.setInvalidPostalCode()
+            _this.addInvalidPostalCodeMessage()
+          } else {
+            _this.setValidPostalCode()
+            _this.removeInvalidPostalCodeMessage()
+          }
+        })
       }
     } catch (err) {
       console.error(`Ocorreu um erro ao validar CEP: ${err}`)
