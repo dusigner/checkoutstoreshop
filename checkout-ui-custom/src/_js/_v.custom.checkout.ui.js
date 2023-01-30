@@ -1168,7 +1168,7 @@ class checkoutCustom {
     new SamsungCarePlus().init()
     new BespokeRefrigerator().init()
     this.installationService.init()
-    this.TradeIn.init()
+    this.TradeIn.init(orderForm)
     this.Rewards.showObsRewards()
 
     // debounce to prevent append from default script

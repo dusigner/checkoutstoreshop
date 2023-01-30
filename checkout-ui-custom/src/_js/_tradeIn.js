@@ -1,31 +1,21 @@
 import { formatCurrencyBRL } from './_utils'
 
 export default class TradeIn {
-  init() {
-    const { items } = window.vtexjs.checkout.orderForm
+  async init(orderForm) {
+    const { items } = orderForm
 
-    const getTransport = localStorage.getItem('transport')
+    const customDataDomain = orderForm.customData ? orderForm.customData.customApps.filter(i => i.id === 'domain') : [];
+
+    const getTransport = customDataDomain.length > 0 ? customDataDomain[0].fields.trade_in_option_selected : '';
     const transport = getTransport ? JSON.parse(getTransport) : ''
-    const customData = window.vtexjs.checkout.orderForm.customData
-      ? window.vtexjs.checkout.orderForm.customData.customApps.find(
-          item => item.id === 'domain'
-        )
-      : false
-
-    const isSocialSelling = window.vtexjs.checkout.orderForm.marketingData
-      ? window.vtexjs.checkout.orderForm.marketingData.marketingTags.find(
-          item => item === 'vtexSocialSelling'
-        )
-      : false
 
     if (items.length && transport.length) {
       this.checkTradeIn(items, transport)
-    } else if (items.length && customData && isSocialSelling) {
-      const transportCustomData = customData.fields.trade_in_option_selected
-
-      this.checkTradeIn(items, JSON.parse(transportCustomData))
-    } else {
-      return ''
+    } else if (!items.length && transport.length && localStorage.getItem('transport')) {
+      $('#total-details-tradein').remove()
+      $('#text-details-tradein').remove()
+      await this.removeCustomDataTradeIn()
+      return
     }
   }
 
@@ -55,7 +45,7 @@ export default class TradeIn {
             } else {
               totalItemTradeIn +=
                 itemLinkTradeIn.evaluatedProducts[k].price +
-                parseInt(itemLinkTradeIn.boostSSG, 10)
+                parseFloat(itemLinkTradeIn.boostSSG)
             }
           }
         }
@@ -74,6 +64,7 @@ export default class TradeIn {
       $('#total-details-tradein').remove()
       $('#text-details-tradein').remove()
       this.removeCustomDataTradeIn()
+      return
     }
 
     const newTransport = transport.filter(item => {
@@ -88,8 +79,7 @@ export default class TradeIn {
     })
 
     if (newTransport.length < transport.length) {
-      localStorage.setItem('transport', JSON.stringify(newTransport))
-      this.validateTradeinCustomData()
+      this.putCustomData(newTransport, totalTradeIn)
     }
   }
 
@@ -151,7 +141,6 @@ export default class TradeIn {
       trade_in_total_value: total,
     }
 
-    localStorage.setItem('transport', JSON.stringify(transport))
     $('#total-tradein-value').text(`${formatCurrencyBRL(total, false)}*`)
 
     await $.ajax({
@@ -181,22 +170,15 @@ export default class TradeIn {
   }
 
   async validateTradeinCustomData() {
-    const getTransport = localStorage.getItem('transport')
+    const customDataDomain = window.vtexjs.checkout.orderForm.customData ? 
+      window.vtexjs.checkout.orderForm.customData.customApps.filter(i => i.id === 'domain') : [];
+
+    const getTransport = customDataDomain.length > 0 ? customDataDomain[0].fields.trade_in_option_selected : '';
     const transport = getTransport ? JSON.parse(getTransport) : ''
 
     let total = 0
     const arrayPromise = []
     const arrayProductsTrocafone = []
-
-    const isSocialSelling = window.vtexjs.checkout.orderForm.marketingData
-      ? window.vtexjs.checkout.orderForm.marketingData.marketingTags.find(
-          item => item === 'vtexSocialSelling'
-        )
-      : false
-
-    if (isSocialSelling) {
-      return
-    }
 
     if (!!transport && transport.length > 0) {
       await transport.map(mainProduct => {
@@ -209,7 +191,7 @@ export default class TradeIn {
 
       arrayProductsTrocafone.map(item => {
         const request = fetch(
-          `${this.rootPath()}/p4v1/tradeinCheckImei/${item.imei}`
+          `${this.rootPath()}/p4v1/tradeinCheckImei/${item.imei}/${item.boosted}`
         )
           .then(response => response.json())
           .then(response => {
@@ -257,10 +239,10 @@ export default class TradeIn {
 
           return ''
         })
-        this.putCustomData(transport, total)
+        if (JSON.stringify(transport) != getTransport) {
+          this.putCustomData(transport, total)
+        }
       })
-    } else {
-      this.removeCustomDataTradeIn()
     }
   }
 }
