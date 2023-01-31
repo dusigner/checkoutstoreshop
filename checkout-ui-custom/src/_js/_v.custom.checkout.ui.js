@@ -852,22 +852,6 @@ class checkoutCustom {
       }
 
       // Pega o valor do pix (código 125)
-      const pay = orderForm.paymentData.installmentOptions.filter((payment) => {
-          return payment.paymentSystem === '125';
-      })
-
-      const data = {
-          payments: [
-              {
-                  paymentSystem: 125,
-                  installments: 1,
-                  referenceValue: pay[0].value
-              }
-          ]
-      }
-
-      vtexjs.checkout.sendAttachment('paymentData', data)
-
       const inCashPrice = orderForm.paymentData.installmentOptions.find(
         item => item.paymentSystem == 125
       ).installments[0].total
@@ -937,6 +921,29 @@ class checkoutCustom {
     } catch (e) {
       console.error('enchancementSummaryCart error:', e)
     }
+  }
+
+  setPixAsDefaultPaymentMethod() {
+    if(window.vtexjs){
+      const pay = vtexjs.checkout.orderForm.paymentData.installmentOptions.filter((payment) => {
+        return payment.paymentSystem === '125';
+      })
+
+      if(!pay) return;
+
+      const data = {
+          payments: [
+              {
+                  paymentSystem: 125,
+                  installments: 1,
+                  referenceValue: pay[0].value
+              }
+          ]
+      }
+
+      vtexjs.checkout.sendAttachment('paymentData', data)
+    }
+
   }
 
   enchancementUnavailableProduct() {
@@ -1815,6 +1822,9 @@ class checkoutCustom {
       })
 
       $(window).load(function () {
+        _this.setPixAsDefaultPaymentMethod()
+        console.log("carregou!!!")
+
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
         })
