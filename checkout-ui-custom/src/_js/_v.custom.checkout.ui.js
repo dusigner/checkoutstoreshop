@@ -1823,7 +1823,6 @@ class checkoutCustom {
 
       $(window).load(function () {
         _this.setPixAsDefaultPaymentMethod()
-        console.log("carregou!!!")
 
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
