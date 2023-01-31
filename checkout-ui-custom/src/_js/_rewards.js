@@ -478,30 +478,11 @@ export default class Rewards {
         }).value / 100
     }
 
-    let TotalShipping = 0
-
-    if (
-      orderForm.totalizers.find(item => {
-        return item.id === 'Shipping'
-      })
-    ) {
-      TotalShipping =
-        orderForm.totalizers.find(item => {
-          return item.id === 'Shipping'
-        }).value / 100
-    }
-
     const ProductItems = []
 
     orderForm.items.map(item => {
       const MultProporcional =
         ((item.sellingPrice / 100) * item.quantity) / (TotalItems + TotalDisc)
-
-      let TotalShippingCurrentItem = 0
-
-      if (TotalShipping > 0) {
-        TotalShippingCurrentItem = MultProporcional * TotalShipping
-      }
 
       let TotalRewardsDiscountCurrentItem = 0
 
@@ -514,8 +495,7 @@ export default class Rewards {
         ObjectType: 'ESTORE_BR',
         ObjectId: item.refId,
         Amount: (
-          (item.sellingPrice / 100) * item.quantity +
-          TotalShippingCurrentItem -
+          (item.sellingPrice / 100) * item.quantity -
           TotalRewardsDiscountCurrentItem
         ).toString(),
         Quantity: item.quantity.toString(),
