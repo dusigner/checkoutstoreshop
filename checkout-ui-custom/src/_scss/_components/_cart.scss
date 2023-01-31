@@ -90,6 +90,11 @@ h1#cart-title {display:none !important;}
       display: flex;
       flex-wrap:wrap;
       border-bottom:1px solid  $muted5;
+      .best-price {
+        .new-product-price {
+          text-decoration: line-through;
+        }
+      }
       &.gratuito {
         .best-price {
           .new-product-price {

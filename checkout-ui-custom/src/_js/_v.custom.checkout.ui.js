@@ -764,13 +764,16 @@ class checkoutCustom {
           return
         }
 
-        const totalValue = _trElem.find('.total-price:eq(0)').text()
+        const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
+        const onTermValue = _trElem.find('.total-price:eq(0)').text()
 
         const free =
           orderForm.items[i].sellingPrice == 1 ||
           orderForm.items[i].sellingPrice == 0
 
         free ? _trElem.addClass('gratuito') : null
+
+        _trElem.find('.new-product-price').text(onTermValue)
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
@@ -832,7 +835,7 @@ class checkoutCustom {
 
       const _trElem = $(`.summary-template-holder`)
 
-      if (path === '#/payment' || this.hasSelectedDefaultPaymentMethod) {
+      if (path === '#/payment') {
         const selectedPaymentMethod =
           window.vtexjs.checkout.orderForm.paymentData.payments[0]
 
@@ -873,13 +876,16 @@ class checkoutCustom {
         .then(data => {
           const installmentOptions = data.installments
 
-          return (
-            installmentOptions.find(
-              install =>
-                install.count ===
-                Math.max(...installmentOptions.map(inst => inst.count))
-            ).total || 0
+          const maxInstallment = installmentOptions.find(
+            install =>
+              install.count ===
+              Math.max(...installmentOptions.map(inst => inst.count))
           )
+
+          return maxInstallment ? maxInstallment.total : ''
+        })
+        .catch(e => {
+          console.log("onTerm Price error", e)
         })
 
       const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
@@ -924,6 +930,29 @@ class checkoutCustom {
     } catch (e) {
       console.error('enchancementSummaryCart error:', e)
     }
+  }
+
+  setPixAsDefaultPaymentMethod() {
+    if(window.vtexjs){
+      const pay = vtexjs.checkout.orderForm.paymentData.installmentOptions.filter((payment) => {
+        return payment.paymentSystem === '125';
+      })
+
+      if(!pay) return;
+
+      const data = {
+          payments: [
+              {
+                  paymentSystem: 125,
+                  installments: 1,
+                  referenceValue: pay[0].value
+              }
+          ]
+      }
+
+      vtexjs.checkout.sendAttachment('paymentData', data)
+    }
+
   }
 
   enchancementUnavailableProduct() {
@@ -1168,7 +1197,7 @@ class checkoutCustom {
     new SamsungCarePlus().init()
     new BespokeRefrigerator().init()
     this.installationService.init()
-    this.TradeIn.init()
+    this.TradeIn.init(orderForm)
     this.Rewards.showObsRewards()
 
     // debounce to prevent append from default script
@@ -1802,6 +1831,8 @@ class checkoutCustom {
       })
 
       $(window).load(function () {
+        _this.setPixAsDefaultPaymentMethod()
+
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
         })
