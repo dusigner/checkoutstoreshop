@@ -179,6 +179,13 @@ export default class Rewards {
     try {
       const { orderForm } = window.vtexjs.checkout
 
+      if (
+        orderForm.items.length === 0 &&
+        $('#text-details-rewards').length > 0
+      ) {
+        $('#text-details-rewards').remove()
+      }
+
       if (orderForm.items.length === 0) return
 
       if (orderForm.totalizers.length === 0) return
