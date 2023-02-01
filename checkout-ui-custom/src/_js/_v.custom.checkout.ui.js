@@ -775,6 +775,10 @@ class checkoutCustom {
 
         _trElem.find('.new-product-price').text(onTermValue)
 
+        if(onTermValue !== totalValue){
+          _trElem.find('.new-product-price').addClass('discount')
+        }
+
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
         _trElem
