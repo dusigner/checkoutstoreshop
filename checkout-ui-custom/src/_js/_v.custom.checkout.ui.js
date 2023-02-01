@@ -775,7 +775,7 @@ class checkoutCustom {
 
         _trElem.find('.new-product-price').text(onTermValue)
 
-        if(onTermValue !== totalValue){
+        if (onTermValue !== totalValue) {
           _trElem.find('.new-product-price').addClass('discount')
         }
 
@@ -889,7 +889,7 @@ class checkoutCustom {
           return maxInstallment ? maxInstallment.total : ''
         })
         .catch(e => {
-          console.log("onTerm Price error", e)
+          console.log('onTerm Price error', e)
         })
 
       const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
@@ -937,26 +937,28 @@ class checkoutCustom {
   }
 
   setPixAsDefaultPaymentMethod() {
-    if(window.vtexjs){
-      const pay = vtexjs.checkout.orderForm.paymentData.installmentOptions.filter((payment) => {
-        return payment.paymentSystem === '125';
-      })
+    if (window.vtexjs) {
+      const pay =
+        vtexjs.checkout.orderForm.paymentData.installmentOptions.filter(
+          payment => {
+            return payment.paymentSystem === '125'
+          }
+        )
 
-      if(!pay) return;
+      if (!pay) return
 
       const data = {
-          payments: [
-              {
-                  paymentSystem: 125,
-                  installments: 1,
-                  referenceValue: pay[0].value
-              }
-          ]
+        payments: [
+          {
+            paymentSystem: 125,
+            installments: 1,
+            referenceValue: pay[0].value,
+          },
+        ],
       }
 
       vtexjs.checkout.sendAttachment('paymentData', data)
     }
-
   }
 
   enchancementUnavailableProduct() {
