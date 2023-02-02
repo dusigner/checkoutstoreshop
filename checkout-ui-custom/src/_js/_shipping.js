@@ -339,5 +339,17 @@ export default class CustomShippingData {
         console.error(`Erro ao verificar campo destinatário: ${err}`)
       }
     })
+
+    $('body').on(
+      'input',
+      'input#ship-street, input#ship-complement, input#ship-neighborhood',
+      function () {
+        const regexp = /[^A-Za-z0-9\s]+$/
+
+        if ($(this).val().match(regexp)) {
+          $(this).val($(this).val().replace(regexp, ''))
+        }
+      }
+    )
   }
 }
