@@ -71,9 +71,38 @@ export default class CustomPreEmail {
     }, 100)
   }
 
+  
+  loginEmail () {
+    $(document).on('keyup', '#client-pre-email', async function (e) { 
+        var email = $('#client-pre-email').val();
+        var domain = email.split('@')
+        domain = domain[1];
+        if((domain !== undefined) || domain !== null) {
+          fetch(
+              `/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain`, {
+                  type: 'GET',
+                  headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                  },
+              }
+          ).then(response => {
+            response.json().then(data => {  
+              if($('.wrongdomain').length == 0){
+                $(`<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`).insertBefore($('#btn-client-pre-email'))
+                setTimeout(function(){
+                  $('.wrongdomain').remove()
+                }, 5000)
+              }
+            })
+          })
+        }
+    });
+  }
+
   bindEvents() {
     const _this = this
-
+    _this.loginEmail()
     $(document).on('click', '#btn-samsung-account', function () {
       _this.openSamsungAccountModal()
     })
