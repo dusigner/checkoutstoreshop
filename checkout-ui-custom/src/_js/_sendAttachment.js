@@ -18,7 +18,7 @@ export default class SendAttachment {
 
     const transport = transportCustomData
       ? JSON.parse(transportCustomData)
-      : '[]'
+      : []
 
     // TRADE-IN
     if (transport.length) {
