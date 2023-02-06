@@ -16,11 +16,9 @@ export default class SendAttachment {
     const transportCustomData =
       customData && customData.customApps[0].fields.trade_in_option_selected
 
-    const transport = localStorage.getItem('transport')
-      ? JSON.parse(localStorage.getItem('transport'))
-      : transportCustomData
+    const transport = transportCustomData
       ? JSON.parse(transportCustomData)
-      : '[]'
+      : []
 
     // TRADE-IN
     if (transport.length) {
