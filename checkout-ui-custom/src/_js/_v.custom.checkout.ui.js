@@ -1730,6 +1730,7 @@ class checkoutCustom {
           window.location.hash === '#/cart'
         ) {
           _this.TradeIn.validateTradeinCustomData()
+          _this.SendAttachment.sendOpenTextField()
           _this.displayHideSuperChat(window.location.hash)
           _this.customizeLogOut()
         }
@@ -1856,6 +1857,7 @@ class checkoutCustom {
           window.location.hash === '#/cart'
         ) {
           _this.TradeIn.validateTradeinCustomData()
+          _this.SendAttachment.sendOpenTextField()
           _this.displayHideSuperChat(window.location.hash)
         }
 
