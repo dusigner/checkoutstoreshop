@@ -102,7 +102,14 @@ h1#cart-title {display:none !important;}
           }
         }
         .quantity {
-          display: none;
+          display: flex;
+          .item-quantity-change{
+            display: none;
+          }
+          input{
+            pointer-events: none;
+            border-inline: 0px;
+          }
         }
       }
       &.hide {

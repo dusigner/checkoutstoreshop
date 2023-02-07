@@ -1,10 +1,12 @@
 export default class SamsungCarePlus {
+  
   constructor() {
     this.SAMSUNG_CARE_CATEGORY = '/2005/'
     this.LINK_SCPLUS = 'linkSCPLUS'
   }
 
   init() {
+    console.log("TESTE CHECKOUT SAMSUNG CARE")
     try {
       const { items } = window.vtexjs.checkout.orderForm
 
@@ -24,30 +26,12 @@ export default class SamsungCarePlus {
     const scpItem = items.filter(item => this.isSamsungCarePlus(item))
 
     if (!scpItem.length) return
-
-    scpItem.forEach(item => {
-      if ($(`.product-item[data-sku="${item.id}"] .item-link-remove`)) {
-        $(`.product-item[data-sku="${item.id}"] .quantity`).hide()
-      }
-    })
-
-    // Se tem mais de um seguro então deixa somente o ultimo seguro colocado.
-    if (scpItem.length > 1) {
-      const remove = scpItem.filter((item, index) => {
-        if (index === scpItem.length - 1) return false
-
-        return true
-      })
-
-      this.removeSamsungCarePlus(remove)
-
-      return
-    }
+    console.log("scpItem", scpItem)
 
     const skuMainProduct = scpItem[0].attachments.find(
       att => att.name === this.LINK_SCPLUS
     )
-
+    console.log("skuMainProduct", skuMainProduct)
     // Se o produto não tiver o attachment do SC+ então há algo errado no carrinho. Remove o seguro.
     if (!skuMainProduct || !skuMainProduct.content) {
       this.removeSamsungCarePlus()
@@ -57,7 +41,7 @@ export default class SamsungCarePlus {
     const mainProduct = items.find(
       item => item.id === skuMainProduct.content.idsku
     )
-
+    console.log("Main Product", mainProduct)
     // Se não tiver o produto principal então remove o seguro.
     if (!mainProduct) {
       this.removeSamsungCarePlus()
