@@ -495,7 +495,7 @@ export default class Rewards {
         ObjectType: 'ESTORE_BR',
         ObjectId: item.refId,
         Amount: (
-          (item.sellingPrice / 100) * item.quantity -
+          Math.round(item.sellingPrice * item.quantity) / 100 -
           TotalRewardsDiscountCurrentItem
         ).toString(),
         Quantity: item.quantity.toString(),
