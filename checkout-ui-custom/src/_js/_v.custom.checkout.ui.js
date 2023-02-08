@@ -1781,8 +1781,6 @@ class checkoutCustom {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.customizeLogOut()
           }
-
-          _this.Rewards.showPointsSimulation()
         }
       })
 
@@ -1796,8 +1794,6 @@ class checkoutCustom {
           _this.preEmail.createElementSamsungAccountLogin()
         }
 
-        _this.Rewards.showPointsSimulation()
-
         if (window.location.hash === '#/cart') {
           _this.Rewards.cancelRewardsDiscount()
         }
@@ -1805,6 +1801,7 @@ class checkoutCustom {
         if (window.location.hash === '#/payment') {
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
+          _this.Rewards.showPointsSimulation()
         }
 
         if (window.location.hash === '#/profile') {
@@ -1868,7 +1865,6 @@ class checkoutCustom {
 
         window.vtexjs.checkout.getOrderForm().done(function () {
           _this.addMedalliaScript()
-          _this.Rewards.showPointsSimulation()
         })
 
         if (window.location.hash === '#/payment') {
