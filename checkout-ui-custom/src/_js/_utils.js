@@ -33,7 +33,7 @@ module.exports.percentageDiscount = ( _discount , _price) => {
   
   const percent = (Math.round(((_discount - _price)/_price)*100))
 
-  return percent == 0 ? '' : '<span>'+ percent +'%</span>'
+  return percent == 0 ? '' : '<span class="percent">'+ percent +'%</span>'
 }
 
 module.exports.formatNumberBRL = _value =>

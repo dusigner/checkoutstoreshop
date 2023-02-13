@@ -970,27 +970,28 @@ class checkoutCustom {
   
             switch (paymentSystem) {
               case '125':
-                $('.payment-group-list-btn a[data-name="Pix"] span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                $('.payment-group-list-btn a[data-name="Pix"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
                 break 
   
               case '1':
-                $('.payment-group-list-btn a[data-name="American Express"] span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                $('.payment-group-list-btn a[data-name="American Express"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
                 break
   
               case '501':
-                $('.payment-group-list-btn a[data-name="Samsung Itaucard"] span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                $('.payment-group-list-btn a[data-name="Samsung Itaucard"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
                 break
   
               case '6':
-                $('.payment-group-list-btn a[data-name="Boleto Bancário"] span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                $('.payment-group-list-btn a[data-name="Boleto Bancário"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
                 break
   
               case '107':
-                $('.payment-group-list-btn a[data-name="Samsung Pay"] span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                $('.payment-group-list-btn a[data-name="Samsung Pay"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
                 break
   
               case '72':
-                $('.payment-group-list-btn a[data-name="PicPay"] span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                $('.payment-group-list-btn a[data-name="PicPay"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                $('.payment-group').addClass('paymentDiscount')
                 break
   
               default:
@@ -1766,7 +1767,7 @@ class checkoutCustom {
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
           }
-          if (window.location.hash === '#/payment') {
+          if (window.location.hash === '#/payment' && $('.paymentDiscount').length == 0) {
             _this.paymentDiscount()
           }
         }
@@ -1792,7 +1793,6 @@ class checkoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
-          _this.paymentDiscount()
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
