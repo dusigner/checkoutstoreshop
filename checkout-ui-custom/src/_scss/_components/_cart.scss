@@ -101,7 +101,9 @@ h1#cart-title {display:none !important;}
             display: none;
           }
         }
-        .quantity {
+      }
+      &.product-item {
+        .quantity-samsungCare {
           display: flex;
           .item-quantity-change{
             display: none;
