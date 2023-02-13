@@ -73,7 +73,7 @@ export default class CustomPreEmail {
 
   
   loginEmail () {
-    $(document).on('keyup', '#client-pre-email', async function (e) { 
+    $(document).on('keyup', '#client-pre-email, #client-email', async function (e) { 
         var email = $('#client-pre-email').val();
         var domain = email.split('@')
         domain = domain[1];
@@ -90,6 +90,7 @@ export default class CustomPreEmail {
             response.json().then(data => {  
               if($('.wrongdomain').length == 0){
                 $(`<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`).insertBefore($('#btn-client-pre-email'))
+                $(`<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`).appendTo($('.client-email'))
                 setTimeout(function(){
                   $('.wrongdomain').remove()
                 }, 5000)
