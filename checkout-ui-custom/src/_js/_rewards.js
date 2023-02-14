@@ -322,7 +322,7 @@ export default class Rewards {
       }).value
     }
 
-    if (orderForm.orderFormId) {
+    if (orderForm.orderFormId && this.userSaGuid && this.userAcceptedRewards) {
       const data = {
         Id: orderForm.orderFormId,
         Timestamp: new Date().toISOString().split('Z')[0],
