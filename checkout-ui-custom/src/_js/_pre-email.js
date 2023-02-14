@@ -90,7 +90,7 @@ export default class CustomPreEmail {
             response.json().then(data => {  
               if($('.wrongdomain').length == 0){
                 $(`<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`).insertBefore($('#btn-client-pre-email'))
-                $(`<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`).appendTo($('.client-email'))
+                $(`<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`).appendTo($('body.v-custom-step-profile .client-email'))
                 setTimeout(function(){
                   $('.wrongdomain').remove()
                 }, 5000)
