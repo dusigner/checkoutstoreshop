@@ -91,7 +91,7 @@ h1#cart-title {display:none !important;}
       flex-wrap:wrap;
       border-bottom:1px solid  $muted5;
       .best-price {
-        .new-product-price {
+        .new-product-price.discount {
           text-decoration: line-through;
         }
       }

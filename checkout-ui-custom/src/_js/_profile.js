@@ -419,18 +419,6 @@ export default class CustomProfileData {
       }
     })
 
-    $('body').on(
-      'input',
-      'input#ship-street, input#ship-complement, input#ship-neighborhood',
-      function () {
-        const regexp = /[^a-z0-9\s]+$/
-
-        if ($(this).val().match(regexp)) {
-          $(this).val($(this).val().replace(regexp, ''))
-        }
-      }
-    )
-
     $('body').on('input', '#client-whatasapp', function () {
       const $this = $(this)
       const isInvalidNumber = $this.val().length > 0 && $this.val().length < 15

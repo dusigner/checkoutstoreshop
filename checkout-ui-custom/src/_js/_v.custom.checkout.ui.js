@@ -8,6 +8,7 @@ const {
   debounce,
   formatCurrencyBRL,
   formatNegativeValue,
+  percentageDiscount
 } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const { default: CustomProfileData } = require('./_profile')
@@ -775,6 +776,10 @@ class checkoutCustom {
 
         _trElem.find('.new-product-price').text(onTermValue)
 
+        if (onTermValue !== totalValue) {
+          _trElem.find('.new-product-price').addClass('discount')
+        }
+
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
         _trElem
@@ -885,7 +890,7 @@ class checkoutCustom {
           return maxInstallment ? maxInstallment.total : ''
         })
         .catch(e => {
-          console.log("onTerm Price error", e)
+          console.log('onTerm Price error', e)
         })
 
       const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
@@ -933,26 +938,77 @@ class checkoutCustom {
   }
 
   setPixAsDefaultPaymentMethod() {
-    if(window.vtexjs){
-      const pay = vtexjs.checkout.orderForm.paymentData.installmentOptions.filter((payment) => {
-        return payment.paymentSystem === '125';
-      })
+    if (window.vtexjs) {
+      const pay =
+        vtexjs.checkout.orderForm.paymentData.installmentOptions.filter(
+          payment => {
+            return payment.paymentSystem === '125'
+          }
+        )
 
-      if(!pay) return;
+      if (!pay) return
 
       const data = {
-          payments: [
-              {
-                  paymentSystem: 125,
-                  installments: 1,
-                  referenceValue: pay[0].value
-              }
-          ]
+        payments: [
+          {
+            paymentSystem: 125,
+            installments: 1,
+            referenceValue: pay[0].value,
+          },
+        ],
       }
 
       vtexjs.checkout.sendAttachment('paymentData', data)
     }
+  }
 
+  paymentDiscount  ()  {
+    if(vtexjs.checkout.orderForm && vtexjs.checkout.orderForm.paymentData) {
+      vtexjs.checkout.orderForm.paymentData.paymentSystems.forEach(function(e){
+        fetch(
+          `/api/checkout/pub/orderForm/${
+            vtexjs.checkout.orderForm.orderFormId
+          }/installments?paymentSystem=${e.id}`
+        )
+          .then(response => response.json())
+          .then(data => {
+            const { installments, paymentSystem } = data
+  
+            switch (paymentSystem) {
+              case '125':
+                $('.payment-group-list-btn a[data-name="Pix"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                break 
+  
+              case '1':
+                $('.payment-group-list-btn a[data-name="American Express"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                break
+  
+              case '501':
+                $('.payment-group-list-btn a[data-name="Samsung Itaucard"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                break
+  
+              case '6':
+                $('.payment-group-list-btn a[data-name="Boleto Bancário"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                break
+  
+              case '107':
+                $('.payment-group-list-btn a[data-name="Samsung Pay"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                break
+  
+              case '72':
+                $('.payment-group-list-btn a[data-name="PicPay"] > span').append(percentageDiscount(installments[0].total,vtexjs.checkout.orderForm.totalizers[0].value))
+                $('.payment-group').addClass('paymentDiscount')
+                break
+  
+              default:
+                break
+            }
+          })
+          .catch(e => {
+            console.log("Error: ", e)
+          })
+      })
+    }
   }
 
   enchancementUnavailableProduct() {
@@ -1676,7 +1732,6 @@ class checkoutCustom {
     _this.general()
     _this.updateStep()
     _this.builder()
-
     _this.changeShippingTimeInfoInit()
     if (_this.orderForm) {
       _this.updateLang(_this.orderForm)
@@ -1696,7 +1751,6 @@ class checkoutCustom {
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
-
         // #pre-email
         _this.preEmail.bindEvents()
         _this.preEmail.createElementSamsungAccountLogin()
@@ -1718,6 +1772,9 @@ class checkoutCustom {
 
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
+          }
+          if (window.location.hash === '#/payment' && $('.paymentDiscount').length == 0) {
+            _this.paymentDiscount()
           }
         }
       })
