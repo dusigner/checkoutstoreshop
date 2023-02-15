@@ -317,3 +317,8 @@
     content: 'Continuar para Pagamentos';
   }
 }
+
+
+[data-i18n='global.didYouMean'], #email-suggestion-address {
+  display: none;
+}
