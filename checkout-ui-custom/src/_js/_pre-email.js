@@ -3,6 +3,9 @@
 /* eslint-disable func-names */
 
 export default class CustomPreEmail {
+  rootPath() {
+    return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+  }
   createElementSamsungAccountLogin() {
     $('#client-pre-email').attr('placeholder', 'Ex:.exemplo@mail.com')
 
@@ -73,13 +76,14 @@ export default class CustomPreEmail {
 
   
   loginEmail () {
+    const _this = this
     $(document).on('keyup', '#client-pre-email, #client-email', async function (e) { 
         var email = $('#client-pre-email').val();
         var domain = email.split('@')
         domain = domain[1];
         if((domain !== undefined) || domain !== null) {
           fetch(
-              `/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain`, {
+              `${_this.rootPath()}/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain`, {
                   type: 'GET',
                   headers: {
                       Accept: 'application/json',
