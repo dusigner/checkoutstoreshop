@@ -963,10 +963,11 @@ class checkoutCustom {
   }
 
   paymentDiscount  ()  {
+    const _this = this
     if(vtexjs.checkout.orderForm && vtexjs.checkout.orderForm.paymentData) {
       vtexjs.checkout.orderForm.paymentData.paymentSystems.forEach(function(e){
         fetch(
-          `/api/checkout/pub/orderForm/${
+          `${_this.rootPath()}/api/checkout/pub/orderForm/${
             vtexjs.checkout.orderForm.orderFormId
           }/installments?paymentSystem=${e.id}`
         )
@@ -1774,7 +1775,7 @@ class checkoutCustom {
             _this.shipping.checkReceiverName(_this.orderForm)
           }
           if (window.location.hash === '#/payment' && $('.paymentDiscount').length == 0) {
-            _this.paymentDiscount()
+            _this.paymentDiscount(window.location.hash)
           }
         }
       })
