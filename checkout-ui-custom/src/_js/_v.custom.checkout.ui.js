@@ -1775,7 +1775,7 @@ class checkoutCustom {
             _this.shipping.checkReceiverName(_this.orderForm)
           }
           if (window.location.hash === '#/payment' && $('.paymentDiscount').length == 0) {
-            _this.paymentDiscount(window.location.hash)
+            _this.paymentDiscount()
           }
         }
       })
