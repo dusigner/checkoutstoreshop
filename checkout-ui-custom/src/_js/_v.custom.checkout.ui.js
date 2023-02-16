@@ -1583,6 +1583,62 @@ class checkoutCustom {
     })
   }
 
+  // Adiciona um botão fake e de remover produto para ssc proteção completa e abre um popup ao clicar
+  popupSSC() {
+    if($('.fakeRemove').length === 0){
+      $('.product-item').each(function () {
+        const dataSku = $(this).attr('data-sku')
+        if(dataSku == '3353' || dataSku == '3354' || dataSku == '25811' || dataSku == '25810') {
+          $('<i title="remover" class="icon fakeRemove icon-remove item-remove-ico"></i>').appendTo($(`.product-item[data-sku=${dataSku}] .item-remove`))
+        }
+      })
+      let product = vtexjs.checkout.orderForm.items.filter((item) => {
+        return item.id === '3353' || item.id === '3354' || item.id === '25811' || item.id === '25810';
+      })
+      let nameProduct = product[0].name
+      let idsku = product[0].attachments[0].content.idsku
+      $(document).on('click', '.fakeRemove', function() {
+        if(product[0] && product[0].attachments[0] && product[0].attachments[0].content.idsku) {
+          const name = $(`.product-item[data-sku=${idsku}] .product-name a:first-child`).text()
+          $(`<div class="layerpopup"></div>
+             <div class="modalssc">
+              <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name}</b></p>
+              <div>
+                <a>Voltar ao carrinho</a>
+                <a data-id='${idsku}'>Excluir</a>
+              </div>
+             </div>`)
+          .prependTo($('body'))
+        }
+      })
+      $(document).on('click', '.modalssc div a', function() {
+        $('.layerpopup, .modalssc').fadeOut('fast',function(){
+          $(this).remove()
+        })
+      })
+      $(document).on('click', '.modalssc div a + a', function() {
+        const productId = $(this).attr('data-id')
+        setTimeout(function () {
+          const removeList = []
+          window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
+            if (el.id === productId) {
+              removeList.push({
+                index: i,
+                quantity: 0,
+              })
+            }
+          })
+          const itemsToRemove = removeList
+          if (itemsToRemove.length > 0) {
+            return window.vtexjs.checkout
+              .removeItems(itemsToRemove)
+              .then(() => {})
+          }
+        }, 1000)
+      })
+    }
+  }
+
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
     const accountbr = window.__RUNTIME__.account == 'samsungbr'
@@ -1732,6 +1788,7 @@ class checkoutCustom {
     _this.general()
     _this.updateStep()
     _this.builder()
+    _this.popupSSC()
     _this.changeShippingTimeInfoInit()
     if (_this.orderForm) {
       _this.updateLang(_this.orderForm)
