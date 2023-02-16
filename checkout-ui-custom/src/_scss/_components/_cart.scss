@@ -101,8 +101,9 @@ h1#cart-title {display:none !important;}
             display: none;
           }
         }
-        .quantity {
-          display: none;
+        .quantity,
+        .item-remove {
+          display: none !important;
         }
       }
       &.hide {
