@@ -1218,6 +1218,10 @@
 	grid-area: giftcard-content;
 }
 
+.gift-card-provider-group{
+  display: none;
+}
+
 #rewards-remove-discount:hover {
 	cursor: pointer;
 }
