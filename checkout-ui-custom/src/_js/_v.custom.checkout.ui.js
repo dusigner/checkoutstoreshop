@@ -809,7 +809,7 @@ class checkoutCustom {
           _trElem.find('td.product-name').append(
             `<div class="more-info">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
-              <p class="estimate-shipping">2-5 Dias úteis após a confirmação do pagamento</p>
+              <p class="estimate-shipping">Após a entrega do produto</p>
             </div>`
           )
         } else {
