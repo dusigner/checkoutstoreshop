@@ -72,13 +72,20 @@ h1#cart-title {display:none !important;}
   position: absolute;
   z-index: 999;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 50%);
   background: #fff;
+  top: auto;
+  @media(max-width: 764px) {
+    width: 75%;
+  }
 }
 .modalssc > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media(max-width: 764px) {
+    flex-direction: column;
+  }
 }
 .hidden2 {
   visibility: hidden;
@@ -97,6 +104,10 @@ h1#cart-title {display:none !important;}
   text-decoration: none;
   padding: 9px;
   margin: 20px 0 0 0;
+  @media(max-width:764px) {
+    width: 93%;
+    margin: 10px 0 0 0;
+  }
 }
 .modalssc > div a + a {
   color:#fff;
