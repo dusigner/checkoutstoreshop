@@ -1588,12 +1588,12 @@ class checkoutCustom {
     if($('.fakeRemove').length === 0){
       $('.product-item').each(function () {
         const dataSku = $(this).attr('data-sku')
-        if(dataSku == '3353' || dataSku == '3354' || dataSku == '25811' || dataSku == '25810') {
+        if(dataSku == '3353' || dataSku == '3354' || dataSku == '3653' || dataSku == '3654' || dataSku == '3655' || dataSku == '25811' || dataSku == '25810') {
           $('<i title="remover" class="icon fakeRemove icon-remove item-remove-ico"></i>').appendTo($(`.product-item[data-sku=${dataSku}] .item-remove`))
         }
       })
       let product = vtexjs.checkout.orderForm.items.filter((item) => {
-        return item.id === '3353' || item.id === '3354' || item.id === '25811' || item.id === '25810';
+        return item.id === '3353' || item.id === '3354' || item.id === '3653' || item.id === '3654' || item.id === '3655' || item.id === '25811' || item.id === '25810';
       })
       let nameProduct = product[0].name
       let idsku = product[0].attachments[0].content.idsku
