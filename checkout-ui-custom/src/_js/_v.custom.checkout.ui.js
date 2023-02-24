@@ -963,10 +963,11 @@ class checkoutCustom {
   }
 
   paymentDiscount  ()  {
+    const _this = this
     if(vtexjs.checkout.orderForm && vtexjs.checkout.orderForm.paymentData) {
       vtexjs.checkout.orderForm.paymentData.paymentSystems.forEach(function(e){
         fetch(
-          `/api/checkout/pub/orderForm/${
+          `${_this.rootPath()}/api/checkout/pub/orderForm/${
             vtexjs.checkout.orderForm.orderFormId
           }/installments?paymentSystem=${e.id}`
         )
