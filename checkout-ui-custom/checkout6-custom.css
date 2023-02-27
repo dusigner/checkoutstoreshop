@@ -1248,9 +1248,8 @@ h1#cart-title {
         text-decoration: line-through; }
       .table.cart-items tbody tr.gratuito .best-price .new-product-price {
         display: none; }
-      .table.cart-items tbody tr.gratuito .quantity,
-      .table.cart-items tbody tr.gratuito .item-remove {
-        display: none !important; }
+      .table.cart-items tbody tr.gratuito .quantity {
+        display: none; }
       .table.cart-items tbody tr.hide {
         display: none; }
       .table.cart-items tbody tr > .v-custom-bundles {
@@ -1352,6 +1351,7 @@ h1#cart-title {
           .table.cart-items tbody tr td.quantity-price a.manualprice-link-remove {
             z-index: 2; }
           .table.cart-items tbody tr td.product-price a.manualprice-link-remove, .table.cart-items tbody tr td.quantity-price a.manualprice-link-remove {
+            display: none;
             position: absolute;
             top: -2px;
             left: -4px;

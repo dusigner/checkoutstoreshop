@@ -101,9 +101,8 @@ h1#cart-title {display:none !important;}
             display: none;
           }
         }
-        .quantity,
-        .item-remove {
-          display: none !important;
+        .quantity {
+          display: none;
         }
       }
       &.hide {
@@ -252,6 +251,7 @@ h1#cart-title {display:none !important;}
 
 
           a.manualprice-link-remove {
+            display: none;
             position: absolute;
             top: -2px;
             left: -4px;
