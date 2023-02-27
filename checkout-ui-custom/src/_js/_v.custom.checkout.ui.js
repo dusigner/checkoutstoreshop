@@ -1592,25 +1592,29 @@ class checkoutCustom {
           $('<i title="remover" class="icon fakeRemove icon-remove item-remove-ico"></i>').appendTo($(`.product-item[data-sku=${dataSku}] .item-remove`))
         }
       })
-      let product = vtexjs.checkout.orderForm.items.filter((item) => {
-        return item.id === '3353' || item.id === '3354' || item.id === '3653' || item.id === '3654' || item.id === '3655' || item.id === '25811' || item.id === '25810';
-      })
-      let nameProduct = product[0].name
-      let idsku = product[0].attachments[0].content.idsku
-      $(document).on('click', '.fakeRemove', function() {
-        if(product[0] && product[0].attachments[0] && product[0].attachments[0].content.idsku) {
-          const name = $(`.product-item[data-sku=${idsku}] .product-name a:first-child`).text()
-          $(`<div class="layerpopup"></div>
-             <div class="modalssc">
-              <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name}</b></p>
-              <div>
-                <a>Voltar ao carrinho</a>
-                <a data-id='${idsku}'>Excluir</a>
-              </div>
-             </div>`)
-          .prependTo($('body'))
+      if(window.vtexjs.checkout && window.vtexjs.checkout.orderForm && window.vtexjs.checkout.orderForm.items){
+        let product = window.vtexjs.checkout.orderForm.items.filter((item) => {
+          return item.id === '3353' || item.id === '3354' || item.id === '3653' || item.id === '3654' || item.id === '3655' || item.id === '25811' || item.id === '25810';
+        })
+        if(product[0] && product[0].attachments[0]) {
+          let nameProduct = product[0].name
+          let idsku = product[0].attachments[0].content.idsku
+          $(document).on('click', '.fakeRemove', function() {
+            if(product[0] && product[0].attachments[0] && product[0].attachments[0].content.idsku) {
+              const name = $(`table tr.product-item[data-sku=${idsku}]:first-child td.product-name a:first-child`).text()
+              $(`<div class="layerpopup"></div>
+                 <div class="modalssc">
+                  <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name}</b></p>
+                  <div>
+                    <a>Voltar ao carrinho</a>
+                    <a data-id='${idsku}'>Excluir</a>
+                  </div>
+                 </div>`)
+              .prependTo($('body'))
+            }
+          })
         }
-      })
+      }
       $(document).on('click', '.modalssc div a', function() {
         $('.layerpopup, .modalssc').fadeOut('fast',function(){
           $(this).remove()
@@ -1618,23 +1622,26 @@ class checkoutCustom {
       })
       $(document).on('click', '.modalssc div a + a', function() {
         const productId = $(this).attr('data-id')
-        setTimeout(function () {
-          const removeList = []
+        
+          var interval = 2000;
           window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
-            if (el.id === productId) {
-              removeList.push({
-                index: i,
-                quantity: 0,
-              })
-            }
+
+            setTimeout(function () {
+              const removeList = []
+              if (el.id === productId) {
+                removeList.push({
+                  index: i,
+                  quantity: 0,
+                })
+                const itemsToRemove = removeList
+                if (itemsToRemove.length > 0) {
+                  return window.vtexjs.checkout
+                    .removeItems(itemsToRemove)
+                    .then(() => {})
+                }
+              }
+            }, i * interval)
           })
-          const itemsToRemove = removeList
-          if (itemsToRemove.length > 0) {
-            return window.vtexjs.checkout
-              .removeItems(itemsToRemove)
-              .then(() => {})
-          }
-        }, 1000)
       })
     }
   }
@@ -1903,7 +1910,7 @@ class checkoutCustom {
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
         _this.customizeLogOut()
-
+        _this.popupSSC()
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
           _this.preEmail.createElementSamsungAccountLogin()
         }
