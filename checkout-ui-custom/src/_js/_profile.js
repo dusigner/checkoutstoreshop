@@ -207,8 +207,17 @@ export default class CustomProfileData {
     return r
   }
 
-  mdata(v) {
+  dateMask(v, keyCode) {
     let r = v.trim()
+
+    const keys = {
+      backspace: 8,
+      delete: 48,
+    }
+
+    if (keyCode && (keyCode === keys.backspace || keyCode === keys.delete)) {
+      return r
+    }
 
     if (v.match(/^\d{2}$/) !== null) {
       r += '/'
@@ -383,8 +392,8 @@ export default class CustomProfileData {
       }, 1)
     })
 
-    $('body').on('keyup', '#client-birth-date', function (e) {
-      const v = _this.mdata(e.target.value)
+    $('body').on('keyup keydown', '#client-birth-date', function (e) {
+      const v = _this.dateMask(e.target.value, e.keyCode)
 
       if (v !== e.target.value) {
         e.target.value = v
