@@ -22,6 +22,7 @@ const { default: SendAttachment } = require('./_sendAttachment.js')
 const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 const { default: AdobeLaunchPixel } = require('./_adobeLaunchPixel.js')
 const { default: Rewards } = require('./_rewards.js')
+const { default: CheckoutLimit} = require('./_checkoutLimit.js')
 
 class checkoutCustom {
   constructor({
@@ -54,6 +55,7 @@ class checkoutCustom {
     this.adobeLaunchPixel = new AdobeLaunchPixel()
     this.hasSelectedDefaultPaymentMethod = false
     this.Rewards = new Rewards()
+    this.CheckoutLimit = new CheckoutLimit()
   }
 
   rootPath() {
@@ -1880,6 +1882,7 @@ class checkoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
+        _this.CheckoutLimit.init(orderForm)
       })
 
       $(window).load(function () {
