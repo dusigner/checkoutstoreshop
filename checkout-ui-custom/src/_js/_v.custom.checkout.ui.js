@@ -866,72 +866,77 @@ class checkoutCustom {
       }
 
       // Pega o valor do pix (código 125)
-      const inCashPrice = orderForm.paymentData.installmentOptions.find(
-        item => item.paymentSystem == 125
-      ).installments[0].total
+      if(window.vtexjs.checkout.orderForm && window.vtexjs.checkout.orderForm.items.length > 0) {
+        const inCashPrice = orderForm.paymentData.installmentOptions.find(
+          item => item.paymentSystem == 125
+        ).installments[0].total
+  
+        // Encontra as installments para do cartao visa (código 2)
+        // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
+        const termPrice = await fetch(
+          `${this.rootPath()}/api/checkout/pub/orderForm/${
+            orderForm.orderFormId
+          }/installments?paymentSystem=2`
+        )
+          .then(response => response.json())
+          .then(data => {
+            const installmentOptions = data.installments
+  
+            const maxInstallment = installmentOptions.find(
+              install =>
+                install.count ===
+                Math.max(...installmentOptions.map(inst => inst.count))
+            )
+  
+            return maxInstallment ? maxInstallment.total : ''
+          })
+          .catch(e => {
+            console.log('onTerm Price error', e)
+          })
 
-      // Encontra as installments para do cartao visa (código 2)
-      // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-      const termPrice = await fetch(
-        `${this.rootPath()}/api/checkout/pub/orderForm/${
-          orderForm.orderFormId
-        }/installments?paymentSystem=2`
-      )
-        .then(response => response.json())
-        .then(data => {
-          const installmentOptions = data.installments
+          const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
 
-          const maxInstallment = installmentOptions.find(
-            install =>
-              install.count ===
-              Math.max(...installmentOptions.map(inst => inst.count))
-          )
-
-          return maxInstallment ? maxInstallment.total : ''
-        })
-        .catch(e => {
-          console.log('onTerm Price error', e)
-        })
-
-      const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
-
-      const _component = `
-          <div class="cart-total" style="margin-bottom: 20px; color: #000">
-            <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
-              <p class="ref-id">Total</p>
-              <p class="estimate-shipping">${formatCurrencyBRL(inCashPrice)}</p>
-            </div>
-            ${
-              percentDiscount > 0
-                ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
-                    <p>(${percentDiscount}% de desconto)</p>
-                  </div>`
-                : ''
+          const _component = `
+              <div class="cart-total" style="margin-bottom: 20px; color: #000">
+                <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
+                  <p class="ref-id">Total</p>
+                  <p class="estimate-shipping">${formatCurrencyBRL(inCashPrice)}</p>
+                </div>
+                ${
+                  percentDiscount > 0
+                    ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
+                        <p>(${percentDiscount}% de desconto)</p>
+                      </div>`
+                    : ''
+                }
+    
+                <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
+                    <p class="gross-total">
+                      Ou parcelado em até 12x
+                    </p>
+                    <p class="discount-total" style="font-weight: 700;">
+                      ${formatCurrencyBRL(termPrice)}
+                    </p>
+                </div>
+              </div>
+            `
+    
+          if (path !== '#/cart') {
+            if (_trElem.find('.cart-total').length === 0) {
+              _trElem.prepend(_component)
             }
-
-            <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                <p class="gross-total">
-                  Ou parcelado em até 12x
-                </p>
-                <p class="discount-total" style="font-weight: 700;">
-                  ${formatCurrencyBRL(termPrice)}
-                </p>
-            </div>
-          </div>
-        `
-
-      if (path !== '#/cart') {
-        if (_trElem.find('.cart-total').length === 0) {
-          _trElem.prepend(_component)
-        }
-      } else if (path === '#/cart') {
-        if (_trElem.find('.cart-total').length === 0) {
-          _trElem.prepend(_component)
-        } else {
-          _trElem.find('.cart-total').remove()
-          _trElem.prepend(_component)
-        }
+          } else if (path === '#/cart') {
+            if (_trElem.find('.cart-total').length === 0) {
+              _trElem.prepend(_component)
+            } else {
+              _trElem.find('.cart-total').remove()
+              _trElem.prepend(_component)
+            }
+          }
       }
+
+
+ 
     } catch (e) {
       console.error('enchancementSummaryCart error:', e)
     }
