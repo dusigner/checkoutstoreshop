@@ -1628,7 +1628,7 @@ class checkoutCustom {
       $(document).on('click', '.modalssc div a + a', function() {
         const productId = $(this).attr('data-id')
         
-          var interval = 2000;
+          var interval = 4000;
           window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
 
             setTimeout(function () {
