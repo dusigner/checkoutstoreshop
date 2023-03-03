@@ -37,13 +37,21 @@ export default class CheckoutLimit {
         return null
       }
       if(item.quantity > sessionStorage.skuLimit){
-        this.changeItem(item.id, 'hide')
 
-        var updateItem = {
-          index: index,
-          quantity: sessionStorage.skuLimit
-        };
-        return vtexjs.checkout.updateItems([updateItem], null, false);
+        const that = this
+        Swal.fire({
+          icon: "warning",
+          text: `A quantidade do produto ${item.name} será atualizada para ${sessionStorage.skuLimit} unidades.`
+        }).then(()=>{
+          that.changeItem(item.id, 'hide')
+
+          let updateItem = {
+            index: index,
+            quantity: sessionStorage.skuLimit
+          };
+          return vtexjs.checkout.updateItems([updateItem], null, false);
+        })
+
       }
       if(item.quantity < sessionStorage.skuLimit){
         this.changeItem(item.id, 'show')
