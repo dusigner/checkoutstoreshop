@@ -1604,7 +1604,7 @@ class checkoutCustom {
           let idsku = product[0].attachments[0].content.idsku
           $(document).on('click', '.fakeRemove', function() {
             if(product[0] && product[0].attachments[0] && product[0].attachments[0].content.idsku) {
-              const name = $(`table tr.product-item[data-sku=${idsku}]:first-child td.product-name a:first-child`).text()
+              const name = $(`table tr.product-item[data-sku=${idSku}] td.product-name > a:first-child`).text()
               $(`<div class="layerpopup"></div>
                  <div class="modalssc">
                   <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name}</b></p>
