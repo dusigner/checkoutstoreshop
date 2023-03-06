@@ -25,7 +25,7 @@ input, select, button {
 
 .summary-template-holder .summary-coupon p.coupon-fields span input input, #client-profile-data p.input input, #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input, #shipping-data .vtex-omnishipping-1-x-addressForm p.input input, #vtexIdContainer input, .table.cart-items tr.item-attachments-content input,
 .table.cart-items tr.item-attachments-content select, .table.cart-items tbody tr td .product-service select, .table.cart-items td.quantity input, .summary-template-holder .summary-coupon fieldset.coupon-fieldset input[type="text"], .cart-more-options .srp-container select,
-.cart-more-options .srp-container input[type=text]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=text]:not(.pac-target-input),
+.cart-more-options .srp-container input[type="text"]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=text]:not(.pac-target-input),
 #shipping-data .vtex-omnishipping-1-x-addressForm input[type=tel]:not(.pac-target-input),
 #shipping-data .vtex-omnishipping-1-x-addressForm input[type=email]:not(.pac-target-input),
 #shipping-data .vtex-omnishipping-1-x-addressForm select:not(.pac-target-input), .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input, .orderform-template .summary-note .note-textarea, .vcustom--vtex-omnishipping-1-x-address input {
@@ -48,14 +48,14 @@ input, select, button {
   @media (max-width: 768px) {
     .summary-template-holder .summary-coupon p.coupon-fields span input input, #client-profile-data p.input input, #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input, #shipping-data .vtex-omnishipping-1-x-addressForm p.input input, #vtexIdContainer input, .table.cart-items tr.item-attachments-content input,
     .table.cart-items tr.item-attachments-content select, .table.cart-items tbody tr td .product-service select, .table.cart-items td.quantity input, .summary-template-holder .summary-coupon fieldset.coupon-fieldset input[type="text"], .cart-more-options .srp-container select,
-    .cart-more-options .srp-container input[type=text]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=text]:not(.pac-target-input),
+    .cart-more-options .srp-container input[type="text"]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=text]:not(.pac-target-input),
     #shipping-data .vtex-omnishipping-1-x-addressForm input[type=tel]:not(.pac-target-input),
     #shipping-data .vtex-omnishipping-1-x-addressForm input[type=email]:not(.pac-target-input),
     #shipping-data .vtex-omnishipping-1-x-addressForm select:not(.pac-target-input), .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input, .orderform-template .summary-note .note-textarea, .vcustom--vtex-omnishipping-1-x-address input {
       font-size: 14px; } }
   .summary-template-holder .summary-coupon p.coupon-fields span input input:focus, #client-profile-data p.input input:focus, #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input:focus, #shipping-data .vtex-omnishipping-1-x-addressForm p.input input:focus, #vtexIdContainer input:focus, .table.cart-items tr.item-attachments-content input:focus,
   .table.cart-items tr.item-attachments-content select:focus, .table.cart-items tbody tr td .product-service select:focus, .table.cart-items td.quantity input:focus, .summary-template-holder .summary-coupon fieldset.coupon-fieldset input:focus[type="text"], .cart-more-options .srp-container select:focus,
-  .cart-more-options .srp-container input:focus[type=text]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input:focus, #shipping-data .vtex-omnishipping-1-x-addressForm input:focus[type=text]:not(.pac-target-input),
+  .cart-more-options .srp-container input:focus[type="text"]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input:focus, #shipping-data .vtex-omnishipping-1-x-addressForm input:focus[type=text]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm input:focus[type=tel]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm input:focus[type=email]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm select:focus:not(.pac-target-input), .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input:focus, .orderform-template .summary-note .note-textarea:focus, .vcustom--vtex-omnishipping-1-x-address input:focus,
@@ -81,8 +81,8 @@ input, select, button {
   .summary-template-holder .summary-coupon fieldset.coupon-fieldset p.filled input[type="text"],
   p.filled .cart-more-options .srp-container select,
   .cart-more-options .srp-container p.filled select,
-  p.filled .cart-more-options .srp-container input[type=text]:not(.pac-target-input),
-  .cart-more-options .srp-container p.filled input[type=text]:not(.pac-target-input),
+  p.filled .cart-more-options .srp-container input[type="text"]:not(.pac-target-input),
+  .cart-more-options .srp-container p.filled input[type="text"]:not(.pac-target-input),
   p.filled .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input,
   .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation p.filled input,
   p.filled #shipping-data .vtex-omnishipping-1-x-addressForm input[type=text]:not(.pac-target-input),
@@ -102,7 +102,7 @@ input, select, button {
     border-color: #555555; }
   .summary-template-holder .summary-coupon p.coupon-fields span input input::placeholder, #client-profile-data p.input input::placeholder, #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input::placeholder, #shipping-data .vtex-omnishipping-1-x-addressForm p.input input::placeholder, #vtexIdContainer input::placeholder, .table.cart-items tr.item-attachments-content input::placeholder,
   .table.cart-items tr.item-attachments-content select::placeholder, .table.cart-items tbody tr td .product-service select::placeholder, .table.cart-items td.quantity input::placeholder, .summary-template-holder .summary-coupon fieldset.coupon-fieldset input[type="text"]::placeholder, .cart-more-options .srp-container select::placeholder,
-  .cart-more-options .srp-container input:not(.pac-target-input)[type=text]::placeholder, .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input::placeholder, #shipping-data .vtex-omnishipping-1-x-addressForm input:not(.pac-target-input)[type=text]::placeholder,
+  .cart-more-options .srp-container input:not(.pac-target-input)[type="text"]::placeholder, .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input::placeholder, #shipping-data .vtex-omnishipping-1-x-addressForm input:not(.pac-target-input)[type=text]::placeholder,
   #shipping-data .vtex-omnishipping-1-x-addressForm input:not(.pac-target-input)[type=tel]::placeholder,
   #shipping-data .vtex-omnishipping-1-x-addressForm input:not(.pac-target-input)[type=email]::placeholder,
   #shipping-data .vtex-omnishipping-1-x-addressForm select:not(.pac-target-input)::placeholder, .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input::placeholder, .orderform-template .summary-note .note-textarea::placeholder, .vcustom--vtex-omnishipping-1-x-address input::placeholder {
@@ -110,27 +110,27 @@ input, select, button {
     opacity: 0; }
   .summary-template-holder .summary-coupon p.coupon-fields span input input:disabled, #client-profile-data p.input input:disabled, #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input:disabled, #shipping-data .vtex-omnishipping-1-x-addressForm p.input input:disabled, #vtexIdContainer input:disabled, .table.cart-items tr.item-attachments-content input:disabled,
   .table.cart-items tr.item-attachments-content select:disabled, .table.cart-items tbody tr td .product-service select:disabled, .table.cart-items td.quantity input:disabled, .summary-template-holder .summary-coupon fieldset.coupon-fieldset input:disabled[type="text"], .cart-more-options .srp-container select:disabled,
-  .cart-more-options .srp-container input:disabled[type=text]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input:disabled, #shipping-data .vtex-omnishipping-1-x-addressForm input:disabled[type=text]:not(.pac-target-input),
+  .cart-more-options .srp-container input:disabled[type="text"]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input:disabled, #shipping-data .vtex-omnishipping-1-x-addressForm input:disabled[type=text]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm input:disabled[type=tel]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm input:disabled[type=email]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm select:disabled:not(.pac-target-input), .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input:disabled, .orderform-template .summary-note .note-textarea:disabled, .vcustom--vtex-omnishipping-1-x-address input:disabled {
     cursor: not-allowed; }
   .summary-template-holder .summary-coupon p.coupon-fields span input input.success:not([invalid="true"]), #client-profile-data p.input input.success:not([invalid="true"]), #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input.success:not([invalid="true"]), #shipping-data .vtex-omnishipping-1-x-addressForm p.input input.success:not([invalid="true"]), #vtexIdContainer input.success:not([invalid="true"]), .table.cart-items tr.item-attachments-content input.success:not([invalid="true"]),
   .table.cart-items tr.item-attachments-content select.success:not([invalid="true"]), .table.cart-items tbody tr td .product-service select.success:not([invalid="true"]), .table.cart-items td.quantity input.success:not([invalid="true"]), .summary-template-holder .summary-coupon fieldset.coupon-fieldset input.success:not([invalid="true"])[type="text"], .cart-more-options .srp-container select.success:not([invalid="true"]),
-  .cart-more-options .srp-container input.success:not([invalid="true"])[type=text]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input.success:not([invalid="true"]), #shipping-data .vtex-omnishipping-1-x-addressForm input.success:not([invalid="true"])[type=text]:not(.pac-target-input),
+  .cart-more-options .srp-container input.success:not([invalid="true"])[type="text"]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input.success:not([invalid="true"]), #shipping-data .vtex-omnishipping-1-x-addressForm input.success:not([invalid="true"])[type=text]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm input.success:not([invalid="true"])[type=tel]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm input.success:not([invalid="true"])[type=email]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm select.success:not([invalid="true"]):not(.pac-target-input), .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input.success:not([invalid="true"]), .orderform-template .summary-note .success.note-textarea:not([invalid="true"]), .vcustom--vtex-omnishipping-1-x-address input.success:not([invalid="true"]) {
     background-image: none; }
   .summary-template-holder .summary-coupon p.coupon-fields span input input.error, #client-profile-data p.input input.error, #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input.error, #shipping-data .vtex-omnishipping-1-x-addressForm p.input input.error, #vtexIdContainer input.error, .table.cart-items tr.item-attachments-content input.error,
   .table.cart-items tr.item-attachments-content select.error, .table.cart-items tbody tr td .product-service select.error, .table.cart-items td.quantity input.error, .summary-template-holder .summary-coupon fieldset.coupon-fieldset input.error[type="text"], .cart-more-options .srp-container select.error,
-  .cart-more-options .srp-container input.error[type=text]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input.error, #shipping-data .vtex-omnishipping-1-x-addressForm input.error[type=text]:not(.pac-target-input),
+  .cart-more-options .srp-container input.error[type="text"]:not(.pac-target-input), .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input.error, #shipping-data .vtex-omnishipping-1-x-addressForm input.error[type=text]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm input.error[type=tel]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm input.error[type=email]:not(.pac-target-input),
   #shipping-data .vtex-omnishipping-1-x-addressForm select.error:not(.pac-target-input), .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input.error, .orderform-template .summary-note .error.note-textarea, .vcustom--vtex-omnishipping-1-x-address input.error {
     border-color: #ff4c4c;
     border-width: 2px; }
-  .summary-template-holder .summary-coupon p.coupon-fields span input input ~ span.error, #client-profile-data p.input input ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm p.input input ~ span.error, #vtexIdContainer input ~ span.error, .table.cart-items tr.item-attachments-content input ~ span.error, .table.cart-items tr.item-attachments-content select ~ span.error, .table.cart-items tbody tr td .product-service select ~ span.error, .table.cart-items td.quantity input ~ span.error, .summary-template-holder .summary-coupon fieldset.coupon-fieldset input[type="text"] ~ span.error, .cart-more-options .srp-container select ~ span.error, .cart-more-options .srp-container input[type=text]:not(.pac-target-input) ~ span.error, .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=text]:not(.pac-target-input) ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=tel]:not(.pac-target-input) ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=email]:not(.pac-target-input) ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm select:not(.pac-target-input) ~ span.error, .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input ~ span.error, .orderform-template .summary-note .note-textarea ~ span.error, .vcustom--vtex-omnishipping-1-x-address input ~ span.error,
+  .summary-template-holder .summary-coupon p.coupon-fields span input input ~ span.error, #client-profile-data p.input input ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm p.input input ~ span.error, #vtexIdContainer input ~ span.error, .table.cart-items tr.item-attachments-content input ~ span.error, .table.cart-items tr.item-attachments-content select ~ span.error, .table.cart-items tbody tr td .product-service select ~ span.error, .table.cart-items td.quantity input ~ span.error, .summary-template-holder .summary-coupon fieldset.coupon-fieldset input[type="text"] ~ span.error, .cart-more-options .srp-container select ~ span.error, .cart-more-options .srp-container input[type="text"]:not(.pac-target-input) ~ span.error, .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=text]:not(.pac-target-input) ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=tel]:not(.pac-target-input) ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm input[type=email]:not(.pac-target-input) ~ span.error, #shipping-data .vtex-omnishipping-1-x-addressForm select:not(.pac-target-input) ~ span.error, .orderform-template-holder .step.shipping-data .vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input ~ span.error, .orderform-template .summary-note .note-textarea ~ span.error, .vcustom--vtex-omnishipping-1-x-address input ~ span.error,
   .summary-template-holder .summary-coupon p.coupon-fields span input input ~ small,
   #client-profile-data p.input input ~ small,
   #shipping-data .vtex-omnishipping-1-x-addressFormPart1 p.input input ~ small,
@@ -142,7 +142,7 @@ input, select, button {
   .table.cart-items td.quantity input ~ small,
   .summary-template-holder .summary-coupon fieldset.coupon-fieldset input[type="text"] ~ small,
   .cart-more-options .srp-container select ~ small,
-  .cart-more-options .srp-container input[type=text]:not(.pac-target-input) ~ small,
+  .cart-more-options .srp-container input[type="text"]:not(.pac-target-input) ~ small,
   .cart-more-options .srp-container .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input ~ small,
   #shipping-data .vtex-omnishipping-1-x-addressForm input[type=text]:not(.pac-target-input) ~ small,
   #shipping-data .vtex-omnishipping-1-x-addressForm input[type=tel]:not(.pac-target-input) ~ small,
@@ -246,17 +246,17 @@ input:-webkit-autofill:active {
       border: 1px solid #1d63be; }
   .btn-secondary, .table.cart-items tbody tr td.product-name .add-service.btn, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.add-service, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.add-service,
   .table.cart-items tbody tr td.product-name .clone-item.btn, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.clone-item, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.clone-item,
-  .table.cart-items tbody tr td.product-name .add-item-attachment-container a, .table.cart-items tbody tr td .product-service input[type=submit], .summary-template-holder .summary-coupon fieldset.coupon-fieldset button[type="submit"], .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .btn, .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc a, .orderform-template-holder #payment-data .payment-discounts-list table td.action a, .orderform-template-holder #payment-data #btn-add-gift-card {
+  .table.cart-items tbody tr td.product-name .add-item-attachment-container a, .table.cart-items tbody tr td .product-service input[type="submit"], .summary-template-holder .summary-coupon fieldset.coupon-fieldset button[type="submit"], .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .btn, .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc a, .orderform-template-holder #payment-data .payment-discounts-list table td.action a, .orderform-template-holder #payment-data #btn-add-gift-card {
     background: transparent;
     border: 1px solid #000;
     color: #000; }
     .btn-secondary:hover, .table.cart-items tbody tr td.product-name .add-service.btn:hover, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.add-service:hover, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.add-service:hover,
     .table.cart-items tbody tr td.product-name .clone-item.btn:hover, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.clone-item:hover, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.clone-item:hover,
-    .table.cart-items tbody tr td.product-name .add-item-attachment-container a:hover, .table.cart-items tbody tr td .product-service input:hover[type=submit], .summary-template-holder .summary-coupon fieldset.coupon-fieldset button:hover[type="submit"], .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .btn:hover, .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a:hover, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc a:hover, .orderform-template-holder #payment-data .payment-discounts-list table td.action a:hover, .orderform-template-holder #payment-data #btn-add-gift-card:hover, .btn-secondary:focus, .table.cart-items tbody tr td.product-name .add-service.btn:focus, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.add-service:focus, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.add-service:focus,
+    .table.cart-items tbody tr td.product-name .add-item-attachment-container a:hover, .table.cart-items tbody tr td .product-service input:hover[type="submit"], .summary-template-holder .summary-coupon fieldset.coupon-fieldset button:hover[type="submit"], .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .btn:hover, .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a:hover, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc a:hover, .orderform-template-holder #payment-data .payment-discounts-list table td.action a:hover, .orderform-template-holder #payment-data #btn-add-gift-card:hover, .btn-secondary:focus, .table.cart-items tbody tr td.product-name .add-service.btn:focus, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.add-service:focus, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.add-service:focus,
     .table.cart-items tbody tr td.product-name .clone-item.btn:focus, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.clone-item:focus, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.clone-item:focus,
-    .table.cart-items tbody tr td.product-name .add-item-attachment-container a:focus, .table.cart-items tbody tr td .product-service input:focus[type=submit], .summary-template-holder .summary-coupon fieldset.coupon-fieldset button:focus[type="submit"], .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .btn:focus, .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a:focus, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc a:focus, .orderform-template-holder #payment-data .payment-discounts-list table td.action a:focus, .orderform-template-holder #payment-data #btn-add-gift-card:focus, .btn-secondary:active, .table.cart-items tbody tr td.product-name .add-service.btn:active, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.add-service:active, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.add-service:active,
+    .table.cart-items tbody tr td.product-name .add-item-attachment-container a:focus, .table.cart-items tbody tr td .product-service input:focus[type="submit"], .summary-template-holder .summary-coupon fieldset.coupon-fieldset button:focus[type="submit"], .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .btn:focus, .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a:focus, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc a:focus, .orderform-template-holder #payment-data .payment-discounts-list table td.action a:focus, .orderform-template-holder #payment-data #btn-add-gift-card:focus, .btn-secondary:active, .table.cart-items tbody tr td.product-name .add-service.btn:active, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.add-service:active, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.add-service:active,
     .table.cart-items tbody tr td.product-name .clone-item.btn:active, .table.cart-items tbody tr td.product-name .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a.clone-item:active, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .table.cart-items tbody tr td.product-name a.clone-item:active,
-    .table.cart-items tbody tr td.product-name .add-item-attachment-container a:active, .table.cart-items tbody tr td .product-service input:active[type=submit], .summary-template-holder .summary-coupon fieldset.coupon-fieldset button:active[type="submit"], .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .btn:active, .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a:active, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc a:active, .orderform-template-holder #payment-data .payment-discounts-list table td.action a:active, .orderform-template-holder #payment-data #btn-add-gift-card:active {
+    .table.cart-items tbody tr td.product-name .add-item-attachment-container a:active, .table.cart-items tbody tr td .product-service input:active[type="submit"], .summary-template-holder .summary-coupon fieldset.coupon-fieldset button:active[type="submit"], .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .btn:active, .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data a:active, .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data .cart-more-options .srp-container .vtex-shipping-preview-0-x-pc a:active, .orderform-template-holder #payment-data .payment-discounts-list table td.action a:active, .orderform-template-holder #payment-data #btn-add-gift-card:active {
       background: #f1f7ff;
       border: 1px solid #000;
       color: #000; }
@@ -1003,7 +1003,8 @@ body .main-header {
         margin-left: 16px;
         margin-right: 16px;
         row-gap: 6px;
-        grid-template-areas: 'logo secure' 'steps steps'; } }
+        grid-template-areas: 'logo secure'
+ 'steps steps'; } }
   body .main-header > .container:before, body .main-header > .container:after {
     display: none; }
   body .main-header .checkout-secure-buy {
@@ -1193,7 +1194,10 @@ body.v-custom-cart-empty .cart-template-holder {
   box-sizing: border-box; }
 
 .empty-cart-content {
-  padding: 50px 0; }
+  padding: 50px 0;
+  visibility: hidden; }
+  .empty-cart-content.is-empty {
+    visibility: visible; }
 
 h1#cart-title {
   display: none !important; }
@@ -1265,7 +1269,8 @@ h1#cart-title {
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 5fr 1fr;
-        grid-template-areas: "image name price" "image quantity item-remove";
+        grid-template-areas: "image name price"
+ "image quantity item-remove";
         position: relative;
         padding: 20px 0; }
         @media (max-width: 690px) {
@@ -1273,7 +1278,9 @@ h1#cart-title {
             display: grid;
             grid-template-columns: 4fr 1fr;
             grid-template-rows: 2fr 8fr 2fr;
-            grid-template-areas: "item-remove item-remove" "name image" "quantity price";
+            grid-template-areas: "item-remove item-remove"
+ "name image"
+ "quantity price";
             padding: 10px 0; } }
       .table.cart-items tbody tr td {
         width: auto;
@@ -1351,11 +1358,10 @@ h1#cart-title {
           .table.cart-items tbody tr td.quantity-price a.manualprice-link-remove {
             z-index: 2; }
           .table.cart-items tbody tr td.product-price a.manualprice-link-remove, .table.cart-items tbody tr td.quantity-price a.manualprice-link-remove {
-            display: none;
             position: absolute;
             top: -2px;
             left: -4px;
-            background: #FFF; }
+            background: #fff; }
           .table.cart-items tbody tr td.product-price a.manualprice-link-remove i.icon-remove:before, .table.cart-items tbody tr td.quantity-price a.manualprice-link-remove i.icon-remove:before {
             width: 10px !important;
             height: 10px !important; }
@@ -1363,7 +1369,7 @@ h1#cart-title {
             padding: 5px 5px 5px 31px;
             border: 1px solid #ccc;
             display: inline-block;
-            background: #FFF;
+            background: #fff;
             border-radius: 5px;
             box-shadow: 0 0 19px #777;
             position: absolute;
@@ -1412,7 +1418,7 @@ h1#cart-title {
           clear: both;
           border: none; }
         .table.cart-items tbody tr td .product-service {
-          height: calc( 40px + 10px);
+          height: calc(40px + 10px);
           margin-top: 10px;
           position: relative; }
           @media (min-width: 690px) {
@@ -1423,7 +1429,7 @@ h1#cart-title {
           .table.cart-items tbody tr td .product-service p {
             display: flex; }
           .table.cart-items tbody tr td .product-service select {
-            background: #FFF;
+            background: #fff;
             width: 100%;
             margin-right: 10px; }
         .table.cart-items tbody tr td.quantity input {
@@ -1457,7 +1463,7 @@ h1#cart-title {
           margin-bottom: 10px;
           margin-top: 10px; }
         .table.cart-items tbody tr.v-custom-indexed-item td.quantity, .table.cart-items tbody tr.item-service td.quantity {
-          background: #FFF;
+          background: #fff;
           width: 25px;
           height: 20px;
           text-align: center;
@@ -1475,7 +1481,7 @@ h1#cart-title {
           .table.cart-items tbody tr.v-custom-indexed-item .item-remove i.icon.icon-remove.item-remove-ico:before, .table.cart-items tbody tr.item-service .item-remove i.icon.icon-remove.item-remove-ico:before {
             content: "-";
             background: #ff4c4c;
-            color: #FFF;
+            color: #fff;
             line-height: 9px;
             border-radius: 100%;
             width: 16px;
@@ -1533,7 +1539,7 @@ h1#cart-title {
     color: #000;
     font-weight: bold;
     text-decoration: none;
-    font-family: 'SamsungSharpSans';
+    font-family: "SamsungSharpSans";
     font-size: 16px; }
   .table.cart-items td.quantity {
     display: flex;
@@ -1586,14 +1592,17 @@ h1#cart-title {
     height: 15px; }
 
 .summary-template-holder {
-  background: #F7F7F7;
+  background: #f7f7f7;
   padding: 24px;
   text-align: left;
   box-sizing: border-box;
   border-radius: 20px;
   border: none;
   display: grid;
-  grid-template-areas: 'products' 'coupon' 'price' 'finish_payment'; }
+  grid-template-areas: "products"
+ "coupon"
+ "price"
+ "finish_payment"; }
   .summary-template-holder .cart-total {
     grid-area: price; }
   .summary-template-holder .row-fluid.summary {
@@ -1648,7 +1657,7 @@ h1#cart-title {
       color: #000;
       font-size: 0; }
       .summary-template-holder .summary-coupon fieldset.coupon-fieldset button[type="submit"]::after {
-        content: 'Aplicar';
+        content: "Aplicar";
         font-size: 14px;
         font-weight: 700; }
     .summary-template-holder .summary-coupon fieldset.coupon-fieldset .coupon-data {
@@ -1735,7 +1744,12 @@ h1#cart-title {
           border-radius: 0; } }
   .summary-template-holder .summary-totalizers .totalizers-list {
     display: grid;
-    grid-template-areas: 'subtotal' 'descontos_total' 'cupom' 'cupom_desconto' 'cupom_instantaneo' 'entrega'; }
+    grid-template-areas: "subtotal"
+ "descontos_total"
+ "cupom"
+ "cupom_desconto"
+ "cupom_instantaneo"
+ "entrega"; }
     .summary-template-holder .summary-totalizers .totalizers-list .Items {
       grid-area: subtotal; }
     .summary-template-holder .summary-totalizers .totalizers-list .coupon-applied {
@@ -1745,7 +1759,8 @@ h1#cart-title {
       max-height: 23px; }
   .summary-template-holder .summary-totalizers .table {
     display: grid;
-    grid-template-areas: 'total-details-tradein' 'totalizers-list'; }
+    grid-template-areas: "total-details-tradein"
+ "totalizers-list"; }
     .summary-template-holder .summary-totalizers .table .totalizers-list {
       grid-area: totalizers-list;
       border-bottom: 1px solid #cbcbcb;
@@ -1827,7 +1842,7 @@ h1#cart-title {
     .cart-more-options .srp-container .srp-delivery-select-container,
     .cart-more-options .srp-container .srp-shipping-current-single {
       border-radius: 6px !important;
-      background: #F5F7FE !important;
+      background: #f5f7fe !important;
       border: 0;
       padding-block: 12px;
       padding-inline: 16px;
@@ -1846,7 +1861,7 @@ h1#cart-title {
         margin: 0; }
         .cart-more-options .srp-container .srp-delivery-select-container .srp-delivery-current-many .srp-delivery-current-many__name,
         .cart-more-options .srp-container .srp-shipping-current-single .srp-delivery-current-many .srp-delivery-current-many__name {
-          color: #006BEA;
+          color: #006bea;
           font-weight: 700;
           font-size: 14px; }
         .cart-more-options .srp-container .srp-delivery-select-container .srp-delivery-current-many .srp-delivery-current-many__sla,
@@ -1861,14 +1876,14 @@ h1#cart-title {
     .cart-more-options .srp-container span.error {
       display: none; }
     .cart-more-options .srp-container .srp-toggle__wrapper label {
-      background: #FFF;
+      background: #fff;
       padding: 10px 0;
       border-radius: 20px; }
     .cart-more-options .srp-container .srp-delivery-info .b--light-gray {
-      background: #FFF;
+      background: #fff;
       border-radius: 20px; }
     .cart-more-options .srp-container select,
-    .cart-more-options .srp-container input[type=text]:not(.pac-target-input) {
+    .cart-more-options .srp-container input[type="text"]:not(.pac-target-input) {
       outline: initial; }
     .cart-more-options .srp-container form.srp-postal-code__form.dib.relative {
       width: 100%; }
@@ -3615,7 +3630,10 @@ svg.vtex-omnishipping-1-x-svg {
   padding-top: 20px !important;
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-template-areas: 'gift rewards-btn' 'giftcard-content giftcard-content' 'rewards-calc rewards-calc' 'payment-group steps'; }
+  grid-template-areas: 'gift rewards-btn'
+ 'giftcard-content giftcard-content'
+ 'rewards-calc rewards-calc'
+ 'payment-group steps'; }
 
 @media screen and (max-width: 1200px) {
   .step.client-profile-data.active .box-step .form-step[style*="display: block"],
@@ -3628,7 +3646,12 @@ svg.vtex-omnishipping-1-x-svg {
   .step.shipping-data.active .accordion-inner.shipping-container,
   #payment-data .box-step form.form-step {
     grid-template-columns: 1fr;
-    grid-template-areas: 'gift' 'rewards-btn' 'giftcard-content' 'rewards-calc' 'payment-group' 'steps'; } }
+    grid-template-areas: 'gift'
+ 'rewards-btn'
+ 'giftcard-content'
+ 'rewards-calc'
+ 'payment-group'
+ 'steps'; } }
 
 .client-pre-email + .client-profile-data .accordion-body:before {
   display: none; }
