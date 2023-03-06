@@ -860,70 +860,77 @@ class checkoutCustom {
       }
 
       // Pega o valor do pix (código 125)
-      const inCashPrice = orderForm.paymentData.installmentOptions.find(
-        item => item.paymentSystem == 125
-      ).installments[0].total
+      if(window.vtexjs.checkout.orderForm && window.vtexjs.checkout.orderForm.items.length > 0) {
+        const inCashPrice = orderForm.paymentData.installmentOptions.find(
+          item => item.paymentSystem == 125
+        ).installments[0].total
+  
+        // Encontra as installments para do cartao visa (código 2)
+        // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
+        const termPrice = await fetch(
+          `${this.rootPath()}/api/checkout/pub/orderForm/${
+            orderForm.orderFormId
+          }/installments?paymentSystem=2`
+        )
+          .then(response => response.json())
+          .then(data => {
+            const installmentOptions = data.installments
+  
+            const maxInstallment = installmentOptions.find(
+              install =>
+                install.count ===
+                Math.max(...installmentOptions.map(inst => inst.count))
+            )
+  
+            return maxInstallment ? maxInstallment.total : ''
+          })
+          .catch(e => {
+            console.log('onTerm Price error', e)
+          }) 
 
-      // Encontra as installments para do cartao visa (código 2)
-      // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-      const termPrice = await fetch(
-        `${this.rootPath()}/api/checkout/pub/orderForm/${orderForm.orderFormId
-        }/installments?paymentSystem=2`
-      )
-        .then(response => response.json())
-        .then(data => {
-          const installmentOptions = data.installments
+          const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
 
-          const maxInstallment = installmentOptions.find(
-            install =>
-              install.count ===
-              Math.max(...installmentOptions.map(inst => inst.count))
-          )
-
-          return maxInstallment ? maxInstallment.total : ''
-        })
-        .catch(e => {
-          console.log('onTerm Price error', e)
-        })
-
-      const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
-
-      const _component = `
-          <div class="cart-total" style="margin-bottom: 20px; color: #000">
-            <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
-              <p class="ref-id">Total</p>
-              <p class="estimate-shipping">${formatCurrencyBRL(inCashPrice)}</p>
-            </div>
-            ${percentDiscount > 0
-          ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
-                    <p>(${percentDiscount}% de desconto)</p>
-                  </div>`
-          : ''
-        }
-
-            <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                <p class="gross-total">
-                  Ou parcelado em até 12x
-                </p>
-                <p class="discount-total" style="font-weight: 700;">
-                  ${formatCurrencyBRL(termPrice)}
-                </p>
-            </div>
-          </div>
-        `
-
-      if (path !== '#/cart') {
-        if (_trElem.find('.cart-total').length === 0) {
-          _trElem.prepend(_component)
-        }
-      } else if (path === '#/cart') {
-        if (_trElem.find('.cart-total').length === 0) {
-          _trElem.prepend(_component)
-        } else {
-          _trElem.find('.cart-total').remove()
-          _trElem.prepend(_component)
-        }
+          const _component = `
+              <div class="cart-total" style="margin-bottom: 20px; color: #000">
+                <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
+                  <p class="ref-id">Total</p>
+                  <p class="estimate-shipping">${formatCurrencyBRL(inCashPrice)}</p>
+                </div>
+                ${
+                  percentDiscount > 0
+                    ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
+                        <p>(${percentDiscount}% de desconto)</p>
+                      </div>`
+                    : ''
+                }
+    
+                <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
+                    <p class="gross-total">
+                      Ou parcelado em até 12x
+                    </p>
+                    <p class="discount-total" style="font-weight: 700;">
+                      ${formatCurrencyBRL(termPrice)}
+                    </p>
+                </div>
+              </div>
+            `
+    
+          if (path !== '#/cart') {
+            if (_trElem.find('.cart-total').length === 0) {
+              _trElem.prepend(_component)
+            }
+          } else if (path === '#/cart') {
+            if (_trElem.find('.cart-total').length === 0) {
+              _trElem.prepend(_component)
+            } else {
+              _trElem.find('.cart-total').remove()
+              _trElem.prepend(_component)
+            }
+          }
       }
+
+
+ 
     } catch (e) {
       console.error('enchancementSummaryCart error:', e)
     }
@@ -1579,6 +1586,69 @@ class checkoutCustom {
     })
   }
 
+  // Adiciona um botão fake e de remover produto para ssc proteção completa e abre um popup ao clicar
+  popupSSC() {
+    if($('.fakeRemove').length === 0){
+      $('.product-item').each(function () {
+        const dataSku = $(this).attr('data-sku')
+        if(dataSku == '3353' || dataSku == '3354' || dataSku == '3653' || dataSku == '3654' || dataSku == '3655' || dataSku == '25811' || dataSku == '25810') {
+          $('<i title="remover" class="icon fakeRemove icon-remove item-remove-ico"></i>').appendTo($(`.product-item[data-sku=${dataSku}] .item-remove`))
+        }
+      })
+      if(window.vtexjs.checkout && window.vtexjs.checkout.orderForm && window.vtexjs.checkout.orderForm.items){
+        let product = window.vtexjs.checkout.orderForm.items.filter((item) => {
+          return item.id === '3353' || item.id === '3354' || item.id === '3653' || item.id === '3654' || item.id === '3655' || item.id === '25811' || item.id === '25810';
+        })
+        if(product[0] && product[0].attachments[0]) {
+          let nameProduct = product[0].name
+          let idsku = product[0].attachments[0].content.idsku
+          $(document).on('click', '.fakeRemove', function() {
+            if(product[0] && product[0].attachments[0] && product[0].attachments[0].content.idsku) {
+              const name = $(`table tr.product-item[data-sku=${idsku}]:first-child td.product-name a:first-child`).text()
+              $(`<div class="layerpopup"></div>
+                 <div class="modalssc">
+                  <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name}</b></p>
+                  <div>
+                    <a>Voltar ao carrinho</a>
+                    <a data-id='${idsku}'>Excluir</a>
+                  </div>
+                 </div>`)
+              .prependTo($('body'))
+            }
+          })
+        }
+      }
+      $(document).on('click', '.modalssc div a', function() {
+        $('.layerpopup, .modalssc').fadeOut('fast',function(){
+          $(this).remove()
+        })
+      })
+      $(document).on('click', '.modalssc div a + a', function() {
+        const productId = $(this).attr('data-id')
+        
+          var interval = 4000;
+          window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
+
+            setTimeout(function () {
+              const removeList = []
+              if (el.id === productId) {
+                removeList.push({
+                  index: i,
+                  quantity: 0,
+                })
+                const itemsToRemove = removeList
+                if (itemsToRemove.length > 0) {
+                  return window.vtexjs.checkout
+                    .removeItems(itemsToRemove)
+                    .then(() => {})
+                }
+              }
+            }, i * interval)
+          })
+      })
+    }
+  }
+
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
     const accountbr = window.__RUNTIME__.account == 'samsungbr'
@@ -1728,6 +1798,7 @@ class checkoutCustom {
     _this.general()
     _this.updateStep()
     _this.builder()
+    _this.popupSSC()
     _this.changeShippingTimeInfoInit()
     if (_this.orderForm) {
       _this.updateLang(_this.orderForm)
@@ -1842,6 +1913,7 @@ class checkoutCustom {
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
         _this.customizeLogOut()
+        _this.popupSSC()
         _this.showEmptyCart(orderForm)
 
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
