@@ -886,7 +886,7 @@ class checkoutCustom {
           })
           .catch(e => {
             console.log('onTerm Price error', e)
-          })
+          }) 
 
           const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
 
