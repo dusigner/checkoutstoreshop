@@ -804,22 +804,23 @@ class checkoutCustom {
         }
 
         const refId = orderForm.items[i].refId || ''
+        const detailUrl = orderForm.items[i].detailUrl;
+        const isInstallService = detailUrl.includes('/install-service/p');
+        const isSamsungCare = detailUrl.includes('/samsung-care-/p');
 
-        if (orderForm.items[i].detailUrl.indexOf('/install-service/p') == -1) {
-          _trElem.find('td.product-name').append(
-            `<div class="more-info">
-              <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
-              <p class="estimate-shipping">Após a entrega do produto</p>
-            </div>`
-          )
-        } else {
-          _trElem.find('td.product-name').append(
-            `<div class="more-info">
-              <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
-              <p class="estimate-shipping">Após a entrega do produto</p>
-            </div>`
-          )
+        let shippingText = "";
+        if (isInstallService || isSamsungCare) {
+          shippingText = "Após a entrega do produto";
         }
+
+        const moreInfoHtml = `
+          <div class="more-info">
+            <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+            <p class="estimate-shipping">${shippingText}</p>
+          </div>
+        `;
+
+        _trElem.find('td.product-name').append(moreInfoHtml);
       })
     } catch (e) {
       console.error('enchancementProductName error:', e)
