@@ -1688,7 +1688,7 @@ class checkoutCustom {
               product[0].attachments[0].content.idsku
             ) {
               const name = $(
-                `table tr.product-item[data-sku=${idsku}]:first-child td.product-name a:first-child`
+                `table tr.product-item[data-sku=${idsku}] td.product-name > a:first-child`
               ).text()
 
               $(`<div class="layerpopup"></div>
