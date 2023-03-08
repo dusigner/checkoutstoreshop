@@ -1631,42 +1631,35 @@ class checkoutCustom {
           $(this).remove()
         })
       })
-      $(document).on('click', '.modalssc div a + a', function() {
-        const productId = $(this).attr('data-id')
-        const productIdSC = $(this).attr('data-id-sc')
-
-
-          var interval = 2000;
-          window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
-
-            setTimeout(function () {
-              
-              const removeList = []
-              if (el.id === productId) {
-                removeList.push({
-                  index: i,
-                  quantity: 0,
-                })
-                const itemsToRemove = removeList
-                if (itemsToRemove.length > 0) {
-                  return window.vtexjs.checkout
-                    .removeItems(itemsToRemove)
-                    .then(() => {})
-                }
-              }
-            }, i * interval)
-            setTimeout(function () {
-              $(`.table.cart-items tr[data-sku=${productIdSC}] td.item-remove a`).click()
-            }, 3000)
-
-            setTimeout(function () {
-              $('body').removeClass('modalActive');
-              window.location.reload();
-            }, 6000)
-          })
-      })
     }
   }
+
+  clickModal() {
+    $(document).on('click', '.modalssc div a + a', function() {
+      $('body').addClass('modalClick')
+      const productId = $(this).attr('data-id')
+      const productIdSC = $(this).attr('data-id-sc')
+        window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
+          
+          setTimeout(function () {
+            if (el.id === productId) {
+              console.log(productId, 'productId')
+              if($('body').hasClass('modalClick')){
+                $(`.table.cart-items tr[data-sku=${productId}]:eq(0) td.item-remove a`).click()
+              }
+              $('body').removeClass('modalClick')
+            }
+          }, 4000)
+
+          setTimeout(function () {
+            $(`.table.cart-items tr[data-sku=${productIdSC}] td.item-remove a`).click()
+            $('body').removeClass('modalActive');
+          }, 6000)
+        })
+    })
+  }
+
+
 
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
@@ -1826,6 +1819,8 @@ class checkoutCustom {
     }
 
     _this.fixLabels()
+    _this.clickModal()
+    
   }
 
   start() {
