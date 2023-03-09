@@ -47,8 +47,7 @@ export default class CustomPreEmail {
               </button>
             </div>
             <div style="margin-top: 20px">
-              <img style="padding-right: 11px; border-right: 1px solid #cbcbcb" src="https://samsungbr.vteximg.com.br/arquivos/logo-rewards.png?v=1" />
-              <img style="margin-left: 10px" src="https://samsungbr.vteximg.com.br/arquivos/logo-frete.png?v=1" />
+              <img style="padding-right: 11px;" src="https://samsungbr.vteximg.com.br/arquivos/logo-rewards.png?v=1" />
             </div>
             <div class="samsung-account-create" style="margin-top: 10px; font-size:12px; font-family:'SamsungOne'; justify-content: center; display: flex;">
               <p style="max-width: 326px">
