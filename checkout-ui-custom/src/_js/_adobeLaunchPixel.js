@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-console */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
@@ -10,13 +12,19 @@ export default class AdobeLaunchPixel {
 
     /* ATTENTION: THOSE FILES ARE RELATED TO STAGING ENVIRONMENT OF ADOBE DTM, EACH ONE OF THESE ARE RELATED TO ONE SPECIFIC COUNTRY/REGION */
     this.scriptFiles = {
-      ar: '//assets.adobedtm.com/72afb75f5516/510bc748cd99/launch-2ab05c7d16d3.min.js',
-      br: '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
+      ar:
+        '//assets.adobedtm.com/72afb75f5516/510bc748cd99/launch-2ab05c7d16d3.min.js',
+      br:
+        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
       // cl: '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-9eb78db11d7f.min.js',
-      cl: '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-2dc5f0c95eb9-development.min.js',
-      co: '//assets.adobedtm.com/72afb75f5516/666481c328a4/launch-d4f674a4f20e.min.js',
-      mx: '//assets.adobedtm.com/72afb75f5516/15c6fca01360/launch-eeaa88ea2df8.min.js',
-      pe: '//assets.adobedtm.com/72afb75f5516/e81c20aa5fa4/launch-8c7166247df8.min.js',
+      cl:
+        '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-2dc5f0c95eb9-development.min.js',
+      co:
+        '//assets.adobedtm.com/72afb75f5516/666481c328a4/launch-d4f674a4f20e.min.js',
+      mx:
+        '//assets.adobedtm.com/72afb75f5516/15c6fca01360/launch-eeaa88ea2df8.min.js',
+      pe:
+        '//assets.adobedtm.com/72afb75f5516/e81c20aa5fa4/launch-8c7166247df8.min.js',
       ar_staging:
         '//assets.adobedtm.com/94a07bb253a23a545fca071a500c666bbb8d4a94/satelliteLib-00602685fc5991db91c246c9ada0d0aff71599cc-staging.js',
       br_staging:
@@ -77,9 +85,9 @@ export default class AdobeLaunchPixel {
 
     document.head.appendChild(adobeDtmScript)
 
-    adobeDtmScript.onload = function () {
+    adobeDtmScript.onload = function() {
       _this.waitForDataSend()
-      const satelliteInterval = setInterval(function () {
+      const satelliteInterval = setInterval(function() {
         if (document.body) {
           if (document.getElementById('satelliteAA')) {
             clearInterval(satelliteInterval)
@@ -134,7 +142,7 @@ export default class AdobeLaunchPixel {
     /* If the page type is in the array list of DTM watched pages, don't proceed to do nothing */
     if (_this.pageType === false) return
 
-    window.onhashchange = function () {
+    window.onhashchange = function() {
       _this._populateDataLayer()
       _this.waitForDataSend()
       _this._pageTrack()
@@ -144,8 +152,8 @@ export default class AdobeLaunchPixel {
       if (_this.pagesWithMutation.indexOf(_this.pageType) === -1) {
         _this._populateProductLayer()
       } else {
-        _this.observer = new MutationObserver(function (mutations) {
-          mutations.forEach(function (mutation) {
+        _this.observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
             if (
               document.querySelector('.payment-unauthorized-modal') !== null &&
               document.querySelector('.payment-unauthorized-modal').style
@@ -179,21 +187,20 @@ export default class AdobeLaunchPixel {
             }
 
             if (_this.pageType === 'checkout') {
-              $('.item-link-remove.data-omni-remove').on(
-                'click',
-                function (event) {
-                  const { target } = event
-                  const dataOmni = target.getAttribute('data-omni-variant')
+              $('.item-link-remove.data-omni-remove').on('click', function(
+                event
+              ) {
+                const { target } = event
+                const dataOmni = target.getAttribute('data-omni-variant')
 
-                  if (dataOmni) {
-                    _this._removeFromDigitalData(dataOmni)
-                  } else {
-                    _this._removeFromDigitalData(
-                      target.parentElement.getAttribute('data-omni-variant')
-                    )
-                  }
+                if (dataOmni) {
+                  _this._removeFromDigitalData(dataOmni)
+                } else {
+                  _this._removeFromDigitalData(
+                    target.parentElement.getAttribute('data-omni-variant')
+                  )
                 }
-              )
+              })
             }
           })
         })
@@ -219,7 +226,7 @@ export default class AdobeLaunchPixel {
 
     const productIndex = product.modelVariant.indexOf(dataOmniVariant)
 
-    Object.keys(product).forEach(function (key) {
+    Object.keys(product).forEach(function(key) {
       let join = ','
 
       if (key === 'displayName') {
@@ -227,7 +234,7 @@ export default class AdobeLaunchPixel {
       }
 
       product[key] = product[key]
-        .filter(function (_, index) {
+        .filter(function(_, index) {
           return index !== productIndex
         })
         .join(join)
@@ -242,16 +249,16 @@ export default class AdobeLaunchPixel {
 
     if (_this.pageInterval !== null) return
 
-    _this.pageInterval = setInterval(function () {
+    _this.pageInterval = setInterval(function() {
       if (document.body) {
         const rootDivs = document.querySelectorAll('body > div, body > header')
 
         for (let i = 0; i < rootDivs.length; i++) {
-          Object.keys(_this.dtmWatchPages).forEach(function (page) {
+          Object.keys(_this.dtmWatchPages).forEach(function(page) {
             const pageClass = _this.dtmWatchPages[page]
             const classes = rootDivs[i].classList
 
-            classes.forEach(function (item) {
+            classes.forEach(function(item) {
               if (page === 'custom' && item.indexOf(pageClass) > -1) {
                 _this.pageType = 'custom'
 
@@ -338,7 +345,7 @@ export default class AdobeLaunchPixel {
     }
 
     if (attrs !== null) {
-      Object.keys(attrs).forEach(function (attr) {
+      Object.keys(attrs).forEach(function(attr) {
         let attrName = 'data-omni'
         const value = attrs[attr]
 
@@ -367,12 +374,12 @@ export default class AdobeLaunchPixel {
 
     try {
       if (type === 'name') {
-        return _this.codesCache.find(function (obj) {
+        return _this.codesCache.find(function(obj) {
           return obj[type] === value
         })
       }
 
-      result = _this.codesCache.find(function (obj) {
+      result = _this.codesCache.find(function(obj) {
         return obj[type] === value
       })
       if (!result) return
@@ -448,7 +455,7 @@ export default class AdobeLaunchPixel {
     ) {
       const xhttp = new XMLHttpRequest()
 
-      xhttp.addEventListener('load', function () {
+      xhttp.addEventListener('load', function() {
         _this._callbackFetch(this, node, callback, displayName, prodUrl)
       })
       xhttp.open('POST', targetUrl, true)
@@ -676,7 +683,7 @@ export default class AdobeLaunchPixel {
       _this.setElementOmni(checkoutLogin, 'data-omni-signin', {
         '': 'login_try:guest',
       })
-      checkoutLoginForm.onsubmit = function (e) {
+      checkoutLoginForm.onsubmit = function(e) {
         e.preventDefault()
         let parameter = 'login_try:guest'
 
@@ -692,7 +699,7 @@ export default class AdobeLaunchPixel {
   waitForDataSend() {
     const _this = this
 
-    let intervalWait = setInterval(function () {
+    let intervalWait = setInterval(function() {
       if (!_this.pageType || window.digitalData.page.pageInfo.siteCode === '') {
         return
       }
@@ -715,7 +722,9 @@ export default class AdobeLaunchPixel {
 
     const siteCode = _this._fetchSiteCode()
 
-    window.digitalData.user.loginStatus = false
+    $(window).on('orderFormUpdated.vtex', function(evt, orderForm) {
+      window.digitalData.user.loginStatus = orderForm.loggedIn
+    })
 
     window.digitalData.page.pageInfo.siteCode = siteCode
     window.digitalData.page.pageInfo.siteSection = 'shop'
@@ -737,11 +746,11 @@ export default class AdobeLaunchPixel {
       const rootDivs = document.querySelectorAll('body > div')
 
       for (let i = 0; i < rootDivs.length; i++) {
-        Object.keys(_this.dtmWatchPages).forEach(function (page) {
+        Object.keys(_this.dtmWatchPages).forEach(function(page) {
           const pageClass = _this.dtmWatchPages[page]
           const classes = rootDivs[i].classList
 
-          classes.forEach(function (item) {
+          classes.forEach(function(item) {
             if (item === pageClass) {
               _this.pageType = page
             }
@@ -782,19 +791,19 @@ export default class AdobeLaunchPixel {
     const hashname = window.location.hash
       .replace('#/', '')
       .split('/')
-      .filter(function (el) {
+      .filter(function(el) {
         return el !== ''
       })
 
     let pathnameArr = pathname
       .split('/')
-      .filter(function (el) {
+      .filter(function(el) {
         return el !== ''
       })
       .concat(hashname)
 
     if (_this.countryCodes.indexOf(pathnameArr[0]) > -1) pathnameArr.shift()
-    pathnameArr = pathnameArr.filter(function (value) {
+    pathnameArr = pathnameArr.filter(function(value) {
       return value.trim() !== ''
     })
     for (let p = 0; p <= 3; p++) {
@@ -849,7 +858,7 @@ export default class AdobeLaunchPixel {
         try {
           for (let i = 0; i < items.length; i++) {
             const item = items[i]
-            const index = _this.codesCache.findIndex(function (obj) {
+            const index = _this.codesCache.findIndex(function(obj) {
               return item.refId === obj.modelCode
             })
 
@@ -877,7 +886,7 @@ export default class AdobeLaunchPixel {
 
       const productItems = document.querySelectorAll('tr.product-item')
 
-      productItems.forEach(function (productItem) {
+      productItems.forEach(function(productItem) {
         if (productItem !== null) {
           if (
             productItem.getAttribute('data-loading') !== null &&
@@ -924,7 +933,7 @@ export default class AdobeLaunchPixel {
             if (productSKU === null) return
 
             xhttp.open('POST', targetUrl, true)
-            xhttp.onreadystatechange = function () {
+            xhttp.onreadystatechange = function() {
               if (this.readyState === 4 && this.status === 200) {
                 apiData = JSON.parse(this.response)
                 apiData.listPrice = productPrice
@@ -953,7 +962,7 @@ export default class AdobeLaunchPixel {
     const _pimSubType = []
     const _listPrice = []
 
-    const idInterval = setInterval(function () {
+    const idInterval = setInterval(function() {
       try {
         if (
           window.vtexjs &&
@@ -1168,7 +1177,7 @@ export default class AdobeLaunchPixel {
 
         xhttp.open('POST', targetUrl, true)
         _this.codesCache = -1
-        xhttp.onreadystatechange = function () {
+        xhttp.onreadystatechange = function() {
           if (this.readyState === 4 && this.status === 200) {
             const newCache = {}
 
@@ -1256,7 +1265,7 @@ export default class AdobeLaunchPixel {
 
   _hasServicesInAttachment(nameService, attachments) {
     if (nameService === 'linkscplus') {
-      return attachments.find(function (attachment) {
+      return attachments.find(function(attachment) {
         return (
           attachment.name.toLowerCase() === nameService.toLowerCase() &&
           attachment.content.idsku !== '0'
@@ -1264,7 +1273,7 @@ export default class AdobeLaunchPixel {
       })
     }
 
-    return attachments.find(function (attachment) {
+    return attachments.find(function(attachment) {
       return attachment.name.toLowerCase() === nameService.toLowerCase()
     })
   }
@@ -1273,7 +1282,7 @@ export default class AdobeLaunchPixel {
     const _this = this
 
     let data = ''
-    const findItem = window.vtexjs.checkout.orderForm.items.find(function (
+    const findItem = window.vtexjs.checkout.orderForm.items.find(function(
       item
     ) {
       return item.id === skuId
@@ -1282,7 +1291,7 @@ export default class AdobeLaunchPixel {
     if (!findItem) return ''
 
     try {
-      const findItemCache = _this.codesCache.find(function (obj) {
+      const findItemCache = _this.codesCache.find(function(obj) {
         return obj.sku === findItem.id
       })
 
@@ -1354,10 +1363,9 @@ export default class AdobeLaunchPixel {
         productFamily =
           response.more.resultData.Products.Product.BasicInfo[0].PviCategories
             .ProductSubTypeName
-        allCategories =
-          response.more.resultData.Products.Product.BasicInfo[0].Categories.Category[0].CategoryEnglishNamePath.split(
-            '|'
-          )
+        allCategories = response.more.resultData.Products.Product.BasicInfo[0].Categories.Category[0].CategoryEnglishNamePath.split(
+          '|'
+        )
         pimSubType = allCategories.length > 2 ? allCategories[2] : ''
 
         if (Object.values(response).length === 0 || response.message) {
