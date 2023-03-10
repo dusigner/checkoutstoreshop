@@ -874,18 +874,21 @@ class checkoutCustom {
         )
           .then(response => response.json())
           .then(data => {
-            const installmentOptions = data.installments
-  
-            const maxInstallment = installmentOptions.find(
-              install =>
-                install.count ===
-                Math.max(...installmentOptions.map(inst => inst.count))
-            )
-  
-            return maxInstallment ? maxInstallment.total : ''
+            if(data && data.installments) {
+              const installmentOptions = data.installments
+    
+              const maxInstallment = installmentOptions.find(
+                install =>
+                  install.count ===
+                  Math.max(...installmentOptions.map(inst => inst.count))
+              )
+    
+              return maxInstallment ? maxInstallment.total : ''
+            }
+
           })
           .catch(e => {
-            console.log('onTerm Price error', e)
+            console.log('onTerm Price error', e) 
           }) 
 
           const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
@@ -1235,13 +1238,14 @@ class checkoutCustom {
 
   update(orderForm) {
     const _this = this
-
     this.ApplyCoupon(orderForm)
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
-    this.enchancementSummaryCart(orderForm, window.location.hash)
+    if(!$("body").hasClass("modalActive")) {
+      this.enchancementSummaryCart(orderForm, window.location.hash)
+    }
     this.enchancementUnavailableProduct()
     this.createChoiceNewProducts()
     this.couponInfo(orderForm)
@@ -1253,6 +1257,7 @@ class checkoutCustom {
     this.indexedInItems(orderForm)
     this.showCustomDiscounts()
     this.summaryCustom()
+    this.popupSSC()
     new CustomHeader().init()
     new SamsungCarePlus().init()
     new BespokeRefrigerator().init()
@@ -1601,16 +1606,19 @@ class checkoutCustom {
         })
         if(product[0] && product[0].attachments[0]) {
           let nameProduct = product[0].name
-          let idsku = product[0].attachments[0].content.idsku
+          let idsku = product[0].attachments[0].content.idsku 
+          let idskusc = product[0].id
           $(document).on('click', '.fakeRemove', function() {
+            $('body').addClass('modalActive');
             if(product[0] && product[0].attachments[0] && product[0].attachments[0].content.idsku) {
-              const name = $(`table tr.product-item[data-sku=${idSku}] td.product-name > a:first-child`).text()
+              const name = window.vtexjs.checkout.orderForm.items.filter(val => val.id === idsku)
+              if($('.modalssc').length == 0 && $('.layerpopup').length == 0)
               $(`<div class="layerpopup"></div>
                  <div class="modalssc">
-                  <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name}</b></p>
+                  <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name[0].name}</b></p>
                   <div>
                     <a>Voltar ao carrinho</a>
-                    <a data-id='${idsku}'>Excluir</a>
+                    <a data-id-sc='${idskusc}' data-id='${idsku}'>Excluir</a>
                   </div>
                  </div>`)
               .prependTo($('body'))
@@ -1623,31 +1631,35 @@ class checkoutCustom {
           $(this).remove()
         })
       })
-      $(document).on('click', '.modalssc div a + a', function() {
-        const productId = $(this).attr('data-id')
-        
-          var interval = 4000;
-          window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
-
-            setTimeout(function () {
-              const removeList = []
-              if (el.id === productId) {
-                removeList.push({
-                  index: i,
-                  quantity: 0,
-                })
-                const itemsToRemove = removeList
-                if (itemsToRemove.length > 0) {
-                  return window.vtexjs.checkout
-                    .removeItems(itemsToRemove)
-                    .then(() => {})
-                }
-              }
-            }, i * interval)
-          })
-      })
     }
   }
+
+  clickModal() {
+    $(document).on('click', '.modalssc div a + a', function() {
+      $('body').addClass('modalClick')
+      const productId = $(this).attr('data-id')
+      const productIdSC = $(this).attr('data-id-sc')
+        window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
+          
+          setTimeout(function () {
+            if (el.id === productId) {
+              console.log(productId, 'productId')
+              if($('body').hasClass('modalClick')){
+                $(`.table.cart-items tr[data-sku=${productId}]:eq(0) td.item-remove a`).click()
+              }
+              $('body').removeClass('modalClick')
+            }
+          }, 4000)
+
+          setTimeout(function () {
+            $(`.table.cart-items tr[data-sku=${productIdSC}] td.item-remove a`).click()
+            $('body').removeClass('modalActive');
+          }, 6000)
+        })
+    })
+  }
+
+
 
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
@@ -1798,7 +1810,6 @@ class checkoutCustom {
     _this.general()
     _this.updateStep()
     _this.builder()
-    _this.popupSSC()
     _this.changeShippingTimeInfoInit()
     if (_this.orderForm) {
       _this.updateLang(_this.orderForm)
@@ -1808,6 +1819,8 @@ class checkoutCustom {
     }
 
     _this.fixLabels()
+    _this.clickModal()
+    
   }
 
   start() {
@@ -1832,7 +1845,6 @@ class checkoutCustom {
 
       $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
-
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
@@ -1913,7 +1925,6 @@ class checkoutCustom {
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
         _this.customizeLogOut()
-        _this.popupSSC()
         _this.showEmptyCart(orderForm)
 
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
@@ -1956,7 +1967,6 @@ class checkoutCustom {
 
       $(window).load(function () {
         _this.setPixAsDefaultPaymentMethod()
-
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
         })
