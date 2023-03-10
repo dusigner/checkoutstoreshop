@@ -806,22 +806,24 @@ class checkoutCustom {
         }
 
         const refId = orderForm.items[i].refId || ''
+        const { detailUrl } = orderForm.items[i]
+        const isInstallService = detailUrl.includes('/install-service/p')
+        const isSamsungCare = detailUrl.includes('/samsung-care-/p')
 
-        if (orderForm.items[i].detailUrl.indexOf('/install-service/p') == -1) {
-          _trElem.find('td.product-name').append(
-            `<div class="more-info">
-              <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
-              <p class="estimate-shipping">Após a entrega do produto</p>
-            </div>`
-          )
-        } else {
-          _trElem.find('td.product-name').append(
-            `<div class="more-info">
-              <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
-              <p class="estimate-shipping">Após a entrega do produto</p>
-            </div>`
-          )
+        let shippingText = ''
+
+        if (isInstallService || isSamsungCare) {
+          shippingText = 'Após a entrega do produto'
         }
+
+        const moreInfoHtml = `
+          <div class="more-info">
+            <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+            <p class="estimate-shipping">${shippingText}</p>
+          </div>
+        `
+
+        _trElem.find('td.product-name').append(moreInfoHtml)
       })
     } catch (e) {
       console.error('enchancementProductName error:', e)
@@ -879,15 +881,17 @@ class checkoutCustom {
         )
           .then(response => response.json())
           .then(data => {
-            const installmentOptions = data.installments
+            if (data && data.installments) {
+              const installmentOptions = data.installments
 
-            const maxInstallment = installmentOptions.find(
-              install =>
-                install.count ===
-                Math.max(...installmentOptions.map(inst => inst.count))
-            )
+              const maxInstallment = installmentOptions.find(
+                install =>
+                  install.count ===
+                  Math.max(...installmentOptions.map(inst => inst.count))
+              )
 
-            return maxInstallment ? maxInstallment.total : ''
+              return maxInstallment ? maxInstallment.total : ''
+            }
           })
           .catch(e => {
             console.error('onTerm Price error', e)
@@ -1294,7 +1298,10 @@ class checkoutCustom {
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
-    this.enchancementSummaryCart(orderForm, window.location.hash)
+    if (!$('body').hasClass('modalActive')) {
+      this.enchancementSummaryCart(orderForm, window.location.hash)
+    }
+
     this.enchancementUnavailableProduct()
     this.createChoiceNewProducts()
     this.couponInfo(orderForm)
@@ -1306,6 +1313,7 @@ class checkoutCustom {
     this.indexedInItems(orderForm)
     this.showCustomDiscounts()
     this.summaryCustom()
+    this.popupSSC()
     new CustomHeader().init()
     new SamsungCarePlus().init()
     new BespokeRefrigerator().init()
@@ -1680,25 +1688,29 @@ class checkoutCustom {
         if (product[0] && product[0].attachments[0]) {
           const nameProduct = product[0].name
           const { idsku } = product[0].attachments[0].content
+          const idskusc = product[0].id
 
           $(document).on('click', '.fakeRemove', function () {
+            $('body').addClass('modalActive')
             if (
               product[0] &&
               product[0].attachments[0] &&
               product[0].attachments[0].content.idsku
             ) {
-              const name = $(
-                `table tr.product-item[data-sku=${idsku}] td.product-name > a:first-child`
-              ).text()
+              const name = window.vtexjs.checkout.orderForm.items.filter(
+                val => val.id === idsku
+              )
 
-              $(`<div class="layerpopup"></div>
+              if ($('.modalssc').length == 0 && $('.layerpopup').length == 0) {
+                $(`<div class="layerpopup"></div>
                  <div class="modalssc">
-                  <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name}</b></p>
+                  <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name[0].name}</b></p>
                   <div>
                     <a>Voltar ao carrinho</a>
-                    <a data-id='${idsku}'>Excluir</a>
+                    <a data-id-sc='${idskusc}' data-id='${idsku}'>Excluir</a>
                   </div>
                  </div>`).prependTo($('body'))
+              }
             }
           })
         }
@@ -1709,32 +1721,36 @@ class checkoutCustom {
           $(this).remove()
         })
       })
-      $(document).on('click', '.modalssc div a + a', function () {
-        const productId = $(this).attr('data-id')
-
-        const interval = 4000
-
-        window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
-          setTimeout(function () {
-            const removeList = []
-
-            if (el.id === productId) {
-              removeList.push({
-                index: i,
-                quantity: 0,
-              })
-              const itemsToRemove = removeList
-
-              if (itemsToRemove.length > 0) {
-                return window.vtexjs.checkout
-                  .removeItems(itemsToRemove)
-                  .then(() => {})
-              }
-            }
-          }, i * interval)
-        })
-      })
     }
+  }
+
+  clickModal() {
+    $(document).on('click', '.modalssc div a + a', function () {
+      $('body').addClass('modalClick')
+      const productId = $(this).attr('data-id')
+      const productIdSC = $(this).attr('data-id-sc')
+
+      window.vtexjs.checkout.orderForm.items.forEach(el => {
+        setTimeout(function () {
+          if (el.id === productId) {
+            if ($('body').hasClass('modalClick')) {
+              $(
+                `.table.cart-items tr[data-sku=${productId}]:eq(0) td.item-remove a`
+              ).click()
+            }
+
+            $('body').removeClass('modalClick')
+          }
+        }, 4000)
+
+        setTimeout(function () {
+          $(
+            `.table.cart-items tr[data-sku=${productIdSC}] td.item-remove a`
+          ).click()
+          $('body').removeClass('modalActive')
+        }, 6000)
+      })
+    })
   }
 
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
@@ -1886,7 +1902,6 @@ class checkoutCustom {
     _this.general()
     _this.updateStep()
     _this.builder()
-    _this.popupSSC()
     _this.changeShippingTimeInfoInit()
     if (_this.orderForm) {
       _this.updateLang(_this.orderForm)
@@ -1896,6 +1911,7 @@ class checkoutCustom {
     }
 
     _this.fixLabels()
+    _this.clickModal()
   }
 
   start() {
@@ -1920,7 +1936,6 @@ class checkoutCustom {
 
       $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
-
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
@@ -2005,7 +2020,6 @@ class checkoutCustom {
         _this.customAddressFormInit(orderForm)
         _this.URLHasIncludePayment()
         _this.customizeLogOut()
-        _this.popupSSC()
         _this.showEmptyCart(orderForm)
 
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
@@ -2048,7 +2062,6 @@ class checkoutCustom {
 
       $(window).load(function () {
         _this.setPixAsDefaultPaymentMethod()
-
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
         })
