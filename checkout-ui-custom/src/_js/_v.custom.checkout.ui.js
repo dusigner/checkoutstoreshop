@@ -864,7 +864,7 @@ class checkoutCustom {
         const inCashPrice = orderForm.paymentData.installmentOptions.find(
           item => item.paymentSystem == 125
         ).installments[0].total
-  
+
         // Encontra as installments para do cartao visa (código 2)
         // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
         const termPrice = await fetch(
@@ -875,18 +875,18 @@ class checkoutCustom {
           .then(response => response.json())
           .then(data => {
             const installmentOptions = data.installments
-  
+
             const maxInstallment = installmentOptions.find(
               install =>
                 install.count ===
                 Math.max(...installmentOptions.map(inst => inst.count))
             )
-  
+
             return maxInstallment ? maxInstallment.total : ''
           })
           .catch(e => {
             console.log('onTerm Price error', e)
-          }) 
+          })
 
           const percentDiscount = Math.floor(100 - (inCashPrice / termPrice) * 100)
 
@@ -903,7 +903,7 @@ class checkoutCustom {
                       </div>`
                     : ''
                 }
-    
+
                 <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p class="gross-total">
                       Ou parcelado em até 12x
@@ -914,7 +914,7 @@ class checkoutCustom {
                 </div>
               </div>
             `
-    
+
           if (path !== '#/cart') {
             if (_trElem.find('.cart-total').length === 0) {
               _trElem.prepend(_component)
@@ -930,7 +930,7 @@ class checkoutCustom {
       }
 
 
- 
+
     } catch (e) {
       console.error('enchancementSummaryCart error:', e)
     }
@@ -1625,7 +1625,7 @@ class checkoutCustom {
       })
       $(document).on('click', '.modalssc div a + a', function() {
         const productId = $(this).attr('data-id')
-        
+
           var interval = 4000;
           window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
 
@@ -1844,6 +1844,42 @@ class checkoutCustom {
             _this.paymentDiscount()
           }
         }
+      })
+
+      $(document).ajaxComplete(function (event, xhr, settings) {
+        _this.init()
+
+        const acessKeyURL = settings.url.includes('/api/checkout/pub/profiles/')
+        const ssgAccountURL = settings.url.includes('/api/sessions')
+
+        if (acessKeyURL || ssgAccountURL) {
+          const loginSucess = xhr.statusText === 'success'
+
+          if(loginSucess){
+            fetch(`${_this.rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`, {
+              credentials: 'include'
+            })
+              .then(resp => resp.json())
+              .then(data => {
+                const email = data.user;
+                const userProfileId = data.userId
+                return fetch(`${_this.rootPath()}/_v/post/updateClientAcessOrigin`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                      docId: userProfileId,
+                      email: email,
+                      accessOrigin: 'desktop'
+                    })
+                })
+                .then(() => {
+                    return response;
+                })
+                .catch(console.error)
+              })
+          }
+        }
+
+
       })
 
       $(window).on('hashchange', function () {
