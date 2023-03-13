@@ -6,6 +6,7 @@ export default class CustomPreEmail {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
   }
+
   createElementSamsungAccountLogin() {
     $('#client-pre-email').attr('placeholder', 'Ex:.exemplo@mail.com')
 
@@ -13,10 +14,9 @@ export default class CustomPreEmail {
       $('.samsung-account-container').length === 0 &&
       $('.client-pre-email-h').length > 0
     ) {
+      $('#toggleButtonContainer').remove()
 
-      $("#toggleButtonContainer").remove()
-
-      $("#btn-client-pre-email").after(`
+      $('#btn-client-pre-email').after(`
       <div id="toggleButtonContainer" class="samsung-toggle-button-container">
 
         <p class="samsung-visitante-title">Entrar como visitante:</p>
@@ -47,8 +47,7 @@ export default class CustomPreEmail {
               </button>
             </div>
             <div style="margin-top: 20px">
-              <img style="padding-right: 11px; border-right: 1px solid #cbcbcb" src="https://samsungbr.vteximg.com.br/arquivos/logo-rewards.png?v=1" />
-              <img style="margin-left: 10px" src="https://samsungbr.vteximg.com.br/arquivos/logo-frete.png?v=1" />
+              <img style="padding-right: 11px;" src="https://samsungbr.vteximg.com.br/arquivos/logo-rewards.png?v=1" />
             </div>
             <div class="samsung-account-create" style="margin-top: 10px; font-size:12px; font-family:'SamsungOne'; justify-content: center; display: flex;">
               <p style="max-width: 326px">
@@ -74,29 +73,38 @@ export default class CustomPreEmail {
     }, 100)
   }
 
-  
-  loginEmail () {
+  loginEmail() {
     const _this = this
-    $(document).on('keyup', '#client-pre-email, #client-email', async function (e) { 
-        var email = $('#client-pre-email').val();
-        var domain = email.split('@')
-        domain = domain[1];
-        if((domain !== undefined) || domain !== null) {
-          setTimeout(function(){
+
+    $(document).on(
+      'keyup',
+      '#client-pre-email, #client-email',
+      async function () {
+        const email = $('#client-pre-email').val()
+        let domain = email.split('@')
+
+        domain = domain[1]
+        if (domain !== undefined || domain !== null) {
+          setTimeout(function () {
             fetch(
-                `${_this.rootPath()}/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain`, {
-                    type: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                }
+              `${_this.rootPath()}/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain`,
+              {
+                type: 'GET',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+              }
             ).then(response => {
-              response.json().then(data => {  
-                if($('.wrongdomain').length == 0){
-                  $(`<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`).insertBefore($('#btn-client-pre-email'))
-                  $(`<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`).appendTo($('body.v-custom-step-profile .client-email'))
-                  setTimeout(function(){
+              response.json().then(data => {
+                if ($('.wrongdomain').length === 0) {
+                  $(
+                    `<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`
+                  ).insertBefore($('#btn-client-pre-email'))
+                  $(
+                    `<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`
+                  ).appendTo($('body.v-custom-step-profile .client-email'))
+                  setTimeout(function () {
                     $('.wrongdomain').remove()
                   }, 5000)
                 }
@@ -104,18 +112,20 @@ export default class CustomPreEmail {
             })
           }, 1000)
         }
-    });
+      }
+    )
   }
 
   bindEvents() {
     const _this = this
+
     _this.loginEmail()
     $(document).on('click', '#btn-samsung-account', function () {
       _this.openSamsungAccountModal()
     })
 
     $(document).on('click', '#toggleButtonLogin', function () {
-      $('.samsung-toggle-button-container').hide();
+      $('.samsung-toggle-button-container').hide()
     })
   }
 }

@@ -2762,6 +2762,10 @@ h3.client-pre-email-h {
 #shipping-data .vtex-omnishipping-1-x-warning {
   margin-top: 16px; }
 
+#shipping-data .glide__track {
+  width: 100%;
+  max-width: 90vw; }
+
 .payment-group-item-cards .card-flag {
   width: 32px !important;
   background-size: auto 20px;
