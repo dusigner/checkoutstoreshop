@@ -1003,7 +1003,8 @@ body .main-header {
         margin-left: 16px;
         margin-right: 16px;
         row-gap: 6px;
-        grid-template-areas: 'logo secure' 'steps steps'; } }
+        grid-template-areas: 'logo secure'
+ 'steps steps'; } }
   body .main-header > .container:before, body .main-header > .container:after {
     display: none; }
   body .main-header .checkout-secure-buy {
@@ -1242,7 +1243,11 @@ h1#cart-title {
   max-width: 400px;
   border-radius: 20px;
   padding: 20px;
+<<<<<<< HEAD
   position: absolute;
+=======
+  position: fixed;
+>>>>>>> 402077311fe345995be4cbef63a8f395f24674c9
   z-index: 999;
   left: 50%;
   transform: translate(-50%, 50%);
@@ -1338,7 +1343,12 @@ h1#cart-title {
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 5fr 1fr;
+<<<<<<< HEAD
         grid-template-areas: "image name price" "image quantity item-remove";
+=======
+        grid-template-areas: "image name price"
+ "image quantity item-remove";
+>>>>>>> 402077311fe345995be4cbef63a8f395f24674c9
         position: relative;
         padding: 20px 0; }
         @media (max-width: 690px) {
@@ -1346,7 +1356,13 @@ h1#cart-title {
             display: grid;
             grid-template-columns: 4fr 1fr;
             grid-template-rows: 2fr 8fr 2fr;
+<<<<<<< HEAD
             grid-template-areas: "item-remove item-remove" "name image" "quantity price";
+=======
+            grid-template-areas: "item-remove item-remove"
+ "name image"
+ "quantity price";
+>>>>>>> 402077311fe345995be4cbef63a8f395f24674c9
             padding: 10px 0; } }
       .table.cart-items tbody tr td {
         width: auto;
@@ -1666,7 +1682,14 @@ h1#cart-title {
   border-radius: 20px;
   border: none;
   display: grid;
+<<<<<<< HEAD
   grid-template-areas: "products" "coupon" "price" "finish_payment"; }
+=======
+  grid-template-areas: "products"
+ "coupon"
+ "price"
+ "finish_payment"; }
+>>>>>>> 402077311fe345995be4cbef63a8f395f24674c9
   .summary-template-holder .cart-total {
     grid-area: price; }
   .summary-template-holder .row-fluid.summary {
@@ -1808,7 +1831,16 @@ h1#cart-title {
           border-radius: 0; } }
   .summary-template-holder .summary-totalizers .totalizers-list {
     display: grid;
+<<<<<<< HEAD
     grid-template-areas: "subtotal" "descontos_total" "cupom" "cupom_desconto" "cupom_instantaneo" "entrega"; }
+=======
+    grid-template-areas: "subtotal"
+ "descontos_total"
+ "cupom"
+ "cupom_desconto"
+ "cupom_instantaneo"
+ "entrega"; }
+>>>>>>> 402077311fe345995be4cbef63a8f395f24674c9
     .summary-template-holder .summary-totalizers .totalizers-list .Items {
       grid-area: subtotal; }
     .summary-template-holder .summary-totalizers .totalizers-list .coupon-applied {
@@ -1818,7 +1850,12 @@ h1#cart-title {
       max-height: 23px; }
   .summary-template-holder .summary-totalizers .table {
     display: grid;
+<<<<<<< HEAD
     grid-template-areas: "total-details-tradein" "totalizers-list"; }
+=======
+    grid-template-areas: "total-details-tradein"
+ "totalizers-list"; }
+>>>>>>> 402077311fe345995be4cbef63a8f395f24674c9
     .summary-template-holder .summary-totalizers .table .totalizers-list {
       grid-area: totalizers-list;
       border-bottom: 1px solid #cbcbcb;
@@ -2762,6 +2799,10 @@ h3.client-pre-email-h {
 #shipping-data .vtex-omnishipping-1-x-warning {
   margin-top: 16px; }
 
+#shipping-data .glide__track {
+  width: 100%;
+  max-width: 90vw; }
+
 .payment-group-item-cards .card-flag {
   width: 32px !important;
   background-size: auto 20px;
@@ -3688,7 +3729,10 @@ svg.vtex-omnishipping-1-x-svg {
   padding-top: 20px !important;
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-template-areas: 'gift rewards-btn' 'giftcard-content giftcard-content' 'rewards-calc rewards-calc' 'payment-group steps'; }
+  grid-template-areas: 'gift rewards-btn'
+ 'giftcard-content giftcard-content'
+ 'rewards-calc rewards-calc'
+ 'payment-group steps'; }
 
 @media screen and (max-width: 1200px) {
   .step.client-profile-data.active .box-step .form-step[style*="display: block"],
@@ -3701,7 +3745,12 @@ svg.vtex-omnishipping-1-x-svg {
   .step.shipping-data.active .accordion-inner.shipping-container,
   #payment-data .box-step form.form-step {
     grid-template-columns: 1fr;
-    grid-template-areas: 'gift' 'rewards-btn' 'giftcard-content' 'rewards-calc' 'payment-group' 'steps'; } }
+    grid-template-areas: 'gift'
+ 'rewards-btn'
+ 'giftcard-content'
+ 'rewards-calc'
+ 'payment-group'
+ 'steps'; } }
 
 .client-pre-email + .client-profile-data .accordion-body:before {
   display: none; }
