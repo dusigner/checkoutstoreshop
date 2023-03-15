@@ -4,6 +4,13 @@ fieldset.pre-email.row-fluid {
   justify-content: center;
 }
 
+.wrongdomain { 
+  color: red;
+  font-size: 12px;
+  display: block;
+  margin-top: 5px;
+}
+
 h3.client-pre-email-h {
   flex-basis: 100%;
   padding-bottom: 30px;

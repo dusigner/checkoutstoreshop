@@ -16,11 +16,7 @@ export default class SendAttachment {
     const transportCustomData =
       customData && customData.customApps[0].fields.trade_in_option_selected
 
-    const transport = localStorage.getItem('transport')
-      ? JSON.parse(localStorage.getItem('transport'))
-      : transportCustomData
-      ? JSON.parse(transportCustomData)
-      : '[]'
+    const transport = transportCustomData ? JSON.parse(transportCustomData) : []
 
     // TRADE-IN
     if (transport.length) {
@@ -96,9 +92,8 @@ export default class SendAttachment {
 
                   obsToOpenTextField += `{'isInstallation':'true','sku':'${
                     install.refId
-                  }','estimate':'${
-                    estimative + 1
-                  }','price': '${formatCurrencyBRL(install.price)}'}, `
+                  }','estimate':'${estimative +
+                    1}','price': '${formatCurrencyBRL(install.price)}'}, `
                 }
 
                 return ''

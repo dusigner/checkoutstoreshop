@@ -179,6 +179,13 @@ export default class Rewards {
     try {
       const { orderForm } = window.vtexjs.checkout
 
+      if (
+        orderForm.items.length === 0 &&
+        $('#text-details-rewards').length > 0
+      ) {
+        $('#text-details-rewards').remove()
+      }
+
       if (orderForm.items.length === 0) return
 
       if (orderForm.totalizers.length === 0) return
@@ -315,7 +322,7 @@ export default class Rewards {
       }).value
     }
 
-    if (orderForm.orderFormId) {
+    if (orderForm.orderFormId && this.userSaGuid && this.userAcceptedRewards) {
       const data = {
         Id: orderForm.orderFormId,
         Timestamp: new Date().toISOString().split('Z')[0],
@@ -369,10 +376,9 @@ export default class Rewards {
 
   cancelRewardsDiscount(verify = false) {
     if (window.vtexjs.checkout.orderForm.paymentData.giftCards) {
-      const rewardsDiscount =
-        window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
-          g => g.provider === 'SSG_REWARDS'
-        )
+      const rewardsDiscount = window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
+        g => g.provider === 'SSG_REWARDS'
+      )
 
       if (!rewardsDiscount) return
       if (!rewardsDiscount[0]) return
@@ -478,30 +484,11 @@ export default class Rewards {
         }).value / 100
     }
 
-    let TotalShipping = 0
-
-    if (
-      orderForm.totalizers.find(item => {
-        return item.id === 'Shipping'
-      })
-    ) {
-      TotalShipping =
-        orderForm.totalizers.find(item => {
-          return item.id === 'Shipping'
-        }).value / 100
-    }
-
     const ProductItems = []
 
     orderForm.items.map(item => {
       const MultProporcional =
         ((item.sellingPrice / 100) * item.quantity) / (TotalItems + TotalDisc)
-
-      let TotalShippingCurrentItem = 0
-
-      if (TotalShipping > 0) {
-        TotalShippingCurrentItem = MultProporcional * TotalShipping
-      }
 
       let TotalRewardsDiscountCurrentItem = 0
 
@@ -514,8 +501,7 @@ export default class Rewards {
         ObjectType: 'ESTORE_BR',
         ObjectId: item.refId,
         Amount: (
-          (item.sellingPrice / 100) * item.quantity +
-          TotalShippingCurrentItem -
+          Math.round(item.sellingPrice * item.quantity) / 100 -
           TotalRewardsDiscountCurrentItem
         ).toString(),
         Quantity: item.quantity.toString(),

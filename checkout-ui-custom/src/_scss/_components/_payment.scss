@@ -86,7 +86,7 @@
       .payment-group-item-text {
         padding-left: 0px;
 		font-size: 0;
-
+		order: 1;
         &::before {
           content: "";
           margin-right: 25px;
@@ -102,6 +102,10 @@
 		&::after {
 			content: "Cartão Samsung Itaú";
 			font-size: 12px;
+			flex-grow: 2;
+		}
+		> span {
+			order: 2;
 		}
       }
     }
@@ -156,8 +160,9 @@
 		  background: none;
 		  position: relative;
 		  margin:0;
-      grid-area: payment-group;
-      max-width: 330px;
+		  grid-area: payment-group;
+		//   min-width: 290px;
+		  max-width: 330px;
 
       #payment-group-SamsungPayPaymentGroup{
         span {
@@ -247,13 +252,22 @@
 			span.payment-group-item-text {
 				padding: 0;
 				line-height: 17px;
-
-        display: flex;
-        align-items: center;
-        background-size: 24px;
-        background-position-x: left;
-        padding-left: 48px;
-        min-height: 44px;
+				display: flex;
+				align-items: center;
+				background-size: 24px;
+				background-position-x: left;
+				padding-left: 48px;
+				min-height: 44px;
+				justify-content: space-between;
+				width: 100%;
+				span {
+					background: #00838F;
+					padding: 0px 6px;
+					border-radius: 20px;
+					color: #fff;
+					font-size: 10px;
+					margin: 0 0 0 10px;
+				}
 			}
 
 			&:first-child:nth-last-child(n + 2),
@@ -1189,8 +1203,11 @@
 }
 
 /* hide default rewards calculator */
-.gift-card-section:nth-of-type(1) {
-	display: none !important;
+.gift-card-provider-options.text.input.span7 {
+	label,
+	select {
+		display: none;
+	}
 }
 
 .payment-discounts-alert-wrap{
@@ -1199,6 +1216,10 @@
 
 .box-step-content .gift-card-section:nth-of-type(n+1) {
 	grid-area: giftcard-content;
+}
+
+.gift-card-provider-group{
+  display: none;
 }
 
 #rewards-remove-discount:hover {
