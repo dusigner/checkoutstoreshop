@@ -30,6 +30,7 @@ export default class Rewards {
         success: res => {
           if (this.emailUserRewards !== docId) {
             window.localStorage.setItem('saGuid', res[0].saGuid || '')
+            window._satellite.setVar('GUID', res[0].saGuid || '')
             this.userSaGuid = res[0].saGuid
             this.emailUserRewards = docId
           }

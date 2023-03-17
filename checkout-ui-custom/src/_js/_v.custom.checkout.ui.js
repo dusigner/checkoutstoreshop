@@ -913,7 +913,7 @@ class checkoutCustom {
                       </div>`
                     : ''
                 }
-    
+
                 <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p class="gross-total">
                       Ou parcelado em até 12x
@@ -1949,6 +1949,28 @@ class checkoutCustom {
           }
         }
       })
+
+      $(document).ajaxComplete(function (event, xhr, settings) {
+        _this.init()
+        const acessKeyURL = settings.url.includes('/api/checkout/pub/profiles/')
+        const ssgAccountURL = settings.url.includes('/api/sessions')
+        if (acessKeyURL || ssgAccountURL) {
+          const loginSucess = xhr.statusText === 'success'
+          if(loginSucess){
+            trackLogin(ssgAccountURL, acessKeyURL)
+          }
+        }
+      })
+
+
+    function trackLogin(ssgAccountURL, accessKeyURL){
+        if(ssgAccountURL){
+            window._satellite.track('samsung_account_login')
+        }else if(accessKeyURL){
+            window._satellite.track('vtex_account_login')
+        }
+    }
+
 
       $(window).on('hashchange', function () {
         const cartItems = document.querySelector('.cart-items')
