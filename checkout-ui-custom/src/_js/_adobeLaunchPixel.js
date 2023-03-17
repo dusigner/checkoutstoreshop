@@ -676,13 +676,13 @@ export default class AdobeLaunchPixel {
 
     if (checkoutLogin !== null && checkoutLoginForm !== null) {
       _this.setElementOmni(checkoutLogin, 'data-omni-signin', {
-        '': 'login_try:guest',
+        '': 'account:submit',
       })
       checkoutLoginForm.onsubmit = function (e) {
         e.preventDefault()
-        let parameter = 'login_try:guest'
+        let parameter = 'account:submit'
 
-        if (!checkoutLoginForm.checkValidity()) parameter = 'login_try:guest'
+        if (!checkoutLoginForm.checkValidity()) parameter = 'account:submit'
         _this.setElementOmni(checkoutLogin, 'data-omni-signin', {
           '': parameter,
         })
