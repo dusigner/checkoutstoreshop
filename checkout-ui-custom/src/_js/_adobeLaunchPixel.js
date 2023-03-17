@@ -718,7 +718,10 @@ export default class AdobeLaunchPixel {
     const siteCode = _this._fetchSiteCode()
 
     $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {
-      window.digitalData.user.loginStatus = orderForm.loggedIn
+      window.digitalData.user.loginStatus = window.digitalData.user.loginStatus || orderForm.loggedIn
+      if(!window.digitalData.user.loginStatus){
+        window._satellite.track('shop_guest_login')
+      }
     })
 
     window.digitalData.page.pageInfo.siteCode = siteCode

@@ -1958,6 +1958,9 @@ class checkoutCustom {
           const loginSucess = xhr.statusText === 'success'
           if(loginSucess){
             trackLogin(ssgAccountURL, acessKeyURL)
+            window.digitalData.user.loginStatus = true
+          }else {
+            window.digitalData.user.loginStatus = false
           }
         }
       })
