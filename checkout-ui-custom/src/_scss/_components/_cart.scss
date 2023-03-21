@@ -1091,18 +1091,18 @@ h1#cart-title {
     }
 
     #deliver-at-text a {
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 12px;
       cursor: initial;
-
+      font-weight: 700;
       &::after {
-        content: "Trocar CEP";
+        content: "Ver mais opções";
         color: #000000;
         font-size: 12px;
         margin-left: 16px;
         display: inline-block;
         text-decoration: underline;
         cursor: pointer;
+        font-weight: 400;
       }
     }
 
@@ -1146,7 +1146,7 @@ h1#cart-title {
     }
     .srp-toggle__wrapper {
       label {
-        background: #fff;
+        // background: #fff;
         padding: 10px 0;
         border-radius: $borderRadius;
       }
@@ -1303,6 +1303,589 @@ h1#cart-title {
       }
     }
   }
+}
+
+
+.sellerInformation {
+  font-size: 12px;
+  color: #767676;
+
+  span {
+      color: #0077C8;
+      font-weight: bold;
+  }
+}
+.sla-info{
+  .sla-price{
+      display: none;
+  }
+}
+
+
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__pickup {
+  display: block;
+  border: none;
+}
+
+.srp-toggle__wrapper.flex.br-pill.shadow-4.relative {
+  border-radius: 20px;
+  box-shadow: none !important;
+  max-width: 200px;
+  border: 1px #DDDDDD solid;
+}
+
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current,
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current label {
+  width: 50%;
+  border-radius: 20px;
+  background:#363636;
+  box-shadow: none;
+  border:none;
+}
+
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current {
+  background: #000
+}
+
+.srp-toggle__pickup,
+.srp-toggle__delivery{
+  position: relative;
+  font-size: 14px;
+  font-family: SamsungOne;
+  text-transform: capitalize !important;
+  font-weight: 700;
+}
+
+.srp-toggle__pickup.gray.blue {
+  color: #fff !important;
+  
+}
+.srp-toggle__pickup.gray {
+  color: #000 !important;
+}
+.srp-toggle__delivery.gray {
+  color: #000 !important;
+}
+.srp-toggle__delivery.gray.blue {
+  color: #fff !important;
+}
+
+a.srp-address-title {
+  color: #006BEA !important;
+}
+
+.srp-shipping-current-single__price {
+  color:#000 !important;
+  font-weight: 700;
+}
+
+.srp-pickup-info a.srp-address-title:after {
+  content: 'Ver mais opções';
+  display: block;
+  font-size: 12px;
+  text-decoration: underline;
+}
+
+button#find-pickup-link {
+  border-radius: 20px;
+  border: solid 2px #000;
+  background: #fff;
+  color: #000;
+  font-size: 13px;
+  font-weight: bold;
+  appearance: none;
+  transition: ease .1s;
+}
+
+button#find-pickup-link:hover {
+  background: #000;
+  color: #fff;
+}
+
+.orderform-template #shipping-data .shipping-container #postalCode-finished-loading{
+  display:block;
+}
+.pickup-point-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 3px !important;
+  border-color: #D6D6D6 !important;
+
+.pickup-marker-blue {
+  width: 20px !important;
+  height: 20px;
+  display: block;
+  position: relative !important;
+  margin: 20px;
+}
+}
+
+.pickup-point-wrapper {
+  padding-left: 10px;
+  position: relative;
+}
+
+.button-details-pickup-point {
+  display: none;
+}
+
+.pickup-point-name {
+  color: #0077C8;
+}
+
+.button-change-pickup-point {
+  max-width: 256px;
+  height: 40px;
+  width: 100% !important;
+  border-radius: 20px !important;
+  border: solid 1px #000 !important;
+  color: #000;
+  font-weight: bold;
+  font-size: 14px;
+  transition: ease .1s;
+  text-shadow: none;
+
+&:hover {
+  background:#000;
+  color: #fff;
+}
+}
+
+.shp-lean-option-active {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.shp-lean {
+  border: none;
+}
+
+.shp-option-text-price {
+  color: #4B830D;
+  font-size: 14px;
+  font-weight: bold;
+}
+.vtex-omnishipping-1-x-{
+&sellerText {
+  display: none;
+}
+&package {
+  border-radius: 3px !important;
+  border-color: #D6D6D6 !important;
+}
+
+&priceItems {
+  display: flex;
+  justify-content: flex-start;
+}
+
+&productItems {
+  justify-content: flex-start;
+}
+
+&item {
+  width: auto;
+}
+
+&hr {
+  display: none;
+}
+&package .sla {
+  text-align: left;
+}
+
+&itemImgWrapper {
+  width: auto;
+}
+
+&package {
+  justify-content: flex-start !important;
+}
+
+&packageItems {
+  justify-content: flex-start;
+}
+&addressSummaryActive {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 3px !important;
+  border-color: #D6D6D6 !important;
+}
+
+&addressSummaryActive .address-summary {
+  display: block;
+  align-items: center;
+  width: 100%;
+  border-radius: 3px !important;
+  border-color: #D6D6D6 !important;
+  background-position: 3% 50% !important;
+  padding-left: 10% !important;
+
+  .link-edit {
+    display: none;
+  }
+}
+
+&address div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+&address div .ship-number {
+  max-width: 24%;
+}
+
+&address div input,
+&address div .ship-number {
+  width: 100% !important;
+}
+
+&submitPaymentButton.btn-submit-wrapper.btn-go-to-payment-wrapper + div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+}
+
+&btnDelivery{
+  + div{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    z-index: 11;
+    top: 0;
+    left: 0;
+    display: flex;
+  }
+}
+}
+
+.pickup-packages {
+  margin-bottom: 30px;
+}
+
+.shipping-has-pickups {
+  max-width: 250px;
+}
+
+.orderform-template #shipping-data input[type=text]#ship-number {
+  max-width: initial !important;
+}
+
+.input.ship-complement.text {
+  width: 70% !important;
+}
+
+.srp-toggle__current {
+  border: 0 !important;
+  background:#000;
+}
+
+.orderform-template #shipping-data input {
+  height: 45px !important;
+  background: #fff !important;
+  max-width: initial !important;
+}
+
+.orderform-template #shipping-data .shipping-container .ship-reference {
+  width: 100%;
+}
+
+p.input.ship-receiverName {
+  width: 100%;
+}
+
+form#pkpmodal-search {
+  display: flex;
+  flex-direction: revert;
+  width: 80%;
+}
+
+button.vtex-pickup-points-modal-3-x-askGeolocationBtn.vtex-pickup-points-modal-3-x-askGeolocationBtnPostalCode.pkp-modal-ask-geolocation-btn.postal-code {
+  position: relative;
+  padding: 0;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orderform-template #shipping-data input[type=text]#ship-postalCode {
+  max-width: initial !important;
+  width: 100%;
+  border: solid 1px #9b9b9b;
+}
+
+span{
+.street {
+  white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 170px;
+}
+.number {
+  white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 170px;
+}
+.neighborhood {
+  white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 170px;
+}
+.complement {
+  white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 170px;
+}
+.city {
+  white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 170px;
+}
+.state {
+  white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 170px;
+}
+.postalCode {
+  white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    max-width: 170px;
+}
+}
+
+.vtex-pickup-points-modal-3-x{
+&-modalBackdrop{
+  &.pkpmodal-backdrop {
+    background: rgba(0,0,0,0.7);
+  }
+  
+}
+&-pkpmodal {
+  max-width: 468px;
+  border-radius: 8px;
+  margin-left: calc( -468px / 2 ) !important;
+
+  @media(max-width:1025px){
+    max-width: initial;
+    border-radius: 8px;
+    margin-left: 0; 
+  }
+
+}
+&-closeButton{
+  &.pkpmodal-close {
+    position: relative;
+    left: 5px;
+    top: 5px;
+    box-shadow: none;
+  }
+}
+&-modalTitle {
+  font-size: 22px;
+  color: #000;
+  font-weight: bold;
+}
+&-pickupListTitle {
+  color: #000;
+  font-weight: bold;
+}
+&-pointsItem {
+  border: solid 1px #D6D6D6;
+  border-radius: 3px;
+}
+&-pickupPointSlaAvailabilityPostalCode {
+  padding: 12px 15px;
+  color: #000;
+}
+&-pickupPointName {
+  color: #0077C8;
+  margin-bottom: 0px;
+}
+&-pickupPointAddress {
+  color: #000;
+  margin-bottom: 5px;
+}
+&-pointsItem {
+  color: #0077C8;
+}
+&-pickupPointDistance{
+  &.pkpmodal-pickup-point-distance {
+    color: #000;
+  }
+}
+&-pickupPointMarkerPostalCode {
+  width: 70px;
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 2px;
+    height: 40px;
+    background: #D6D6D6;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}
+&-pickupPointInfo {
+  padding-left: 5px;
+}
+&-pickupPointMain {
+  padding-bottom: 5px;
+}
+&-modalDetailsBackLnk{
+  &.pkpmodal-details-back-lnk{
+    &.btn{
+      &.btn-link {
+        color: #000;
+      }
+    }
+  }
+}
+&-modalDetailsBackLnk.pkpmodal-details-back-lnk.btn.btn-link svg pach {
+  fill: #000;
+}
+
+&-modalDetailsBackLnk {
+  fill: #000 !important;
+}
+
+
+&-infoBarContainer {
+  box-shadow: none;
+  margin-top: 5px;
+}
+
+&-pickupDetailsHeaderTitle {
+  color: #000;
+}
+
+&-pickupDetailsHeaderButton {
+  color: #000;
+  border: none;
+}
+
+&-firstOrLast {
+  color: gray;border: none;
+}
+
+
+
+&-pickupDetailsHeader.pkpmodal-details-header {
+  border: none;
+}
+
+&-pickupPoint {
+  background-color: #fff;
+  border: 1px solid #d6d6d6;
+  border-radius: 4px;
+}
+
+&-modalDetailsInfoTitle {
+  color: #000;
+  font-weight: 400;
+}
+
+&-modalDetailsHours {
+  color: #000;
+}
+
+&-modalDetailsMiddle{
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius:5px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+&-modalDetailsBottom{
+  button {
+    max-width: 200px;
+    margin: 0 auto;
+    border-radius: 20px;
+    background: #0077C8;
+  }
+}
+&-pointsList{
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius:5px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+}
+
+label[for="ship-postalCode"] {
+  font-weight: bold !important;
+  display: block;
+}
+
+input#ship-postalCode + small {
+  margin-left: 0;
+margin-top: 5px;
+  display: block;
+}
+
+button#pkpmodal-show-list-btn {
+  border: solid 1px #000;
+  border-radius: 25px;
+  color: #000;
+  font-weight: bold;
+}
+
+.pkpmodal-location-summary-btn {
+  color: #000;
+  font-size: 14px;
+}
+.pkpmodal-pickup-point-available {
+  color: #0077C8;
+  font-size: 12px;
 }
 
 // end split cart in 2 columns
