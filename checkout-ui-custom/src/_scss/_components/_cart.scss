@@ -1314,6 +1314,12 @@ h1#cart-title {
     box-shadow: none;
   }
 
+  .pkpmodal-info-bar {
+    @media (max-width: 1023px) {
+      overflow-y: scroll;
+    }
+  }
+
   .pkpmodal-info-bar-container {
     border-radius: 20px;
 
@@ -1393,6 +1399,7 @@ h1#cart-title {
     @media (max-width: 1023px) {
       background-color: #fff;
       margin-top: 75px;
+      height: fit-content;
     }
   }
 
