@@ -810,8 +810,10 @@ class checkoutCustom {
         const isInstallService = detailUrl.includes('/install-service/p')
         const isSamsungCare = detailUrl.includes('/samsung-care-/p')
 
-
-        const shippingText = isInstallService || isSamsungCare ? 'Após a entrega do produto' : '2-5 Dias úteis após a confirmação do pagamento';
+        const shippingText =
+          isInstallService || isSamsungCare
+            ? 'Após a entrega do produto'
+            : '2-5 Dias úteis após a confirmação do pagamento'
 
         const moreInfoHtml = `
           <div class="more-info">
@@ -865,10 +867,12 @@ class checkoutCustom {
         window.vtexjs.checkout.orderForm &&
         window.vtexjs.checkout.orderForm.items.length > 0
       ) {
-        const inCashPrice = orderForm.paymentData.installmentOptions.find(
+        const installmentPix = orderForm.paymentData.installmentOptions.find(
           item => item.paymentSystem == 125
-        ).installments[0].total
+        ).installments
 
+        if (!installmentPix.length) return
+        const inCashPrice = installmentPix[0].total
         // Encontra as installments para do cartao visa (código 2)
         // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
         const termPrice = await fetch(
@@ -913,7 +917,7 @@ class checkoutCustom {
                       </div>`
                     : ''
                 }
-    
+
                 <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p class="gross-total">
                       Ou parcelado em até 12x
@@ -944,28 +948,31 @@ class checkoutCustom {
   }
 
   setPixAsDefaultPaymentMethod() {
-    if (window.vtexjs) {
-      const pay =
-        vtexjs.checkout.orderForm.paymentData.installmentOptions.filter(
+    vtexjs.checkout.getOrderForm().done(function (orderForm) {
+      try {
+        const pixInstalments = orderForm.paymentData.installmentOptions.filter(
           payment => {
             return payment.paymentSystem === '125'
           }
         )
 
-      if (!pay) return
+        if (!pixInstalments.length) return
 
-      const data = {
-        payments: [
-          {
-            paymentSystem: 125,
-            installments: 1,
-            referenceValue: pay[0].value,
-          },
-        ],
+        const data = {
+          payments: [
+            {
+              paymentSystem: 125,
+              installments: 1,
+              referenceValue: pixInstalments[0].value,
+            },
+          ],
+        }
+
+        vtexjs.checkout.sendAttachment('paymentData', data)
+      } catch (err) {
+        console.error(`Erro ao exibir preço à vista para items no carrinho.`)
       }
-
-      vtexjs.checkout.sendAttachment('paymentData', data)
-    }
+    })
   }
 
   paymentDiscount() {
