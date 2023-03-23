@@ -1,4 +1,3 @@
-/* eslint-disable no-empty */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
@@ -328,7 +327,9 @@ export default class CustomShippingData {
       if ($.trim($postalCodeInput.val().length) >= 9) {
         setTimeout(() => $('#cart-shipping-calculate').click(), 10)
       }
-    } catch {}
+    } catch (err) {
+      console.error(`Ocorreu um erro ao validar CEP: ${err}`)
+    }
   }
 
   bindEvents() {
