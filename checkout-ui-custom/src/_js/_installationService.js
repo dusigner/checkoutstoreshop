@@ -19,31 +19,33 @@ export default class InstallationService {
   validateSamsungCarePlus(items) {
     const installations = this.getInstallationItems(items)
     const relatedItems = this.getRelatedInstallationItems(items)
+    // eslint-disable-next-line no-console, prettier/prettier, padding-line-between-statements
+    console.log('entrou no aqui no installation', installations)
 
     // remover instalações duplicadas
-    const toRemove = []
+    // const toRemove = []
 
-    installations.forEach(installation => {
-      if ($(`.product-item[data-sku="${installation.id}"] .item-link-remove`)) {
-        $(`.product-item[data-sku="${installation.id}"] .quantity`).hide()
-      }
+    // installations.forEach(installation => {
+    //   if ($(`.product-item[data-sku="${installation.id}"] .item-link-remove`)) {
+    //     $(`.product-item[data-sku="${installation.id}"] .quantity`).hide()
+    //   }
 
-      const duplicated = installations.filter(
-        installationItem =>
-          installationItem.id === installation.id &&
-          installationItem.refId === installation.refId
-      )
+    //   const duplicated = installations.filter(
+    //     installationItem =>
+    //       installationItem.id === installation.id &&
+    //       installationItem.refId === installation.refId
+    //   )
 
-      const alreadyInArray = toRemove.find(item => item.id === installation.id)
+    //   const alreadyInArray = toRemove.find(item => item.id === installation.id)
 
-      if (duplicated.length > 1 && !alreadyInArray) {
-        toRemove.push(...duplicated.slice(1, duplicated.length))
-      }
-    })
+    //   if (duplicated.length > 1 && !alreadyInArray) {
+    //     toRemove.push(...duplicated.slice(1, duplicated.length))
+    //   }
+    // })
 
-    if (toRemove.length) {
-      this.removeInstallations(toRemove)
-    }
+    // if (toRemove.length) {
+    //   this.removeInstallations(toRemove)
+    // }
 
     // Caso a quantidade de itens e a quantidade de instalações sejam iguais então não falta items.
     if (installations.length === relatedItems.length) return
