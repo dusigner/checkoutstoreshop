@@ -961,6 +961,7 @@ h1#cart-title {
       display: grid;
       grid-template-areas:
         "subtotal"
+        "installation_summary"
         "descontos_total"
         "cupom"
         "cupom_desconto"
@@ -969,6 +970,10 @@ h1#cart-title {
 
       .Items {
         grid-area: subtotal;
+      }
+
+      .installation-summary {
+        grid-area: installation_summary;
       }
 
       .coupon-applied {
@@ -1007,6 +1012,21 @@ h1#cart-title {
         }
       }
     }
+  }
+  
+  .installation-summary {
+      > td {
+        width: 100% !important;
+      }
+
+      tr {
+        align-items: center;
+      }
+
+      tbody {
+        border: 0 !important;
+        padding: 0 !important;
+      }
   }
 
   .shipping-reset {
