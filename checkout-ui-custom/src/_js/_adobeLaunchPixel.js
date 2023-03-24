@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-console */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
@@ -715,7 +717,9 @@ export default class AdobeLaunchPixel {
 
     const siteCode = _this._fetchSiteCode()
 
-    window.digitalData.user.loginStatus = false
+    $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {
+      window.digitalData.user.loginStatus = orderForm.loggedIn
+    })
 
     window.digitalData.page.pageInfo.siteCode = siteCode
     window.digitalData.page.pageInfo.siteSection = 'shop'

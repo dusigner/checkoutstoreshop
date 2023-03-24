@@ -7,6 +7,7 @@
   },
   "globals": {
     "window": true,
-    "$": true
+    "$": true,
+    "vtexjs": true
   }
 }
