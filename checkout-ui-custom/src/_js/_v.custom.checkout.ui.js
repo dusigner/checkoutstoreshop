@@ -438,6 +438,8 @@ class checkoutCustom {
         item.detailUrl.includes('/install-service/p')
       )
 
+      if (!installationServices.length) return
+
       const installationSummaryRows = installationServices.map(item => {
         const installationPrice =
           item.sellingPrice > 1
