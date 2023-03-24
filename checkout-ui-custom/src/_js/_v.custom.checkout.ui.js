@@ -810,11 +810,8 @@ class checkoutCustom {
         const isInstallService = detailUrl.includes('/install-service/p')
         const isSamsungCare = detailUrl.includes('/samsung-care-/p')
 
-        let shippingText = ''
 
-        if (isInstallService || isSamsungCare) {
-          shippingText = 'Após a entrega do produto'
-        }
+        const shippingText = isInstallService || isSamsungCare ? 'Após a entrega do produto' : '2-5 Dias úteis após a confirmação do pagamento';
 
         const moreInfoHtml = `
           <div class="more-info">
