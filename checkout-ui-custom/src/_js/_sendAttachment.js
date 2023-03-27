@@ -13,8 +13,11 @@ export default class SendAttachment {
 
     const { items } = window.vtexjs.checkout.orderForm
     const customData = window.vtexjs.checkout.orderForm.customData || false
+    const tradeInCustomData =
+      customData && customData.customApps.find(item => item.id === 'domain')
+
     const transportCustomData =
-      customData && customData.customApps[0].fields.trade_in_option_selected
+      tradeInCustomData && tradeInCustomData.fields.trade_in_option_selected
 
     const transport = transportCustomData ? JSON.parse(transportCustomData) : []
 

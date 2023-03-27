@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
@@ -924,7 +925,7 @@ class checkoutCustom {
                       </div>`
                     : ''
                 }
-    
+
                 <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p class="gross-total">
                       Ou parcelado em até 12x
@@ -1728,6 +1729,31 @@ class checkoutCustom {
           $(this).remove()
         })
       })
+      $(document).on('click', '.modalssc div a + a', function() {
+        const productId = $(this).attr('data-id')
+
+        const interval = 4000
+
+        window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
+          setTimeout(function() {
+            const removeList = []
+
+            if (el.id === productId) {
+              removeList.push({
+                index: i,
+                quantity: 0,
+              })
+              const itemsToRemove = removeList
+
+              if (itemsToRemove.length > 0) {
+                return window.vtexjs.checkout
+                  .removeItems(itemsToRemove)
+                  .then(() => {})
+              }
+            }
+          }, i * interval)
+        })
+      })
     }
   }
 
@@ -1963,6 +1989,47 @@ class checkoutCustom {
             $('.paymentDiscount').length == 0
           ) {
             _this.paymentDiscount()
+          }
+        }
+      })
+
+      $(document).ajaxComplete(function(event, xhr, settings) {
+        _this.init()
+
+        const acessKeyURL = settings.url.includes('/api/checkout/pub/profiles/')
+        const ssgAccountURL = settings.url.includes('/api/sessions')
+
+        if (acessKeyURL || ssgAccountURL) {
+          const loginSucess = xhr.statusText === 'success'
+
+          if (loginSucess) {
+            fetch(
+              `${_this.rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
+              {
+                credentials: 'include',
+              }
+            )
+              .then(resp => resp.json())
+              .then(data => {
+                const email = data.user
+                const userProfileId = data.userId
+
+                return fetch(
+                  `${_this.rootPath()}/_v/post/updateClientAcessOrigin`,
+                  {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      docId: userProfileId,
+                      email,
+                      accessOrigin: 'desktop',
+                    }),
+                  }
+                )
+                  .then(() => {
+                    return response
+                  })
+                  .catch(console.error)
+              })
           }
         }
       })
