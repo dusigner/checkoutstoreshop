@@ -181,8 +181,17 @@ h1#cart-title {
             display: none;
           }
         }
-        .quantity {
-          display: none;
+      }
+      &.product-item {
+        .quantity-samsungCare {
+          display: flex;
+          .item-quantity-change{
+            display: none;
+          }
+          input{
+            pointer-events: none;
+            border-inline: 0px;
+          }
         }
       }
       &.hide {
