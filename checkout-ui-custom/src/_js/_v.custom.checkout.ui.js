@@ -1,4 +1,6 @@
+/* eslint-disable no-undef */
 /* eslint-disable prefer-destructuring */
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
@@ -55,6 +57,7 @@ class checkoutCustom {
     this.adobeLaunchPixel = new AdobeLaunchPixel()
     this.hasSelectedDefaultPaymentMethod = false
     this.Rewards = new Rewards()
+    this.samsungCarePlus = new SamsungCarePlus()
   }
 
   rootPath() {
@@ -846,6 +849,7 @@ class checkoutCustom {
       const _trElem = $(`.summary-template-holder`)
 
       if (path === '#/payment') {
+        // eslint-disable-next-line prefer-destructuring
         const selectedPaymentMethod =
           window.vtexjs.checkout.orderForm.paymentData.payments[0]
 
@@ -923,7 +927,7 @@ class checkoutCustom {
                       </div>`
                     : ''
                 }
-    
+
                 <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p class="gross-total">
                       Ou parcelado em até 12x
@@ -1319,7 +1323,7 @@ class checkoutCustom {
     this.summaryCustom()
     this.popupSSC()
     new CustomHeader().init()
-    new SamsungCarePlus().init()
+    this.samsungCarePlus.init()
     new BespokeRefrigerator().init()
     this.installationService.init()
     this.TradeIn.init(orderForm)
@@ -1727,6 +1731,31 @@ class checkoutCustom {
           $(this).remove()
         })
       })
+      $(document).on('click', '.modalssc div a + a', function() {
+        const productId = $(this).attr('data-id')
+
+        const interval = 4000
+
+        window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
+          setTimeout(function() {
+            const removeList = []
+
+            if (el.id === productId) {
+              removeList.push({
+                index: i,
+                quantity: 0,
+              })
+              const itemsToRemove = removeList
+
+              if (itemsToRemove.length > 0) {
+                return window.vtexjs.checkout
+                  .removeItems(itemsToRemove)
+                  .then(() => {})
+              }
+            }
+          }, i * interval)
+        })
+      })
     }
   }
 
@@ -1879,7 +1908,27 @@ class checkoutCustom {
     $('body').on('focus', 'input#ship-postalCode', function() {
       $(this).attr('maxlength', 9)
     })
+    $('body').on('paste', '#ship-postalCode', function() {
+      const $postalCodeInput = $(this)
 
+      if (!$postalCodeInput.length) return
+
+      setTimeout(() => {
+        if (
+          $.trim($postalCodeInput.val()).length === 8 &&
+          !$postalCodeInput.val().includes('-')
+        ) {
+          $('#cart-shipping-calculate').trigger('click')
+        }
+
+        if (
+          $.trim($postalCodeInput.val()).length >= 9 &&
+          $postalCodeInput.val().includes('-')
+        ) {
+          $('#cart-shipping-calculate').trigger('click')
+        }
+      }, 10)
+    })
     $('body').on('input', '#ship-postalCode', function() {
       if ($.trim($(this).val().length) >= 9) {
         setTimeout(() => $('#cart-shipping-calculate').click(), 10)
@@ -1941,10 +1990,10 @@ class checkoutCustom {
         _this.shipping.bindEvents()
         _this.shipping.limitFieldsCharacters()
 
-        $(window).on(
-          'checkoutRequestBegin.vtex',
-          _this.installationService.interceptInstallationRequest
-        )
+        $(window).on('checkoutRequestBegin.vtex', function(event, request) {
+          _this.installationService.interceptInstallationRequest(event, request)
+          _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
+        })
       })
 
       $(document).ajaxComplete(function(event, xhr, settings) {
@@ -1962,6 +2011,47 @@ class checkoutCustom {
             $('.paymentDiscount').length == 0
           ) {
             _this.paymentDiscount()
+          }
+        }
+      })
+
+      $(document).ajaxComplete(function(event, xhr, settings) {
+        _this.init()
+
+        const acessKeyURL = settings.url.includes('/api/checkout/pub/profiles/')
+        const ssgAccountURL = settings.url.includes('/api/sessions')
+
+        if (acessKeyURL || ssgAccountURL) {
+          const loginSucess = xhr.statusText === 'success'
+
+          if (loginSucess) {
+            fetch(
+              `${_this.rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
+              {
+                credentials: 'include',
+              }
+            )
+              .then(resp => resp.json())
+              .then(data => {
+                const email = data.user
+                const userProfileId = data.userId
+
+                return fetch(
+                  `${_this.rootPath()}/_v/post/updateClientAcessOrigin`,
+                  {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      docId: userProfileId,
+                      email,
+                      accessOrigin: 'desktop',
+                    }),
+                  }
+                )
+                  .then(() => {
+                    return response
+                  })
+                  .catch(console.error)
+              })
           }
         }
       })
@@ -2072,7 +2162,16 @@ class checkoutCustom {
 
         _this.shipping.toggleGoToPaymentDisabled()
       })
+      $(window).on('attachmentUpdated.vtex', function(evt, orderFormSection) {
+        switch (orderFormSection) {
+          case 'shippingData':
+            _this.shipping.autoTriggerSlasResult()
+            break
 
+          default:
+            console.error(`No case found for ${orderFormSection}`)
+        }
+      })
       $(window).load(function() {
         _this.setPixAsDefaultPaymentMethod()
         $('#cart-to-orderform').on('click', function() {
