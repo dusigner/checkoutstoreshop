@@ -57,6 +57,7 @@ class checkoutCustom {
     this.adobeLaunchPixel = new AdobeLaunchPixel()
     this.hasSelectedDefaultPaymentMethod = false
     this.Rewards = new Rewards()
+    this.samsungCarePlus = new SamsungCarePlus()
   }
 
   rootPath() {
@@ -848,6 +849,7 @@ class checkoutCustom {
       const _trElem = $(`.summary-template-holder`)
 
       if (path === '#/payment') {
+        // eslint-disable-next-line prefer-destructuring
         const selectedPaymentMethod =
           window.vtexjs.checkout.orderForm.paymentData.payments[0]
 
@@ -1321,7 +1323,7 @@ class checkoutCustom {
     this.summaryCustom()
     this.popupSSC()
     new CustomHeader().init()
-    new SamsungCarePlus().init()
+    this.samsungCarePlus.init()
     new BespokeRefrigerator().init()
     this.installationService.init()
     this.TradeIn.init(orderForm)
@@ -1987,6 +1989,11 @@ class checkoutCustom {
         // #shipping
         _this.shipping.bindEvents()
         _this.shipping.limitFieldsCharacters()
+
+        $(window).on(
+          'checkoutRequestBegin.vtex',
+          _this.samsungCarePlus.interceptSamsungCarePlusRequest
+        )
       })
 
       $(document).ajaxComplete(function(event, xhr, settings) {
