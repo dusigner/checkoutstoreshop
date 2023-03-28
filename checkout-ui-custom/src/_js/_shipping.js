@@ -315,6 +315,23 @@ export default class CustomShippingData {
     }
   }
 
+  autoTriggerSlasResult() {
+    try {
+      const $postalCodeInput = $('#ship-postalCode:visible')
+      const slasResultAlreadyActive = $('.srp-delivery-info:visible').length > 1
+
+      if (slasResultAlreadyActive || !$postalCodeInput.length) {
+        return
+      }
+
+      if ($.trim($postalCodeInput.val().length) >= 9) {
+        setTimeout(() => $('#cart-shipping-calculate').click(), 10)
+      }
+    } catch (err) {
+      console.error(`Ocorreu um erro ao validar CEP: ${err}`)
+    }
+  }
+
   bindEvents() {
     const _this = this
 

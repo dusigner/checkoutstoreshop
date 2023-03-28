@@ -1,4 +1,6 @@
 /* eslint-disable no-undef */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
@@ -1906,7 +1908,27 @@ class checkoutCustom {
     $('body').on('focus', 'input#ship-postalCode', function() {
       $(this).attr('maxlength', 9)
     })
+    $('body').on('paste', '#ship-postalCode', function() {
+      const $postalCodeInput = $(this)
 
+      if (!$postalCodeInput.length) return
+
+      setTimeout(() => {
+        if (
+          $.trim($postalCodeInput.val()).length === 8 &&
+          !$postalCodeInput.val().includes('-')
+        ) {
+          $('#cart-shipping-calculate').trigger('click')
+        }
+
+        if (
+          $.trim($postalCodeInput.val()).length >= 9 &&
+          $postalCodeInput.val().includes('-')
+        ) {
+          $('#cart-shipping-calculate').trigger('click')
+        }
+      }, 10)
+    })
     $('body').on('input', '#ship-postalCode', function() {
       if ($.trim($(this).val().length) >= 9) {
         setTimeout(() => $('#cart-shipping-calculate').click(), 10)
@@ -2140,7 +2162,16 @@ class checkoutCustom {
 
         _this.shipping.toggleGoToPaymentDisabled()
       })
+      $(window).on('attachmentUpdated.vtex', function(evt, orderFormSection) {
+        switch (orderFormSection) {
+          case 'shippingData':
+            _this.shipping.autoTriggerSlasResult()
+            break
 
+          default:
+            console.error(`No case found for ${orderFormSection}`)
+        }
+      })
       $(window).load(function() {
         _this.setPixAsDefaultPaymentMethod()
         $('#cart-to-orderform').on('click', function() {
