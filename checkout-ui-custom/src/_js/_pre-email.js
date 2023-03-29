@@ -19,7 +19,7 @@ export default class CustomPreEmail {
       $('#btn-client-pre-email').after(`
       <div id="toggleButtonContainer" class="samsung-toggle-button-container">
 
-        <p class="samsung-visitante-title">Entrar como visitante:</p>
+        <p class="samsung-visitante-title">Acessar como visitante</p>
 
         <button class="samsung-button-login" id="toggleButtonLogin" type="button">Informe seu e-mail</button>
 
