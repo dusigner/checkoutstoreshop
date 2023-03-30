@@ -65,7 +65,7 @@ export default class CustomPreEmail {
   openSamsungAccountModal() {
     window.vtexid.start()
 
-    const checkCustomButtonInterval = setInterval(function () {
+    const checkCustomButtonInterval = setInterval(function() {
       if ($('#vtexIdUI-').length) {
         clearInterval(checkCustomButtonInterval)
 
@@ -81,13 +81,13 @@ export default class CustomPreEmail {
     $(document).on(
       'keyup',
       '#client-pre-email, #client-email',
-      async function () {
+      async function() {
         const email = $('#client-pre-email').val()
         let domain = email.split('@')
 
         domain = domain[1]
         if (domain !== undefined || domain !== null) {
-          setTimeout(function () {
+          setTimeout(function() {
             fetch(
               `${_this.rootPath()}/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain`,
               {
@@ -106,7 +106,7 @@ export default class CustomPreEmail {
                   $(
                     `<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`
                   ).appendTo($('body.v-custom-step-profile .client-email'))
-                  setTimeout(function () {
+                  setTimeout(function() {
                     $('.wrongdomain').remove()
                   }, 5000)
                 }
@@ -122,11 +122,11 @@ export default class CustomPreEmail {
     const _this = this
 
     _this.loginEmail()
-    $(document).on('click', '#btn-samsung-account', function () {
+    $(document).on('click', '#btn-samsung-account', function() {
       _this.openSamsungAccountModal()
     })
 
-    $(document).on('click', '#toggleButtonLogin', function () {
+    $(document).on('click', '#toggleButtonLogin', function() {
       $('.samsung-toggle-button-container').hide()
     })
   }
