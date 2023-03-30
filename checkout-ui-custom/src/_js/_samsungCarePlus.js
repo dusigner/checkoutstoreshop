@@ -1,3 +1,8 @@
+/* eslint-disable no-inner-declarations */
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable vtex/prefer-early-return */
+/* eslint-disable func-names */
+/* eslint eqeqeq: 0 */
 export default class SamsungCarePlus {
   constructor() {
     this.SAMSUNG_CARE_CATEGORY = '/2005/'
@@ -24,25 +29,13 @@ export default class SamsungCarePlus {
     const scpItem = items.filter(item => this.isSamsungCarePlus(item))
 
     if (!scpItem.length) return
-
     scpItem.forEach(item => {
       if ($(`.product-item[data-sku="${item.id}"] .item-link-remove`)) {
-        $(`.product-item[data-sku="${item.id}"] .quantity`).hide()
+        $(`.product-item[data-sku="${item.id}"] .quantity`).addClass(
+          'quantity-samsungCare'
+        )
       }
     })
-
-    // Se tem mais de um seguro então deixa somente o ultimo seguro colocado.
-    if (scpItem.length > 1) {
-      const remove = scpItem.filter((item, index) => {
-        if (index === scpItem.length - 1) return false
-
-        return true
-      })
-
-      this.removeSamsungCarePlus(remove)
-
-      return
-    }
 
     const skuMainProduct = scpItem[0].attachments.find(
       att => att.name === this.LINK_SCPLUS
@@ -79,5 +72,61 @@ export default class SamsungCarePlus {
           removeBtn[0].remove()
         }
       })
+  }
+
+  interceptSamsungCarePlusRequest(event, request) {
+    const isUpdateItemRequest = request.url.includes('/items/update/')
+
+    if (!isUpdateItemRequest) {
+      return
+    }
+
+    try {
+      function findSamsungCareInCart() {
+        const { items } = window.vtexjs.checkout.orderForm
+
+        return items.filter(item => {
+          const { attachments } = item
+
+          return attachments.some(attachment => {
+            return attachment.name.includes('linkSCPLUS')
+          })
+        })
+      }
+
+      const hasSamsungCareInCart = findSamsungCareInCart()
+
+      if (!hasSamsungCareInCart.length) {
+        return
+      }
+
+      const { items } = this.vtexjs.checkout.orderForm
+      const payload = JSON.parse(request.data || '{}')
+      const { orderItems } = payload
+      const [currentItem] = orderItems
+
+      function findSamsungCarePlusById(item) {
+        const { attachments } = item
+
+        return attachments.some(attachment => {
+          return attachment.content.idsku === currentItem.id
+        })
+      }
+
+      const samsungCarePlus = items.find(findSamsungCarePlusById)
+
+      if (samsungCarePlus) {
+        orderItems.push({
+          seller: samsungCarePlus.seller,
+          quantity: currentItem.quantity,
+          id: samsungCarePlus.id,
+          index: items.indexOf(samsungCarePlus),
+          hasBundleItems: !!samsungCarePlus.bundleItems.length,
+        })
+        request.data = JSON.stringify(payload)
+      }
+    } catch (err) {
+      console.error(`Erro ao sincronizar quantidade do Samsung Care: ${err}`)
+    }
   }
 }
