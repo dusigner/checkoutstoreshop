@@ -1,496 +1,496 @@
-module.exports._countriesrules = {
-  ITA: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_2'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: true,
-    postalCode: true,
-  },
-  SMR: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    number: true,
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    postalCode: true,
-  },
-  USA: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-  },
-  ESP: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_2'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: true,
-    postalCode: true,
-  },
-  NLD: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_2'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 6,
-  },
-  BEL: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_2'],
-    },
-    number: false,
-    postalCode: true,
-  },
-  AUT: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_2'],
-    },
-    number: true,
-    postalCode: true,
-  },
-  HRV: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  CYP: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 4,
-  },
-  DNK: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 4,
-  },
-  EST: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  FIN: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  DEU: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    complement: {
-      valueIn: 'long_name',
-      types: ['subpremise'],
-    },
-    neighborhood: {
-      valueIn: 'long_name',
-      types: ['administrative_area_level_3'],
-    },
-    number: true,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  GRC: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'long_name',
-      types: ['administrative_area_level_3'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  CZE: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    neighborhood: false,
-    number: false,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  CHE: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: true,
-    postalCode: true,
-    postalCodeLength: 4,
-  },
-  ROU: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: true,
-    postalCode: true,
-    postalCodeLength: 6,
-  },
-  HUN: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 4,
-  },
-  IRL: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: ['postal_town'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 7,
-  },
-  LVA: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 4,
-  },
-  LTU: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_2'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  LUX: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 4,
-  },
-  MLT: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 2,
-  },
-  PRT: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 7,
-  },
-  SVK: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  SVN: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 5,
-  },
-  SWE: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    neighborhood: {
-      valueIn: 'short_name',
-      types: ['postal_town'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: ['sublocality_level_1'],
-    },
-    number: true,
-    postalCode: true,
-  },
-  ARG: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_2'],
-    },
-    number: false,
-    postalCode: true,
-    postalCodeLength: 4,
-  },
-  VAT: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: true,
-    postalCode: true,
-  },
-  BRA: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-  },
-  ARE: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'short_name',
-      types: [
-        {
-          valueIn: 'long_name',
-          types: ['locality'],
-        },
-      ],
-    },
-    number: true,
-    postalCode: false,
-  },
-  RUS: {
-    number: false,
-    city: {
-      valueIn: 'long_name',
-      types: ['locality', 'administrative_area_level_2'],
-    },
-    state: false,
-    neighborhood: {
-      valueIn: 'long_name',
-      types: ['administrative_area_level_3'],
-    },
-    postalCode: true,
-  },
-  WWD: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: false,
-    postalCode: true,
-  },
-  ZAF: {
-    state: {
-      valueIn: 'short_name',
-      types: ['administrative_area_level_1'],
-    },
-    city: {
-      valueIn: 'long_name',
-      types: ['locality'],
-    },
-    number: true,
-    postalCode: true,
-  },
-  PAN: {
-    state: 'administrative_area_level_1',
-    city: 'administrative_are_level_2',
-    neighborhood: 'locality',
-    number: false,
-    postalCode: true,
-  },
-}
+// module.exports._countriesrules = {
+//   ITA: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_2'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: true,
+//     postalCode: true,
+//   },
+//   SMR: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     number: true,
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     postalCode: true,
+//   },
+//   USA: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//   },
+//   ESP: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_2'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: true,
+//     postalCode: true,
+//   },
+//   NLD: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_2'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 6,
+//   },
+//   BEL: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_2'],
+//     },
+//     number: false,
+//     postalCode: true,
+//   },
+//   AUT: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_2'],
+//     },
+//     number: true,
+//     postalCode: true,
+//   },
+//   HRV: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   CYP: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 4,
+//   },
+//   DNK: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 4,
+//   },
+//   EST: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   FIN: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   DEU: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     complement: {
+//       valueIn: 'long_name',
+//       types: ['subpremise'],
+//     },
+//     neighborhood: {
+//       valueIn: 'long_name',
+//       types: ['administrative_area_level_3'],
+//     },
+//     number: true,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   GRC: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'long_name',
+//       types: ['administrative_area_level_3'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   CZE: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     neighborhood: false,
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   CHE: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: true,
+//     postalCode: true,
+//     postalCodeLength: 4,
+//   },
+//   ROU: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: true,
+//     postalCode: true,
+//     postalCodeLength: 6,
+//   },
+//   HUN: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 4,
+//   },
+//   IRL: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: ['postal_town'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 7,
+//   },
+//   LVA: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 4,
+//   },
+//   LTU: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_2'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   LUX: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 4,
+//   },
+//   MLT: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 2,
+//   },
+//   PRT: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 7,
+//   },
+//   SVK: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   SVN: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 5,
+//   },
+//   SWE: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     neighborhood: {
+//       valueIn: 'short_name',
+//       types: ['postal_town'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: ['sublocality_level_1'],
+//     },
+//     number: true,
+//     postalCode: true,
+//   },
+//   ARG: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_2'],
+//     },
+//     number: false,
+//     postalCode: true,
+//     postalCodeLength: 4,
+//   },
+//   VAT: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: true,
+//     postalCode: true,
+//   },
+//   BRA: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//   },
+//   ARE: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'short_name',
+//       types: [
+//         {
+//           valueIn: 'long_name',
+//           types: ['locality'],
+//         },
+//       ],
+//     },
+//     number: true,
+//     postalCode: false,
+//   },
+//   RUS: {
+//     number: false,
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality', 'administrative_area_level_2'],
+//     },
+//     state: false,
+//     neighborhood: {
+//       valueIn: 'long_name',
+//       types: ['administrative_area_level_3'],
+//     },
+//     postalCode: true,
+//   },
+//   WWD: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: false,
+//     postalCode: true,
+//   },
+//   ZAF: {
+//     state: {
+//       valueIn: 'short_name',
+//       types: ['administrative_area_level_1'],
+//     },
+//     city: {
+//       valueIn: 'long_name',
+//       types: ['locality'],
+//     },
+//     number: true,
+//     postalCode: true,
+//   },
+//   PAN: {
+//     state: 'administrative_area_level_1',
+//     city: 'administrative_are_level_2',
+//     neighborhood: 'locality',
+//     number: false,
+//     postalCode: true,
+//   },
+// }
 
 // _countries.find(i=>i[0]=="US")
 module.exports._countries = [
