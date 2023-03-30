@@ -1,3 +1,4 @@
+/* eslint-disable no-inner-declarations */
 /* eslint-disable no-undef */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable prettier/prettier */
@@ -879,10 +880,12 @@ class checkoutCustom {
         window.vtexjs.checkout.orderForm &&
         window.vtexjs.checkout.orderForm.items.length > 0
       ) {
-        const inCashPrice = orderForm.paymentData.installmentOptions.find(
+        const installmentPix = orderForm.paymentData.installmentOptions.find(
           item => item.paymentSystem == 125
-        ).installments[0].total
+        ).installments
 
+        if (!installmentPix.length) return
+        const inCashPrice = installmentPix[0].total
         // Encontra as installments para do cartao visa (código 2)
         // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
         const termPrice = await fetch(
@@ -958,27 +961,31 @@ class checkoutCustom {
   }
 
   setPixAsDefaultPaymentMethod() {
-    if (window.vtexjs) {
-      const pay = vtexjs.checkout.orderForm.paymentData.installmentOptions.filter(
-        payment => {
-          return payment.paymentSystem === '125'
+    vtexjs.checkout.getOrderForm().done(function(orderForm) {
+      try {
+        const pixInstalments = orderForm.paymentData.installmentOptions.filter(
+          payment => {
+            return payment.paymentSystem === '125'
+          }
+        )
+
+        if (!pixInstalments.length) return
+
+        const data = {
+          payments: [
+            {
+              paymentSystem: 125,
+              installments: 1,
+              referenceValue: pixInstalments[0].value,
+            },
+          ],
         }
-      )
 
-      if (!pay) return
-
-      const data = {
-        payments: [
-          {
-            paymentSystem: 125,
-            installments: 1,
-            referenceValue: pay[0].value,
-          },
-        ],
+        vtexjs.checkout.sendAttachment('paymentData', data)
+      } catch (err) {
+        console.error(`Erro ao exibir preço à vista para items no carrinho.`)
       }
-
-      vtexjs.checkout.sendAttachment('paymentData', data)
-    }
+    })
   }
 
   paymentDiscount() {
@@ -1990,10 +1997,10 @@ class checkoutCustom {
         _this.shipping.bindEvents()
         _this.shipping.limitFieldsCharacters()
 
-        $(window).on(
-          'checkoutRequestBegin.vtex',
-          _this.samsungCarePlus.interceptSamsungCarePlusRequest
-        )
+        $(window).on('checkoutRequestBegin.vtex', function(event, request) {
+          _this.installationService.interceptInstallationRequest(event, request)
+          _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
+        })
       })
 
       $(document).ajaxComplete(function(event, xhr, settings) {
@@ -2025,6 +2032,8 @@ class checkoutCustom {
           const loginSucess = xhr.statusText === 'success'
 
           if (loginSucess) {
+            trackLogin(ssgAccountURL, acessKeyURL)
+            window.digitalData.user.loginStatus = true
             fetch(
               `${_this.rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
               {
@@ -2052,9 +2061,19 @@ class checkoutCustom {
                   })
                   .catch(console.error)
               })
+          } else {
+            window.digitalData.user.loginStatus = false
           }
         }
       })
+
+      function trackLogin(ssgAccountURL, accessKeyURL) {
+        if (ssgAccountURL) {
+          window._satellite.track('samsung_account_login')
+        } else if (accessKeyURL) {
+          window._satellite.track('vtex_account_login')
+        }
+      }
 
       $(window).on('hashchange', function() {
         const cartItems = document.querySelector('.cart-items')
