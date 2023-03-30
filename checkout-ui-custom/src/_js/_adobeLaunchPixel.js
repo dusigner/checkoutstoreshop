@@ -681,13 +681,13 @@ export default class AdobeLaunchPixel {
 
     if (checkoutLogin !== null && checkoutLoginForm !== null) {
       _this.setElementOmni(checkoutLogin, 'data-omni-signin', {
-        '': 'login_try:guest',
+        '': 'account:submit',
       })
       checkoutLoginForm.onsubmit = function(e) {
         e.preventDefault()
-        let parameter = 'login_try:guest'
+        let parameter = 'account:submit'
 
-        if (!checkoutLoginForm.checkValidity()) parameter = 'login_try:guest'
+        if (!checkoutLoginForm.checkValidity()) parameter = 'account:submit'
         _this.setElementOmni(checkoutLogin, 'data-omni-signin', {
           '': parameter,
         })
@@ -723,7 +723,11 @@ export default class AdobeLaunchPixel {
     const siteCode = _this._fetchSiteCode()
 
     $(window).on('orderFormUpdated.vtex', function(evt, orderForm) {
-      window.digitalData.user.loginStatus = orderForm.loggedIn
+      window.digitalData.user.loginStatus =
+        window.digitalData.user.loginStatus || orderForm.loggedIn
+      if (!window.digitalData.user.loginStatus) {
+        window._satellite.track('shop_guest_login')
+      }
     })
 
     window.digitalData.page.pageInfo.siteCode = siteCode

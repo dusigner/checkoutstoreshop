@@ -1,3 +1,4 @@
+/* eslint-disable no-inner-declarations */
 /* eslint-disable no-undef */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable prettier/prettier */
@@ -960,7 +961,7 @@ class checkoutCustom {
   }
 
   setPixAsDefaultPaymentMethod() {
-    vtexjs.checkout.getOrderForm().done(function (orderForm) {
+    vtexjs.checkout.getOrderForm().done(function(orderForm) {
       try {
         const pixInstalments = orderForm.paymentData.installmentOptions.filter(
           payment => {
@@ -2031,6 +2032,8 @@ class checkoutCustom {
           const loginSucess = xhr.statusText === 'success'
 
           if (loginSucess) {
+            trackLogin(ssgAccountURL, acessKeyURL)
+            window.digitalData.user.loginStatus = true
             fetch(
               `${_this.rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
               {
@@ -2058,9 +2061,19 @@ class checkoutCustom {
                   })
                   .catch(console.error)
               })
+          } else {
+            window.digitalData.user.loginStatus = false
           }
         }
       })
+
+      function trackLogin(ssgAccountURL, accessKeyURL) {
+        if (ssgAccountURL) {
+          window._satellite.track('samsung_account_login')
+        } else if (accessKeyURL) {
+          window._satellite.track('vtex_account_login')
+        }
+      }
 
       $(window).on('hashchange', function() {
         const cartItems = document.querySelector('.cart-items')
