@@ -69,7 +69,7 @@ export default class TradeIn {
 
     const newTransport = transport.filter(item => {
       const hasMainProduct =
-        items.filter(orderItem => orderItem.id === item.skuId).length > 0
+        items.filter(orderItem => orderItem.productId === item.mainProductId).length > 0
 
       if (hasMainProduct) {
         return item
@@ -170,7 +170,7 @@ export default class TradeIn {
   }
 
   async validateTradeinCustomData() {
-    const customDataDomain = window.vtexjs.checkout.orderForm.customData ? 
+    const customDataDomain = window.vtexjs.checkout.orderForm.customData ?
       window.vtexjs.checkout.orderForm.customData.customApps.filter(i => i.id === 'domain') : [];
 
     const getTransport = customDataDomain.length > 0 ? customDataDomain[0].fields.trade_in_option_selected : '';

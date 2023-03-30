@@ -879,10 +879,12 @@ class checkoutCustom {
         window.vtexjs.checkout.orderForm &&
         window.vtexjs.checkout.orderForm.items.length > 0
       ) {
-        const inCashPrice = orderForm.paymentData.installmentOptions.find(
+        const installmentPix = orderForm.paymentData.installmentOptions.find(
           item => item.paymentSystem == 125
-        ).installments[0].total
+        ).installments
 
+        if (!installmentPix.length) return
+        const inCashPrice = installmentPix[0].total
         // Encontra as installments para do cartao visa (código 2)
         // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
         const termPrice = await fetch(
@@ -958,27 +960,31 @@ class checkoutCustom {
   }
 
   setPixAsDefaultPaymentMethod() {
-    if (window.vtexjs) {
-      const pay = vtexjs.checkout.orderForm.paymentData.installmentOptions.filter(
-        payment => {
-          return payment.paymentSystem === '125'
+    vtexjs.checkout.getOrderForm().done(function (orderForm) {
+      try {
+        const pixInstalments = orderForm.paymentData.installmentOptions.filter(
+          payment => {
+            return payment.paymentSystem === '125'
+          }
+        )
+
+        if (!pixInstalments.length) return
+
+        const data = {
+          payments: [
+            {
+              paymentSystem: 125,
+              installments: 1,
+              referenceValue: pixInstalments[0].value,
+            },
+          ],
         }
-      )
 
-      if (!pay) return
-
-      const data = {
-        payments: [
-          {
-            paymentSystem: 125,
-            installments: 1,
-            referenceValue: pay[0].value,
-          },
-        ],
+        vtexjs.checkout.sendAttachment('paymentData', data)
+      } catch (err) {
+        console.error(`Erro ao exibir preço à vista para items no carrinho.`)
       }
-
-      vtexjs.checkout.sendAttachment('paymentData', data)
-    }
+    })
   }
 
   paymentDiscount() {
