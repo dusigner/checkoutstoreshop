@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-console */
 export default class BespokeRefrigerator {
   constructor() {
     this.SKU_BESPOKE_PAIR = ''
@@ -26,7 +28,9 @@ export default class BespokeRefrigerator {
             if (
               $(`.product-item[data-sku="${item.id}"] .add-item-attachment`)
             ) {
-              $(`.product-item[data-sku="${item.id}"] .add-item-attachment`).hide()
+              $(
+                `.product-item[data-sku="${item.id}"] .add-item-attachment`
+              ).hide()
             }
 
             if ($(`.product-item[data-sku="${item.id}"] input`)) {
@@ -114,7 +118,10 @@ export default class BespokeRefrigerator {
     $('body').on('click', '.bespokeRemove', e => {
       e.preventDefault()
       const currentItems = window.vtexjs.checkout.orderForm.items
-      const data = $(e.target).parents('.product-item').data()
+      const data = $(e.target)
+        .parents('.product-item')
+        .data()
+
       const skuDeleted = data ? data.sku : null
 
       $(e.target).remove()
@@ -127,7 +134,10 @@ export default class BespokeRefrigerator {
     $('body').on('click', '.editBespoke', e => {
       e.preventDefault()
       const currentItems = window.vtexjs.checkout.orderForm.items
-      const data = $(e.target).parents('.product-item').data()
+      const data = $(e.target)
+        .parents('.product-item')
+        .data()
+
       const skuEdited = data ? data.sku : null
 
       $(e.target).remove()
@@ -373,6 +383,7 @@ export default class BespokeRefrigerator {
       const removeBtn = $(
         `tr.product-item[data-sku="${mainItems[0].id}"] td.item-remove a`
       )
+
       console.log('removeBtn', removeBtn)
 
       if (removeBtn.length) {

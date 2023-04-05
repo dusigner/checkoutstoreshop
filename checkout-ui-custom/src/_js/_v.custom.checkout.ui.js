@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-console */
 /* eslint-disable no-inner-declarations */
 /* eslint-disable no-undef */
 /* eslint-disable prefer-destructuring */
@@ -26,7 +28,7 @@ const { default: SendAttachment } = require('./_sendAttachment.js')
 const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 const { default: AdobeLaunchPixel } = require('./_adobeLaunchPixel.js')
 const { default: Rewards } = require('./_rewards.js')
-const { default: CheckoutLimit} = require('./_checkoutLimit.js')
+const { default: CheckoutLimit } = require('./_checkoutLimit.js')
 
 class checkoutCustom {
   constructor({
@@ -418,6 +420,13 @@ class checkoutCustom {
                   )}</span>
                 </td>
               </tr>`
+        }
+
+        if (
+          discount.name.toLowerCase().includes(' frete') ||
+          discount.name.toLowerCase().includes(' (frete')
+        ) {
+          return ``
         }
 
         return `
