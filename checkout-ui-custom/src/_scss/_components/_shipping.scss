@@ -315,3 +315,128 @@
         max-width: 90vw;
     }
 }
+
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-deliveryChannelsTogglePickup {
+    border: 0 !important;
+    background: none !important;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-deliveryOptionActive {
+    background:#000 !important;
+    border: 0 !important;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-deliveryChannelsWrapper {
+    box-shadow: none !important;
+}
+
+.v-custom-step-shipping .shp-method-option-text {
+    position: relative;
+    font-size: 14px;
+    font-family: SamsungOne;
+    text-transform: capitalize !important;
+    font-weight: 700;
+}
+
+.v-custom-step-shipping .shipping-has-pickups {
+    max-width: 200px !important
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-PickupPointInfo {
+    background: #F5F7FE !important;
+    border: 0 !important;
+    text-align: left;
+}
+
+.v-custom-step-shipping .pickup-marker-blue {
+    // display: none;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-PickupPointName {
+    color: #006BEA !important;
+    font-size: 14px !important;
+    font-family: SamsungOne;
+    font-weight: 700;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-PickupPointAddress {
+    line-height: 16px;
+    margin-top: 5px;
+    font-size: 14px !important;
+    font-family: SamsungOne;
+    font-weight: 400;
+    text-align: left;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-findPickup {
+    text-align: center;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-pickupPointChange {
+    display: inline-block !important;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-pickupPointChange {
+    margin-top: 5px;
+    font-size: 12px !important;
+    font-family: SamsungOne;
+    border: 0 !important;
+    height: auto !important;
+    max-width: none !important;
+    font-weight: 400 !important;
+    text-decoration: underline;
+    color: #000;
+    &:hover {
+        background: none !important;
+    }
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-packages {
+    margin-top: 0 !important;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-shippingSectionTitle,
+.v-custom-step-shipping .vtex-omnishipping-1-x-receiverTitle {
+    color:#000;
+    font-weight: 400 !important;
+    font-size: 12px !important;
+    font-family: SamsungOne;
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-shippingSectionTitle {
+    margin-bottom: 10px !important;
+}
+
+.v-custom-step-payment .vtex-omnishipping-1-x-SummaryItemTitle {
+    margin-top: 16px;
+}
+
+.v-custom-step-shipping .delivery-group-content {
+    &:before {
+        content: 'Produtos de Loja Online Samsung';
+        color:#000;
+        font-weight: 400 !important;
+        font-size: 12px !important;
+        font-family: SamsungOne;
+        display: block;
+        margin: 0 0 10px;
+    }
+}
+
+.v-custom-step-shipping #postalCode-finished-loading {
+    &:after {
+        content: 'Escolher opções de retirada';
+        color:#000;
+        font-weight: 700 !important;
+        font-size: 18px !important;
+        font-family: SamsungOne;
+        display: block;
+        margin: 0 0 10px;
+    }
+
+}
+
+.v-custom-step-shipping .vtex-omnishipping-1-x-alert {
+    display: none !important;
+}

@@ -74,15 +74,11 @@ export default class CustomShippingData {
   }
 
   setInvalidPostalCode() {
-    $('body')
-      .removeClass('valid-postal-code')
-      .addClass('invalid-postal-code')
+    $('body').removeClass('valid-postal-code').addClass('invalid-postal-code')
   }
 
   setValidPostalCode() {
-    $('body')
-      .removeClass('invalid-postal-code')
-      .addClass('valid-postal-code')
+    $('body').removeClass('invalid-postal-code').addClass('valid-postal-code')
   }
 
   resetValidation() {
@@ -98,7 +94,7 @@ export default class CustomShippingData {
   }
 
   addVirtualInventoryMessage() {
-    $(window).on('orderFormUpdated.vtex', function() {
+    $(window).on('orderFormUpdated.vtex', function () {
       try {
         const $postalCodeForm = $('#shipping-preview-container')
         const $virtualInventoryMessage = $(
@@ -168,7 +164,7 @@ export default class CustomShippingData {
 
       this.validateVirtualInventory(orderForm)
 
-      const interval = setInterval(function() {
+      const interval = setInterval(function () {
         if (
           orderForm.messages &&
           orderForm.messages[0] &&
@@ -203,7 +199,7 @@ export default class CustomShippingData {
           `${_this.rootPath()}/api/checkout/pub/postal-code/BRA/${
             orderFormAddress.postalCode
           }`
-        ).done(function(data) {
+        ).done(function (data) {
           const address = data
 
           if (address.postalCode && !address.city) {
@@ -235,7 +231,7 @@ export default class CustomShippingData {
 
       $.getJSON(
         `${_this.rootPath()}/api/checkout/pub/postal-code/BRA/${$postalCodeInput.val()}`
-      ).done(function(data) {
+      ).done(function (data) {
         const address = data
 
         _this.validadePostalCode(address)
@@ -272,7 +268,7 @@ export default class CustomShippingData {
       for (const field of fieldsToLimit) {
         const { selector, maxLength } = field
 
-        $(document).on('focus', `${context} ${selector}`, function() {
+        $(document).on('focus', `${context} ${selector}`, function () {
           $(this).attr('maxlength', maxLength)
         })
       }
@@ -283,7 +279,7 @@ export default class CustomShippingData {
 
   toggleGoToPaymentDisabled() {
     const disabled =
-      $('#shipping-data p.input.required input').filter(function() {
+      $('#shipping-data p.input.required input').filter(function () {
         return $.trim($(this).val()).length === 0
       }).length === 0
 
@@ -335,21 +331,25 @@ export default class CustomShippingData {
   bindEvents() {
     const _this = this
 
-    $(document).on('input', '#shipping-data input#ship-postalCode', function() {
-      if (!$(this).val().length < 9) {
-        _this.resetValidation()
+    $(document).on(
+      'input',
+      '#shipping-data input#ship-postalCode',
+      function () {
+        if (!$(this).val().length < 9) {
+          _this.resetValidation()
+        }
       }
-    })
+    )
 
     $(document).on(
       'input',
       '#shipping-data p.input.required input',
-      function() {
+      function () {
         _this.toggleGoToPaymentDisabled()
       }
     )
 
-    $(document).on('input', '#ship-receiverName', function() {
+    $(document).on('input', '#ship-receiverName', function () {
       try {
         _this.checkReceiverName(window.vtexjs.checkout.orderForm)
       } catch (err) {
@@ -360,19 +360,11 @@ export default class CustomShippingData {
     $('body').on(
       'input',
       'input#ship-street, input#ship-complement, input#ship-neighborhood',
-      function() {
+      function () {
         const regexp = /[^A-Za-z0-9\s]+$/
 
-        if (
-          $(this)
-            .val()
-            .match(regexp)
-        ) {
-          $(this).val(
-            $(this)
-              .val()
-              .replace(regexp, '')
-          )
+        if ($(this).val().match(regexp)) {
+          $(this).val($(this).val().replace(regexp, ''))
         }
       }
     )
