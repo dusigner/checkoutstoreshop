@@ -1415,3 +1415,193 @@ h1#cart-title {
 }
 
 // end split cart in 2 columns
+
+.pkpmodal {
+  border: none !important;
+
+  .pkpmodal-close {
+    box-shadow: none;
+  }
+
+  .pkpmodal-info-bar {
+    @media (max-width: 1023px) {
+      overflow-y: scroll;
+    }
+  }
+
+  .pkpmodal-info-bar-container {
+    border-radius: 20px;
+
+    .pkpmodal-location-summary {
+      font-size: 16px;
+
+      button{
+        color: #006BEA;
+        text-decoration: underline;
+      }
+    }
+
+    .pkpmodal-header {
+      padding: 24px 0 20px 24px;
+      border-bottom: none;
+
+      .pkpmodal-title {
+        color: #000;
+        font-size: 24px;
+        font-family: "SamsungSharpSans";
+        font-weight: 700;
+      }
+    }
+
+    .pkpmodal-points-list {
+      p{
+        color: #000;
+        font-size: 12px;
+      }
+
+      .pkpmodal-pickup-point{
+        background-color: #F5F7FE;
+
+        .pkpmodal-pickup-point-name{
+          color: #006BEA;
+          font-size: 14px;
+        }
+
+        .pkpmodal-pickup-point-address {
+          span {
+            font-size: 14px;
+            color: #000;
+          }
+        }
+
+        .pkpmodal-pickup-point-available{
+          font-size: 12px;
+          font-weight: 700;
+          color: #000;
+        }
+
+        .pkpmodal-pickup-point-sla-availability {
+          font-size: 12px;
+          color: #000;
+
+          .pkpmodal-pickup-point-sla {
+            visibility: hidden;
+          }
+
+          .pkpmodal-pickup-point-sla::before {
+            visibility: visible;
+            content: 'Retirada após confirmação que será enviada via e-mail.'
+          }
+        }
+      }
+
+      #pkpmodal-show-list-btn{
+        background-color: #000;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 20px;
+        border: none;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      background-color: #fff;
+      margin-top: 75px;
+      height: fit-content;
+    }
+  }
+
+  .pkpmodal-info-bar{
+    .pkpmodal-details-top {
+      display: flex;
+      align-items: center;
+
+      button {
+        color: #000;
+
+        svg {
+          path {
+            fill: #000;
+          }
+        }
+      }
+    }
+
+    .pkpmodal-details-header{
+      border: none;
+
+      p{
+        font-size: 24px;
+        font-weight: 700;
+        color: #000;
+        font-family: "SamsungSharpSans";
+      }
+
+      .pkpmodal-details-header-button{
+        border-left: none;
+      }
+    }
+
+    .pkpmodal-pickup-point{
+      background-color: #F5F7FE;
+
+      .pkpmodal-pickup-point-name{
+        color: #006BEA;
+        font-size: 14px;
+      }
+
+      .pkpmodal-pickup-point-address {
+        span {
+          font-size: 14px;
+          color: #000;
+        }
+      }
+
+      .pkpmodal-pickup-point-available{
+        font-size: 12px;
+        font-weight: 700;
+        color: #000;
+      }
+
+      .pkpmodal-pickup-point-sla-availability {
+        font-size: 12px;
+        color: #000;
+
+        .pkpmodal-pickup-point-sla {
+          visibility: hidden;
+        }
+
+        .pkpmodal-pickup-point-sla::before {
+          visibility: visible;
+          content: 'Retirada após confirmação que será enviada via e-mail.'
+        }
+      }
+    }
+
+    .pkpmodal-details-info {
+      .pkpmodal-details-info-title {
+        color: #000;
+        font-size: 14px;
+      }
+
+      td {
+        color: #000;
+      }
+    }
+
+    .pkpmodal-details-bottom {
+      display: flex;
+      justify-content: center;
+
+      button {
+        background-color: #000;
+        font-size: 14px;
+        font-weight: 700;
+        width: 169px;
+        border-radius: 20px;
+        border: none;
+      }
+    }
+  }
+}
