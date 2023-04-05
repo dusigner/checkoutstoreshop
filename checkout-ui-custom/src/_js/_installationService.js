@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable padding-line-between-statements */
+/* eslint-disable no-inner-declarations */
 export default class InstallationService {
   constructor() {
     this.INSTALLATION_URL = '/install-service/p'
@@ -10,40 +13,23 @@ export default class InstallationService {
 
       if (!hasInstallation) return
 
-      this.validateSamsungCarePlus(items)
+      this.validateInstallationService(items)
     } catch (e) {
       console.error('installationService error', e)
     }
   }
 
-  validateSamsungCarePlus(items) {
+  validateInstallationService(items) {
     const installations = this.getInstallationItems(items)
     const relatedItems = this.getRelatedInstallationItems(items)
 
-    // remover instalações duplicadas
-    const toRemove = []
-
     installations.forEach(installation => {
       if ($(`.product-item[data-sku="${installation.id}"] .item-link-remove`)) {
-        $(`.product-item[data-sku="${installation.id}"] .quantity`).hide()
-      }
-
-      const duplicated = installations.filter(
-        installationItem =>
-          installationItem.id === installation.id &&
-          installationItem.refId === installation.refId
-      )
-
-      const alreadyInArray = toRemove.find(item => item.id === installation.id)
-
-      if (duplicated.length > 1 && !alreadyInArray) {
-        toRemove.push(...duplicated.slice(1, duplicated.length))
+        $(`.product-item[data-sku="${installation.id}"] .quantity`).addClass(
+          'quantity-installation-service'
+        )
       }
     })
-
-    if (toRemove.length) {
-      this.removeInstallations(toRemove)
-    }
 
     // Caso a quantidade de itens e a quantidade de instalações sejam iguais então não falta items.
     if (installations.length === relatedItems.length) return
@@ -75,6 +61,57 @@ export default class InstallationService {
         removeBtn[0].remove()
       }
     })
+  }
+
+  interceptInstallationRequest(event, request) {
+    const isUpdateItemRequest = request.url.includes('/items/update/')
+    if (!isUpdateItemRequest) {
+      return
+    }
+    try {
+      function findInstallationServiceInCart() {
+        const { items } = window.vtexjs.checkout.orderForm
+        return items.filter(item => {
+          const { attachments } = item
+          return attachments.some(attachment => {
+            return attachment.name.includes('linkInstallation')
+          })
+        })
+      }
+      const hasInstallationServiceInCart = findInstallationServiceInCart()
+      if (!hasInstallationServiceInCart.length) {
+        return
+      }
+      const { items } = this.vtexjs.checkout.orderForm
+      const payload = JSON.parse(request.data || '{}')
+      const { orderItems } = payload
+      const [currentItem] = orderItems
+
+      function findInstallationServiceById(item) {
+        const mainItem = items.find(
+          itemResponse => itemResponse.id === currentItem.id
+        )
+        const { attachments } = item
+        return attachments.some(attachment => {
+          return attachment.content.refId === mainItem.refId
+        })
+      }
+      const installationService = items.find(findInstallationServiceById)
+      if (installationService) {
+        orderItems.push({
+          seller: installationService.seller,
+          quantity: currentItem.quantity,
+          id: installationService.id,
+          index: items.indexOf(installationService),
+          hasBundleItems: !!installationService.bundleItems.length,
+        })
+        request.data = JSON.stringify(payload)
+      }
+    } catch (err) {
+      console.error(
+        `Erro ao sincronizar quantidade do Serviço de instalação: ${err}`
+      )
+    }
   }
 
   // Encontrar as instalações.

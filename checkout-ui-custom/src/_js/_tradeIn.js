@@ -1,21 +1,31 @@
+/* eslint-disable vtex/prefer-early-return */
 import { formatCurrencyBRL } from './_utils'
 
 export default class TradeIn {
   async init(orderForm) {
     const { items } = orderForm
 
-    const customDataDomain = orderForm.customData ? orderForm.customData.customApps.filter(i => i.id === 'domain') : [];
+    const customDataDomain = orderForm.customData
+      ? orderForm.customData.customApps.filter(i => i.id === 'domain')
+      : []
 
-    const getTransport = customDataDomain.length > 0 ? customDataDomain[0].fields.trade_in_option_selected : '';
+    const getTransport =
+      customDataDomain.length > 0
+        ? customDataDomain[0].fields.trade_in_option_selected
+        : ''
+
     const transport = getTransport ? JSON.parse(getTransport) : ''
 
     if (items.length && transport.length) {
       this.checkTradeIn(items, transport)
-    } else if (!items.length && transport.length && localStorage.getItem('transport')) {
+    } else if (
+      !items.length &&
+      transport.length &&
+      localStorage.getItem('transport')
+    ) {
       $('#total-details-tradein').remove()
       $('#text-details-tradein').remove()
       await this.removeCustomDataTradeIn()
-      return
     }
   }
 
@@ -64,12 +74,14 @@ export default class TradeIn {
       $('#total-details-tradein').remove()
       $('#text-details-tradein').remove()
       this.removeCustomDataTradeIn()
+
       return
     }
 
     const newTransport = transport.filter(item => {
       const hasMainProduct =
-        items.filter(orderItem => orderItem.id === item.skuId).length > 0
+        items.filter(orderItem => orderItem.productId === item.mainProductId)
+          .length > 0
 
       if (hasMainProduct) {
         return item
@@ -170,10 +182,17 @@ export default class TradeIn {
   }
 
   async validateTradeinCustomData() {
-    const customDataDomain = window.vtexjs.checkout.orderForm.customData ? 
-      window.vtexjs.checkout.orderForm.customData.customApps.filter(i => i.id === 'domain') : [];
+    const customDataDomain = window.vtexjs.checkout.orderForm.customData
+      ? window.vtexjs.checkout.orderForm.customData.customApps.filter(
+          i => i.id === 'domain'
+        )
+      : []
 
-    const getTransport = customDataDomain.length > 0 ? customDataDomain[0].fields.trade_in_option_selected : '';
+    const getTransport =
+      customDataDomain.length > 0
+        ? customDataDomain[0].fields.trade_in_option_selected
+        : ''
+
     const transport = getTransport ? JSON.parse(getTransport) : ''
 
     let total = 0
@@ -191,7 +210,9 @@ export default class TradeIn {
 
       arrayProductsTrocafone.map(item => {
         const request = fetch(
-          `${this.rootPath()}/p4v1/tradeinCheckImei/${item.imei}/${item.boosted}`
+          `${this.rootPath()}/p4v1/tradeinCheckImei/${item.imei}/${
+            item.boosted
+          }`
         )
           .then(response => response.json())
           .then(response => {
@@ -239,7 +260,7 @@ export default class TradeIn {
 
           return ''
         })
-        if (JSON.stringify(transport) != getTransport) {
+        if (JSON.stringify(transport) !== getTransport) {
           this.putCustomData(transport, total)
         }
       })
