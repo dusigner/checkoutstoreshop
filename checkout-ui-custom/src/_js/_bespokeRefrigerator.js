@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-console */
 export default class BespokeRefrigerator {
   constructor() {
     this.SKU_BESPOKE_PAIR = ''
@@ -5,9 +7,9 @@ export default class BespokeRefrigerator {
     this.SKU_BESPOKE_SERVICE = ''
     this.SELLER = ''
     this.CATEGORYID =
-      window.location.href.indexOf('samsungbr.') >= 0 ||
+      window.location.href.indexOf('samsungbrshop.') >= 0 ||
       window.location.host.split('.')[0].indexOf('shop') >= 0
-        ? '/30/33/39/2113/'
+        ? '/3/33/39/2043/'
         : '/2044/'
   }
 
@@ -26,7 +28,9 @@ export default class BespokeRefrigerator {
             if (
               $(`.product-item[data-sku="${item.id}"] .add-item-attachment`)
             ) {
-              $(`.product-item[data-sku="${item.id}"] .add-item-attachment`)
+              $(
+                `.product-item[data-sku="${item.id}"] .add-item-attachment`
+              ).hide()
             }
 
             if ($(`.product-item[data-sku="${item.id}"] input`)) {
@@ -114,7 +118,10 @@ export default class BespokeRefrigerator {
     $('body').on('click', '.bespokeRemove', e => {
       e.preventDefault()
       const currentItems = window.vtexjs.checkout.orderForm.items
-      const data = $(e.target).parents('.product-item').data()
+      const data = $(e.target)
+        .parents('.product-item')
+        .data()
+
       const skuDeleted = data ? data.sku : null
 
       $(e.target).remove()
@@ -127,7 +134,10 @@ export default class BespokeRefrigerator {
     $('body').on('click', '.editBespoke', e => {
       e.preventDefault()
       const currentItems = window.vtexjs.checkout.orderForm.items
-      const data = $(e.target).parents('.product-item').data()
+      const data = $(e.target)
+        .parents('.product-item')
+        .data()
+
       const skuEdited = data ? data.sku : null
 
       $(e.target).remove()
@@ -153,7 +163,7 @@ export default class BespokeRefrigerator {
       items.forEach((el, i) => {
         if (
           el.productCategoryIds === '/2044/' ||
-          el.productCategoryIds === '/30/33/39/2113/'
+          el.productCategoryIds === '/3/33/39/2043'
         ) {
           // id bespoke
           removeList.push({
@@ -323,7 +333,7 @@ export default class BespokeRefrigerator {
                 $($(`.product-item[data-sku='${item.id}']`)).find(
                   '.item-remove'
                 ).prepend(`
-                  <div style="display: flex; align-items: center;">
+                  <div class="customBespokeRemove" style="display: flex; align-items: center;">
                     <a href="/simule-sua-bespoke" class="editBespoke btn" style="
                       background-color: #fff;
                       color: #000;
@@ -374,6 +384,8 @@ export default class BespokeRefrigerator {
         `tr.product-item[data-sku="${mainItems[0].id}"] td.item-remove a`
       )
 
+      console.log('removeBtn', removeBtn)
+
       if (removeBtn.length) {
         removeBtn[0].remove()
         this.clearBespokeRefrigerator(items, mainItems[0].id, false)
@@ -394,10 +406,10 @@ export default class BespokeRefrigerator {
       let url
 
       if (
-        window.location.href.indexOf('samsungbr.') >= 0 ||
+        window.location.href.indexOf('samsungbrshop.') >= 0 ||
         window.location.host.indexOf('shop.') >= 0
       ) {
-        url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/30/33/39/2113/`
+        url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/3/33/39/2043`
       } else {
         url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/2044/`
       }
@@ -408,6 +420,7 @@ export default class BespokeRefrigerator {
           response.forEach(product => {
             if (product.productName.indexOf('parelhamento') < 0) {
               product.items.forEach(currentItem => {
+                console.log('currentItem.itemId', currentItem.itemId)
                 this.SKU_MAIN.push(currentItem.itemId)
               })
             }
@@ -420,6 +433,8 @@ export default class BespokeRefrigerator {
         .then(response => response.json())
         .then(response => {
           const { service, pairing, seller } = response[0]
+
+          console.log('response[0]response[0]', response[0])
 
           this.SKU_BESPOKE_SERVICE = service
           this.SKU_BESPOKE_PAIR = pairing
