@@ -45,6 +45,16 @@ body.v-custom-googleForm-on {
   
 }
 
+.vtex-omnishipping-1-x-deliveryGroup,
+.vtex-omnishipping-1-x-addressForm {
+    display:none
+}
+.valid-postal-code {
+  .vtex-omnishipping-1-x-deliveryGroup,
+  .vtex-omnishipping-1-x-addressForm {
+    display:block
+  }
+}
 .v-custom-googleFormScript-added.v-custom-googleForm-on .accordion-inner.shipping-container  > * {
   display: none;
 }
