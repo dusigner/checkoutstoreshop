@@ -95,9 +95,8 @@ export default class SendAttachment {
 
                   obsToOpenTextField += `{'isInstallation':'true','sku':'${
                     install.refId
-                  }','estimate':'${
-                    estimative + 1
-                  }','price': '${formatCurrencyBRL(install.price)}'}, `
+                  }','estimate':'${estimative +
+                    1}','price': '${formatCurrencyBRL(install.price)}'}, `
                 }
 
                 return ''
