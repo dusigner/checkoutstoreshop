@@ -1339,7 +1339,6 @@ export default class AdobeLaunchPixel {
       .split('test')
       .shift()
     const accountBRShop = account.replace('shop', '')
-    console.log('acccountBRSHOP', accountBRShop)
 
     // const rootPath = window.__RUNTIME__.rootPath;
     let productDivision = ''
