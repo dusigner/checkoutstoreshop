@@ -720,11 +720,8 @@ export default class AdobeLaunchPixel {
   /* Populates the window.digitalData variable Page informations */
   _populateDataLayer() {
 
-    console.log('window._satellite', window._satellite)
     if(window._satellite === undefined ||
       window._satellite === null) return null
-
-      console.log('window._satellite depois do null')
 
     const _this = this
 
