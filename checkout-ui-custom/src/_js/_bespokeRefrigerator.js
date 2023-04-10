@@ -420,7 +420,7 @@ export default class BespokeRefrigerator {
           response.forEach(product => {
             if (product.productName.indexOf('parelhamento') < 0) {
               product.items.forEach(currentItem => {
-                console.log('currentItem.itemId', currentItem.itemId)
+                // console.log('currentItem.itemId', currentItem.itemId)
                 this.SKU_MAIN.push(currentItem.itemId)
               })
             }
@@ -434,7 +434,7 @@ export default class BespokeRefrigerator {
         .then(response => {
           const { service, pairing, seller } = response[0]
 
-          console.log('response[0]response[0]', response[0])
+          // console.log('response[0]response[0]', response[0])
 
           this.SKU_BESPOKE_SERVICE = service
           this.SKU_BESPOKE_PAIR = pairing
