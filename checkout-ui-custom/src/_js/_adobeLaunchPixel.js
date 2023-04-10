@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 /* eslint-disable no-prototype-builtins */
@@ -989,7 +990,10 @@ export default class AdobeLaunchPixel {
               _productFamily.push(scplus.productFamily)
               _pimSubType.push(scplus.pimSubType)
 
-              if (window.__RUNTIME__.account === 'samsungbr') {
+              if (
+                window.__RUNTIME__.account === 'samsungbr' ||
+                window.__RUNTIME__.account === 'samsungbrshop'
+              ) {
                 _listPrice.push(Number(scplus.listPrice).toFixed(2))
               } else {
                 _listPrice.push(Number(scplus.listPrice))
@@ -1027,6 +1031,7 @@ export default class AdobeLaunchPixel {
 
               if (
                 window.__RUNTIME__.account.indexOf('samsungbr') > -1 ||
+                window.__RUNTIME__.account.indexOf('samsungbrshop') > -1 ||
                 window.__RUNTIME__.account.indexOf('samsungmx') > -1
               ) {
                 _listPrice.push(Number(item.price / 100).toFixed(2))
@@ -1333,6 +1338,7 @@ export default class AdobeLaunchPixel {
       .replace('samsung', '')
       .split('test')
       .shift()
+    const accountBRShop = account.replace('shop', '')
 
     // const rootPath = window.__RUNTIME__.rootPath;
     let productDivision = ''
@@ -1343,7 +1349,9 @@ export default class AdobeLaunchPixel {
       ? window.__RUNTIME__.rootPath
       : ''
 
-    const uri = `${currentPath}/pvt/getModel?siteCode=${account}&modelCode=${skuId}`
+    const uri = `${currentPath}/pvt/getModel?siteCode=${
+      account === 'samsungbrshop' ? accountBRShop : account
+    }&modelCode=${skuId}`
     const myHeaders = new Headers({ 'Content-Type': 'application/json' })
 
     return fetch(uri, { method: 'GET', headers: myHeaders })
