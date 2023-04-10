@@ -1096,6 +1096,7 @@ export default class AdobeLaunchPixel {
     const hostArr = window.location.host.split('.')
 
     if (hostArr[0].includes('samsungbrtest')) return 'br'
+    if (hostArr[0].includes('samsungbrshop')) return 'br'
     if (hostArr[0] === 'samsungmxio') return 'mx'
     const tldCode = hostArr[hostArr.length - 1]
 
