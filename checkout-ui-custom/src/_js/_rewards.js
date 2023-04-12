@@ -128,7 +128,9 @@ export default class Rewards {
   }
 
   createButtonRewards() {
-    if ($('#show-rewards-parent').length !== 0) return
+    const saGuid = localStorage.getItem('saGuid')
+
+    if ($('#show-rewards-parent').length !== 0 || !saGuid) return
 
     $('.link-gift-card').after(`
       <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn; margin-left: 20px">
