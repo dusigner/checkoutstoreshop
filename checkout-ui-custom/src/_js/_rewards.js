@@ -382,10 +382,9 @@ export default class Rewards {
 
   cancelRewardsDiscount(verify = false) {
     if (window.vtexjs.checkout.orderForm.paymentData.giftCards) {
-      const rewardsDiscount =
-        window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
-          g => g.provider === 'SSG_REWARDS'
-        )
+      const rewardsDiscount = window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
+        g => g.provider === 'SSG_REWARDS'
+      )
 
       if (!rewardsDiscount) return
       if (!rewardsDiscount[0]) return
