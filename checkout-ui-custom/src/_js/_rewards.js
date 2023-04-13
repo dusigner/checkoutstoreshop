@@ -382,9 +382,10 @@ export default class Rewards {
 
   cancelRewardsDiscount(verify = false) {
     if (window.vtexjs.checkout.orderForm.paymentData.giftCards) {
-      const rewardsDiscount = window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
-        g => g.provider === 'SSG_REWARDS'
-      )
+      const rewardsDiscount =
+        window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
+          g => g.provider === 'SSG_REWARDS'
+        )
 
       if (!rewardsDiscount) return
       if (!rewardsDiscount[0]) return
@@ -439,13 +440,15 @@ export default class Rewards {
   showPointsSimulation() {
     const { orderForm } = window.vtexjs.checkout
 
-    if (orderForm.items.length === 0) return
-
-    if (orderForm.totalizers.length === 0) return
-
     if (orderForm.loggedIn) {
       this.getRewardsData(orderForm.clientProfileData.email)
     }
+
+    if (window.location.hash !== '#/payment') return
+
+    if (orderForm.items.length === 0) return
+
+    if (orderForm.totalizers.length === 0) return
 
     let rewardsDiscountApplied = 0
 
