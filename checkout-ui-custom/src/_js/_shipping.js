@@ -260,10 +260,6 @@ export default class CustomShippingData {
         selector: '#ship-number',
         maxLength: 10,
       },
-      {
-        selector: '#ship-complement',
-        maxLength: 10,
-      },
     ]
 
     try {
