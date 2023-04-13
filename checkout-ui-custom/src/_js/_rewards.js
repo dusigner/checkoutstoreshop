@@ -184,7 +184,9 @@ export default class Rewards {
   showObsRewards() {
     try {
       const { orderForm } = window.vtexjs.checkout
+      const saGuid = localStorage.getItem('saGuid')
 
+      if (!saGuid) return
       if (
         orderForm.items.length === 0 &&
         $('#text-details-rewards').length > 0
@@ -532,6 +534,9 @@ export default class Rewards {
       data: JSON.stringify(data),
       success: res => {
         if (this.totalPointsCurrentOrder === res.TotalPointAmount) return
+        const saGuid = localStorage.getItem('saGuid')
+
+        if (!saGuid) return
 
         this.totalPointsCurrentOrder = res.TotalPointAmount
         this.putRewardsOnCustomData(orderForm.orderFormId, res.TotalPointAmount)
