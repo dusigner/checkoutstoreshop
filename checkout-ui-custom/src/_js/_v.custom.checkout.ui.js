@@ -430,24 +430,57 @@ class checkoutCustom {
       })
 
       $('.totalizers-list .discount').remove()
-      const hasService = window.vtexjs.checkout.orderForm.items.every(item => {
-        return item.detailUrl.indexOf('/install-service/p') == -1
-      })
-
-      if (!hasService) {
-        $(`<tr class="discount install-service" style="height: 23px;">
-              <td>Serviço de instalação</td>
-              <td>
-                <span style="font-weight: 700">
-                  Grátis
-                </span>
-              </td>
-            </tr>`).insertBefore(_trElem)
-      }
 
       _trElem.before(`${elements.join()}`)
     } catch (e) {
       console.error('showCustomDiscounts error', e)
+    }
+  }
+
+  showCustomMsgInstallation(orderForm) {
+    try {
+      const { items } = orderForm
+      const _trElem = $(`.Discounts`)
+
+      const installationServices = items.filter(item =>
+        item.detailUrl.includes('/install-service/p')
+      )
+
+      if (!installationServices.length) return
+
+      const installationSummaryRows = installationServices.map(item => {
+        const installationPrice =
+          item.sellingPrice > 1
+            ? formatCurrencyBRL(item.sellingPrice)
+            : 'Grátis'
+
+        return `
+          <tr style="height: 23px;">
+            <td>Serviço de instalação</td>
+            <td>
+              <span style="font-weight: 700">
+                ${installationPrice}
+              </span>
+            </td>
+          </tr>
+        `
+      })
+
+      const element = `
+        <tr class="installation-summary">
+          <td style="padding: 0 !important">
+            <table width="100%">
+              ${installationSummaryRows.join('')}
+            </table>
+          </td>
+        </tr>
+      `
+
+      $('.totalizers-list .installation-summary').remove()
+
+      _trElem.before(`${element}`)
+    } catch (err) {
+      console.error(`installationServiceSummary: ${err}`)
     }
   }
 
@@ -1326,6 +1359,7 @@ class checkoutCustom {
     this.condensedTaxes(orderForm)
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
+    this.showCustomMsgInstallation(orderForm)
     this.showCustomDiscounts()
     this.summaryCustom()
     this.popupSSC()
