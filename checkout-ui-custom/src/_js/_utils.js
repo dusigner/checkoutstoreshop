@@ -29,11 +29,5 @@ module.exports.formatNegativeValue = _value => {
   return price
 }
 
-module.exports.percentageDiscount = (_discount, _price) => {
-  const percent = Math.round(((_discount - _price) / _price) * 100)
-
-  return percent === 0 ? '' : `<span class="percent">${percent}%</span>`
-}
-
 module.exports.formatNumberBRL = _value =>
   new Intl.NumberFormat('pt-BR').format(_value)
