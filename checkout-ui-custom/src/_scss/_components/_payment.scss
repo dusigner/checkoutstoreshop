@@ -85,8 +85,7 @@
     #payment-group-customPrivate_501PaymentGroup {
       .payment-group-item-text {
         padding-left: 0px;
-		font-size: 0;
-		order: 1;
+		    font-size: 0;
         &::before {
           content: "";
           margin-right: 25px;
@@ -102,10 +101,6 @@
 		&::after {
 			content: "Cartão Samsung Itaú";
 			font-size: 12px;
-			flex-grow: 2;
-		}
-		> span {
-			order: 2;
 		}
       }
     }
@@ -258,16 +253,6 @@
 				background-position-x: left;
 				padding-left: 48px;
 				min-height: 44px;
-				justify-content: space-between;
-				width: 100%;
-				span {
-					background: #00838F;
-					padding: 0px 6px;
-					border-radius: 20px;
-					color: #fff;
-					font-size: 10px;
-					margin: 0 0 0 10px;
-				}
 			}
 
 			&:first-child:nth-last-child(n + 2),

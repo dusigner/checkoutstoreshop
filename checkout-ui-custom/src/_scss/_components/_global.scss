@@ -289,3 +289,11 @@ body {
     }
   }
 }
+//BESPOKE
+.customBespokeRemove + a {
+  display: none;
+}
+
+tr[install-item=true] .quantity{
+  display: none !important;
+}
