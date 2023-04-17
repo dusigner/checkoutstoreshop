@@ -1001,6 +1001,99 @@ class checkoutCustom {
     })
   }
 
+  paymentDiscount() {
+    const _this = this
+
+    if (vtexjs.checkout.orderForm && vtexjs.checkout.orderForm.paymentData) {
+      vtexjs.checkout.orderForm.paymentData.paymentSystems.forEach(function (
+        e
+      ) {
+        fetch(
+          `${_this.rootPath()}/api/checkout/pub/orderForm/${
+            vtexjs.checkout.orderForm.orderFormId
+          }/installments?paymentSystem=${e.id}`
+        )
+          .then(response => response.json())
+          .then(data => {
+            const { installments, paymentSystem } = data
+
+            switch (paymentSystem) {
+              case '125':
+                $('.payment-group-list-btn a[data-name="Pix"] > span').append(
+                  percentageDiscount(
+                    installments[0].total,
+                    vtexjs.checkout.orderForm.totalizers[0].value
+                  )
+                )
+                break
+
+              case '1':
+                $(
+                  '.payment-group-list-btn a[data-name="American Express"] > span'
+                ).append(
+                  percentageDiscount(
+                    installments[0].total,
+                    vtexjs.checkout.orderForm.totalizers[0].value
+                  )
+                )
+                break
+
+              case '501':
+                $(
+                  '.payment-group-list-btn a[data-name="Samsung Itaucard"] > span'
+                ).append(
+                  percentageDiscount(
+                    installments[0].total,
+                    vtexjs.checkout.orderForm.totalizers[0].value
+                  )
+                )
+                break
+
+              case '6':
+                $(
+                  '.payment-group-list-btn a[data-name="Boleto Bancário"] > span'
+                ).append(
+                  percentageDiscount(
+                    installments[0].total,
+                    vtexjs.checkout.orderForm.totalizers[0].value
+                  )
+                )
+                break
+
+              case '107':
+                $(
+                  '.payment-group-list-btn a[data-name="Samsung Pay"] > span'
+                ).append(
+                  percentageDiscount(
+                    installments[0].total,
+                    vtexjs.checkout.orderForm.totalizers[0].value
+                  )
+                )
+                break
+
+              case '72':
+                $(
+                  '.payment-group-list-btn a[data-name="PicPay"] > span'
+                ).append(
+                  percentageDiscount(
+                    installments[0].total,
+                    vtexjs.checkout.orderForm.totalizers[0].value
+                  )
+                )
+                $('.payment-group').addClass('paymentDiscount')
+                break
+
+              default:
+                break
+            }
+          })
+          .catch(err => {
+            console.error('Error: ', err)
+          })
+      })
+    }
+  }
+
   enchancementUnavailableProduct() {
     try {
       const _trElem = $(`.table.cart-items tbody`)
@@ -2080,6 +2173,7 @@ class checkoutCustom {
           _this.profile.addDateBirthField()
           _this.profile.addMsgPhone()
           _this.profile.addTerms(orderForm)
+          _this.Rewards.showPointsSimulation()
         }
 
         if (window.location.hash === '#/shipping') {
