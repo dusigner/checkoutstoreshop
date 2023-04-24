@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-console */
+/* eslint-disable no-inner-declarations */
 /* eslint-disable no-undef */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable prettier/prettier */
@@ -11,7 +14,6 @@ const {
   debounce,
   formatCurrencyBRL,
   formatNegativeValue,
-  percentageDiscount,
 } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const { default: CustomProfileData } = require('./_profile')
@@ -25,6 +27,7 @@ const { default: SendAttachment } = require('./_sendAttachment.js')
 const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 const { default: AdobeLaunchPixel } = require('./_adobeLaunchPixel.js')
 const { default: Rewards } = require('./_rewards.js')
+const { default: CheckoutLimit } = require('./_checkoutLimit.js')
 
 class checkoutCustom {
   constructor({
@@ -47,6 +50,8 @@ class checkoutCustom {
     this.showNoteField = showNoteField
     this.customAddressForm = customAddressForm
     this.hideEmailStep = hideEmailStep
+    this.lastOrderFormTotalPrice = 0
+    this.termPrice = 0
 
     this.preEmail = new CustomPreEmail()
     this.profile = new CustomProfileData()
@@ -57,6 +62,7 @@ class checkoutCustom {
     this.adobeLaunchPixel = new AdobeLaunchPixel()
     this.hasSelectedDefaultPaymentMethod = false
     this.Rewards = new Rewards()
+    this.CheckoutLimit = new CheckoutLimit()
     this.samsungCarePlus = new SamsungCarePlus()
   }
 
@@ -414,6 +420,13 @@ class checkoutCustom {
               </tr>`
         }
 
+        if (
+          discount.name.toLowerCase().includes(' frete') ||
+          discount.name.toLowerCase().includes(' (frete')
+        ) {
+          return ``
+        }
+
         return `
             <tr class="discount cupon" style="height: 23px;">
               <td style="margin-left: 10px;">Desc. Cupom</td>
@@ -426,24 +439,57 @@ class checkoutCustom {
       })
 
       $('.totalizers-list .discount').remove()
-      const hasService = window.vtexjs.checkout.orderForm.items.every(item => {
-        return item.detailUrl.indexOf('/install-service/p') == -1
-      })
-
-      if (!hasService) {
-        $(`<tr class="discount install-service" style="height: 23px;">
-              <td>Serviço de instalação</td>
-              <td>
-                <span style="font-weight: 700">
-                  Grátis
-                </span>
-              </td>
-            </tr>`).insertBefore(_trElem)
-      }
 
       _trElem.before(`${elements.join()}`)
     } catch (e) {
       console.error('showCustomDiscounts error', e)
+    }
+  }
+
+  showCustomMsgInstallation(orderForm) {
+    try {
+      const { items } = orderForm
+      const _trElem = $(`.Discounts`)
+
+      const installationServices = items.filter(item =>
+        item.detailUrl.includes('/install-service/p')
+      )
+
+      if (!installationServices.length) return
+
+      const installationSummaryRows = installationServices.map(item => {
+        const installationPrice =
+          item.sellingPrice > 1
+            ? formatCurrencyBRL(item.sellingPrice)
+            : 'Grátis'
+
+        return `
+          <tr style="height: 23px;">
+            <td>Serviço de instalação</td>
+            <td>
+              <span style="font-weight: 700">
+                ${installationPrice}
+              </span>
+            </td>
+          </tr>
+        `
+      })
+
+      const element = `
+        <tr class="installation-summary">
+          <td style="padding: 0 !important">
+            <table width="100%">
+              ${installationSummaryRows.join('')}
+            </table>
+          </td>
+        </tr>
+      `
+
+      $('.totalizers-list .installation-summary').remove()
+
+      _trElem.before(`${element}`)
+    } catch (err) {
+      console.error(`installationServiceSummary: ${err}`)
     }
   }
 
@@ -839,6 +885,7 @@ class checkoutCustom {
         return
       }
 
+      const _this = this
       const _trElem = $(`.summary-template-holder`)
 
       if (path === '#/payment') {
@@ -872,37 +919,46 @@ class checkoutCustom {
         window.vtexjs.checkout.orderForm &&
         window.vtexjs.checkout.orderForm.items.length > 0
       ) {
-        const inCashPrice = orderForm.paymentData.installmentOptions.find(
+        const installmentPix = orderForm.paymentData.installmentOptions.find(
           item => item.paymentSystem == 125
-        ).installments[0].total
+        ).installments
 
+        if (!installmentPix.length) return
+        const inCashPrice = installmentPix[0].total
         // Encontra as installments para do cartao visa (código 2)
         // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-        const termPrice = await fetch(
-          `${this.rootPath()}/api/checkout/pub/orderForm/${
-            orderForm.orderFormId
-          }/installments?paymentSystem=2`
-        )
-          .then(response => response.json())
-          .then(data => {
-            if (data && data.installments) {
-              const installmentOptions = data.installments
 
-              const maxInstallment = installmentOptions.find(
-                install =>
-                  install.count ===
-                  Math.max(...installmentOptions.map(inst => inst.count))
-              )
+        // THE INSTALLMENTS ENDPOINT HAS A LOT OF REQUESTS AND IT AFFECT INDIRECTLY THE REWARDS PERFOMANCE, BECAUSE OF IT
+        // I IMPLEMENTED TWO NEW STATES ONE TO KNOW THE LAST TOTALPRICE OF ORDERFORM AND ANOTHER TO KEEP THE INSTALLMENTS PRICE
+        // ONLY WILL DO A NEW REQUEST CASE ORDERFORM TOTALPRICE BE CHANGED.
+        if (_this.lastOrderFormTotalPrice !== orderForm.value) {
+          _this.lastOrderFormTotalPrice = orderForm.value
+          _this.termPrice = await fetch(
+            `${this.rootPath()}/api/checkout/pub/orderForm/${
+              orderForm.orderFormId
+            }/installments?paymentSystem=2`
+          )
+            .then(response => response.json())
+            .then(data => {
+              if (data && data.installments) {
+                const installmentOptions = data.installments
 
-              return maxInstallment ? maxInstallment.total : ''
-            }
-          })
-          .catch(e => {
-            console.error('onTerm Price error', e)
-          })
+                const maxInstallment = installmentOptions.find(
+                  install =>
+                    install.count ===
+                    Math.max(...installmentOptions.map(inst => inst.count))
+                )
+
+                return maxInstallment ? maxInstallment.total : ''
+              }
+            })
+            .catch(e => {
+              console.error('onTerm Price error', e)
+            })
+        }
 
         const percentDiscount = Math.floor(
-          100 - (inCashPrice / termPrice) * 100
+          100 - (inCashPrice / _this.termPrice) * 100
         )
 
         const _component = `
@@ -926,7 +982,7 @@ class checkoutCustom {
                       Ou parcelado em até 12x
                     </p>
                     <p class="discount-total" style="font-weight: 700;">
-                      ${formatCurrencyBRL(termPrice)}
+                      ${formatCurrencyBRL(_this.termPrice)}
                     </p>
                 </div>
               </div>
@@ -951,28 +1007,31 @@ class checkoutCustom {
   }
 
   setPixAsDefaultPaymentMethod() {
-    if (window.vtexjs) {
-      const pay =
-        vtexjs.checkout.orderForm.paymentData.installmentOptions.filter(
+    vtexjs.checkout.getOrderForm().done(function (orderForm) {
+      try {
+        const pixInstalments = orderForm.paymentData.installmentOptions.filter(
           payment => {
             return payment.paymentSystem === '125'
           }
         )
 
-      if (!pay) return
+        if (!pixInstalments.length) return
 
-      const data = {
-        payments: [
-          {
-            paymentSystem: 125,
-            installments: 1,
-            referenceValue: pay[0].value,
-          },
-        ],
+        const data = {
+          payments: [
+            {
+              paymentSystem: 125,
+              installments: 1,
+              referenceValue: pixInstalments[0].value,
+            },
+          ],
+        }
+
+        vtexjs.checkout.sendAttachment('paymentData', data)
+      } catch (err) {
+        console.error(`Erro ao exibir preço à vista para items no carrinho.`)
       }
-
-      vtexjs.checkout.sendAttachment('paymentData', data)
-    }
+    })
   }
 
   paymentDiscount() {
@@ -1315,6 +1374,7 @@ class checkoutCustom {
     this.condensedTaxes(orderForm)
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
+    this.showCustomMsgInstallation(orderForm)
     this.showCustomDiscounts()
     this.summaryCustom()
     this.popupSSC()
@@ -1785,9 +1845,13 @@ class checkoutCustom {
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
     const accountbr = window.__RUNTIME__.account == 'samsungbr'
+    const accountbrshop = window.__RUNTIME__.account == 'samsungbrshop'
     const notMyvtex = window.location.href.indexOf('myvtex') == -1
 
-    if ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) {
+    if (
+      ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) ||
+      (accountbrshop && notMyvtex)
+    ) {
       $('#is-not-me').removeAttr('href')
       $('body').on('click', '#is-not-me', function () {
         const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId}`
@@ -1997,13 +2061,6 @@ class checkoutCustom {
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
           }
-
-          if (
-            window.location.hash === '#/payment' &&
-            $('.paymentDiscount').length == 0
-          ) {
-            _this.paymentDiscount()
-          }
         }
       })
 
@@ -2017,6 +2074,8 @@ class checkoutCustom {
           const loginSucess = xhr.statusText === 'success'
 
           if (loginSucess) {
+            trackLogin(ssgAccountURL, acessKeyURL)
+            window.digitalData.user.loginStatus = true
             fetch(
               `${_this.rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
               {
@@ -2044,9 +2103,19 @@ class checkoutCustom {
                   })
                   .catch(console.error)
               })
+          } else {
+            window.digitalData.user.loginStatus = false
           }
         }
       })
+
+      function trackLogin(ssgAccountURL, accessKeyURL) {
+        if (ssgAccountURL) {
+          window._satellite.track('samsung_account_login')
+        } else if (accessKeyURL) {
+          window._satellite.track('vtex_account_login')
+        }
+      }
 
       $(window).on('hashchange', function () {
         const cartItems = document.querySelector('.cart-items')
@@ -2138,6 +2207,7 @@ class checkoutCustom {
           _this.profile.addDateBirthField()
           _this.profile.addMsgPhone()
           _this.profile.addTerms(orderForm)
+          _this.Rewards.showPointsSimulation()
         }
 
         if (window.location.hash === '#/shipping') {
@@ -2153,6 +2223,7 @@ class checkoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
+        _this.CheckoutLimit.init(orderForm)
       })
       $(window).on('attachmentUpdated.vtex', function (evt, orderFormSection) {
         switch (orderFormSection) {

@@ -19,9 +19,9 @@ export default class CustomPreEmail {
       $('#btn-client-pre-email').after(`
       <div id="toggleButtonContainer" class="samsung-toggle-button-container">
 
-        <p class="samsung-visitante-title">Entrar como visitante:</p>
+        <p class="samsung-visitante-title">Acessar como visitante</p>
 
-        <button class="samsung-button-login" id="toggleButtonLogin" type="button">Informe seu e-mail</button>
+        <button class="samsung-button-login data-omni-signin" data-omni="login_try:guest" id="toggleButtonLogin" type="button">Informe seu e-mail</button>
 
         <p class="samsung-message-rewards">Ao entrar como visitante não será possível pontuar no programa Samsung Rewards</p>
       </div>
@@ -40,6 +40,8 @@ export default class CustomPreEmail {
             </p>
           </div>
               <button
+                class="data-omni-signin"
+                data-omni="login_try:samsung account"
                 id="btn-samsung-account"
                 type="submit"
               >

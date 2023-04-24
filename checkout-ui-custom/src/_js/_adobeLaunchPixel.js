@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 /* eslint-disable no-prototype-builtins */
@@ -617,13 +618,13 @@ export default class AdobeLaunchPixel {
 
     if (checkoutLogin !== null && checkoutLoginForm !== null) {
       _this.setElementOmni(checkoutLogin, 'data-omni-signin', {
-        '': 'login_try:guest',
+        '': 'account:submit',
       })
       checkoutLoginForm.onsubmit = function (e) {
         e.preventDefault()
-        let parameter = 'login_try:guest'
+        let parameter = 'account:submit'
 
-        if (!checkoutLoginForm.checkValidity()) parameter = 'login_try:guest'
+        if (!checkoutLoginForm.checkValidity()) parameter = 'account:submit'
         _this.setElementOmni(checkoutLogin, 'data-omni-signin', {
           '': parameter,
         })
@@ -654,12 +655,20 @@ export default class AdobeLaunchPixel {
 
   /* Populates the window.digitalData variable Page informations */
   _populateDataLayer() {
+    if (window._satellite === undefined || window._satellite === null) {
+      return null
+    }
+
     const _this = this
 
     const siteCode = _this._fetchSiteCode()
 
     $(window).on('orderFormUpdated.vtex', function (evt, orderForm) {
-      window.digitalData.user.loginStatus = orderForm.loggedIn
+      window.digitalData.user.loginStatus =
+        window.digitalData.user.loginStatus || orderForm.loggedIn
+      if (!window.digitalData.user.loginStatus) {
+        window._satellite.track('shop_guest_login')
+      }
     })
 
     window.digitalData.page.pageInfo.siteCode = siteCode
@@ -964,7 +973,11 @@ export default class AdobeLaunchPixel {
                 model.pimSubType !== undefined ? model.pimSubType : ''
               )
 
-              if (window.__RUNTIME__.account.indexOf('samsungbr') > -1) {
+              if (
+                window.__RUNTIME__.account.indexOf('samsungbr') > -1 ||
+                window.__RUNTIME__.account.indexOf('samsungbrshop') > -1 ||
+                window.__RUNTIME__.account.indexOf('samsungmx') > -1
+              ) {
                 _listPrice.push(Number(item.price / 100).toFixed(2))
               } else {
                 _listPrice.push(Number(item.price))
@@ -1225,6 +1238,7 @@ export default class AdobeLaunchPixel {
       .replace('samsung', '')
       .split('test')
       .shift()
+    const accountBRShop = account.replace('shop', '')
 
     // const rootPath = window.__RUNTIME__.rootPath;
     let productDivision = ''
@@ -1235,7 +1249,9 @@ export default class AdobeLaunchPixel {
       ? window.__RUNTIME__.rootPath
       : ''
 
-    const uri = `${currentPath}/pvt/getModel?siteCode=${account}&modelCode=${skuId}`
+    const uri = `${currentPath}/pvt/getModel?siteCode=${
+      account === 'samsungbrshop' ? accountBRShop : account
+    }&modelCode=${skuId}`
     const myHeaders = new Headers({ 'Content-Type': 'application/json' })
 
     return fetch(uri, { method: 'GET', headers: myHeaders })

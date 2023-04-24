@@ -1046,6 +1046,7 @@ h1#cart-title {
       display: grid;
       grid-template-areas:
         "subtotal"
+        "installation_summary"
         "descontos_total"
         "cupom"
         "cupom_desconto"
@@ -1054,6 +1055,10 @@ h1#cart-title {
 
       .Items {
         grid-area: subtotal;
+      }
+
+      .installation-summary {
+        grid-area: installation_summary;
       }
 
       .coupon-applied {
@@ -1094,6 +1099,21 @@ h1#cart-title {
         }
       }
     }
+  }
+  
+  .installation-summary {
+      > td {
+        width: 100% !important;
+      }
+
+      tr {
+        align-items: center;
+      }
+
+      tbody {
+        border: 0 !important;
+        padding: 0 !important;
+      }
   }
 
   .shipping-reset {
@@ -1178,21 +1198,39 @@ h1#cart-title {
       color: #000;
       font-size: 14px;
     }
+    .srp-pickup-info {
+      .srp-address-title {
+        &::after {
+          content: "Ver mais opções";
+          color: #000000;
+          font-size: 12px;
+          margin-left: 16px;
+          display: inline-block;
+          text-decoration: underline;
+          cursor: pointer;
+          font-weight: 400;
+        }
+      }
+    }
+    .srp-delivery-header {
+      .srp-address-title {
+        &::after {
+          content: "Trocar CEP";
+          color: #000000;
+          font-size: 12px;
+          margin-left: 16px;
+          display: inline-block;
+          text-decoration: underline;
+          cursor: pointer;
+          font-weight: 400;
+        }
+      }
+    }
 
     #deliver-at-text a {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       cursor: initial;
-
-      &::after {
-        content: "Trocar CEP";
-        color: #000000;
-        font-size: 12px;
-        margin-left: 16px;
-        display: inline-block;
-        text-decoration: underline;
-        cursor: pointer;
-      }
     }
 
     .srp-delivery-select-container,
@@ -1242,7 +1280,7 @@ h1#cart-title {
 
     .srp-toggle__wrapper {
       label {
-        background: #fff;
+        background: transparent;
         padding: 10px 0;
         border-radius: $borderRadius;
       }
@@ -1415,3 +1453,255 @@ h1#cart-title {
 }
 
 // end split cart in 2 columns
+.sellerInformation {
+  font-size: 12px;
+  color: #767676;
+  span {
+      color: #0077C8;
+      font-weight: bold;
+  }
+}
+.sla-info{
+  .sla-price{
+      display: none;
+  }
+}
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__pickup {
+  display: block;
+  border: none;
+}
+.srp-toggle__wrapper.flex.br-pill.shadow-4.relative {
+  border-radius: 20px;
+  box-shadow: none !important;
+  max-width: 200px;
+  border: 1px #DDDDDD solid;
+}
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current,
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current label {
+  width: 50%;
+  border-radius: 20px;
+  background:#363636;
+  box-shadow: none;
+  border:none;
+}
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current {
+  background: #000
+}
+.srp-toggle__pickup,
+.srp-toggle__delivery{
+  position: relative;
+  font-size: 14px;
+  font-family: SamsungOne;
+  text-transform: capitalize !important;
+  font-weight: 700;
+}
+.srp-toggle__pickup.gray.blue {
+  color: #fff !important;
+  
+}
+.srp-toggle__pickup.gray {
+  color: #000 !important;
+}
+.srp-toggle__delivery.gray {
+  color: #000 !important;
+}
+.srp-toggle__delivery.gray.blue {
+  color: #fff !important;
+}
+a.srp-address-title {
+  color: #006BEA !important;
+}
+.srp-shipping-current-single__price {
+  color:#000 !important;
+  font-weight: 700;
+}
+.srp-pickup-info a.srp-address-title:after {
+  content: 'Ver mais opções';
+  display: block;
+  font-size: 12px;
+  text-decoration: underline;
+}
+button#find-pickup-link {
+  border-radius: 20px;
+  border: solid 2px #000;
+  background: #fff;
+  color: #000;
+  font-size: 13px;
+  font-weight: bold;
+  appearance: none;
+  transition: ease .1s;
+}
+button#find-pickup-link:hover {
+  background: #000;
+  color: #fff;
+}
+.orderform-template #shipping-data .shipping-container #postalCode-finished-loading{
+  display:block;
+}
+.pickup-point-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius: 3px !important;
+  border-color: #D6D6D6 !important;
+.pickup-marker-blue {
+  width: 20px !important;
+  height: 20px;
+  display: block;
+  position: relative !important;
+  margin: 20px;
+}
+}
+.pickup-point-wrapper {
+  padding-left: 10px;
+  position: relative;
+}
+.button-details-pickup-point {
+  display: none;
+}
+.pickup-point-name {
+  color: #0077C8;
+}
+.button-change-pickup-point {
+  max-width: 256px;
+  height: 40px;
+  width: 100% !important;
+  border-radius: 20px !important;
+  border: solid 1px #000 !important;
+  color: #000;
+  font-weight: bold;
+  font-size: 14px;
+  transition: ease .1s;
+  text-shadow: none;
+&:hover {
+  background:#000;
+  color: #fff;
+}
+}
+.shp-lean-option-active {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+.shp-lean {
+  border: none;
+}
+.shp-option-text-price {
+  color: #4B830D;
+  font-size: 14px;
+  font-weight: bold;
+}
+.vtex-omnishipping-1-x-{
+  &sellerText {
+    display: none;
+  }
+  &package {
+    border-radius: 3px !important;
+    border-color: #D6D6D6 !important;
+  }
+  &priceItems {
+    display: flex;
+    justify-content: flex-start;
+  }
+  &productItems {
+    justify-content: flex-start;
+  }
+  &item {
+    width: auto;
+  }
+  &hr {
+    display: none;
+  }
+  &package .sla {
+    text-align: left;
+  }
+  &itemImgWrapper {
+    width: auto;
+  }
+  &package {
+    justify-content: flex-start !important;
+  }
+  &packageItems {
+    justify-content: flex-start;
+  }
+  &addressSummaryActive {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-radius: 3px !important;
+    border-color: #D6D6D6 !important;
+  }
+  &addressSummaryActive .address-summary {
+    display: block;
+    align-items: center;
+    width: 100%;
+    border-radius: 3px !important;
+    border-color: #D6D6D6 !important;
+    background-position: 3% 50% !important;
+    padding-left: 10% !important;
+    .link-edit {
+      display: none;
+    }
+  }
+  &address div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  &address div .ship-number {
+    max-width: 24%;
+  }
+  &address div input,
+  &address div .ship-number {
+    width: 100% !important;
+  }
+  &submitPaymentButton.btn-submit-wrapper.btn-go-to-payment-wrapper + div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+  }
+  &btnDelivery{
+    + div{
+      position: fixed;
+      width: 100%;
+      height: 100vh;
+      z-index: 11;
+      top: 0;
+      left: 0;
+      display: flex;
+    }
+  }
+}
+.pickup-packages {
+  margin-bottom: 30px;
+}
+.shipping-has-pickups {
+  max-width: 250px;
+}
+.orderform-template #shipping-data input[type=text]#ship-number {
+  max-width: initial !important;
+}
+.input.ship-complement.text {
+  width: 70% !important;
+}
+.srp-toggle__current {
+  border: 0 !important;
+  background:#000;
+}
+.orderform-template #shipping-data input {
+  height: 45px !important;
+  background: #fff !important;
+  max-width: initial !important;
+}
+.orderform-template #shipping-data .shipping-container .ship-reference {
+  width: 100%;
+}
+p.input.ship-receiverName {
+  width: 100%;
+}

@@ -30,6 +30,10 @@ export default class Rewards {
         success: res => {
           if (this.emailUserRewards !== docId) {
             window.localStorage.setItem('saGuid', res[0].saGuid || '')
+            if (window._satellite) {
+              window._satellite.setVar('GUID', res[0].saGuid || '')
+            }
+
             this.userSaGuid = res[0].saGuid
             this.emailUserRewards = docId
           }
@@ -128,7 +132,9 @@ export default class Rewards {
   }
 
   createButtonRewards() {
-    if ($('#show-rewards-parent').length !== 0) return
+    const saGuid = localStorage.getItem('saGuid')
+
+    if ($('#show-rewards-parent').length !== 0 || !saGuid) return
 
     $('.link-gift-card').after(`
       <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn; margin-left: 20px">
@@ -178,7 +184,9 @@ export default class Rewards {
   showObsRewards() {
     try {
       const { orderForm } = window.vtexjs.checkout
+      const saGuid = localStorage.getItem('saGuid')
 
+      if (!saGuid) return
       if (
         orderForm.items.length === 0 &&
         $('#text-details-rewards').length > 0
@@ -434,13 +442,15 @@ export default class Rewards {
   showPointsSimulation() {
     const { orderForm } = window.vtexjs.checkout
 
-    if (orderForm.items.length === 0) return
-
-    if (orderForm.totalizers.length === 0) return
-
     if (orderForm.loggedIn) {
       this.getRewardsData(orderForm.clientProfileData.email)
     }
+
+    if (window.location.hash !== '#/payment') return
+
+    if (orderForm.items.length === 0) return
+
+    if (orderForm.totalizers.length === 0) return
 
     let rewardsDiscountApplied = 0
 
@@ -527,6 +537,9 @@ export default class Rewards {
       data: JSON.stringify(data),
       success: res => {
         if (this.totalPointsCurrentOrder === res.TotalPointAmount) return
+        const saGuid = localStorage.getItem('saGuid')
+
+        if (!saGuid) return
 
         this.totalPointsCurrentOrder = res.TotalPointAmount
         this.putRewardsOnCustomData(orderForm.orderFormId, res.TotalPointAmount)

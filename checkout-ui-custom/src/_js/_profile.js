@@ -321,10 +321,10 @@ export default class CustomProfileData {
   addRewardsBlock() {
     // rewards
     $('.box-client-info .newsletter').after(
-      `<div id="RewardsBlock" style="display: none">
-        <h3 style="color:black;font-size:15px;">Samsung Rewards</h3>
+      `<div id="RewardsBlock" style="margin-top: 35px; display: none">
+        <h3 style="color:black;font-size:12px;">Samsung Rewards</h3>
         <label class="inputOptIn __rewards">
-          <input type="checkbox" id="inputRewards" checked />
+          <input type="checkbox" id="inputRewards" />
           <span class="custom-checkbox-icon"></span>
           <span>
             Participar do programa Samsung Rewards para ganhar pontos com este pedido.
