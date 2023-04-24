@@ -5,6 +5,10 @@
 /* eslint-disable func-names */
 /* eslint-disable max-params */
 
+import { _isSCPlus } from './utils/adobe/getIsSCPlus'
+import { getPaymentMethod } from './utils/adobe/paymentMethod'
+import { SITE_CODE_STRING } from './utils/adobe/siteCodeString'
+
 export default class AdobeLaunchPixel {
   constructor() {
     /* List of pages where the DTM transformation is enabled */
@@ -38,8 +42,7 @@ export default class AdobeLaunchPixel {
     const dataLayerScript = document.createElement('script')
 
     dataLayerScript.type = 'text/javascript'
-    dataLayerScript.innerText =
-      'var siteCode="",pageURL=" ",digitalData={page:{pageInfo:{siteCode:"",siteSection:"shop",pageName:"" },pathIndicator:{depth_2:"",depth_3:"",depth_4:"",depth_5:""},offerId:""},user:{loginStatus:false},product:{modelVariant:"",model_name:"",displayName:"",productDivision:"",productFamily:"",pimSubType:"",listPrice:""},orderdetails:{listPrice:"",productsOrdered:"",modelVariant:"",deliveryOption:"",paymentMethod:"",orderId:"",productDivision:"",productFamily:"",pimSubType:"",displayName:"",addService:"",oldDevice:""}},depth=window.location.href.split("/").length,depth_last=window.location.href.split("/")[depth-1];""!==depth_last&&"?"!==depth_last.charAt(0)||(depth-=1),""===digitalData.page.pathIndicator.depth_2&&(depth>=5&&(digitalData.page.pathIndicator.depth_2=pageURL.split("/")[4]),depth>=6&&(digitalData.page.pathIndicator.depth_3=pageURL.split("/")[5]),depth>=7&&(digitalData.page.pathIndicator.depth_4=pageURL.split("/")[6]),depth>=8&&(digitalData.page.pathIndicator.depth_5=pageURL.split("/")[7]));var pageName=siteCode+":shop";""!=digitalData.page.pathIndicator.depth_2&&(pageName+=":"+digitalData.page.pathIndicator.depth_2),""!=digitalData.page.pathIndicator.depth_3&&(pageName+=":"+digitalData.page.pathIndicator.depth_3),""!=digitalData.page.pathIndicator.depth_4&&(pageName+=":"+digitalData.page.pathIndicator.depth_4),""!=digitalData.page.pathIndicator.depth_5&&(pageName+=":"+digitalData.page.pathIndicator.depth_5),digitalData.page.pageInfo.pageName=pageName;'
+    dataLayerScript.innerText = SITE_CODE_STRING
     document.head.appendChild(dataLayerScript)
 
     _this.getPageType()
@@ -599,54 +602,7 @@ export default class AdobeLaunchPixel {
       endCheckout = endCheckout[1]
 
       if (document.querySelector('.payment-group-item') !== null) {
-        const paymentMethodSelected = document.querySelector(
-          '.payment-group-item.active'
-        )
-
-        let paymentMethod = 'boleto invoice'
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-bankInvoicePaymentGroup'
-        ) {
-          paymentMethod = 'boleto invoice'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-payPalPaymentGroup'
-        ) {
-          paymentMethod = 'paypal'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-debitCardPaymentGroup'
-        ) {
-          paymentMethod = 'debit card'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-MercadoPagoPaymentGroup'
-        ) {
-          paymentMethod = 'mercado pago'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-creditCardPaymentGroup'
-        ) {
-          paymentMethod = 'credit card'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id ===
-            'payment-group-customPrivate_501PaymentGroup'
-        ) {
-          paymentMethod = 'porto'
-        }
+        const { paymentMethod } = getPaymentMethod()
 
         _this.setElementOmni(endCheckout, 'data-omni-checkout', {
           base: window.digitalData.product.model_name,
@@ -959,7 +915,7 @@ export default class AdobeLaunchPixel {
           const { items } = window.vtexjs.checkout.orderForm
 
           items.forEach(async item => {
-            if (_this._isSCPlus(item)) {
+            if (_isSCPlus(item)) {
               const scplus = _this._getMobileCareData(item)
 
               _modelName.push(`;${scplus.model_name}`)
@@ -969,7 +925,10 @@ export default class AdobeLaunchPixel {
               _productFamily.push(scplus.productFamily)
               _pimSubType.push(scplus.pimSubType)
 
-              if (window.__RUNTIME__.account === 'samsungbr') {
+              if (
+                window.__RUNTIME__.account === 'samsungbr' ||
+                window.__RUNTIME__.account === 'samsungbrshop'
+              ) {
                 _listPrice.push(Number(scplus.listPrice).toFixed(2))
               } else {
                 _listPrice.push(Number(scplus.listPrice))
@@ -1133,8 +1092,8 @@ export default class AdobeLaunchPixel {
         new Date() - new Date(cache.lastUpdate) >= HALF_HOUR
       ) {
         let body = {}
-        const skuIds = window.vtexjs.checkout.orderForm.items.filter(item => {
-          return item.id
+        const skuIds = window.vtexjs.checkout.orderForm.items.map(item => {
+          return Number(item.id)
         })
 
         if (skuIds.length > 0) {
@@ -1195,19 +1154,6 @@ export default class AdobeLaunchPixel {
     }
   }
 
-  _getTradeInData() {
-    return {
-      model_name: 'trade-in',
-      modelVariant: 'trade-in',
-      displayName: 'trade-in',
-      listPrice: 0,
-      unit: 0,
-      productDivision: 'shop program',
-      productFamily: 'trade-in',
-      pimSubType: 'trade-in',
-    }
-  }
-
   _getMobileCareData(product) {
     return {
       model_name: 'samsung care',
@@ -1223,32 +1169,9 @@ export default class AdobeLaunchPixel {
   _isTradeIn(item) {
     const filter = Object.values(item.productCategories)
       .map(el => el.toLowerCase())
-      .filter(el => el.match('trade') || el.match('cambia-tu-smartphone'))
+      .filter(el => el.match('trade'))
 
     return filter.length > 0
-  }
-
-  _isSCPlus(item) {
-    const filter = Object.values(item.productCategories)
-      .map(el => el.toLowerCase())
-      .filter(el => el.match('samsung care'))
-
-    return filter.length > 0
-  }
-
-  _hasServicesInAttachment(nameService, attachments) {
-    if (nameService === 'linkscplus') {
-      return attachments.find(function (attachment) {
-        return (
-          attachment.name.toLowerCase() === nameService.toLowerCase() &&
-          attachment.content.idsku !== '0'
-        )
-      })
-    }
-
-    return attachments.find(function (attachment) {
-      return attachment.name.toLowerCase() === nameService.toLowerCase()
-    })
   }
 
   _mountDataBuyNow(dataOmni, skuId) {
