@@ -1198,22 +1198,39 @@ h1#cart-title {
       color: #000;
       font-size: 14px;
     }
+    .srp-pickup-info {
+      .srp-address-title {
+        &::after {
+          content: "Ver mais opções";
+          color: #000000;
+          font-size: 12px;
+          margin-left: 16px;
+          display: inline-block;
+          text-decoration: underline;
+          cursor: pointer;
+          font-weight: 400;
+        }
+      }
+    }
+    .srp-delivery-header {
+      .srp-address-title {
+        &::after {
+          content: "Trocar CEP";
+          color: #000000;
+          font-size: 12px;
+          margin-left: 16px;
+          display: inline-block;
+          text-decoration: underline;
+          cursor: pointer;
+          font-weight: 400;
+        }
+      }
+    }
 
     #deliver-at-text a {
       font-size: 12px;
       font-weight: 700;
       cursor: initial;
-
-      &::after {
-        content: "Ver mais opções";
-        color: #000000;
-        font-size: 12px;
-        margin-left: 16px;
-        display: inline-block;
-        text-decoration: underline;
-        cursor: pointer;
-        font-weight: 400;
-      }
     }
 
     .srp-delivery-select-container,
