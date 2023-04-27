@@ -1857,7 +1857,7 @@ class checkoutCustom {
         const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId}`
 
         window.location.assign(
-          `https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbr&returnUrl=${returnUrl}`
+          `https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbrshop&returnUrl=${returnUrl}`
         )
       })
     }
