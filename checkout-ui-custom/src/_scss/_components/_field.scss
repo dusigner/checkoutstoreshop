@@ -14,13 +14,13 @@
     }
 
     label {
-		position: relative;
+		position: initial; /* BUGFIX CSP */
 		top: 26px;
 		left: 0;
 		font-size: 18px;
 		transition: 0.2s;
 		cursor: initial;
-		
+
 		@media (max-width: 768px) {
 			font-size: 14px;
 		}

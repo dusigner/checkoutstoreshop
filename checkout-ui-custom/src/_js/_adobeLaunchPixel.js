@@ -6,6 +6,10 @@
 /* eslint-disable func-names */
 /* eslint-disable max-params */
 
+import { _isSCPlus } from './utils/adobe/getIsSCPlus'
+import { getPaymentMethod } from './utils/adobe/paymentMethod'
+import { SITE_CODE_STRING } from './utils/adobe/siteCodeString'
+
 export default class AdobeLaunchPixel {
   constructor() {
     /* List of pages where the DTM transformation is enabled */
@@ -13,35 +17,15 @@ export default class AdobeLaunchPixel {
 
     /* ATTENTION: THOSE FILES ARE RELATED TO STAGING ENVIRONMENT OF ADOBE DTM, EACH ONE OF THESE ARE RELATED TO ONE SPECIFIC COUNTRY/REGION */
     this.scriptFiles = {
-      ar:
-        '//assets.adobedtm.com/72afb75f5516/510bc748cd99/launch-2ab05c7d16d3.min.js',
       br:
         '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
-      // cl: '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-9eb78db11d7f.min.js',
-      cl:
-        '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-2dc5f0c95eb9-development.min.js',
-      co:
-        '//assets.adobedtm.com/72afb75f5516/666481c328a4/launch-d4f674a4f20e.min.js',
-      mx:
-        '//assets.adobedtm.com/72afb75f5516/15c6fca01360/launch-eeaa88ea2df8.min.js',
-      pe:
-        '//assets.adobedtm.com/72afb75f5516/e81c20aa5fa4/launch-8c7166247df8.min.js',
-      ar_staging:
-        '//assets.adobedtm.com/94a07bb253a23a545fca071a500c666bbb8d4a94/satelliteLib-00602685fc5991db91c246c9ada0d0aff71599cc-staging.js',
+
       br_staging:
         '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-005f425fd4fc-staging.min.js',
-      cl_staging:
-        '//assets.adobedtm.com/72afb75f5516/bfab45f65e61/launch-2dc5f0c95eb9-development.min.js',
-      co_staging:
-        '//assets.adobedtm.com/72afb75f5516/666481c328a4/launch-b4a7b8e288e1-staging.min.js',
-      mx_staging:
-        '//assets.adobedtm.com/72afb75f5516/15c6fca01360/launch-850c1bb8210b-development.min.js',
-      pe_staging:
-        '//assets.adobedtm.com/72afb75f5516/e81c20aa5fa4/launch-f3a9bb019200-staging.min.js',
     }
 
-    this.version2 = ['ar', 'br', 'cl', 'co', 'mx', 'pe']
-    this.countryCodes = ['ar', 'br', 'cl', 'co', 'mx', 'pe']
+    this.version2 = ['br']
+    this.countryCodes = ['br']
     this.pageType = false
     this.observer = null
     this.pageInterval = null
@@ -54,14 +38,12 @@ export default class AdobeLaunchPixel {
   /* This part injects the jQuery (it's needed to adobe DTM), the window.digitalData variable (globally) */
   init() {
     const _this = this
-
     _this.loadCache()
 
     const dataLayerScript = document.createElement('script')
 
     dataLayerScript.type = 'text/javascript'
-    dataLayerScript.innerText =
-      'var siteCode="",pageURL=" ",digitalData={page:{pageInfo:{siteCode:"",siteSection:"shop",pageName:"" },pathIndicator:{depth_2:"",depth_3:"",depth_4:"",depth_5:""},offerId:""},user:{loginStatus:false},product:{modelVariant:"",model_name:"",displayName:"",productDivision:"",productFamily:"",pimSubType:"",listPrice:""},orderdetails:{listPrice:"",productsOrdered:"",modelVariant:"",deliveryOption:"",paymentMethod:"",orderId:"",productDivision:"",productFamily:"",pimSubType:"",displayName:"",addService:"",oldDevice:""}},depth=window.location.href.split("/").length,depth_last=window.location.href.split("/")[depth-1];""!==depth_last&&"?"!==depth_last.charAt(0)||(depth-=1),""===digitalData.page.pathIndicator.depth_2&&(depth>=5&&(digitalData.page.pathIndicator.depth_2=pageURL.split("/")[4]),depth>=6&&(digitalData.page.pathIndicator.depth_3=pageURL.split("/")[5]),depth>=7&&(digitalData.page.pathIndicator.depth_4=pageURL.split("/")[6]),depth>=8&&(digitalData.page.pathIndicator.depth_5=pageURL.split("/")[7]));var pageName=siteCode+":shop";""!=digitalData.page.pathIndicator.depth_2&&(pageName+=":"+digitalData.page.pathIndicator.depth_2),""!=digitalData.page.pathIndicator.depth_3&&(pageName+=":"+digitalData.page.pathIndicator.depth_3),""!=digitalData.page.pathIndicator.depth_4&&(pageName+=":"+digitalData.page.pathIndicator.depth_4),""!=digitalData.page.pathIndicator.depth_5&&(pageName+=":"+digitalData.page.pathIndicator.depth_5),digitalData.page.pageInfo.pageName=pageName;'
+    dataLayerScript.innerText = SITE_CODE_STRING
     document.head.appendChild(dataLayerScript)
 
     _this.getPageType()
@@ -461,7 +443,7 @@ export default class AdobeLaunchPixel {
       })
       xhttp.open('POST', targetUrl, true)
       xhttp.setRequestHeader('Content-Type', 'application/json')
-      // xhttp.send(JSON.stringify(data));
+      // xhttp.send(JSON.stringify(body))
     }
   }
 
@@ -620,54 +602,7 @@ export default class AdobeLaunchPixel {
       endCheckout = endCheckout[1]
 
       if (document.querySelector('.payment-group-item') !== null) {
-        const paymentMethodSelected = document.querySelector(
-          '.payment-group-item.active'
-        )
-
-        let paymentMethod = 'boleto invoice'
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-bankInvoicePaymentGroup'
-        ) {
-          paymentMethod = 'boleto invoice'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-payPalPaymentGroup'
-        ) {
-          paymentMethod = 'paypal'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-debitCardPaymentGroup'
-        ) {
-          paymentMethod = 'debit card'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-MercadoPagoPaymentGroup'
-        ) {
-          paymentMethod = 'mercado pago'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id === 'payment-group-creditCardPaymentGroup'
-        ) {
-          paymentMethod = 'credit card'
-        }
-
-        if (
-          paymentMethodSelected &&
-          paymentMethodSelected.id ===
-            'payment-group-customPrivate_501PaymentGroup'
-        ) {
-          paymentMethod = 'porto'
-        }
+        const { paymentMethod } = getPaymentMethod()
 
         _this.setElementOmni(endCheckout, 'data-omni-checkout', {
           base: window.digitalData.product.model_name,
@@ -719,9 +654,9 @@ export default class AdobeLaunchPixel {
 
   /* Populates the window.digitalData variable Page informations */
   _populateDataLayer() {
-
-    if(window._satellite === undefined ||
-      window._satellite === null) return null
+    if (window._satellite === undefined || window._satellite === null) {
+      return null
+    }
 
     const _this = this
 
@@ -929,6 +864,10 @@ export default class AdobeLaunchPixel {
             apiData = cachedData
             apiData.listPrice = productPrice
           } else if (_this.codesCache === -1) {
+            /**
+             * chamar orderform e pegar as infos de skuId e passar de body dentro da request da link API.
+             */
+            // const response = this.
             const xhttp = new XMLHttpRequest()
             const targetUrl =
               'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=4512d4c4a13541a9bc451c529f2bbb31'
@@ -984,7 +923,7 @@ export default class AdobeLaunchPixel {
           const { items } = window.vtexjs.checkout.orderForm
 
           items.forEach(async item => {
-            if (_this._isSCPlus(item)) {
+            if (_isSCPlus(item)) {
               const scplus = _this._getMobileCareData(item)
 
               _modelName.push(`;${scplus.model_name}`)
@@ -1100,8 +1039,6 @@ export default class AdobeLaunchPixel {
     const hostArr = window.location.host.split('.')
 
     if (hostArr[0].includes('samsungbrtest')) return 'br'
-    if (hostArr[0].includes('samsungbrshop')) return 'br'
-    if (hostArr[0] === 'samsungmxio') return 'mx'
     const tldCode = hostArr[hostArr.length - 1]
 
     if (_this.countryCodes.indexOf(tldCode) > -1) return tldCode
@@ -1115,18 +1052,7 @@ export default class AdobeLaunchPixel {
   }
 
   _isProduction() {
-    const productionSites = [
-      'shop.samsung.com/ar',
-      'shop.samsung.com.ar',
-      'shop.samsung.com/pe',
-      'shop.samsung.com.pe',
-      'shop.samsung.com/co',
-      'shop.samsung.com.co',
-      'shop.samsung.com/br',
-      'shop.samsung.com.br',
-      'www.samsungstore.mx',
-      'shop.samsung.com/mx',
-    ]
+    const productionSites = ['shop.samsung.com/br', 'shop.samsung.com.br']
 
     for (let i = 0; i < productionSites.length; i++) {
       if (window.location.href.indexOf(productionSites[i]) > -1) {
@@ -1148,16 +1074,7 @@ export default class AdobeLaunchPixel {
   loadCache() {
     const _this = this
 
-    const cacheApiKeys = {
-      ar: '88c1b01b99814a5f857c637d37bae622',
-      br: '78ca5fdbcadb437083408712375af24c',
-      ch: 'd2d9609836c04d9bbb7b07affa9c7a87',
-      co: '846f6305d72e4a058d3d11d6f13fc2f7',
-      mx: '8b6be84693f840849d056aef5c88149f',
-      pm: '150c1dcde6c9443fa12721a1204af446',
-      py: '75ea8fb8a57144d4a6dbbd77144d9fb3',
-      pe: '918161aef5d34eff8745f32917ffef8c',
-    }
+    const apiKey = '78ca5fdbcadb437083408712375af24c'
 
     const country = _this._fetchSiteCode()
 
@@ -1186,8 +1103,21 @@ export default class AdobeLaunchPixel {
         !('lastUpdate' in cache) ||
         new Date() - new Date(cache.lastUpdate) >= HALF_HOUR
       ) {
+        let body = {}
+        const skuIds = window.vtexjs.checkout.orderForm.items.map(item => {
+          return Number(item.id)
+        })
+
+        if (skuIds.length > 0) {
+          body = {
+            skuIds,
+          }
+        } else {
+          body = {}
+        }
+
         const xhttp = new XMLHttpRequest()
-        const targetUrl = `https://ssg-checkout.linkapi.com.br/v1/products?apiKey=${cacheApiKeys[country]}`
+        const targetUrl = `https://ssg-checkout.linkapi.com.br/v1/products?apiKey=${apiKey}`
 
         xhttp.open('POST', targetUrl, true)
         _this.codesCache = -1
@@ -1208,7 +1138,7 @@ export default class AdobeLaunchPixel {
         }
 
         xhttp.setRequestHeader('Content-Type', 'application/json')
-        xhttp.send()
+        xhttp.send(JSON.stringify(body))
       }
 
       if (cache !== null && cache !== undefined) {
@@ -1236,19 +1166,6 @@ export default class AdobeLaunchPixel {
     }
   }
 
-  _getTradeInData() {
-    return {
-      model_name: 'trade-in',
-      modelVariant: 'trade-in',
-      displayName: 'trade-in',
-      listPrice: 0,
-      unit: 0,
-      productDivision: 'shop program',
-      productFamily: 'trade-in',
-      pimSubType: 'trade-in',
-    }
-  }
-
   _getMobileCareData(product) {
     return {
       model_name: 'samsung care',
@@ -1264,32 +1181,9 @@ export default class AdobeLaunchPixel {
   _isTradeIn(item) {
     const filter = Object.values(item.productCategories)
       .map(el => el.toLowerCase())
-      .filter(el => el.match('trade') || el.match('cambia-tu-smartphone'))
+      .filter(el => el.match('trade'))
 
     return filter.length > 0
-  }
-
-  _isSCPlus(item) {
-    const filter = Object.values(item.productCategories)
-      .map(el => el.toLowerCase())
-      .filter(el => el.match('samsung care'))
-
-    return filter.length > 0
-  }
-
-  _hasServicesInAttachment(nameService, attachments) {
-    if (nameService === 'linkscplus') {
-      return attachments.find(function(attachment) {
-        return (
-          attachment.name.toLowerCase() === nameService.toLowerCase() &&
-          attachment.content.idsku !== '0'
-        )
-      })
-    }
-
-    return attachments.find(function(attachment) {
-      return attachment.name.toLowerCase() === nameService.toLowerCase()
-    })
   }
 
   _mountDataBuyNow(dataOmni, skuId) {
@@ -1354,9 +1248,7 @@ export default class AdobeLaunchPixel {
       ? window.__RUNTIME__.rootPath
       : ''
 
-    const uri = `${currentPath}/pvt/getModel?siteCode=${
-      account === 'samsungbrshop' ? accountBRShop : account
-    }&modelCode=${skuId}`
+    const uri = `${currentPath}/pvt/getModel?siteCode=${accountBRShop}&modelCode=${skuId}`
     const myHeaders = new Headers({ 'Content-Type': 'application/json' })
 
     return fetch(uri, { method: 'GET', headers: myHeaders })
