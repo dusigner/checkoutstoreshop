@@ -735,7 +735,7 @@
 				width:100%;
 				overflow: hidden;
 				margin:0 0 20px 0;
-				display: block !important;
+				display: none !important; /* REMOVING TOOGLE BUTTON */
 			}
     	.vtex-omnishipping-1-x-summaryChange {
 		    background:$actionSecondary;

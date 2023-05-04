@@ -21,10 +21,6 @@ body {
         top: 0;
       }
     }
-
-    @media(max-width: $mobileWidth) {
-      padding-top: 127;
-    }
   }
 
   .main-header {
