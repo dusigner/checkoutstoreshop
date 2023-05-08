@@ -309,8 +309,8 @@ export default class CustomShippingData {
 
   autoTriggerSlasResult() {
     try {
-      const $postalCodeInput = $('#ship-postalCode:visible')
-      const slasResultAlreadyActive = $('.srp-delivery-info:visible').length > 1
+      const $postalCodeInput = $('.full-cart.active #ship-postalCode:visible')
+      const slasResultAlreadyActive = $('.full-cart.active .srp-delivery-info:visible').length > 1
 
       if (slasResultAlreadyActive || !$postalCodeInput.length) {
         return
@@ -321,6 +321,34 @@ export default class CustomShippingData {
       }
     } catch (err) {
       console.error(`Ocorreu um erro ao validar CEP: ${err}`)
+    }
+  }
+
+  addInvalidSelectedDateMessage() {
+    try {
+      // Garante que sempre vai iniciar sem mensagem
+      $('.invalid-selectedDate-msg').remove()
+
+      const isToggleActive = $('.vtex-omnishipping-1-x-toggleInnerActive').length > 0
+      const hasSelectedDate = $('#scheduled-delivery-Agendada').length > 0
+
+      if (!isToggleActive) {
+        if (!$('.vtex-omnishipping-1-x-leanShippingOptionActive').length) {
+          $('#Normal.shp-lean-option').trigger('click')
+        }
+
+        return
+      }
+      
+      // Adiciona mensagem apenas se a condição corresponder
+      if (!hasSelectedDate && isToggleActive) {
+        const $scheduledDeliveryList = $('.vtex-omnishipping-1-x-scheduledDeliveryList')
+        const $invalidSelectedDateMessage = $('<div class="invalid-selectedDate-msg"><p class="invalid-selectedDate-msg__message">Você deve agendar data e horário da sua entrega.</p></div>');
+
+        $scheduledDeliveryList.after($invalidSelectedDateMessage)
+      }
+    } catch (err) {
+      console.error(`Não foi possível adicionar mensagem de data agendamento obrigatória. ${err}`)
     }
   }
 
@@ -364,5 +392,9 @@ export default class CustomShippingData {
         }
       }
     )
+
+    $(document).on('click', '.vtex-omnishipping-1-x-toggle, .react-datepicker__day:not(.react-datepicker__day--disabled)', function() {     
+      setTimeout(_this.addInvalidSelectedDateMessage, 10)
+    });
   }
 }
