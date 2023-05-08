@@ -339,7 +339,6 @@ export default class CustomShippingData {
         $notSetectedSchedule.attr('disabled', 'disabled')
         $scheduledDeliveryList.after($invalidSelectedDateMessage)
       } else {
-        console.log("inside else")
         $("#btn-go-to-payment").removeAttr('disabled')
       }
 
@@ -358,19 +357,6 @@ export default class CustomShippingData {
     }
 
   }
-
-  // disableBtnWnoData() {
-  //   const isToggleActive = $('.vtex-omnishipping-1-x-toggleInnerActive').length > 0
-  //   const btnToPayment = $("#btn-go-to-payment")
-  //   const $invalidSelectedDateMessage = $('<div class="invalid-selectedDate-msg"><p class="invalid-selectedDate-msg__message">Por favor selecione uma data para a entrega</p></div>');
-  //   const $scheduledDeliveryMessage = $('.vtex-omnishipping-1-x-scheduledDeliveryList')
-
-  //   if (!isToggleActive) {
-  //     $("#btn-go-to-payment").addClass("btn-disabled-while")
-
-  //     $scheduledDeliveryMessage.after($invalidSelectedDateMessage)
-  //   }
-  // }
 
   bindEvents() {
     const _this = this
