@@ -74,6 +74,12 @@ h1#cart-title {
 
 .fakeRemove {
   cursor: pointer;
+  display: block;
+  position: absolute;
+  width: 36px;
+  height: 30px;
+  right: 3px;
+  bottom: 19px;
 }
 
 .layerpopup {

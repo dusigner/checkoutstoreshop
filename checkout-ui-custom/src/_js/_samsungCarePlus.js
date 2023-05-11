@@ -15,6 +15,7 @@ export default class SamsungCarePlus {
 
       if (items) {
         this.validateSamsungCarePlus(items)
+        this.popupSSC(items)
       }
     } catch (e) {
       console.error('SamsungCarePlus error', e)
@@ -100,7 +101,7 @@ export default class SamsungCarePlus {
         return
       }
 
-      const { items } = this.vtexjs.checkout.orderForm
+      const { items } = window.vtexjs.checkout.orderForm
       const payload = JSON.parse(request.data || '{}')
       const { orderItems } = payload
       const [currentItem] = orderItems
@@ -127,6 +128,97 @@ export default class SamsungCarePlus {
       }
     } catch (err) {
       console.error(`Erro ao sincronizar quantidade do Samsung Care: ${err}`)
+    }
+  }
+
+  // Adiciona um botão fake e de remover produto para ssc proteção completa e abre um popup ao clicar
+  popupSSC(items) {
+    try {
+      const scpItem = items.filter(item => this.isSamsungCarePlus(item))
+      const scpItemFree = scpItem.filter(item => item.sellingPrice === 0)
+      const scpItemFreeIds = scpItemFree.map(item => item.id)
+
+      if(scpItemFree.length){
+        if ($('.fakeRemove').length === 0) {
+          $('.product-item').each(function () {
+            const dataSku = $(this).attr('data-sku')
+  
+            if (scpItemFreeIds.includes(dataSku)) {
+              $(
+                '<i title="remover" class="fakeRemove"></i>'
+              ).appendTo($(`.product-item[data-sku=${dataSku}] .item-remove`))
+            }
+          })
+          if (items) {
+            const product = items.filter(item => scpItemFreeIds.includes(item.id))
+  
+            if (product[0] && product[0].attachments[0]) {
+              const nameProduct = product[0].name
+              const { idsku } = product[0].attachments[0].content
+              const idskusc = product[0].id
+  
+              $(document).on('click', '.fakeRemove', function () {
+                $('body').addClass('modalActive')
+                if (
+                  product[0] &&
+                  product[0].attachments[0] &&
+                  product[0].attachments[0].content.idsku
+                ) {
+                  const name = items.filter(
+                    val => val.id === idsku
+                  )
+  
+                  if ($('.modalssc').length == 0 && $('.layerpopup').length == 0) {
+                    $(`<div class="layerpopup"></div>
+                    <div class="modalssc">
+                      <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também 
+                        do seu carrinho o item <b>${name[0].name}</b></p>
+                      <div>
+                        <a>Voltar ao carrinho</a>
+                        <a data-id-sc='${idskusc}' data-id='${idsku}'>Excluir</a>
+                      </div>
+                    </div>`).prependTo($('body'))
+                  }
+                }
+              })
+            }
+          }
+  
+          $(document).on('click', '.modalssc div a', function () {
+            $('.layerpopup, .modalssc').fadeOut('fast', function () {
+              $(this).remove()
+            })
+          })
+          $(document).on('click', '.modalssc div a + a', function () {
+            const productId = $(this).attr('data-id')
+  
+            const interval = 4000
+  
+            items.forEach((el, i) => {
+              setTimeout(function () {
+                const removeList = []
+  
+                if (el.id === productId) {
+                  removeList.push({
+                    index: i,
+                    quantity: 0,
+                  })
+                  const itemsToRemove = removeList
+  
+                  if (itemsToRemove.length > 0) {
+                    return window.vtexjs.checkout
+                      .removeItems(itemsToRemove)
+                      .then(() => {})
+                  }
+                }
+              }, i * interval)
+            })
+          })
+        }
+      }
+      
+    } catch (err) {
+      console.error(`Erro ao remover produto de Samsung Care Combo Grátis: ${err}`)
     }
   }
 }
