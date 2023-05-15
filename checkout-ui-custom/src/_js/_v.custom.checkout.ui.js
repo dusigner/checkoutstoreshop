@@ -2047,7 +2047,7 @@ class checkoutCustom {
         _this.shipping.limitFieldsCharacters()
 
         $(window).on('checkoutRequestBegin.vtex', function (event, request) {
-          _this.installationService.interceptInstallationRequest(event, request)
+          _this.installationService.syncQuantity(event, request)
           _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
         })
       })
