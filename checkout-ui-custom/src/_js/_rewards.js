@@ -48,7 +48,7 @@ export default class Rewards {
             this.userAcceptedRewards = true
             if (window.location.hash === '#/payment') {
               this.getPointsSearch()
-              this.showRewardsCalc()
+              this.createButtonRewards()
             }
           }
         },
@@ -63,7 +63,7 @@ export default class Rewards {
       // $('#inputRewards').attr('checked', true)
       if (window.location.hash === '#/payment') {
         this.getPointsSearch()
-        this.showRewardsCalc()
+        this.createButtonRewards()
       }
     }
   }
