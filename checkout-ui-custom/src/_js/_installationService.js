@@ -63,7 +63,7 @@ export default class InstallationService {
     })
   }
 
-  interceptInstallationRequest(event, request) {
+  syncQuantity(event, request) {
     const isUpdateItemRequest = request.url.includes('/items/update/')
     if (!isUpdateItemRequest) {
       return
@@ -82,7 +82,7 @@ export default class InstallationService {
       if (!hasInstallationServiceInCart.length) {
         return
       }
-      const { items } = this.vtexjs.checkout.orderForm
+      const { items } = window.vtexjs.checkout.orderForm
       const payload = JSON.parse(request.data || '{}')
       const { orderItems } = payload
       const [currentItem] = orderItems

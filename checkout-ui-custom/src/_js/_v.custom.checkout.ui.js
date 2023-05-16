@@ -1377,7 +1377,6 @@ class checkoutCustom {
     this.showCustomMsgInstallation(orderForm)
     this.showCustomDiscounts()
     this.summaryCustom()
-    this.popupSSC()
     new CustomHeader().init()
     this.samsungCarePlus.init()
     new BespokeRefrigerator().init()
@@ -1712,106 +1711,7 @@ class checkoutCustom {
     })
   }
 
-  // Adiciona um botão fake e de remover produto para ssc proteção completa e abre um popup ao clicar
-  popupSSC() {
-    if ($('.fakeRemove').length === 0) {
-      $('.product-item').each(function () {
-        const dataSku = $(this).attr('data-sku')
 
-        if (
-          dataSku == '3353' ||
-          dataSku == '3354' ||
-          dataSku == '3653' ||
-          dataSku == '3654' ||
-          dataSku == '3655' ||
-          dataSku == '25811' ||
-          dataSku == '25810'
-        ) {
-          $(
-            '<i title="remover" class="icon fakeRemove icon-remove item-remove-ico"></i>'
-          ).appendTo($(`.product-item[data-sku=${dataSku}] .item-remove`))
-        }
-      })
-      if (
-        window.vtexjs.checkout &&
-        window.vtexjs.checkout.orderForm &&
-        window.vtexjs.checkout.orderForm.items
-      ) {
-        const product = window.vtexjs.checkout.orderForm.items.filter(item => {
-          return (
-            item.id === '3353' ||
-            item.id === '3354' ||
-            item.id === '3653' ||
-            item.id === '3654' ||
-            item.id === '3655' ||
-            item.id === '25811' ||
-            item.id === '25810'
-          )
-        })
-
-        if (product[0] && product[0].attachments[0]) {
-          const nameProduct = product[0].name
-          const { idsku } = product[0].attachments[0].content
-          const idskusc = product[0].id
-
-          $(document).on('click', '.fakeRemove', function () {
-            $('body').addClass('modalActive')
-            if (
-              product[0] &&
-              product[0].attachments[0] &&
-              product[0].attachments[0].content.idsku
-            ) {
-              const name = window.vtexjs.checkout.orderForm.items.filter(
-                val => val.id === idsku
-              )
-
-              if ($('.modalssc').length == 0 && $('.layerpopup').length == 0) {
-                $(`<div class="layerpopup"></div>
-                 <div class="modalssc">
-                  <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name[0].name}</b></p>
-                  <div>
-                    <a>Voltar ao carrinho</a>
-                    <a data-id-sc='${idskusc}' data-id='${idsku}'>Excluir</a>
-                  </div>
-                 </div>`).prependTo($('body'))
-              }
-            }
-          })
-        }
-      }
-
-      $(document).on('click', '.modalssc div a', function () {
-        $('.layerpopup, .modalssc').fadeOut('fast', function () {
-          $(this).remove()
-        })
-      })
-      $(document).on('click', '.modalssc div a + a', function () {
-        const productId = $(this).attr('data-id')
-
-        const interval = 4000
-
-        window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
-          setTimeout(function () {
-            const removeList = []
-
-            if (el.id === productId) {
-              removeList.push({
-                index: i,
-                quantity: 0,
-              })
-              const itemsToRemove = removeList
-
-              if (itemsToRemove.length > 0) {
-                return window.vtexjs.checkout
-                  .removeItems(itemsToRemove)
-                  .then(() => {})
-              }
-            }
-          }, i * interval)
-        })
-      })
-    }
-  }
 
   clickModal() {
     $(document).on('click', '.modalssc div a + a', function () {
@@ -2047,7 +1947,7 @@ class checkoutCustom {
         _this.shipping.limitFieldsCharacters()
 
         $(window).on('checkoutRequestBegin.vtex', function (event, request) {
-          _this.installationService.interceptInstallationRequest(event, request)
+          _this.installationService.syncQuantity(event, request)
           _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
         })
       })

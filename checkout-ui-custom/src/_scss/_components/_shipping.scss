@@ -193,7 +193,7 @@
 
             &.ship-complement,
             &.ship-state {
-                margin-left: 24px !important;
+                margin-left: 0px !important;
             }
 
             &.ship-complement label,
@@ -204,10 +204,16 @@
 
             &.ship-complement label::after {
                 content: "Complemento";
+                @media (max-width: 768px) {
+                  font-size: 14px;
+                }
             }
 
             &.ship-reference label::after {
                 content: "Ponto de Referência";
+                @media (max-width: 768px) {
+                  font-size: 14px;
+                }
             }
 
             &.ship-street {
