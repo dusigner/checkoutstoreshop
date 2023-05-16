@@ -502,7 +502,6 @@ export default class AdobeLaunchPixel {
 
     if (node.className.indexOf('product-item') > -1) {
       if (node.querySelector('td.product-name a') !== null) {
-        _this._addProductToDigitalDataV2()
         $('.product-item .item-quantity-change-increment').addClass(
           'data-omni-buynow'
         )
@@ -712,8 +711,9 @@ export default class AdobeLaunchPixel {
 
   /* Populates the window.digitalData variable Page informations */
   _populateDataLayer() {
-    if (window._satellite === undefined || window._satellite === null)
+    if (window._satellite === undefined || window._satellite === null) {
       return null
+    }
 
     const _this = this
 
