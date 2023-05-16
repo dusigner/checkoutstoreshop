@@ -48,7 +48,7 @@ export default class Rewards {
             this.userAcceptedRewards = true
             if (window.location.hash === '#/payment') {
               this.getPointsSearch()
-              this.createButtonRewards()
+              this.showRewardsCalc()
             }
           }
         },
@@ -63,7 +63,7 @@ export default class Rewards {
       // $('#inputRewards').attr('checked', true)
       if (window.location.hash === '#/payment') {
         this.getPointsSearch()
-        this.createButtonRewards()
+        this.showRewardsCalc()
       }
     }
   }
@@ -92,7 +92,7 @@ export default class Rewards {
         <tbody id="total-details-rewards" style="border-top: 1px solid #cbcbcb;">
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
             <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
-              Pontos Rewards gerados para sua próxima compra**
+              Pontos Rewards gerados para sua próxima compra*
             </td>
             <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important">${formatNumberBRL(
               this.totalPointsCurrentOrder
@@ -105,7 +105,7 @@ export default class Rewards {
       <tbody id="total-details-rewards" style="border-top: 1px solid #cbcbcb;">
         <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
           <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
-            **Pontos Rewards (Gerados apenas quando utilizado Samsung Account)
+            *Pontos Rewards (Gerados apenas quando utilizado Samsung Account)
           </td>
           <td id="total-points-value" style="font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important">${formatNumberBRL(
             this.totalPointsCurrentOrder
@@ -202,7 +202,7 @@ export default class Rewards {
       const _cartElem = $(`.summary-to-new-components`)
       const _component = `
         <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
-          <p>**Pontos Samsung Rewards são gerados somente em compras realizadas por meio de uma Samsung Account participante do programa. Pontos Samsung Rewards pendentes serão creditados 14 dias após a entrega do pedido. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados. Ao utilizar seus pontos já existentes do Samsung Rewards as promoções de meios de pagamento vigentes não serão aplicadas.
+          <p>*Pontos Samsung Rewards são gerados somente em compras realizadas por meio de uma Samsung Account participante do programa. Pontos Samsung Rewards pendentes serão creditados 14 dias após a entrega do pedido. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados. Ao utilizar seus pontos já existentes do Samsung Rewards as promoções de meios de pagamento vigentes não serão aplicadas.
           </p>
         </div>
       `
@@ -263,7 +263,7 @@ export default class Rewards {
               <span class="text-switch-rewards"></span>
             </div>
             <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
-              Seus pontos valem descontos de até 50% na compra de produtos Samsung.
+              Troque seus pontos por até 50% de desconto. *Essa transação poderá utilizar todos os seus pontos.
             </p>
             </div>
           </div>
@@ -291,7 +291,7 @@ export default class Rewards {
     if ($('.switch-rewards input')[0].checked) {
       $('.text-switch-rewards').text('Utilizar os pontos nesta compra')
     } else {
-      $('.text-switch-rewards').text('Acumular pontos para as próximas compras')
+      $('.text-switch-rewards').text('Não utilizar os meus pontos nessa compra')
     }
 
     $(document).on('change', '.switch-rewards input', () => {
@@ -304,7 +304,7 @@ export default class Rewards {
         this.setRewardsDiscount()
       } else {
         $('.text-switch-rewards').text(
-          'Acumular pontos para as próximas compras'
+          'Não utilizar os meus pontos nessa compra'
         )
         this.cancelRewardsDiscount()
       }
