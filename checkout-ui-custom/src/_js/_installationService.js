@@ -63,57 +63,6 @@ export default class InstallationService {
     })
   }
 
-  syncQuantity(event, request) {
-    const isUpdateItemRequest = request.url.includes('/items/update/')
-    if (!isUpdateItemRequest) {
-      return
-    }
-    try {
-      function findInstallationServiceInCart() {
-        const { items } = window.vtexjs.checkout.orderForm
-        return items.filter(item => {
-          const { attachments } = item
-          return attachments.some(attachment => {
-            return attachment.name.includes('linkInstallation')
-          })
-        })
-      }
-      const hasInstallationServiceInCart = findInstallationServiceInCart()
-      if (!hasInstallationServiceInCart.length) {
-        return
-      }
-      const { items } = window.vtexjs.checkout.orderForm
-      const payload = JSON.parse(request.data || '{}')
-      const { orderItems } = payload
-      const [currentItem] = orderItems
-
-      function findInstallationServiceById(item) {
-        const mainItem = items.find(
-          itemResponse => itemResponse.id === currentItem.id
-        )
-        const { attachments } = item
-        return attachments.some(attachment => {
-          return attachment.content.refId === mainItem.refId
-        })
-      }
-      const installationService = items.find(findInstallationServiceById)
-      if (installationService) {
-        orderItems.push({
-          seller: installationService.seller,
-          quantity: currentItem.quantity,
-          id: installationService.id,
-          index: items.indexOf(installationService),
-          hasBundleItems: !!installationService.bundleItems.length,
-        })
-        request.data = JSON.stringify(payload)
-      }
-    } catch (err) {
-      console.error(
-        `Erro ao sincronizar quantidade do Serviço de instalação: ${err}`
-      )
-    }
-  }
-
   // Encontrar as instalações.
   getInstallationItems(items) {
     return items.filter(item => this.isInstallationService(item))
