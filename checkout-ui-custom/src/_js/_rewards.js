@@ -48,7 +48,7 @@ export default class Rewards {
             this.userAcceptedRewards = true
             if (window.location.hash === '#/payment') {
               this.getPointsSearch()
-              this.createButtonRewards()
+              this.showRewardsCalc()
             }
           }
         },
@@ -63,7 +63,7 @@ export default class Rewards {
       // $('#inputRewards').attr('checked', true)
       if (window.location.hash === '#/payment') {
         this.getPointsSearch()
-        this.createButtonRewards()
+        this.showRewardsCalc()
       }
     }
   }
@@ -131,27 +131,12 @@ export default class Rewards {
     }
   }
 
-  createButtonRewards() {
+  showRewardsCalc() {
     const saGuid = localStorage.getItem('saGuid')
 
-    if ($('#show-rewards-parent').length !== 0 || !saGuid) return
+    if (!saGuid) return
 
-    $('.link-gift-card').after(`
-      <p class="link link-gift-card" id="show-rewards-parent" style="display: none; grid-area: rewards-btn; margin-left: 20px">
-        <a id="show-rewards-group" class="link-payment-discounts-cod">
-          Resgatar pontos Rewards
-        </a>
-      </p>
-    `)
-
-    $('body').on('click', '#show-rewards-group', () => {
-      this.showRewardsCalc()
-    })
-  }
-
-  showRewardsCalc() {
     $('#group-all-rewards').show()
-    $('#show-rewards-parent').addClass('disabled')
   }
 
   createRewardsTotalDiscount(discount) {
@@ -284,7 +269,7 @@ export default class Rewards {
         giftRewards[0].value > 0
       ) {
         $('.switch-rewards input')[0].checked = true
-        this.showRewardsCalc()
+        $('#group-all-rewards').show()
       }
     }
 
