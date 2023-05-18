@@ -93,7 +93,7 @@ export default class InstallationService {
         )
         const { attachments } = item
         return attachments.some(attachment => {
-          return attachment.content.refId === mainItem.refId
+          return attachment.content && attachment.content.refId === mainItem && mainItem.refId
         })
       }
       const installationService = items.find(findInstallationServiceById)
