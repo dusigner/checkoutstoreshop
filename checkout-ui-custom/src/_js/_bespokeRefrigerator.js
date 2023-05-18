@@ -301,7 +301,7 @@ export default class BespokeRefrigerator {
           contador = itemToRemove.length
         }
 
-        this.clearBespokeRefrigerator(items, itemToRemove[0].id, contador)
+        this.clearBespokeRefrigerator(items, itemBsk.mainSku, contador)
       }
     })
 
