@@ -1678,12 +1678,12 @@ class checkoutCustom {
       )
         .then(response => response.json())
         .then(response => {
-          if (response[0] && response[0].skuSpecifications !== 'undefined') {
+          if (response[0] && response[0].skuSpecifications) {
             const isInstallation = response[0].skuSpecifications.filter(
               item => item.field.name === 'Serviço de Instalação'
             )
 
-            if (isInstallation.length > 0) {
+            if (isInstallation && isInstallation.length > 0) {
               const nameInstallation = isInstallation[0].values[0].name
 
               setTimeout(function () {
@@ -1710,8 +1710,6 @@ class checkoutCustom {
         })
     })
   }
-
-
 
   clickModal() {
     $(document).on('click', '.modalssc div a + a', function () {
