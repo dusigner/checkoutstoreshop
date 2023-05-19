@@ -309,8 +309,8 @@ export default class CustomShippingData {
 
   autoTriggerSlasResult() {
     try {
-      const $postalCodeInput = $('#ship-postalCode:visible')
-      const slasResultAlreadyActive = $('.srp-delivery-info:visible').length > 1
+      const $postalCodeInput = $('.full-cart.active #ship-postalCode:visible')
+      const slasResultAlreadyActive = $('.full-cart.active .srp-delivery-info:visible').length > 1
 
       if (slasResultAlreadyActive || !$postalCodeInput.length) {
         return

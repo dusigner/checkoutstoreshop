@@ -2127,9 +2127,6 @@ class checkoutCustom {
           case 'shippingData':
             _this.shipping.autoTriggerSlasResult()
             break
-
-          default:
-            console.error(`No case found for ${orderFormSection}`)
         }
       })
       $(window).load(function () {
