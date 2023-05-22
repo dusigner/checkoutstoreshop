@@ -94,6 +94,6 @@ export default class InstallationService {
   }
 
   isInstallationService(item) {
-    return item.detailUrl === this.INSTALLATION_URL && item.attachments.length
+    return item.detailUrl.includes(this.INSTALLATION_URL) && item.attachments.length
   }
 }
