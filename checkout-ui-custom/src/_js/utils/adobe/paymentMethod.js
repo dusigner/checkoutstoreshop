@@ -1,15 +1,23 @@
+/* eslint-disable prettier/prettier */
 export function getPaymentMethod() {
   const paymentMethodSelected = document.querySelector(
     '.payment-group-item.active'
   )
 
-  let paymentMethod = 'boleto invoice'
+  let paymentMethod = 'pix'
 
   if (
     paymentMethodSelected &&
     paymentMethodSelected.id === 'payment-group-bankInvoicePaymentGroup'
   ) {
-    paymentMethod = 'boleto invoice'
+    paymentMethod = 'pix'
+  }
+
+  if (
+    paymentMethodSelected &&
+    paymentMethodSelected.id === 'payment-group-bankInvoicePaymentGroup'
+  ) {
+    paymentMethod = 'bank slip'
   }
 
   if (
@@ -44,7 +52,21 @@ export function getPaymentMethod() {
     paymentMethodSelected &&
     paymentMethodSelected.id === 'payment-group-customPrivate_501PaymentGroup'
   ) {
-    paymentMethod = 'porto'
+    paymentMethod = 'Samsung itaucard'
+  }
+
+  if (
+    paymentMethodSelected &&
+    paymentMethodSelected.id === 'payment-group-picPayPaymentGroup'
+  ) {
+    paymentMethod = 'picpay'
+  }
+
+  if (
+    paymentMethodSelected &&
+    paymentMethodSelected.id === 'payment-group-SamsungPayPaymentGroup'
+  ) {
+    paymentMethod = 'Samsung pay'
   }
 
   return {
