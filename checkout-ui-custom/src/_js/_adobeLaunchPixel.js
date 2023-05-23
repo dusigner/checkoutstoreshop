@@ -107,7 +107,6 @@ export default class AdobeLaunchPixel {
 
       // 	return realPushState.apply(history, arguments);
       // };
-
       _this._LoginGuestTrack()
 
       _this._populateDataLayer()
@@ -1208,7 +1207,7 @@ export default class AdobeLaunchPixel {
       listPrice: product.listPrice / 100,
       productDivision: 'shop program',
       productFamily: 'samsung care',
-      pimSubType: 'insurance',
+      pimSubType: 'samsung care',
     }
   }
 
