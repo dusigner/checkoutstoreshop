@@ -2011,14 +2011,17 @@ class checkoutCustom {
               })
           } else {
             window.digitalData.user.loginStatus = false
+            window._satellite.track('shop_guest_login')
           }
         }
       })
 
       function trackLogin(ssgAccountURL, accessKeyURL) {
         if (ssgAccountURL) {
+          window.digitalData.user.loginStatus = true
           window._satellite.track('samsung_account_login')
         } else if (accessKeyURL) {
+          window.digitalData.user.loginStatus = true
           window._satellite.track('vtex_account_login')
         }
       }
