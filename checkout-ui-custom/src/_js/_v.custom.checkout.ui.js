@@ -2010,7 +2010,6 @@ class checkoutCustom {
                   .catch(console.error)
               })
           } else {
-            console.log('testeee entrou no else')
             window.digitalData.user.loginStatus = false
             window._satellite.track('shop_guest_login')
           }
