@@ -186,7 +186,7 @@ export default class Rewards {
       const { orderForm } = window.vtexjs.checkout
       const saGuid = localStorage.getItem('saGuid')
 
-      if (!saGuid) return
+      if (saGuid) return
       if (
         orderForm.items.length === 0 &&
         $('#text-details-rewards').length > 0
@@ -202,7 +202,9 @@ export default class Rewards {
       const _cartElem = $(`.summary-to-new-components`)
       const _component = `
         <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
-          <p>**Pontos Samsung Rewards são gerados somente em compras realizadas por meio de uma Samsung Account participante do programa. Pontos Samsung Rewards pendentes serão creditados 14 dias após a entrega do pedido. Caso seu pedido seja cancelado ou o pagamento não seja aprovado, os pontos não serão creditados. Ao utilizar seus pontos já existentes do Samsung Rewards as promoções de meios de pagamento vigentes não serão aplicadas.
+          <p>
+          “Faça seu login ou cadastre uma conta Samsung e ganhe Pontos Samsung Rewards ao realizar a sua compra.
+          Junte pontos e troque por até 50% de desconto em compras futuras em nossa Loja Online”.
           </p>
         </div>
       `
