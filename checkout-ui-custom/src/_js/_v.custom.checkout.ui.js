@@ -1699,7 +1699,7 @@ class checkoutCustom {
     })
   }
   verifyCSP(orderForm) {
-
+    // Workaround para caso a vtex mude a posição do selectedAddresses
     const filterSlas = orderForm.shippingData.logisticsInfo[0].slas.filter(objeto => objeto.name === orderForm.shippingData.logisticsInfo[0].selectedSla);
     let statePickUp = filterSlas[0].pickupStoreInfo.address.state
     // Validar se o selectedDeliveryChannel do orderForm é do tipo "pick-up-point";
