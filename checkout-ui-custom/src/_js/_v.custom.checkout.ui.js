@@ -1698,7 +1698,19 @@ class checkoutCustom {
         })
     })
   }
+  verifyCSP(orderForm) {
 
+    const filterSlas = orderForm.shippingData.logisticsInfo[0].slas.filter(objeto => objeto.name === orderForm.shippingData.logisticsInfo[0].selectedSla);
+    let statePickUp = filterSlas[0].pickupStoreInfo.address.state
+    // Validar se o selectedDeliveryChannel do orderForm é do tipo "pick-up-point";
+    if(orderForm.shippingData.logisticsInfo[0].selectedDeliveryChannel === 'pickup-in-point'){
+      // Se positivo, verificar se campo UF do endereço do pick-up-point é igual ao UF do nó InvoiceData;
+      if(statePickUp !== orderForm.invoiceData.address.state) {
+        alert('O estado da NF é diferente do estado do endereço de retirada')
+        window.location.hash = '#/shipping'
+      }
+    }
+  }
   // Adiciona um botão fake e de remover produto para ssc proteção completa e abre um popup ao clicar
   popupSSC() {
     if ($('.fakeRemove').length === 0) {
@@ -2177,7 +2189,6 @@ class checkoutCustom {
         _this.URLHasIncludePayment()
         _this.customizeLogOut()
         _this.showEmptyCart(orderForm)
-
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
           _this.preEmail.createElementSamsungAccountLogin()
         }
@@ -2190,6 +2201,7 @@ class checkoutCustom {
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
+          _this.verifyCSP(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
