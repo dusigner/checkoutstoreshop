@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable no-console */
 export default class BespokeRefrigerator {
@@ -406,7 +407,7 @@ export default class BespokeRefrigerator {
         window.location.href.indexOf('samsungbrshop.') >= 0 ||
         window.location.host.indexOf('shop.') >= 0
       ) {
-        url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/3/33/39/2043`
+        url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/3/33/39/2043&_from=0&_to=49`
       } else {
         url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/2044/`
       }
@@ -456,10 +457,10 @@ export default class BespokeRefrigerator {
         if (!isValid) return
 
         if (response) {
-            this.checkItems(window.vtexjs.checkout.orderForm)
-            this.removeButtons(window.vtexjs.checkout.orderForm)
-            this.editButton(window.vtexjs.checkout.orderForm)
-            this.removeItems()
+          this.checkItems(window.vtexjs.checkout.orderForm)
+          this.removeButtons(window.vtexjs.checkout.orderForm)
+          this.editButton(window.vtexjs.checkout.orderForm)
+          this.removeItems()
         } else {
           console.error(
             "There is a problem with Checkout's Bespoke Customization. Please, check out the code. "
