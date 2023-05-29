@@ -889,7 +889,6 @@ class checkoutCustom {
       const _trElem = $(`.summary-template-holder`)
 
       if (path === '#/payment') {
-        // eslint-disable-next-line prefer-destructuring
         const paymentAmountTotal = orderForm.value
 
         if (paymentAmountTotal) {
@@ -2127,7 +2126,6 @@ class checkoutCustom {
         _this.CheckoutLimit.init(orderForm)
       })
       $(window).on('attachmentUpdated.vtex', function (evt, orderFormSection) {
-        // eslint-disable-next-line prefer-destructuring
         switch (orderFormSection) {
           case 'shippingData':
             _this.shipping.autoTriggerSlasResult()
