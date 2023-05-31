@@ -196,8 +196,7 @@ export default class CustomShippingData {
 
       if (orderFormAddress.postalCode) {
         $.getJSON(
-          `${_this.rootPath()}/api/checkout/pub/postal-code/BRA/${
-            orderFormAddress.postalCode
+          `${_this.rootPath()}/api/checkout/pub/postal-code/BRA/${orderFormAddress.postalCode
           }`
         ).done(function (data) {
           const address = data
@@ -324,6 +323,41 @@ export default class CustomShippingData {
     }
   }
 
+  addInvalidSelectedDateMessage() {
+    try {
+      // Garante que sempre vai iniciar sem mensagem
+      $('.invalid-selectedDate-msg').remove()
+
+      const isToggleActive = $('.vtex-omnishipping-1-x-toggleInnerActive').length > 0
+      const hasSelectedDate = $('#scheduled-delivery-Agendada').length > 0
+      const $scheduledDeliveryList = $('.vtex-omnishipping-1-x-scheduledDeliveryList')
+      const $invalidSelectedDateMessage = $('<div class="invalid-selectedDate-msg"><p class="invalid-selectedDate-msg__message">Você deve agendar data e horário da sua entrega...</p></div>');
+      const $notSetectedSchedule = $("#btn-go-to-payment")
+
+      // Adiciona mensagem apenas se a condição corresponder
+      if (!hasSelectedDate && isToggleActive) {
+        $notSetectedSchedule.attr('disabled', 'disabled')
+        $scheduledDeliveryList.after($invalidSelectedDateMessage)
+      } else {
+        $("#btn-go-to-payment").removeAttr('disabled')
+      }
+
+      if (!isToggleActive) {
+        if (!$('.vtex-omnishipping-1-x-leanShippingOptionActive').length) {
+          $('#Normal.shp-lean-option').trigger('click')
+        }
+
+        return
+      }
+
+
+
+    } catch (err) {
+      console.error(`Não foi possível adicionar mensagem de data agendamento obrigatória. ${err}`)
+    }
+
+  }
+
   bindEvents() {
     const _this = this
 
@@ -364,5 +398,10 @@ export default class CustomShippingData {
         }
       }
     )
+
+    $(document).on('click', '.vtex-omnishipping-1-x-toggle, .react-datepicker__day:not(.react-datepicker__day--disabled)', function () {
+      setTimeout(_this.addInvalidSelectedDateMessage, 10)
+    });
   }
+
 }

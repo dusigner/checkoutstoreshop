@@ -1966,6 +1966,7 @@ class checkoutCustom {
 
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
+            _this.shipping.addInvalidSelectedDateMessage()
           }
         }
       })
