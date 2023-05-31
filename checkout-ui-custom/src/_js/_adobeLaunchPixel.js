@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
@@ -1207,7 +1208,7 @@ export default class AdobeLaunchPixel {
       listPrice: product.listPrice / 100,
       productDivision: 'shop program',
       productFamily: 'samsung care',
-      pimSubType: 'samsung care',
+      pimSubType: 'insurance',
     }
   }
 
@@ -1227,14 +1228,14 @@ export default class AdobeLaunchPixel {
     ) {
       return item.id === skuId
     })
-
     if (!findItem) return ''
+
+    const findItemFinal = parseInt(findItem.id)
 
     try {
       const findItemCache = _this.codesCache.find(function(obj) {
-        return obj.sku === findItem.id
+        return obj.sku === findItemFinal
       })
-
       if (findItemCache) {
         // modelName
         if (dataOmni === 'base') {
@@ -1264,7 +1265,13 @@ export default class AdobeLaunchPixel {
   }
 
   async _getModel(product) {
+    const _this = this
     const skuId = product.refId
+    const findItemFinal = parseInt(product.id)
+    const findItemCache = _this.codesCache.find(function(obj) {
+      return obj.sku === findItemFinal
+    })
+    // const findItemFinal =  parseInt(findItem.id);
     const account = window.__RUNTIME__.account
       .replace('samsung', '')
       .split('test')
@@ -1286,18 +1293,6 @@ export default class AdobeLaunchPixel {
     return fetch(uri, { method: 'GET', headers: myHeaders })
       .then(res => res.json())
       .then(response => {
-        if (!response.hasOwnProperty('more')) {
-          const categories = Object.values(product.productCategories)
-
-          return {
-            modelCode: skuId || '',
-            modelName: skuId || '',
-            productDivision: categories[0] || 'N/A',
-            productFamily: categories.length > 1 ? categories[1] : 'N/A',
-            pimSubType: categories[categories.length - 1] || 'N/A',
-          }
-        }
-
         productDivision =
           response.more.resultData.Products.Product.BasicInfo[0].PviCategories
             .ProductTypeName
@@ -1308,18 +1303,6 @@ export default class AdobeLaunchPixel {
           '|'
         )
         pimSubType = allCategories.length > 2 ? allCategories[2] : ''
-
-        if (Object.values(response).length === 0 || response.message) {
-          const categories = Object.values(product.productCategories)
-
-          return {
-            modelCode: skuId || '',
-            modelName: skuId || '',
-            productDivision: categories[0] || 'N/A',
-            productFamily: categories.length > 1 ? categories[1] : 'N/A',
-            pimSubType: categories[categories.length - 1] || 'N/A',
-          }
-        }
 
         return {
           modelCode: response.ModelCode,
@@ -1334,7 +1317,7 @@ export default class AdobeLaunchPixel {
 
         return {
           modelCode: skuId || '',
-          modelName: skuId || '',
+          modelName: findItemCache.modelName || '',
           productDivision: categories[0] || 'N/A',
           productFamily: categories.length > 1 ? categories[1] : 'N/A',
           pimSubType: categories[categories.length - 1] || 'N/A',
