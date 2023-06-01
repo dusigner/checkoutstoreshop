@@ -1171,7 +1171,7 @@ export default class AdobeLaunchPixel {
   _LoginGuestTrack() {
     if (
       window.digitalData.user.loginStatus === false &&
-      window.location.hash === '#/cart'
+      window.location.hash === '#/email'
     ) {
       try {
         if (
