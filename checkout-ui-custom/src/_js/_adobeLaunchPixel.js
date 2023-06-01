@@ -128,6 +128,7 @@ export default class AdobeLaunchPixel {
     if (_this.pageType === false) return
 
     window.onhashchange = function() {
+      _this._LoginGuestTrack()
       _this._populateDataLayer()
       _this.waitForDataSend()
       _this._pageTrack()
