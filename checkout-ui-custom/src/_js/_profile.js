@@ -100,9 +100,7 @@ export default class CustomProfileData {
     try {
       const clientDateBirth = this.convertDateToLocaleDateString(birthDate)
 
-      $('#client-birth-date')
-        .addClass('success')
-        .val(clientDateBirth)
+      $('#client-birth-date').addClass('success').val(clientDateBirth)
       $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
       $('#inputTermAndPolicies').prop('checked', acceptTermsAndPrivacyPolicy)
 
@@ -118,7 +116,7 @@ export default class CustomProfileData {
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
 
-      this.getClientProfileData(email).done(function(data) {
+      this.getClientProfileData(email).done(function (data) {
         try {
           const profileDataToPersist = {
             birthDate: data[0].birthDate,
@@ -181,20 +179,14 @@ export default class CustomProfileData {
 
     if (inputDateVal.length === 0) {
       $('#error-client-date-birth-required').show()
-      $('#client-birth-date')
-        .addClass('error')
-        .removeClass('success')
+      $('#client-birth-date').addClass('error').removeClass('success')
     } else if (inputDateVal.length > 0 && inputDateVal.length < 10) {
       $('#client-birth-date').removeClass('error success')
     } else if (inputDateVal.length >= 10 && isValid) {
-      $('#client-birth-date')
-        .addClass('success')
-        .removeClass('error')
+      $('#client-birth-date').addClass('success').removeClass('error')
     } else {
       $('#error-client-date-birth').show()
-      $('#client-birth-date')
-        .addClass('error')
-        .removeClass('success')
+      $('#client-birth-date').addClass('error').removeClass('success')
     }
   }
 
@@ -248,9 +240,7 @@ export default class CustomProfileData {
       </span>
     </p>`
 
-    $('.client-document')
-      .first()
-      .after($dateBirthField)
+    $('.client-document').first().after($dateBirthField)
   }
 
   addWhatsAppField() {
@@ -262,9 +252,7 @@ export default class CustomProfileData {
       <span id="error-client-whatsapp-required" class="help error" style="display:none">Campo obrigatório.</span>
     </p>`
 
-    $('.client-phone')
-      .first()
-      .before($field)
+    $('.client-phone').first().before($field)
   }
 
   addPJInformation() {
@@ -326,19 +314,17 @@ export default class CustomProfileData {
 
   checkTerms() {
     if (!$('#inputTermAndPolicies').is(':checked')) {
-      $('#inputTermAndPolicies')
-        .closest('.checkbox-inline')
-        .addClass('error')
+      $('#inputTermAndPolicies').closest('.checkbox-inline').addClass('error')
     }
   }
 
   addRewardsBlock() {
     // rewards
     $('.box-client-info .newsletter').after(
-      `<div id="RewardsBlock" style="display: none">
-        <h3 style="color:black;font-size:15px;">Samsung Rewards</h3>
+      `<div id="RewardsBlock" style="margin-top: 35px; display: none">
+        <h3 style="color:black;font-size:12px;">Samsung Rewards</h3>
         <label class="inputOptIn __rewards">
-          <input type="checkbox" id="inputRewards" checked />
+          <input type="checkbox" id="inputRewards" />
           <span class="custom-checkbox-icon"></span>
           <span>
             Participar do programa Samsung Rewards para ganhar pontos com este pedido.
@@ -387,24 +373,16 @@ export default class CustomProfileData {
     $('body').on(
       'input',
       'input#client-first-name, input#client-last-name, input#ship-receiverName',
-      function() {
+      function () {
         const regexp = /[^A-Za-zÀ-ú\s]+$/
 
-        if (
-          $(this)
-            .val()
-            .match(regexp)
-        ) {
-          $(this).val(
-            $(this)
-              .val()
-              .replace(regexp, '')
-          )
+        if ($(this).val().match(regexp)) {
+          $(this).val($(this).val().replace(regexp, ''))
         }
       }
     )
 
-    $('body').on('keypress', '#client-phone', function(e) {
+    $('body').on('keypress', '#client-phone', function (e) {
       setTimeout(() => {
         const v = _this.mphone(e.target.value)
 
@@ -414,7 +392,7 @@ export default class CustomProfileData {
       }, 1)
     })
 
-    $('body').on('keyup keydown', '#client-birth-date', function(e) {
+    $('body').on('keyup keydown', '#client-birth-date', function (e) {
       const v = _this.dateMask(e.target.value, e.keyCode)
 
       if (v !== e.target.value) {
@@ -424,17 +402,15 @@ export default class CustomProfileData {
       _this.validateAge(e.target.value)
     })
 
-    $('body').on('blur', '#client-birth-date', function(e) {
+    $('body').on('blur', '#client-birth-date', function (e) {
       if (e.target.value.length < 10) {
         $('#error-client-date-birth').hide()
         $('#error-client-date-birth-required').show()
-        $('#client-birth-date')
-          .addClass('error')
-          .removeClass('success')
+        $('#client-birth-date').addClass('error').removeClass('success')
       }
     })
 
-    $('body').on('keypress', '#client-whatasapp', function(e) {
+    $('body').on('keypress', '#client-whatasapp', function (e) {
       setTimeout(() => {
         const v = _this.mphone(e.target.value)
 
@@ -444,23 +420,15 @@ export default class CustomProfileData {
       }, 1)
     })
 
-    $('body').on('input', 'input#ship-number', function() {
+    $('body').on('input', 'input#ship-number', function () {
       const regexp = /[^0-9\s]+$/
 
-      if (
-        $(this)
-          .val()
-          .match(regexp)
-      ) {
-        $(this).val(
-          $(this)
-            .val()
-            .replace(regexp, '')
-        )
+      if ($(this).val().match(regexp)) {
+        $(this).val($(this).val().replace(regexp, ''))
       }
     })
 
-    $('body').on('input', '#client-whatasapp', function() {
+    $('body').on('input', '#client-whatasapp', function () {
       const $this = $(this)
       const isInvalidNumber = $this.val().length > 0 && $this.val().length < 15
 
@@ -480,7 +448,7 @@ export default class CustomProfileData {
       }
     })
 
-    $('body').on('blur', '#client-whatasapp', function() {
+    $('body').on('blur', '#client-whatasapp', function () {
       const $this = $(this)
 
       const isEmpty = $this.val().length === 0
@@ -511,21 +479,17 @@ export default class CustomProfileData {
       }
     })
 
-    $('body').on('change', '.checkbox-inline input:checkbox', function() {
+    $('body').on('change', '.checkbox-inline input:checkbox', function () {
       if ($(this).is(':checked')) {
-        $(this)
-          .closest('.checkbox-inline')
-          .removeClass('error')
+        $(this).closest('.checkbox-inline').removeClass('error')
       } else {
-        $(this)
-          .closest('.checkbox-inline')
-          .addClass('error')
+        $(this).closest('.checkbox-inline').addClass('error')
       }
 
       _this.checkTerms()
     })
 
-    $('body').on('change', '#inputWhatsapp', function() {
+    $('body').on('change', '#inputWhatsapp', function () {
       const isChecked = $(this).is(':checked')
       const $whatsAppInput = $('#client-whatasapp')
 
@@ -540,17 +504,14 @@ export default class CustomProfileData {
         }
       } else {
         $whatsAppInput.closest('p.client-whatsapp').removeClass('required')
-        $whatsAppInput
-          .removeClass('error')
-          .addClass('success')
-          .val('')
+        $whatsAppInput.removeClass('error').addClass('success').val('')
       }
     })
 
     $('body').on(
       'input blur keyup keypress',
       '#client-profile-data p.input input:visible',
-      function() {
+      function () {
         setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
       }
     )
@@ -558,7 +519,7 @@ export default class CustomProfileData {
     $('body').on(
       'change',
       '#client-profile-data input[type="checkbox"]',
-      function() {
+      function () {
         setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
       }
     )
@@ -566,7 +527,7 @@ export default class CustomProfileData {
     $('body').on(
       'click',
       '#edit-profile-data, #cart-to-orderform, #btn-client-pre-email, .checkout-steps_item_identification',
-      function() {
+      function () {
         _this.persistClientProfileData()
       }
     )
@@ -574,7 +535,7 @@ export default class CustomProfileData {
     $('body').on(
       'click',
       '#go-to-shipping, #client-profile-data #go-to-payment',
-      function() {
+      function () {
         _this.saveProfileData()
       }
     )
@@ -585,9 +546,7 @@ export default class CustomProfileData {
 
     const $textMsgPhone = `<small class="textMsgPhone">O número correto garante que possamos entrar em contato em caso de algum problema na entrega.</small>`
 
-    $('p.client-phone')
-      .first()
-      .after($textMsgPhone)
+    $('p.client-phone').first().after($textMsgPhone)
   }
 
   addFieldsProfileToSummary(orderForm) {
@@ -608,9 +567,7 @@ export default class CustomProfileData {
       `
 
     $('#documentCpfField').empty()
-    $('.client-profile-summary')
-      .first()
-      .after($documentCpfField)
+    $('.client-profile-summary').first().after($documentCpfField)
 
     const $dateBirthField = $(`
       <p id='dateBirthField' class="client-profile-summary date-birth-field">
@@ -621,9 +578,7 @@ export default class CustomProfileData {
     `)
 
     if (!$('#dateBirthField').length) {
-      $('.client-profile-summary.cpf-field')
-        .first()
-        .after($dateBirthField)
+      $('.client-profile-summary.cpf-field').first().after($dateBirthField)
     }
 
     const $birthDateFieldValue = $('#dateBirthField span.name')
@@ -631,15 +586,14 @@ export default class CustomProfileData {
     if ($birthDateFieldValue.is(':empty')) {
       const { email } = orderForm.clientProfileData
 
-      _this.getClientProfileData(email).done(function(data) {
+      _this.getClientProfileData(email).done(function (data) {
         if (!data) return
 
         const dataBirthDate = data[0].birthDate
 
         if (dataBirthDate) {
-          const clientDateBirth = _this.convertDateToLocaleDateString(
-            dataBirthDate
-          )
+          const clientDateBirth =
+            _this.convertDateToLocaleDateString(dataBirthDate)
 
           $birthDateFieldValue.text(clientDateBirth)
         }

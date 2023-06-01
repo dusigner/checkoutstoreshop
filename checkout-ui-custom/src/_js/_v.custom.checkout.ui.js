@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-console */
 /* eslint-disable no-inner-declarations */
 /* eslint-disable no-undef */
 /* eslint-disable prefer-destructuring */
@@ -12,7 +14,6 @@ const {
   debounce,
   formatCurrencyBRL,
   formatNegativeValue,
-  percentageDiscount,
 } = require('./_utils.js')
 const FnsCustomAddressForm = require('./_customAddressForm.js')
 const { default: CustomProfileData } = require('./_profile')
@@ -26,6 +27,7 @@ const { default: SendAttachment } = require('./_sendAttachment.js')
 const { default: BespokeRefrigerator } = require('./_bespokeRefrigerator.js')
 const { default: AdobeLaunchPixel } = require('./_adobeLaunchPixel.js')
 const { default: Rewards } = require('./_rewards.js')
+const { default: CheckoutLimit } = require('./_checkoutLimit.js')
 
 class checkoutCustom {
   constructor({
@@ -48,6 +50,8 @@ class checkoutCustom {
     this.showNoteField = showNoteField
     this.customAddressForm = customAddressForm
     this.hideEmailStep = hideEmailStep
+    this.lastOrderFormTotalPrice = 0
+    this.termPrice = 0
 
     this.preEmail = new CustomPreEmail()
     this.profile = new CustomProfileData()
@@ -58,6 +62,7 @@ class checkoutCustom {
     this.adobeLaunchPixel = new AdobeLaunchPixel()
     this.hasSelectedDefaultPaymentMethod = false
     this.Rewards = new Rewards()
+    this.CheckoutLimit = new CheckoutLimit()
     this.samsungCarePlus = new SamsungCarePlus()
   }
 
@@ -416,6 +421,13 @@ class checkoutCustom {
                   )}</span>
                 </td>
               </tr>`
+        }
+
+        if (
+          discount.name.toLowerCase().includes(' frete') ||
+          discount.name.toLowerCase().includes(' (frete')
+        ) {
+          return ``
         }
 
         return `
@@ -880,6 +892,7 @@ class checkoutCustom {
         return
       }
 
+      const _this = this
       const _trElem = $(`.summary-template-holder`)
 
       if (path === '#/payment') {
@@ -921,31 +934,38 @@ class checkoutCustom {
         const inCashPrice = installmentPix[0].total
         // Encontra as installments para do cartao visa (código 2)
         // Pega o valor total para a installment com maior quantidade de parcelas (geralmente 12)
-        const termPrice = await fetch(
-          `${this.rootPath()}/api/checkout/pub/orderForm/${
-            orderForm.orderFormId
-          }/installments?paymentSystem=2`
-        )
-          .then(response => response.json())
-          .then(data => {
-            if (data && data.installments) {
-              const installmentOptions = data.installments
 
-              const maxInstallment = installmentOptions.find(
-                install =>
-                  install.count ===
-                  Math.max(...installmentOptions.map(inst => inst.count))
-              )
+        // THE INSTALLMENTS ENDPOINT HAS A LOT OF REQUESTS AND IT AFFECT INDIRECTLY THE REWARDS PERFOMANCE, BECAUSE OF IT
+        // I IMPLEMENTED TWO NEW STATES ONE TO KNOW THE LAST TOTALPRICE OF ORDERFORM AND ANOTHER TO KEEP THE INSTALLMENTS PRICE
+        // ONLY WILL DO A NEW REQUEST CASE ORDERFORM TOTALPRICE BE CHANGED.
+        if (_this.lastOrderFormTotalPrice !== orderForm.value) {
+          _this.lastOrderFormTotalPrice = orderForm.value
+          _this.termPrice = await fetch(
+            `${this.rootPath()}/api/checkout/pub/orderForm/${
+              orderForm.orderFormId
+            }/installments?paymentSystem=2`
+          )
+            .then(response => response.json())
+            .then(data => {
+              if (data && data.installments) {
+                const installmentOptions = data.installments
 
-              return maxInstallment ? maxInstallment.total : ''
-            }
-          })
-          .catch(e => {
-            console.error('onTerm Price error', e)
-          })
+                const maxInstallment = installmentOptions.find(
+                  install =>
+                    install.count ===
+                    Math.max(...installmentOptions.map(inst => inst.count))
+                )
+
+                return maxInstallment ? maxInstallment.total : ''
+              }
+            })
+            .catch(e => {
+              console.error('onTerm Price error', e)
+            })
+        }
 
         const percentDiscount = Math.floor(
-          100 - (inCashPrice / termPrice) * 100
+          100 - (inCashPrice / _this.termPrice) * 100
         )
 
         const _component = `
@@ -969,7 +989,7 @@ class checkoutCustom {
                       Ou parcelado em até 12x
                     </p>
                     <p class="discount-total" style="font-weight: 700;">
-                      ${formatCurrencyBRL(termPrice)}
+                      ${formatCurrencyBRL(_this.termPrice)}
                     </p>
                 </div>
               </div>
@@ -1362,7 +1382,6 @@ class checkoutCustom {
     this.showCustomMsgInstallation(orderForm)
     this.showCustomDiscounts()
     this.summaryCustom()
-    this.popupSSC()
     new CustomHeader().init()
     this.samsungCarePlus.init()
     new BespokeRefrigerator().init()
@@ -1666,12 +1685,12 @@ class checkoutCustom {
       )
         .then(response => response.json())
         .then(response => {
-          if (response[0] && response[0].skuSpecifications !== 'undefined') {
+          if (response[0] && response[0].skuSpecifications) {
             const isInstallation = response[0].skuSpecifications.filter(
               item => item.field.name === 'Serviço de Instalação'
             )
 
-            if (isInstallation.length > 0) {
+            if (isInstallation && isInstallation.length > 0) {
               const nameInstallation = isInstallation[0].values[0].name
 
               setTimeout(function() {
@@ -1844,15 +1863,19 @@ class checkoutCustom {
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
     const accountbr = window.__RUNTIME__.account == 'samsungbr'
+    const accountbrshop = window.__RUNTIME__.account == 'samsungbrshop'
     const notMyvtex = window.location.href.indexOf('myvtex') == -1
 
-    if ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) {
+    if (
+      ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) ||
+      (accountbrshop && notMyvtex)
+    ) {
       $('#is-not-me').removeAttr('href')
       $('body').on('click', '#is-not-me', function() {
         const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId}`
 
         window.location.assign(
-          `https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbr&returnUrl=${returnUrl}`
+          `https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbrshop&returnUrl=${returnUrl}`
         )
       })
     }
@@ -2044,7 +2067,6 @@ class checkoutCustom {
         _this.shipping.limitFieldsCharacters()
 
         $(window).on('checkoutRequestBegin.vtex', function(event, request) {
-          _this.installationService.interceptInstallationRequest(event, request)
           _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
         })
       })
@@ -2057,13 +2079,6 @@ class checkoutCustom {
 
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
-          }
-
-          if (
-            window.location.hash === '#/payment' &&
-            $('.paymentDiscount').length == 0
-          ) {
-            _this.paymentDiscount()
           }
         }
       })
@@ -2109,14 +2124,17 @@ class checkoutCustom {
               })
           } else {
             window.digitalData.user.loginStatus = false
+            window._satellite.track('shop_guest_login')
           }
         }
       })
 
       function trackLogin(ssgAccountURL, accessKeyURL) {
         if (ssgAccountURL) {
+          window.digitalData.user.loginStatus = true
           window._satellite.track('samsung_account_login')
         } else if (accessKeyURL) {
+          window.digitalData.user.loginStatus = true
           window._satellite.track('vtex_account_login')
         }
       }
@@ -2211,6 +2229,7 @@ class checkoutCustom {
           _this.profile.addDateBirthField()
           _this.profile.addMsgPhone()
           _this.profile.addTerms(orderForm)
+          _this.Rewards.showPointsSimulation()
         }
 
         if (window.location.hash === '#/shipping') {
@@ -2226,15 +2245,13 @@ class checkoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
+        _this.CheckoutLimit.init(orderForm)
       })
       $(window).on('attachmentUpdated.vtex', function(evt, orderFormSection) {
         switch (orderFormSection) {
           case 'shippingData':
             _this.shipping.autoTriggerSlasResult()
             break
-
-          default:
-            console.error(`No case found for ${orderFormSection}`)
         }
       })
       $(window).load(function() {

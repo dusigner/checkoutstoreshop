@@ -1,3 +1,6 @@
+/* eslint-disable padding-line-between-statements */
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-console */
 /* eslint eqeqeq: 0 */
 /* eslint-disable no-useless-escape */
 
@@ -35,7 +38,6 @@ export default class SendAttachment {
             ++itemLinkTradeInValid
           }
         }
-
         if (itemLinkTradeInValid > 0) {
           for (let k = 0; k < itemLinkTradeIn.evaluatedProducts.length; k++) {
             if (k > 0 && totalItemTradeIn > 0) {

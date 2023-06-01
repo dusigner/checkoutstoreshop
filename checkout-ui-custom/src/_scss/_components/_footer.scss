@@ -57,16 +57,25 @@
 					& ~ div {
 						display: flex;
 						align-items: center;
-						justify-content: space-between;
 
 						@media screen and (max-width: 1024px) {
 							flex-wrap: wrap;
-							justify-content: end;
 
 							svg {
 								margin-left: 10px;
 								margin-right: 0px;
 								width: 35px;
+							}
+						}
+
+						@media screen and (max-width: 600px) {
+							display: grid;
+							width: 100%;
+							grid-template-columns: repeat(5, 1fr);
+							row-gap: 8px;
+
+							svg, img {
+								margin: 0 auto !important;
 							}
 						}
 					}
