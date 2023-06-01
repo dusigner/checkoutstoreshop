@@ -274,10 +274,22 @@ export default class CustomShippingData {
   }
 
   toggleGoToPaymentDisabled() {
-    const disabled =
-      $('#shipping-data p.input.required input').filter(function () {
+    //used for pickup point
+    const $pickupReceiverInput = $("#pickup-receiver:visible")
+    ////
+
+    let disabled =
+      $('#shipping-data p.input.required:visible input').filter(function () {
+        
         return $.trim($(this).val()).length === 0
-      }).length === 0
+      }).length === 0 
+
+
+      //used for pickup point
+      if ($pickupReceiverInput.length) {
+        disabled = disabled && $pickupReceiverInput.val().length > 0
+      }
+      ////
 
     $('#btn-go-to-payment').prop('disabled', !disabled)
   }
@@ -337,9 +349,9 @@ export default class CustomShippingData {
       }
     )
 
-    $(document).on(
+   $(document).on(
       'input',
-      '#shipping-data p.input.required input',
+      '#shipping-data p.input.required input, #pickup-receiver:visible',
       function () {
         _this.toggleGoToPaymentDisabled()
       }
