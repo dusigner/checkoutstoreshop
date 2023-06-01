@@ -1265,13 +1265,7 @@ export default class AdobeLaunchPixel {
   }
 
   async _getModel(product) {
-    const _this = this
     const skuId = product.refId
-    const findItemFinal = parseInt(product.id)
-    const findItemCache = _this.codesCache.find(function(obj) {
-      return obj.sku === findItemFinal
-    })
-    // const findItemFinal =  parseInt(findItem.id);
     const account = window.__RUNTIME__.account
       .replace('samsung', '')
       .split('test')
@@ -1317,7 +1311,7 @@ export default class AdobeLaunchPixel {
 
         return {
           modelCode: skuId || '',
-          modelName: findItemCache.modelName || '',
+          modelName: skuId || '',
           productDivision: categories[0] || 'N/A',
           productFamily: categories.length > 1 ? categories[1] : 'N/A',
           pimSubType: categories[categories.length - 1] || 'N/A',
