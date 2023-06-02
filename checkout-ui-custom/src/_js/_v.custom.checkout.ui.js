@@ -803,16 +803,9 @@ class checkoutCustom {
     }
   }   
 
-  checkServices(orderForm){
-    const cupomInstantVoucher = JSON.parse(sessionStorage.getItem('productsServices'))
-    const filteredObj = Object.entries(cupomInstantVoucher).reduce((acc, [key, value]) => {
-    const filteredValue = value.filter(item => item.key === "Instant_Voucher_Collection_SKU");
-      if (filteredValue.length > 0) {
-        acc[key] = filteredValue;
-      }
-      return acc;
-    }, {});
-    const instantVoucherIdSku = Object.keys(filteredObj)
+  checkInstantVoucherService(orderForm){
+    const cupomInstantVoucher = JSON.parse(sessionStorage.getItem('instant-voucher'))
+    const instantVoucherIdSku = Object.keys(cupomInstantVoucher)
 
     try {
       $.each(orderForm.items, function(i) {
@@ -824,7 +817,7 @@ class checkoutCustom {
         })
       })
     } catch (e) {
-      console.error('checkServices error:', e)
+      console.error('checkInstantVoucherService error:', e)
     }
   }
 
@@ -1402,7 +1395,7 @@ class checkoutCustom {
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     if("productsServices" in sessionStorage) {
-      this.checkServices(orderForm)
+      this.checkInstantVoucherService(orderForm)
     }
     this.enchancementProductCart(orderForm)
     if (!$('body').hasClass('modalActive')) {
