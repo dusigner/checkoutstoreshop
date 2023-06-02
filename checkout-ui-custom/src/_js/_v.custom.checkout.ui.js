@@ -894,10 +894,10 @@ class checkoutCustom {
           const moreInfoHtml = `
             <div class="more-info">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="estimate-shipping">${shippingText}</p>
               <p class="instantvoucher">
                 <a class="selecaovoucher" href='${detailUrl.split('/p')[0] + '/instant-voucher?skuId=' +  orderForm.items[i].id}'>Voltar à seleção de cupom instantâneo</a>
               </p>
-              <p class="estimate-shipping">${shippingText}</p>
             </div>
           `
             
