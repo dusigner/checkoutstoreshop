@@ -14,17 +14,6 @@
 		}
 	}
 
-	@media screen and (max-width: 600px) {
-		padding: 90px 15px 0px 15px;
-		position:initial;
-		bottom:0px;
-		.flex {
-			display: block;
-		}
-		max-width: 100% !important;
-		
-	}
-
 	.container {
 		position: unset;
 		& > div {
