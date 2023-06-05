@@ -14,6 +14,14 @@
 		}
 	}
 
+	@media screen and (max-width: 690px) {
+		padding: 30px 20px 50px;
+		position: unset;
+		.flex {
+			display: block;
+		}
+	}
+
 	.container {
 		position: unset;
 		& > div {
