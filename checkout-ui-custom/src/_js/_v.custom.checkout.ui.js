@@ -811,7 +811,10 @@ class checkoutCustom {
       $.each(orderForm.items, function(i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
         $.each(instantVoucherIdSku, function(j){
-          if(orderForm.items[i].productId === instantVoucherIdSku[j]) {
+          if(
+            cupomInstantVoucher[`${instantVoucherIdSku[j]}`].length > 0 &&
+            orderForm.items[i].productId === instantVoucherIdSku[j]
+          ) {
             _trElem.addClass('coupom-instantvoucher')
           }
         })
@@ -1394,7 +1397,7 @@ class checkoutCustom {
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
-    if("productsServices" in sessionStorage) {
+    if("instant-voucher" in sessionStorage) {
       this.checkInstantVoucherService(orderForm)
     }
     this.enchancementProductCart(orderForm)
