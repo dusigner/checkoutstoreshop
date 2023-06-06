@@ -889,26 +889,26 @@ class checkoutCustom {
       const _trElem = $(`.summary-template-holder`)
 
       if (path === '#/payment') {
-        // eslint-disable-next-line prefer-destructuring
-        const selectedPaymentMethod =
-          window.vtexjs.checkout.orderForm.paymentData.payments[0]
+        const paymentAmountTotal = orderForm.value
 
-        const _component = `
+        if (paymentAmountTotal) {
+          const _component = `
           <div class="cart-total" style="margin-bottom: 20px; color: #000">
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
               <p class="estimate-shipping">${formatCurrencyBRL(
-                selectedPaymentMethod ? selectedPaymentMethod.value : 0
+                paymentAmountTotal
               )}</p>
             </div>
           </div>
         `
 
-        if (_trElem.find('.cart-total').length === 0) {
-          _trElem.prepend(_component)
-        } else {
-          _trElem.find('.cart-total').remove()
-          _trElem.prepend(_component)
+          if (_trElem.find('.cart-total').length === 0) {
+            _trElem.prepend(_component)
+          } else {
+            _trElem.find('.cart-total').remove()
+            _trElem.prepend(_component)
+          }
         }
 
         return
@@ -1377,7 +1377,6 @@ class checkoutCustom {
     this.showCustomMsgInstallation(orderForm)
     this.showCustomDiscounts()
     this.summaryCustom()
-    this.popupSSC()
     new CustomHeader().init()
     this.samsungCarePlus.init()
     new BespokeRefrigerator().init()
@@ -1679,12 +1678,12 @@ class checkoutCustom {
       )
         .then(response => response.json())
         .then(response => {
-          if (response[0] && response[0].skuSpecifications !== 'undefined') {
+          if (response[0] && response[0].skuSpecifications) {
             const isInstallation = response[0].skuSpecifications.filter(
               item => item.field.name === 'Serviço de Instalação'
             )
 
-            if (isInstallation.length > 0) {
+            if (isInstallation && isInstallation.length > 0) {
               const nameInstallation = isInstallation[0].values[0].name
 
               setTimeout(function () {
@@ -1710,107 +1709,6 @@ class checkoutCustom {
           }
         })
     })
-  }
-
-  // Adiciona um botão fake e de remover produto para ssc proteção completa e abre um popup ao clicar
-  popupSSC() {
-    if ($('.fakeRemove').length === 0) {
-      $('.product-item').each(function () {
-        const dataSku = $(this).attr('data-sku')
-
-        if (
-          dataSku == '3353' ||
-          dataSku == '3354' ||
-          dataSku == '3653' ||
-          dataSku == '3654' ||
-          dataSku == '3655' ||
-          dataSku == '25811' ||
-          dataSku == '25810'
-        ) {
-          $(
-            '<i title="remover" class="icon fakeRemove icon-remove item-remove-ico"></i>'
-          ).appendTo($(`.product-item[data-sku=${dataSku}] .item-remove`))
-        }
-      })
-      if (
-        window.vtexjs.checkout &&
-        window.vtexjs.checkout.orderForm &&
-        window.vtexjs.checkout.orderForm.items
-      ) {
-        const product = window.vtexjs.checkout.orderForm.items.filter(item => {
-          return (
-            item.id === '3353' ||
-            item.id === '3354' ||
-            item.id === '3653' ||
-            item.id === '3654' ||
-            item.id === '3655' ||
-            item.id === '25811' ||
-            item.id === '25810'
-          )
-        })
-
-        if (product[0] && product[0].attachments[0]) {
-          const nameProduct = product[0].name
-          const { idsku } = product[0].attachments[0].content
-          const idskusc = product[0].id
-
-          $(document).on('click', '.fakeRemove', function () {
-            $('body').addClass('modalActive')
-            if (
-              product[0] &&
-              product[0].attachments[0] &&
-              product[0].attachments[0].content.idsku
-            ) {
-              const name = window.vtexjs.checkout.orderForm.items.filter(
-                val => val.id === idsku
-              )
-
-              if ($('.modalssc').length == 0 && $('.layerpopup').length == 0) {
-                $(`<div class="layerpopup"></div>
-                 <div class="modalssc">
-                  <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também do seu carrinho o item <b>${name[0].name}</b></p>
-                  <div>
-                    <a>Voltar ao carrinho</a>
-                    <a data-id-sc='${idskusc}' data-id='${idsku}'>Excluir</a>
-                  </div>
-                 </div>`).prependTo($('body'))
-              }
-            }
-          })
-        }
-      }
-
-      $(document).on('click', '.modalssc div a', function () {
-        $('.layerpopup, .modalssc').fadeOut('fast', function () {
-          $(this).remove()
-        })
-      })
-      $(document).on('click', '.modalssc div a + a', function () {
-        const productId = $(this).attr('data-id')
-
-        const interval = 4000
-
-        window.vtexjs.checkout.orderForm.items.forEach((el, i) => {
-          setTimeout(function () {
-            const removeList = []
-
-            if (el.id === productId) {
-              removeList.push({
-                index: i,
-                quantity: 0,
-              })
-              const itemsToRemove = removeList
-
-              if (itemsToRemove.length > 0) {
-                return window.vtexjs.checkout
-                  .removeItems(itemsToRemove)
-                  .then(() => {})
-              }
-            }
-          }, i * interval)
-        })
-      })
-    }
   }
 
   clickModal() {
@@ -2047,7 +1945,6 @@ class checkoutCustom {
         _this.shipping.limitFieldsCharacters()
 
         $(window).on('checkoutRequestBegin.vtex', function (event, request) {
-          _this.installationService.interceptInstallationRequest(event, request)
           _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
         })
       })
@@ -2106,14 +2003,17 @@ class checkoutCustom {
               })
           } else {
             window.digitalData.user.loginStatus = false
+            window._satellite.track('shop_guest_login')
           }
         }
       })
 
       function trackLogin(ssgAccountURL, accessKeyURL) {
         if (ssgAccountURL) {
+          window.digitalData.user.loginStatus = true
           window._satellite.track('samsung_account_login')
         } else if (accessKeyURL) {
+          window.digitalData.user.loginStatus = true
           window._satellite.track('vtex_account_login')
         }
       }
@@ -2230,6 +2130,9 @@ class checkoutCustom {
         switch (orderFormSection) {
           case 'shippingData':
             _this.shipping.autoTriggerSlasResult()
+            break
+
+          default:
             break
         }
       })

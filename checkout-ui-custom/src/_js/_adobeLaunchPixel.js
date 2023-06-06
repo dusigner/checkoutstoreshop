@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
@@ -19,9 +20,8 @@ export default class AdobeLaunchPixel {
     this.scriptFiles = {
       br:
         '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
-
       br_staging:
-        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-005f425fd4fc-staging.min.js',
+        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
     }
 
     this.version2 = ['br']
@@ -38,6 +38,7 @@ export default class AdobeLaunchPixel {
   /* This part injects the jQuery (it's needed to adobe DTM), the window.digitalData variable (globally) */
   init() {
     const _this = this
+
     _this.loadCache()
 
     const dataLayerScript = document.createElement('script')
@@ -107,6 +108,7 @@ export default class AdobeLaunchPixel {
 
       // 	return realPushState.apply(history, arguments);
       // };
+      _this._LoginGuestTrack()
 
       _this._populateDataLayer()
 
@@ -126,6 +128,7 @@ export default class AdobeLaunchPixel {
     if (_this.pageType === false) return
 
     window.onhashchange = function() {
+      _this._LoginGuestTrack()
       _this._populateDataLayer()
       _this.waitForDataSend()
       _this._pageTrack()
@@ -331,7 +334,6 @@ export default class AdobeLaunchPixel {
       Object.keys(attrs).forEach(function(attr) {
         let attrName = 'data-omni'
         const value = attrs[attr]
-
         if (attr !== '') attrName += `-${attr}`
         elem.setAttribute(attrName, value)
       })
@@ -414,7 +416,7 @@ export default class AdobeLaunchPixel {
     node.setAttribute('data-loaded', true)
 
     const targetUrl =
-      'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=4512d4c4a13541a9bc451c529f2bbb31'
+      'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=78ca5fdbcadb437083408712375af24c'
 
     const data = {}
 
@@ -443,7 +445,7 @@ export default class AdobeLaunchPixel {
       })
       xhttp.open('POST', targetUrl, true)
       xhttp.setRequestHeader('Content-Type', 'application/json')
-      // xhttp.send(JSON.stringify(body))
+      // xhttp.send(JSON.stringify(data));
     }
   }
 
@@ -484,17 +486,26 @@ export default class AdobeLaunchPixel {
     _this._populateProductLayer()
 
     if (node.className.indexOf('product-item') > -1) {
-      const addItemButton = node.querySelector(
-        'td.quantity a.item-quantity-change.item-quantity-change-increment'
-      )
-
-      if (node.querySelector('td.product-name a') !== null) {
-        const skuId = node.getAttribute('data-sku')
-
-        _this.setElementOmni(addItemButton, 'data-omni-buynow', {
-          base: _this._mountDataBuyNow('base', skuId),
-          variant: _this._mountDataBuyNow('variant', skuId),
-        })
+      if (window.location.hash === '#/cart') {
+        if (node.querySelector('td.product-name a') !== null) {
+          const addItemButton = node.querySelector(
+            'td.quantity a.item-quantity-change.item-quantity-change-increment'
+          )
+          const skuId = node.getAttribute('data-sku')
+          if (addItemButton && skuId) {
+            _this.setElementOmni(addItemButton, 'data-omni-buynow', {
+              base: _this._mountDataBuyNow('base', skuId),
+              variant: _this._mountDataBuyNow('variant', skuId),
+            })
+            $(
+              `.product-item[data-sku="${skuId}"] #item-quantity-change-increment-${skuId}`
+            ).on('click', function() {
+              _this._populateDataLayer()
+              _this.waitForDataSend()
+              _this._pageTrack()
+            })
+          }
+        }
       }
 
       const removeItemButton = node.querySelector('.item-link-remove')
@@ -527,7 +538,7 @@ export default class AdobeLaunchPixel {
       })
     }
 
-    const backtocart2 = document.querySelector('#go-to-cart-button')
+    const backtocart2 = document.querySelector('#go-to-cart-button-custom')
 
     if (backtocart2 !== null) {
       if (backtocart2.querySelector('#orderform-minicart-to-cart') !== null) {
@@ -563,7 +574,7 @@ export default class AdobeLaunchPixel {
       }
     }
 
-    const buyMoreProducts = document.querySelector('#cart-choose-more-products')
+    const buyMoreProducts = document.querySelector('.choice-new-products a')
 
     if (buyMoreProducts !== null) {
       _this.setElementOmni(buyMoreProducts, 'data-omni-backtoshop', {
@@ -662,14 +673,6 @@ export default class AdobeLaunchPixel {
 
     const siteCode = _this._fetchSiteCode()
 
-    $(window).on('orderFormUpdated.vtex', function(evt, orderForm) {
-      window.digitalData.user.loginStatus =
-        window.digitalData.user.loginStatus || orderForm.loggedIn
-      if (!window.digitalData.user.loginStatus) {
-        window._satellite.track('shop_guest_login')
-      }
-    })
-
     window.digitalData.page.pageInfo.siteCode = siteCode
     window.digitalData.page.pageInfo.siteSection = 'shop'
     const pathName = window.location.pathname.replace(`/${siteCode}`, '')
@@ -764,9 +767,7 @@ export default class AdobeLaunchPixel {
   /* Gahters all the products informations inside the page to populate the product property */
   _populateProductLayer() {
     const _this = this
-
     const pagesWithProductLayer = ['checkout']
-
     if (pagesWithProductLayer.indexOf(_this.pageType) === -1) {
       window.digitalData.product.modelVariant = ''
       window.digitalData.product.model_name = ''
@@ -864,13 +865,9 @@ export default class AdobeLaunchPixel {
             apiData = cachedData
             apiData.listPrice = productPrice
           } else if (_this.codesCache === -1) {
-            /**
-             * chamar orderform e pegar as infos de skuId e passar de body dentro da request da link API.
-             */
-            // const response = this.
             const xhttp = new XMLHttpRequest()
             const targetUrl =
-              'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=4512d4c4a13541a9bc451c529f2bbb31'
+              'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=78ca5fdbcadb437083408712375af24c'
 
             const data = {}
 
@@ -921,8 +918,28 @@ export default class AdobeLaunchPixel {
           clearInterval(idInterval)
 
           const { items } = window.vtexjs.checkout.orderForm
+          const customData =
+            window.vtexjs.checkout.orderForm.customData || false
+          const tradeInCustomData =
+            customData &&
+            customData.customApps.find(itemTrade => itemTrade.id === 'domain')
 
+          const transportCustomData =
+            tradeInCustomData &&
+            tradeInCustomData.fields.trade_in_option_selected
           items.forEach(async item => {
+            if (transportCustomData && _modelName.indexOf(';trade-in') < 0) {
+              const tradeIn = _this._getTradeInData(item)
+
+              _modelName.push(`;${tradeIn.model_name}`)
+              _displayName.push(tradeIn.displayName)
+              _modelVariant.push(tradeIn.modelVariant)
+              _productDivision.push(tradeIn.productDivision)
+              _productFamily.push(tradeIn.productFamily)
+              _pimSubType.push(tradeIn.pimSubType)
+              _listPrice.push(tradeIn.listPrice)
+            }
+
             if (_isSCPlus(item)) {
               const scplus = _this._getMobileCareData(item)
 
@@ -943,22 +960,6 @@ export default class AdobeLaunchPixel {
               }
             } else {
               const model = await _this._getModel(item)
-
-              const btnChangeIncrement = document.querySelector(
-                `#item-quantity-change-increment-${item.id}`
-              )
-
-              if (btnChangeIncrement !== null) {
-                btnChangeIncrement.setAttribute(
-                  'data-omni-base',
-                  `;${model.modelName}`
-                )
-                btnChangeIncrement.setAttribute(
-                  'data-omni-variant',
-                  model.modelCode
-                )
-              }
-
               _modelName.push(`;${model.modelName}`)
               _displayName.push(item.name ? item.name : '')
               _modelVariant.push(item.refId)
@@ -1159,10 +1160,44 @@ export default class AdobeLaunchPixel {
           window.location.hash === '#/payment' ||
           window.location.hash === '#/profile')
       ) {
-        window._satellite.track('page_view')
+        if (window.digitalData.product) {
+          window._satellite.track('page_view')
+        }
       }
     } catch (e) {
       console.error('[DTM]: Error window._satellite.track')
+    }
+  }
+
+  _LoginGuestTrack() {
+    if (
+      window.digitalData.user.loginStatus === false &&
+      window.location.hash === '#/email'
+    ) {
+      try {
+        if (
+          window._satellite !== undefined &&
+          window._satellite !== null &&
+          'track' in window._satellite
+        ) {
+          window._satellite.track('shop_guest_login')
+        }
+      } catch (e) {
+        console.error('[DTM]: Error window._satellite.track')
+      }
+    }
+  }
+
+  _getTradeInData() {
+    return {
+      model_name: 'trade-in',
+      modelVariant: 'trade-in',
+      displayName: 'trade-in',
+      listPrice: 0,
+      unit: 0,
+      productDivision: 'shop program',
+      productFamily: 'trade-in',
+      pimSubType: 'trade-in',
     }
   }
 
@@ -1188,21 +1223,20 @@ export default class AdobeLaunchPixel {
 
   _mountDataBuyNow(dataOmni, skuId) {
     const _this = this
-
     let data = ''
     const findItem = window.vtexjs.checkout.orderForm.items.find(function(
       item
     ) {
       return item.id === skuId
     })
-
     if (!findItem) return ''
+
+    const findItemFinal = parseInt(findItem.id)
 
     try {
       const findItemCache = _this.codesCache.find(function(obj) {
-        return obj.sku === findItem.id
+        return obj.sku === findItemFinal
       })
-
       if (findItemCache) {
         // modelName
         if (dataOmni === 'base') {
@@ -1254,18 +1288,6 @@ export default class AdobeLaunchPixel {
     return fetch(uri, { method: 'GET', headers: myHeaders })
       .then(res => res.json())
       .then(response => {
-        if (!response.hasOwnProperty('more')) {
-          const categories = Object.values(product.productCategories)
-
-          return {
-            modelCode: skuId || '',
-            modelName: skuId || '',
-            productDivision: categories[0] || 'N/A',
-            productFamily: categories.length > 1 ? categories[1] : 'N/A',
-            pimSubType: categories[categories.length - 1] || 'N/A',
-          }
-        }
-
         productDivision =
           response.more.resultData.Products.Product.BasicInfo[0].PviCategories
             .ProductTypeName
@@ -1276,18 +1298,6 @@ export default class AdobeLaunchPixel {
           '|'
         )
         pimSubType = allCategories.length > 2 ? allCategories[2] : ''
-
-        if (Object.values(response).length === 0 || response.message) {
-          const categories = Object.values(product.productCategories)
-
-          return {
-            modelCode: skuId || '',
-            modelName: skuId || '',
-            productDivision: categories[0] || 'N/A',
-            productFamily: categories.length > 1 ? categories[1] : 'N/A',
-            pimSubType: categories[categories.length - 1] || 'N/A',
-          }
-        }
 
         return {
           modelCode: response.ModelCode,

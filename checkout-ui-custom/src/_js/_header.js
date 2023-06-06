@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export default class CustomHeader {
   init() {
     this._conditionalHeader()
@@ -24,7 +25,7 @@ export default class CustomHeader {
 
       const showHeader = ['#/payment', '#/shipping', '#/profile']
 
-      $(window).scroll(function () {
+      $(window).scroll(function() {
         const scroll = $(window).scrollTop()
 
         if (scroll > 0) {
