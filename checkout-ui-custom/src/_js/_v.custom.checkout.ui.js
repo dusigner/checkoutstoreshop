@@ -875,8 +875,9 @@ class checkoutCustom {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
 
-
-          
+        if (_trElem.find('td.product-name').find('.more-info').length === 1) {
+          return
+        }
 
           const refId = orderForm.items[i].refId || ''
           const { detailUrl } = orderForm.items[i]
