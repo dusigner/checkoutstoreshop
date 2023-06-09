@@ -825,8 +825,6 @@ export default class AdobeLaunchPixel {
         }
 
         const data = {}
-        console.log('_this.codesCache_this.codesCache', _this.codesCache)
-        console.log('new Date()', new Date())
         if (_this.codesCache !== -1) {
           _this.codesCache.lastUpdate = new Date()
           data[this._fetchSiteCode()] = _this.codesCache
