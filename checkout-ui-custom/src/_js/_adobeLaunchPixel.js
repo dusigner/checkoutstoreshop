@@ -803,18 +803,20 @@ export default class AdobeLaunchPixel {
         try {
           for (let i = 0; i < items.length; i++) {
             const item = items[i]
-            const index = _this.codesCache.findIndex(function(obj) {
-              return item.refId === obj.modelCode
-            })
+            if (_this.codesCache !== -1) {
+              const index = _this.codesCache.findIndex(function(obj) {
+                return item.refId === obj.modelCode
+              })
 
-            if (_this.codesCache[index]) {
-              if (digitsDecimalPoint > 0) {
-                _this.codesCache[index].price = (
-                  item.sellingPrice /
-                  10 ** digitsDecimalPoint
-                ).toFixed(digitsDecimalPoint)
-              } else {
-                _this.codesCache[index].price = item.sellingPrice
+              if (_this.codesCache[index]) {
+                if (digitsDecimalPoint > 0) {
+                  _this.codesCache[index].price = (
+                    item.sellingPrice /
+                    10 ** digitsDecimalPoint
+                  ).toFixed(digitsDecimalPoint)
+                } else {
+                  _this.codesCache[index].price = item.sellingPrice
+                }
               }
             }
           }
@@ -823,10 +825,13 @@ export default class AdobeLaunchPixel {
         }
 
         const data = {}
-
-        _this.codesCache.lastUpdate = new Date()
-        data[this._fetchSiteCode()] = _this.codesCache
-        localStorage.setItem(_this.cacheKey, JSON.stringify(data))
+        console.log('_this.codesCache_this.codesCache', _this.codesCache)
+        console.log('new Date()', new Date())
+        if (_this.codesCache !== -1) {
+          _this.codesCache.lastUpdate = new Date()
+          data[this._fetchSiteCode()] = _this.codesCache
+          localStorage.setItem(_this.cacheKey, JSON.stringify(data))
+        }
       }
 
       const productItems = document.querySelectorAll('tr.product-item')
