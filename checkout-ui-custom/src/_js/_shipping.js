@@ -273,15 +273,22 @@ export default class CustomShippingData {
   }
 
   toggleGoToPaymentDisabled() {
-    if (window.scheduleActive && !window.hasSelectedDate) {
-      $('#btn-go-to-payment').prop('disabled', true)
-      return
-    }
+    //used for pickup point
+    const $pickupReceiverInput = $("#pickup-receiver:visible")
+    ////
 
-    const disabled =
-      $('#shipping-data p.input.required input').filter(function () {
+    let disabled =
+      $('#shipping-data p.input.required:visible input').filter(function () {
+
         return $.trim($(this).val()).length === 0
       }).length === 0
+
+
+      //used for pickup point
+      if ($pickupReceiverInput.length) {
+        disabled = disabled && $pickupReceiverInput.val().length > 0
+      }
+      ////
 
     $('#btn-go-to-payment').prop('disabled', !disabled)
   }
@@ -389,9 +396,9 @@ export default class CustomShippingData {
       }
     )
 
-    $(document).on(
+   $(document).on(
       'input',
-      '#shipping-data p.input.required input',
+      '#shipping-data p.input.required input, #pickup-receiver:visible',
       function () {
         _this.toggleGoToPaymentDisabled()
       }
@@ -417,7 +424,7 @@ export default class CustomShippingData {
       }
     )
 
-    $(document).on('click', 
+    $(document).on('click',
       '.vtex-omnishipping-1-x-toggle, .react-datepicker__day:not(.react-datepicker__day--disabled)',
       function() {
         _this.addInvalidSelectedDateMessage()
