@@ -21,7 +21,7 @@ export default class AdobeLaunchPixel {
       br:
         '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
       br_staging:
-        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
+        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-005f425fd4fc-staging.min.js',
     }
 
     this.version2 = ['br']
