@@ -420,6 +420,18 @@ class checkoutCustom {
               </tr>`
         }
 
+        if (discount.name.toLowerCase().includes('garanteed')) {
+          return `
+            <tr class="discount garanteed-tradein" style="height: 23px;">
+              <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
+              <td>
+                <span style="font-weight: 700" >${formatNegativeValue(
+                  formatCurrencyBRL(discount.value)
+                )}</span>
+              </td>
+            </tr>`
+        }
+
         if (
           discount.name.toLowerCase().includes(' frete') ||
           discount.name.toLowerCase().includes(' (frete')
