@@ -3,6 +3,7 @@ export default class CustomHeader {
   init() {
     this._conditionalHeader()
     this._backToCartLink()
+    this._fixBackToCartLinks()
   }
 
   _conditionalHeader() {
@@ -64,5 +65,11 @@ export default class CustomHeader {
     } catch (e) {
       console.error('backToCart error', e)
     }
+  }
+
+  _fixBackToCartLinks() {
+    $('#go-to-cart-button-custom a[href="#/cart"]').each(function (_, el) {
+      $(el).attr('href', window.checkout.cartURL())
+    })
   }
 }
