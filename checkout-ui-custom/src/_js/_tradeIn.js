@@ -65,7 +65,6 @@ export default class TradeIn {
     }
 
     if (totalTradeIn > 0) {
-      this.showDetailsTradeIn()
       this.showTotalTradeIn(totalTradeIn)
       $('#total-tradein-value').text(
         `${formatCurrencyBRL(totalTradeIn, false)}*`
@@ -92,31 +91,6 @@ export default class TradeIn {
 
     if (newTransport.length < transport.length) {
       this.putCustomData(newTransport, totalTradeIn)
-    }
-  }
-
-  showDetailsTradeIn() {
-    try {
-      const _checkoutElem = $(`.cart-fixed`)
-      const _cartElem = $(`.summary-to-new-components`)
-      const _component = `
-        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #0077C8; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: left;">
-          <p>* A compra de um produto com a modalidade Troca Smart gera uma <span style="font-weight: 700"> transação de valor total do aparelho </span> para pagamento no site.</p>
-          <p>O valor da pré-avaliação da Troca Smart será depositado em conta corrente após avaliação e aceitação do aparelho pela TROCAFONE.</p>
-        </div>
-      `
-
-      if (
-        _checkoutElem.find('#text-details-tradein').length > 0 ||
-        _cartElem.find('#text-details-tradein').length > 0
-      ) {
-        return
-      }
-
-      _cartElem.append(_component)
-      _checkoutElem.append(_component)
-    } catch (e) {
-      console.error('showDetailsTradeIn error:', e)
     }
   }
 
