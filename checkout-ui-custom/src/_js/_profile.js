@@ -33,7 +33,7 @@ export default class CustomProfileData {
       const rewardsOptinIsVisible = $('#RewardsBlock').is(':visible')
       const saGuid = localStorage.getItem('saGuid')
       const rewardsAccepted = $('#inputRewards').is(':checked')
-      let responseGCDM = rewardsOptinIsVisible ? false : true
+      let sendOptinToMasterdata = false
 
       if (
         saGuid &&
@@ -45,8 +45,8 @@ export default class CustomProfileData {
           url: `${_this.rootPath()}/rewards/accept-terms/${saGuid}`,
           type: 'POST',
           crossDomain: true,
-          success: (responseGCDM = true),
-          fail: (responseGCDM = false),
+          success: (sendOptinToMasterdata = true),
+          fail: (sendOptinToMasterdata = false),
         })
       }
 
@@ -67,7 +67,11 @@ export default class CustomProfileData {
         whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
           ? $('.whatsapp_phone').val()
           : '',
-        isRewardsAccepted: responseGCDM,
+      }
+
+      const newDataWithOptin = {
+        ...newData,
+        isRewardsAccepted: true,
       }
 
       await $.ajax({
@@ -76,7 +80,9 @@ export default class CustomProfileData {
         crossDomain: true,
         accept: 'application/vnd.vtex.ds.v10+json',
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(newData),
+        data: JSON.stringify(
+          sendOptinToMasterdata ? newDataWithOptin : newData
+        ),
         success(data) {
           window.localStorage.setItem('doc', data.DocumentId)
         },
