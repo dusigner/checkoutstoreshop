@@ -1478,6 +1478,17 @@ h1#cart-title {
   }
 }
 
+.selecaovoucher {
+  font-family: "SamsungOne" !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  text-decoration: underline !important;
+  color: #2189FF !important;
+}
+tr.product-item:not(.coupom-instantvoucher) .instantvoucher {
+  display: none;
+}
+
 // end split cart in 2 columns
 .sellerInformation {
   font-size: 12px;

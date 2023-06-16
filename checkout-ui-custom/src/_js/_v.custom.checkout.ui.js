@@ -809,6 +809,27 @@ class checkoutCustom {
     if (_this.lang && _this.deliveryDateFormat) {
       _this.changeShippingTimeInfo()
     }
+  }   
+
+  checkInstantVoucherService(orderForm){
+    const cupomInstantVoucher = JSON.parse(sessionStorage.getItem('instant-voucher'))
+    const instantVoucherIdSku = Object.keys(cupomInstantVoucher)
+
+    try {
+      $.each(orderForm.items, function(i) {
+        const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
+        $.each(instantVoucherIdSku, function(j){
+          if(
+            cupomInstantVoucher[`${instantVoucherIdSku[j]}`].length > 0 &&
+            orderForm.items[i].productId === instantVoucherIdSku[j]
+          ) {
+            _trElem.addClass('coupom-instantvoucher')
+          }
+        })
+      })
+    } catch (e) {
+      console.error('checkInstantVoucherService error:', e)
+    }
   }
 
   enchancementTotalPrice(orderForm) {
@@ -819,40 +840,43 @@ class checkoutCustom {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
 
-        if (_trElem.find('td.product-price').find('.best-price').length === 0) {
-          return
-        }
+      if (_trElem.find('td.product-price').find('.best-price').length === 0) {
+        return
+      }
 
-        const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
-        const onTermValue = _trElem.find('.total-price:eq(0)').text()
+      const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
+      const onTermValue = _trElem.find('.total-price:eq(0)').text()
 
-        const free =
-          orderForm.items[i].sellingPrice == 1 ||
-          orderForm.items[i].sellingPrice == 0
+      const free =
+        orderForm.items[i].sellingPrice == 1 ||
+        orderForm.items[i].sellingPrice == 0
 
-        free ? _trElem.addClass('gratuito') : null
+      free ? _trElem.addClass('gratuito') : null
 
-        _trElem.find('.new-product-price').text(onTermValue)
+      _trElem.attr('data-id-product', orderForm.items[i].productId)
 
-        if (onTermValue !== totalValue) {
-          _trElem.find('.new-product-price').addClass('discount')
-        }
+      _trElem.find('.new-product-price').text(onTermValue)
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
-        _trElem
-          .find('td.product-price')
-          .addClass('v-custom-quantity-price-active')
-          .prepend(
-            `
-            <div class="v-custom-quantity-price vqc-ldelem">
-              <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${
-                free ? 'Grátis' : totalValue
-              }</p>
-            </div>
-            `
-          )
-      })
+      _trElem
+        .find('td.product-price')
+        .find('.vqc-ldelem')
+        .remove()
+
+      _trElem
+        .find('td.product-price')
+        .addClass('v-custom-quantity-price-active')
+        .prepend(
+          `
+          <div class="v-custom-quantity-price vqc-ldelem">
+            <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${
+              free ? 'Grátis' : totalValue
+            }</p>
+          </div>
+          `
+      )
+    })
     } catch (e) {
       console.error('enchancementTotalPrice error:', e)
     }
@@ -867,25 +891,31 @@ class checkoutCustom {
           return
         }
 
-        const refId = orderForm.items[i].refId || ''
-        const { detailUrl } = orderForm.items[i]
-        const isInstallService = detailUrl.includes('/install-service/p')
-        const isSamsungCare = detailUrl.includes('/samsung-care-/p')
+          const refId = orderForm.items[i].refId || ''
+          const { detailUrl } = orderForm.items[i]
+          const isInstallService = detailUrl.includes('/install-service/p')
+          const isSamsungCare = detailUrl.includes('/samsung-care-/p')
+  
+          const shippingText =
+            isInstallService || isSamsungCare
+              ? 'Após a entrega do produto'
+              : '2-5 Dias úteis após a confirmação do pagamento'
+  
 
-        const shippingText =
-          isInstallService || isSamsungCare
-            ? 'Após a entrega do produto'
-            : '2-5 Dias úteis após a confirmação do pagamento'
+          const moreInfoHtml = `
+            <div class="more-info">
+              <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="estimate-shipping">${shippingText}</p>
+              <p class="instantvoucher">
+                <a class="selecaovoucher" href='${detailUrl.split('/p')[0] + '/instant-voucher?skuId=' +  orderForm.items[i].id}'>Voltar à seleção de cupom instantâneo</a>
+              </p>
+            </div>
+          `
+            
 
-        const moreInfoHtml = `
-          <div class="more-info">
-            <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
-            <p class="estimate-shipping">${shippingText}</p>
-          </div>
-        `
+          _trElem.find('td.product-name').append(moreInfoHtml)
 
-        _trElem.find('td.product-name').append(moreInfoHtml)
-      })
+        })
     } catch (e) {
       console.error('enchancementProductName error:', e)
     }
@@ -1372,6 +1402,9 @@ class checkoutCustom {
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
+    if("instant-voucher" in sessionStorage) {
+      this.checkInstantVoucherService(orderForm)
+    }
     this.enchancementProductCart(orderForm)
     if (!$('body').hasClass('modalActive')) {
       this.enchancementSummaryCart(orderForm, window.location.hash)
