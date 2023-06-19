@@ -65,7 +65,6 @@ export default class TradeIn {
     }
 
     if (totalTradeIn > 0) {
-      this.showDetailsTradeIn()
       this.showTotalTradeIn(totalTradeIn)
       $('#total-tradein-value').text(
         `${formatCurrencyBRL(totalTradeIn, false)}*`
@@ -95,38 +94,13 @@ export default class TradeIn {
     }
   }
 
-  showDetailsTradeIn() {
-    try {
-      const _checkoutElem = $(`.cart-fixed`)
-      const _cartElem = $(`.summary-to-new-components`)
-      const _component = `
-        <div id="text-details-tradein" style="max-width: 376px; width: 100%; margin-top: 15px; color: #0077C8; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: left;">
-          <p>* A compra de um produto com a modalidade Troca Smart gera uma <span style="font-weight: 700"> transação de valor total do aparelho </span> para pagamento no site.</p>
-          <p>O valor da pré-avaliação da Troca Smart será depositado em conta corrente após avaliação e aceitação do aparelho pela TROCAFONE.</p>
-        </div>
-      `
-
-      if (
-        _checkoutElem.find('#text-details-tradein').length > 0 ||
-        _cartElem.find('#text-details-tradein').length > 0
-      ) {
-        return
-      }
-
-      _cartElem.append(_component)
-      _checkoutElem.append(_component)
-    } catch (e) {
-      console.error('showDetailsTradeIn error:', e)
-    }
-  }
-
   showTotalTradeIn(totalTradeIn) {
     try {
-      const _checkoutElem = $(`.summary-totalizers .table`)
+      const _checkoutElem = $(`.summary-template-holder`)
       const _component = `
         <tbody id="total-details-tradein" >
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
-            <td style="font-size: 14px; color: #000000; font-weight: 400;">Troca Smart - Dinheiro em  <br />Conta</td>
+            <td style="font-size: 14px; color: #000000; font-weight: 400; max-width: 245px;">Bônus Troca Smart - Dinheiro creditado em conta após a entrega do(s) aparelho(s) usado(s) e avaliação da Trocafone:</td>
             <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(
               totalTradeIn,
               false

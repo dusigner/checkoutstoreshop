@@ -21,7 +21,7 @@ export default class AdobeLaunchPixel {
       br:
         '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
       br_staging:
-        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
+        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-005f425fd4fc-staging.min.js',
     }
 
     this.version2 = ['br']
@@ -128,6 +128,7 @@ export default class AdobeLaunchPixel {
     if (_this.pageType === false) return
 
     window.onhashchange = function() {
+      _this._LoginGuestTrack()
       _this._populateDataLayer()
       _this.waitForDataSend()
       _this._pageTrack()
@@ -802,18 +803,20 @@ export default class AdobeLaunchPixel {
         try {
           for (let i = 0; i < items.length; i++) {
             const item = items[i]
-            const index = _this.codesCache.findIndex(function(obj) {
-              return item.refId === obj.modelCode
-            })
+            if (_this.codesCache !== -1) {
+              const index = _this.codesCache.findIndex(function(obj) {
+                return item.refId === obj.modelCode
+              })
 
-            if (_this.codesCache[index]) {
-              if (digitsDecimalPoint > 0) {
-                _this.codesCache[index].price = (
-                  item.sellingPrice /
-                  10 ** digitsDecimalPoint
-                ).toFixed(digitsDecimalPoint)
-              } else {
-                _this.codesCache[index].price = item.sellingPrice
+              if (_this.codesCache[index]) {
+                if (digitsDecimalPoint > 0) {
+                  _this.codesCache[index].price = (
+                    item.sellingPrice /
+                    10 ** digitsDecimalPoint
+                  ).toFixed(digitsDecimalPoint)
+                } else {
+                  _this.codesCache[index].price = item.sellingPrice
+                }
               }
             }
           }
@@ -822,10 +825,11 @@ export default class AdobeLaunchPixel {
         }
 
         const data = {}
-
-        _this.codesCache.lastUpdate = new Date()
-        data[this._fetchSiteCode()] = _this.codesCache
-        localStorage.setItem(_this.cacheKey, JSON.stringify(data))
+        if (_this.codesCache !== -1) {
+          _this.codesCache.lastUpdate = new Date()
+          data[this._fetchSiteCode()] = _this.codesCache
+          localStorage.setItem(_this.cacheKey, JSON.stringify(data))
+        }
       }
 
       const productItems = document.querySelectorAll('tr.product-item')
@@ -1171,7 +1175,7 @@ export default class AdobeLaunchPixel {
   _LoginGuestTrack() {
     if (
       window.digitalData.user.loginStatus === false &&
-      window.location.hash === '#/cart'
+      window.location.hash === '#/email'
     ) {
       try {
         if (
