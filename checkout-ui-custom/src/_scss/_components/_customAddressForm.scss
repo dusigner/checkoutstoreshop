@@ -241,3 +241,22 @@ body.v-custom-fnsCustomAddressForm {
   .vtex-omnishipping-1-x-addressItemOption:not(.vtex-omnishipping-1-x-active):not(:first-child) {
   display: none;
 }
+
+.vtex-omnishipping-1-x-deliveryGroup
+  ~ .vtex-omnishipping-1-x-shippingSectionTitle {
+  font-size: 0 !important;
+  &::after {
+    content: 'Endereço do Cliente';
+    font-size: 14px;
+    font-weight: bold;
+  }
+}
+
+.shp-summary-group.vtex-omnishipping-1-x-SummaryItemGroup:nth-child(3)
+  .vtex-omnishipping-1-x-SummaryItemTitle {
+  font-size: 0;
+  &::after {
+    content: 'Endereço do Cliente';
+    font-size: 14px;
+  }
+}
