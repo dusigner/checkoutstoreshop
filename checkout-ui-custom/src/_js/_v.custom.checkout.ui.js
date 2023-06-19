@@ -1383,7 +1383,9 @@ class checkoutCustom {
     this.showCustomDiscounts()
     this.summaryCustom()
     new CustomHeader().init()
-    this.samsungCarePlus.init()
+    this.CheckoutLimit.lockIncrementButtons(orderForm)
+    this.samsungCarePlus.samsungCareModalTrigger()
+    this.samsungCarePlus.hideQuantityButtons(orderForm)
     new BespokeRefrigerator().init()
     this.installationService.init()
     this.TradeIn.init(orderForm)
@@ -1718,35 +1720,6 @@ class checkoutCustom {
     })
   }
 
-  clickModal() {
-    $(document).on('click', '.modalssc div a + a', function() {
-      $('body').addClass('modalClick')
-      const productId = $(this).attr('data-id')
-      const productIdSC = $(this).attr('data-id-sc')
-
-      window.vtexjs.checkout.orderForm.items.forEach(el => {
-        setTimeout(function() {
-          if (el.id === productId) {
-            if ($('body').hasClass('modalClick')) {
-              $(
-                `.table.cart-items tr[data-sku=${productId}]:eq(0) td.item-remove a`
-              ).click()
-            }
-
-            $('body').removeClass('modalClick')
-          }
-        }, 4000)
-
-        setTimeout(function() {
-          $(
-            `.table.cart-items tr[data-sku=${productIdSC}] td.item-remove a`
-          ).click()
-          $('body').removeClass('modalActive')
-        }, 6000)
-      })
-    })
-  }
-
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
     const accountbr = window.__RUNTIME__.account == 'samsungbr'
@@ -1931,7 +1904,7 @@ class checkoutCustom {
     }
 
     _this.fixLabels()
-    _this.clickModal()
+    _this.CheckoutLimit.init()
   }
 
   start() {
@@ -1954,12 +1927,16 @@ class checkoutCustom {
         _this.shipping.limitFieldsCharacters()
 
         $(window).on('checkoutRequestBegin.vtex', function(event, request) {
-          _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
+          _this.CheckoutLimit.limitQuantity(event, request)
+          _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
+        })
+        $(window).on('checkoutRequestEnd.vtex', function(event, orderForm) {
+          _this.samsungCarePlus.sync(orderForm)
+          _this.CheckoutLimit.sync(orderForm)
         })
       })
 
       $(document).ajaxComplete(function(event, xhr, settings) {
-        _this.init()
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
@@ -2133,7 +2110,6 @@ class checkoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
-        _this.CheckoutLimit.init(orderForm)
       })
       $(window).on('attachmentUpdated.vtex', function(evt, orderFormSection) {
         switch (orderFormSection) {
