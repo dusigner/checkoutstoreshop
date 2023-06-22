@@ -3,8 +3,6 @@ import './checkout6-custom.scss'
 
 import { CheckoutCustom } from './clients/checkout.ui'
 
-console.log('Checkout custom')
-
 window.vcustom = {
   checkout: new CheckoutCustom({
     type: 'vertical', // ["vertical" , "horizontal"]

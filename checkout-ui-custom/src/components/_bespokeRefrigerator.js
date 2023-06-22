@@ -382,7 +382,6 @@ export default class BespokeRefrigerator {
         `tr.product-item[data-sku="${mainItems[0].id}"] td.item-remove a`
       )
 
-      console.log('removeBtn', removeBtn)
 
       if (removeBtn.length) {
         removeBtn[0].remove()
@@ -418,7 +417,6 @@ export default class BespokeRefrigerator {
           response.forEach(product => {
             if (product.productName.indexOf('parelhamento') < 0) {
               product.items.forEach(currentItem => {
-                // console.log('currentItem.itemId', currentItem.itemId)
                 this.SKU_MAIN.push(currentItem.itemId)
               })
             }
@@ -432,7 +430,6 @@ export default class BespokeRefrigerator {
         .then(response => {
           const { service, pairing, seller } = response[0]
 
-          // console.log('response[0]response[0]', response[0])
 
           this.SKU_BESPOKE_SERVICE = service
           this.SKU_BESPOKE_PAIR = pairing
