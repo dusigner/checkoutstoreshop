@@ -805,6 +805,7 @@ h1#cart-title {
     "products"
     "coupon"
     "price"
+    "total_details_tradein"
     "finish_payment";
 
   .cart-total {
@@ -821,6 +822,10 @@ h1#cart-title {
 
   .summaryOrder {
     grid-area: products;
+  }
+
+  #total-details-tradein {
+    grid-area: total_details_tradein;
   }
 
   @media (max-width: $mobileWidth) {
@@ -1052,11 +1057,13 @@ h1#cart-title {
       display: grid;
       grid-template-areas:
         "subtotal"
+        "discount_in_cash"
         "installation_summary"
-        "descontos_total"
         "cupom"
         "cupom_desconto"
         "cupom_instantaneo"
+        "garanteed_tradein"
+        "descontos_total"
         "entrega";
 
       .Items {
@@ -1067,6 +1074,10 @@ h1#cart-title {
         grid-area: installation_summary;
       }
 
+      .discount.discount_in_cash {
+        grid-area: discount_in_cash;
+      }
+
       .coupon-applied {
         grid-area: cupom;
       }
@@ -1074,6 +1085,14 @@ h1#cart-title {
       .Discounts {
         grid-area: descontos_total;
         max-height: 23px;
+      }
+
+      .discount.garanteed-tradein {
+        grid-area: garanteed_tradein;
+      }
+
+      .srp-summary-result {
+        grid-area: entrega;
       }
     }
 
@@ -1207,7 +1226,8 @@ h1#cart-title {
     .srp-pickup-info {
       .srp-address-title {
         &::after {
-          content: "Ver mais opções";
+          content: "Ver mais " "op\00E7\00F5" "es";
+          word-spacing: 0;
           color: #000000;
           font-size: 12px;
           margin-left: 16px;
@@ -1458,6 +1478,17 @@ h1#cart-title {
   }
 }
 
+.selecaovoucher {
+  font-family: "SamsungOne" !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  text-decoration: underline !important;
+  color: #2189FF !important;
+}
+tr.product-item:not(.coupom-instantvoucher) .instantvoucher {
+  display: none;
+}
+
 // end split cart in 2 columns
 .sellerInformation {
   font-size: 12px;
@@ -1522,7 +1553,7 @@ a.srp-address-title {
   font-weight: 700;
 }
 .srp-pickup-info a.srp-address-title:after {
-  content: 'Ver mais opções';
+  content: "Ver mais " "op\00E7\00F5" "es";
   display: block;
   font-size: 12px;
   text-decoration: underline;
