@@ -94,16 +94,17 @@
     }
   }
 
-  .vtex-omnishipping-1-x-deliveryGroup {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    .vtex-omnishipping-1-x-deliveryGroup {
+        margin-top: 16px;
+        margin-bottom: 16px;
 
-    [class*='scheduleActive'].required + div::after {
-      content: 'Você deve agendar data e horário da sua entrega';
-      position: absolute;
-      color: #dd4b39;
-      font-size: 12px;
-      margin-top: 8px;
+        [class*="scheduleActive"].required + div::after {
+          content: "Você deve agendar data e horário da sua entrega";
+          position: absolute;
+          color: #dd4b39;
+          font-size: 12px;
+          margin-top: 8px;
+        }
     }
   }
 
