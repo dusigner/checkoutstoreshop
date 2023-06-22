@@ -1,342 +1,342 @@
 #shipping-data {
   .vtex-omnishipping-1-x-toggleInner {
-      top: 2px;
-      margin: 0;
-      left: 2px;
+    top: 2px;
+    margin: 0;
+    left: 2px;
 
-      &Active {
-          left: auto !important;
-          right: 2px;
-      }
+    &Active {
+      left: auto !important;
+      right: 2px;
+    }
   }
 
   .step.shipping-data.active {
-      .accordion-inner.shipping-container {
-          grid-template-columns: 1fr auto;
-      }
-      .box-step {
-          max-width: 448px;
-      }
+    .accordion-inner.shipping-container {
+      grid-template-columns: 1fr auto;
+    }
+    .box-step {
+      max-width: 448px;
+    }
   }
 
   .vtex-omnishipping-1-x-addressFormPart1,
   .vtex-omnishipping-1-x-deliveryGroup,
   .vtex-omnishipping-1-x-addressForm {
-      max-width: 448px;
+    max-width: 448px;
   }
 
   .vtex-omnishipping-1-x-option:hover,
   .vtex-omnishipping-1-x-leanShippingOptionActive {
-      background:#F5F7FE !important;
+    background: #f5f7fe !important;
   }
 
   .vtex-omnishipping-1-x-leanShippingOption {
-      border: 0;
-      min-height: 70px;
-      box-sizing: border-box;
-      border-radius: 6px;
-      padding-left: 18px;
-      padding-right: 16px;
+    border: 0;
+    min-height: 70px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    padding-left: 18px;
+    padding-right: 16px;
+    font-size: 14px;
+
+    .vtex-omnishipping-1-x-leanShippingTextLabel {
+      font-weight: bold;
       font-size: 14px;
+      color: #006bea;
+    }
 
-      .vtex-omnishipping-1-x-leanShippingTextLabel {
-          font-weight: bold;
-          font-size: 14px;
-          color: #006BEA;
-      }
+    .vtex-omnishipping-1-x-leanShippingText {
+      border: 0;
+    }
 
-      .vtex-omnishipping-1-x-leanShippingText {
-          border: 0;
-      }
+    .vtex-omnishipping-1-x-leanShippingTextLabelSingle {
+      font-size: 14px;
+      color: #000000;
+    }
 
-      .vtex-omnishipping-1-x-leanShippingTextLabelSingle {
-          font-size: 14px;
-          color: #000000;
-      }
-
-      .vtex-omnishipping-1-x-optionPrice {
-          font-weight: bold;
-          color: #000000;
-          font-size: 14px;
-          text-align: right;
-      }
+    .vtex-omnishipping-1-x-optionPrice {
+      font-weight: bold;
+      color: #000000;
+      font-size: 14px;
+      text-align: right;
+    }
   }
 
   .vtex-omnishipping-1-x-addressFormPart1 {
-      margin-bottom: 16px;
+    margin-bottom: 16px;
 
-      // Field
-      p.input {
-          @extend %field;
+    // Field
+    p.input {
+      @extend %field;
 
-          &.ship-postalCode {
-              margin-top: 0 !important;
-              margin-bottom: 0 !important;
-          }
-
-          &.ship-postalCode > small {
-              display: block;
-              margin-block: 8px;
-          }
-
-          &.ship-postalCode > small a {
-              font-size: 14px;
-              color: #000000;
-              text-decoration: underline;
-          }
-
-          input#ship-postalCode {
-              body.invalid-postal-code & {
-                  border-color: $danger;
-              border-width: 2px;
-              }
-          }
+      &.ship-postalCode {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
       }
+
+      &.ship-postalCode > small {
+        display: block;
+        margin-block: 8px;
+      }
+
+      &.ship-postalCode > small a {
+        font-size: 14px;
+        color: #000000;
+        text-decoration: underline;
+      }
+
+      input#ship-postalCode {
+        body.invalid-postal-code & {
+          border-color: $danger;
+          border-width: 2px;
+        }
+      }
+    }
   }
 
   .vtex-omnishipping-1-x-deliveryGroup {
-      margin-top: 16px;
-      margin-bottom: 16px;
+    margin-top: 16px;
+    margin-bottom: 16px;
 
-      [class*="scheduleActive"].required + div::after {
-        content: "Você deve agendar data e horário da sua entrega";
-        position: absolute;
-        color: #dd4b39;
-        font-size: 12px;
-        margin-top: 8px;
-      }
+    [class*='scheduleActive'].required + div::after {
+      content: 'Você deve agendar data e horário da sua entrega';
+      position: absolute;
+      color: #dd4b39;
+      font-size: 12px;
+      margin-top: 8px;
+    }
   }
 
   .vtex-omnishipping-1-x-addressSummaryActive .address-summary {
-      background: url("data:image/svg+xml;base64,PHN2ZyBpZD0iSWNvbl8tX0JvbGRfLV9BY3Rpb25fLV9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC0gQm9sZCAtIEFjdGlvbiAtIExvY2F0aW9uIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cmVjdCBpZD0iQ29udGFpbmVyIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiLz4KICA8cGF0aCBpZD0iSWNvbl9Cb2xkX0FjdGlvbl9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC8gQm9sZCAvIEFjdGlvbiAvIExvY2F0aW9uIiBkPSJNOC41NSwyMi44MTNsLTYuNC03LjQ4OGE5LjUyNCw5LjUyNCwwLDAsMS0xLjYtMi43NTFBOC45ODQsOC45ODQsMCwwLDEsMCw5LjQ1NSw5LjQsOS40LDAsMCwxLDIuNzgzLDIuNzY5YTkuNTIxLDkuNTIxLDAsMCwxLDEzLjQzNCwwQTkuNCw5LjQsMCwwLDEsMTksOS40NTVhOC45ODQsOC45ODQsMCwwLDEtLjU0OSwzLjExOSw5LjUyMiw5LjUyMiwwLDAsMS0xLjYsMi43NTFsLS4wMTIuMDE1TDEwLjQ1LDIyLjgxM2ExLjI1LDEuMjUsMCwwLDEtMS45LDBaTTYuNTgsMi41ODZBNy41LDcuNSwwLDAsMCwyLjU4OSw2LjU1NCw3LjM2Nyw3LjM2NywwLDAsMCwyLDkuNDU1LDcuMDYyLDcuMDYyLDAsMCwwLDMuNjc5LDE0LjA0TDkuNSwyMC44NDZsNS44MDUtNi43ODguMDktLjExMUE3LjA2OSw3LjA2OSwwLDAsMCwxNyw5LjU5VjkuNDU1YTcuNDExLDcuNDExLDAsMCwwLTIuMi01LjI3MSw3LjU0NCw3LjU0NCwwLDAsMC04LjIyNC0xLjZaTTcuNDUxLDE0LjI3YTUuMjY1LDUuMjY1LDAsMSwxLDIuMDQzLjQxM0E1LjIzMSw1LjIzMSwwLDAsMSw3LjQ1MSwxNC4yN1pNNy4wMiw2Ljk1OEEzLjUsMy41LDAsMSwwLDkuNDk0LDUuOTMzLDMuNDc4LDMuNDc4LDAsMCwwLDcuMDIsNi45NThaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyLjUgMC4zNzUpIiBmaWxsPSIjMjE4OWZmIi8+Cjwvc3ZnPgo=") no-repeat;
+    background: url('data:image/svg+xml;base64,PHN2ZyBpZD0iSWNvbl8tX0JvbGRfLV9BY3Rpb25fLV9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC0gQm9sZCAtIEFjdGlvbiAtIExvY2F0aW9uIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cmVjdCBpZD0iQ29udGFpbmVyIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiLz4KICA8cGF0aCBpZD0iSWNvbl9Cb2xkX0FjdGlvbl9Mb2NhdGlvbiIgZGF0YS1uYW1lPSJJY29uIC8gQm9sZCAvIEFjdGlvbiAvIExvY2F0aW9uIiBkPSJNOC41NSwyMi44MTNsLTYuNC03LjQ4OGE5LjUyNCw5LjUyNCwwLDAsMS0xLjYtMi43NTFBOC45ODQsOC45ODQsMCwwLDEsMCw5LjQ1NSw5LjQsOS40LDAsMCwxLDIuNzgzLDIuNzY5YTkuNTIxLDkuNTIxLDAsMCwxLDEzLjQzNCwwQTkuNCw5LjQsMCwwLDEsMTksOS40NTVhOC45ODQsOC45ODQsMCwwLDEtLjU0OSwzLjExOSw5LjUyMiw5LjUyMiwwLDAsMS0xLjYsMi43NTFsLS4wMTIuMDE1TDEwLjQ1LDIyLjgxM2ExLjI1LDEuMjUsMCwwLDEtMS45LDBaTTYuNTgsMi41ODZBNy41LDcuNSwwLDAsMCwyLjU4OSw2LjU1NCw3LjM2Nyw3LjM2NywwLDAsMCwyLDkuNDU1LDcuMDYyLDcuMDYyLDAsMCwwLDMuNjc5LDE0LjA0TDkuNSwyMC44NDZsNS44MDUtNi43ODguMDktLjExMUE3LjA2OSw3LjA2OSwwLDAsMCwxNyw5LjU5VjkuNDU1YTcuNDExLDcuNDExLDAsMCwwLTIuMi01LjI3MSw3LjU0NCw3LjU0NCwwLDAsMC04LjIyNC0xLjZaTTcuNDUxLDE0LjI3YTUuMjY1LDUuMjY1LDAsMSwxLDIuMDQzLjQxM0E1LjIzMSw1LjIzMSwwLDAsMSw3LjQ1MSwxNC4yN1pNNy4wMiw2Ljk1OEEzLjUsMy41LDAsMSwwLDkuNDk0LDUuOTMzLDMuNDc4LDMuNDc4LDAsMCwwLDcuMDIsNi45NThaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyLjUgMC4zNzUpIiBmaWxsPSIjMjE4OWZmIi8+Cjwvc3ZnPgo=')
+      no-repeat;
 
-      background-position: 15px center;
-      border: 1px solid #E5E5E5;
-      border-radius: 6px;
+    background-position: 15px center;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
 
-      box-sizing: border-box;
-      position: relative;
-      min-height: 70px;
-      padding-left: 48px;
-      padding-right: 16px;
+    box-sizing: border-box;
+    position: relative;
+    min-height: 70px;
+    padding-left: 48px;
+    padding-right: 16px;
 
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 
-      br {
-          display: none;
+    br {
+      display: none;
+    }
+
+    span {
+      font-size: 12px;
+      color: #000000;
+
+      &.neighborhood-delimiter-after,
+      &.state-delimiter {
+        display: none;
       }
 
-      span {
-          font-size: 12px;
-          color: #000000;
+      &.neighborhood::after,
+      &.city::after {
+        content: ', ';
+        margin-right: 2px;
+      }
+    }
 
-          &.neighborhood-delimiter-after,
-          &.state-delimiter {
-              display: none;
-          }
+    > span {
+      &:first-of-type {
+        display: flex;
+        max-width: 100%;
+        overflow: hidden;
 
-          &.neighborhood::after,
-          &.city::after {
-              content: ", ";
-              margin-right: 2px;
+        .street {
+          min-width: 900px;
+
+          @media (max-width: $mobileWidth) {
+            min-width: calc(100vw - 118px);
           }
+        }
       }
 
-      > span {
-          &:first-of-type {
-              display: flex;
-              max-width: 100%;
-              overflow: hidden;
-
-              .street {
-                  min-width: 900px;
-
-                  @media(max-width: $mobileWidth) {
-                      min-width: calc(100vw - 118px);
-                  }
-              }
-          }
-
-          &:last-of-type {
-              display: none;
-          }
+      &:last-of-type {
+        display: none;
       }
+    }
   }
 
   .vtex-omnishipping-1-x-addressForm {
+    margin-top: 16px;
+    margin-bottom: 32px;
+
+    @media (max-width: 768px) {
       margin-top: 16px;
-      margin-bottom: 32px;
+    }
 
-      @media (max-width: 768px) {
-          margin-top: 16px;
+    // Fields
+    p.input {
+      @extend %field;
+
+      &.ship-reference {
+        display: block !important;
       }
 
-      // Fields
-      p.input {
-          @extend %field;
-
-          &.ship-reference {
-              display: block !important;
-          }
-
-          &.ship-state {
-              label {
-                  top: 0;
-                  font-size: 14px;
-              }
-          }
-
-          &.ship-street {
-              margin-top: 0 !important;
-          }
-
-          &.ship-number,
-          &.ship-complement,
-          &.ship-city,
-          &.ship-state {
-              width: calc(50% - 12px);
-          }
-
-          &.ship-complement,
-          &.ship-state {
-              margin-left: 0px !important;
-          }
-
-          &.ship-complement label,
-          &.ship-reference label {
-              display: flex;
-              font-size: 0;
-          }
-
-          &.ship-complement label::after {
-              content: "Complemento";
-              @media (max-width: 768px) {
-                font-size: 14px;
-              }
-          }
-
-          &.ship-reference label::after {
-              content: "Ponto de Referência";
-              @media (max-width: 768px) {
-                font-size: 14px;
-              }
-          }
-
-          &.ship-street {
-              margin-top: 0 !important;
-          }
-
-          &.ship-receiverName {
-              margin-bottom: 0 !important;
-          }
-
-          select#ship-state {
-              height: 34px !important;
-              padding: 0;
-          }
+      &.ship-state {
+        label {
+          top: 0;
+          font-size: 14px;
+        }
       }
 
-      input[type=text],
-      input[type=tel],
-      input[type=email],
-      select {
-          &:not(.pac-target-input) {
-              @extend %input-style;
-          }
+      &.ship-street {
+        margin-top: 0 !important;
       }
+
+      &.ship-number,
+      &.ship-complement,
+      &.ship-city,
+      &.ship-state {
+        width: calc(50% - 12px);
+      }
+
+      &.ship-complement,
+      &.ship-state {
+        margin-left: 0px !important;
+      }
+
+      &.ship-complement label,
+      &.ship-reference label {
+        display: flex;
+        font-size: 0;
+      }
+
+      &.ship-complement label::after {
+        content: 'Complemento';
+        @media (max-width: 768px) {
+          font-size: 14px;
+        }
+      }
+
+      &.ship-reference label::after {
+        content: 'Ponto de Referência';
+        @media (max-width: 768px) {
+          font-size: 14px;
+        }
+      }
+
+      &.ship-street {
+        margin-top: 0 !important;
+      }
+
+      &.ship-receiverName {
+        margin-bottom: 0 !important;
+      }
+
+      select#ship-state {
+        height: 34px !important;
+        padding: 0;
+      }
+    }
+
+    input[type='text'],
+    input[type='tel'],
+    input[type='email'],
+    select {
+      &:not(.pac-target-input) {
+        @extend %input-style;
+      }
+    }
   }
 
   #btn-go-to-payment {
-      margin-left: 0;
-      font-size: 0;
-      display: flex;
-      justify-content: center;
+    margin-left: 0;
+    font-size: 0;
+    display: flex;
+    justify-content: center;
 
-      min-width: unset;
-      width: 100%;
-      max-width: 330px;
+    min-width: unset;
+    width: 100%;
+    max-width: 330px;
 
-      &::after {
-          content: "Continuar para Pagamentos";
-          font-size: 14px;
-          font-weight: bold;
-      }
+    &::after {
+      content: 'Continuar para Pagamentos';
+      font-size: 14px;
+      font-weight: bold;
+    }
   }
 
   .vtex-omnishipping-1-x-address {
-      margin-top: 16px;
-      margin-bottom: 0;
+    margin-top: 16px;
+    margin-bottom: 0;
 
-      > div {
-          display: flex;
-          flex-wrap: wrap;
-      }
+    > div {
+      display: flex;
+      flex-wrap: wrap;
+    }
 
-      p {
-          clear:both;
-          float: none;
-          margin: 0;
-          &.input.ship-checkboxNumberLabel.text {
-              width: auto;
-              align-self: flex-end;
-              display: flex;
-              align-items: center;
-              margin-left: 10px !important;
-              height: $inputHeight;
-          }
+    p {
+      clear: both;
+      float: none;
+      margin: 0;
+      &.input.ship-checkboxNumberLabel.text {
+        width: auto;
+        align-self: flex-end;
+        display: flex;
+        align-items: center;
+        margin-left: 10px !important;
+        height: $inputHeight;
       }
+    }
   }
 
   .vtex-omnishipping-1-x-SummaryItemContent {
-      font-size: 14px;
-      font-weight: bold;
-      color: #555555;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555555;
 
-      .address-summary > span {
-          margin-bottom: 7px;
-          display: inline-block;
-      }
+    .address-summary > span {
+      margin-bottom: 7px;
+      display: inline-block;
+    }
 
-      .number {
-          margin-left: 4px;
-      }
+    .number {
+      margin-left: 4px;
+    }
   }
 
   .vtex-omnishipping-1-x-SummaryItemAddress {
-      margin-bottom: 0;
+    margin-bottom: 0;
   }
 
   .vtex-omnishipping-1-x-SummaryItemGroup {
-      padding-top: 0;
+    padding-top: 0;
   }
 
   .vtex-omnishipping-1-x-SummaryItemContent {
-      margin-top: 16px;
+    margin-top: 16px;
   }
 
   .link-change-shipping {
-      display: none;
+    display: none;
   }
 
   .vtex-omnishipping-1-x-warning {
-      margin-top: 16px;
+    margin-top: 16px;
   }
 
   .glide__track {
-      width: 100%;
-      max-width: 90vw;
+    width: 100%;
+    max-width: 90vw;
   }
 }
-
 
 .v-custom-step-shipping .vtex-omnishipping-1-x-deliveryChannelsTogglePickup {
   border: 0 !important;
   background: none !important;
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-deliveryOptionActive {
-  background:#000 !important;
+  background: #000 !important;
   border: 0 !important;
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-deliveryChannelsWrapper {
@@ -350,10 +350,10 @@
   font-weight: 700;
 }
 .v-custom-step-shipping .shipping-has-pickups {
-  max-width: 200px !important
+  max-width: 200px !important;
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-PickupPointInfo {
-  background: #F5F7FE !important;
+  background: #f5f7fe !important;
   border: 0 !important;
   text-align: left;
 }
@@ -361,7 +361,7 @@
   // display: none;
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-PickupPointName {
-  color: #006BEA !important;
+  color: #006bea !important;
   font-size: 14px !important;
   font-family: SamsungOne;
   font-weight: 700;
@@ -391,7 +391,7 @@
   text-decoration: underline;
   color: #000;
   &:hover {
-      background: none !important;
+    background: none !important;
   }
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-packages {
@@ -399,7 +399,7 @@
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-shippingSectionTitle,
 .v-custom-step-shipping .vtex-omnishipping-1-x-receiverTitle {
-  color:#000;
+  color: #000;
   font-weight: 400 !important;
   font-size: 12px !important;
   font-family: SamsungOne;
@@ -417,13 +417,13 @@
   font-weight: 700 !important;
   font-size: 18px;
   &:after {
-      content: 'Produtos de Loja Online Samsung';
-      color:#000;
-      font-weight: 400 !important;
-      font-size: 12px !important;
-      font-family: SamsungOne;
-      display: block;
-      margin: 10px 0 10px;
+    content: 'Produtos de Loja Online Samsung';
+    color: #000;
+    font-weight: 400 !important;
+    font-size: 12px !important;
+    font-family: SamsungOne;
+    display: block;
+    margin: 10px 0 10px;
   }
 }
 
@@ -438,43 +438,112 @@
 }
 
 .pkpmodal {
-border: none !important;
-.pkpmodal-close {
-  box-shadow: none;
-}
-.pkpmodal-info-bar {
-  @media (max-width: 1023px) {
-    overflow-y: scroll;
+  border: none !important;
+  .pkpmodal-close {
+    box-shadow: none;
   }
-}
-.pkpmodal-info-bar-container {
-  border-radius: 20px;
-  .pkpmodal-location-summary {
-    font-size: 16px;
-    button{
-      color: #006BEA;
-      text-decoration: underline;
+  .pkpmodal-info-bar {
+    @media (max-width: 1023px) {
+      overflow-y: scroll;
     }
   }
-  .pkpmodal-header {
-    padding: 24px 0 20px 24px;
-    border-bottom: none;
-    .pkpmodal-title {
-      color: #000;
-      font-size: 24px;
-      font-family: "SamsungSharpSans";
-      font-weight: 700;
+  .pkpmodal-info-bar-container {
+    border-radius: 20px;
+    .pkpmodal-location-summary {
+      font-size: 16px;
+      button {
+        color: #006bea;
+        text-decoration: underline;
+      }
+    }
+    .pkpmodal-header {
+      padding: 24px 0 20px 24px;
+      border-bottom: none;
+      .pkpmodal-title {
+        color: #000;
+        font-size: 24px;
+        font-family: 'SamsungSharpSans';
+        font-weight: 700;
+      }
+    }
+    .pkpmodal-points-list {
+      p {
+        color: #000;
+        font-size: 12px;
+      }
+      .pkpmodal-pickup-point {
+        background-color: #f5f7fe;
+        .pkpmodal-pickup-point-name {
+          color: #006bea;
+          font-size: 14px;
+        }
+        .pkpmodal-pickup-point-address {
+          span {
+            font-size: 14px;
+            color: #000;
+          }
+        }
+        .pkpmodal-pickup-point-available {
+          font-size: 12px;
+          font-weight: 700;
+          color: #000;
+        }
+        .pkpmodal-pickup-point-sla-availability {
+          font-size: 12px;
+          color: #000;
+          .pkpmodal-pickup-point-sla {
+            visibility: hidden;
+          }
+          .pkpmodal-pickup-point-sla::before {
+            visibility: visible;
+            content: 'Retirada após confirmação que será enviada via e-mail.';
+          }
+        }
+      }
+      #pkpmodal-show-list-btn {
+        background-color: #000;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 20px;
+        border: none;
+      }
+    }
+    @media (max-width: 1023px) {
+      background-color: #fff;
+      margin-top: 75px;
+      height: fit-content;
     }
   }
-  .pkpmodal-points-list {
-    p{
-      color: #000;
-      font-size: 12px;
+  .pkpmodal-info-bar {
+    .pkpmodal-details-top {
+      display: flex;
+      align-items: center;
+      button {
+        color: #000;
+        svg {
+          path {
+            fill: #000;
+          }
+        }
+      }
     }
-    .pkpmodal-pickup-point{
-      background-color: #F5F7FE;
-      .pkpmodal-pickup-point-name{
-        color: #006BEA;
+    .pkpmodal-details-header {
+      border: none;
+      p {
+        font-size: 24px;
+        font-weight: 700;
+        color: #000;
+        font-family: 'SamsungSharpSans';
+      }
+      .pkpmodal-details-header-button {
+        border-left: none;
+      }
+    }
+    .pkpmodal-pickup-point {
+      background-color: #f5f7fe;
+      .pkpmodal-pickup-point-name {
+        color: #006bea;
         font-size: 14px;
       }
       .pkpmodal-pickup-point-address {
@@ -483,7 +552,7 @@ border: none !important;
           color: #000;
         }
       }
-      .pkpmodal-pickup-point-available{
+      .pkpmodal-pickup-point-available {
         font-size: 12px;
         font-weight: 700;
         color: #000;
@@ -496,103 +565,34 @@ border: none !important;
         }
         .pkpmodal-pickup-point-sla::before {
           visibility: visible;
-          content: 'Retirada após confirmação que será enviada via e-mail.'
+          content: 'Retirada após confirmação que será enviada via e-mail.';
         }
       }
     }
-    #pkpmodal-show-list-btn{
-      background-color: #000;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      border-radius: 20px;
-      border: none;
-    }
-  }
-  @media (max-width: 1023px) {
-    background-color: #fff;
-    margin-top: 75px;
-    height: fit-content;
-  }
-}
-.pkpmodal-info-bar{
-  .pkpmodal-details-top {
-    display: flex;
-    align-items: center;
-    button {
-      color: #000;
-      svg {
-        path {
-          fill: #000;
-        }
-      }
-    }
-  }
-  .pkpmodal-details-header{
-    border: none;
-    p{
-      font-size: 24px;
-      font-weight: 700;
-      color: #000;
-      font-family: "SamsungSharpSans";
-    }
-    .pkpmodal-details-header-button{
-      border-left: none;
-    }
-  }
-  .pkpmodal-pickup-point{
-    background-color: #F5F7FE;
-    .pkpmodal-pickup-point-name{
-      color: #006BEA;
-      font-size: 14px;
-    }
-    .pkpmodal-pickup-point-address {
-      span {
+    .pkpmodal-details-info {
+      .pkpmodal-details-info-title {
+        color: #000;
         font-size: 14px;
+      }
+      td {
         color: #000;
       }
     }
-    .pkpmodal-pickup-point-available{
-      font-size: 12px;
-      font-weight: 700;
-      color: #000;
-    }
-    .pkpmodal-pickup-point-sla-availability {
-      font-size: 12px;
-      color: #000;
-      .pkpmodal-pickup-point-sla {
-        visibility: hidden;
-      }
-      .pkpmodal-pickup-point-sla::before {
-        visibility: visible;
-        content: 'Retirada após confirmação que será enviada via e-mail.'
+    .pkpmodal-details-bottom {
+      display: flex;
+      justify-content: center;
+      button {
+        background-color: #000;
+        font-size: 14px;
+        font-weight: 700;
+        width: 169px;
+        border-radius: 20px;
+        border: none;
       }
     }
   }
-  .pkpmodal-details-info {
-    .pkpmodal-details-info-title {
-      color: #000;
-      font-size: 14px;
-    }
-    td {
-      color: #000;
-    }
-  }
-  .pkpmodal-details-bottom {
-    display: flex;
-    justify-content: center;
-    button {
-      background-color: #000;
-      font-size: 14px;
-      font-weight: 700;
-      width: 169px;
-      border-radius: 20px;
-      border: none;
-    }
-  }
-}
 }
 
 .estimate-shipping {
-margin: 0;
+  margin: 0;
 }
