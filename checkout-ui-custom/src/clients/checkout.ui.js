@@ -10,7 +10,11 @@ import SendAttachment from '../components/_sendAttachment'
 import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
 import { rootPath } from '../components/utils/_rootPath'
-import { formatNegativeValue, debounce, formatCurrencyBRL } from '../components/_utils'
+import {
+  formatNegativeValue,
+  debounce,
+  formatCurrencyBRL,
+} from '../components/_utils'
 
 export class CheckoutCustom {
   constructor({
@@ -286,11 +290,18 @@ export class CheckoutCustom {
             : '2-5 Dias úteis após a confirmação do pagamento'
 
         const moreInfoHtml = `
-          <div class="more-info">
-            <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
-            <p class="estimate-shipping">${shippingText}</p>
-          </div>
-        `
+            <div class="more-info">
+              <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="estimate-shipping">${shippingText}</p>
+              <p class="instantvoucher">
+                <a class="selecaovoucher" href='${
+                  detailUrl.split('/p')[0] +
+                  '/instant-voucher?skuId=' +
+                  orderForm.items[i].id
+                }'>Voltar à seleção de cupom instantâneo</a>
+              </p>
+            </div>
+          `
 
         _trElem.find('td.product-name').append(moreInfoHtml)
       })
@@ -830,17 +841,19 @@ export class CheckoutCustom {
     if (_this.lang && _this.deliveryDateFormat) {
       _this.changeShippingTimeInfo()
     }
-  }   
+  }
 
-  checkInstantVoucherService(orderForm){
-    const cupomInstantVoucher = JSON.parse(sessionStorage.getItem('instant-voucher'))
+  checkInstantVoucherService(orderForm) {
+    const cupomInstantVoucher = JSON.parse(
+      sessionStorage.getItem('instant-voucher')
+    )
     const instantVoucherIdSku = Object.keys(cupomInstantVoucher)
 
     try {
-      $.each(orderForm.items, function(i) {
+      $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-        $.each(instantVoucherIdSku, function(j){
-          if(
+        $.each(instantVoucherIdSku, function (j) {
+          if (
             cupomInstantVoucher[`${instantVoucherIdSku[j]}`].length > 0 &&
             orderForm.items[i].productId === instantVoucherIdSku[j]
           ) {
@@ -1040,43 +1053,40 @@ export class CheckoutCustom {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
 
-      if (_trElem.find('td.product-price').find('.best-price').length === 0) {
-        return
-      }
+        if (_trElem.find('td.product-price').find('.best-price').length === 0) {
+          return
+        }
 
-      const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
-      const onTermValue = _trElem.find('.total-price:eq(0)').text()
+        const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
+        const onTermValue = _trElem.find('.total-price:eq(0)').text()
 
-      const free =
-        orderForm.items[i].sellingPrice == 1 ||
-        orderForm.items[i].sellingPrice == 0
+        const free =
+          orderForm.items[i].sellingPrice == 1 ||
+          orderForm.items[i].sellingPrice == 0
 
-      free ? _trElem.addClass('gratuito') : null
+        free ? _trElem.addClass('gratuito') : null
 
-      _trElem.attr('data-id-product', orderForm.items[i].productId)
+        _trElem.attr('data-id-product', orderForm.items[i].productId)
 
-      _trElem.find('.new-product-price').text(onTermValue)
+        _trElem.find('.new-product-price').text(onTermValue)
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
-      _trElem
-        .find('td.product-price')
-        .find('.vqc-ldelem')
-        .remove()
+        _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
-      _trElem
-        .find('td.product-price')
-        .addClass('v-custom-quantity-price-active')
-        .prepend(
-          `
+        _trElem
+          .find('td.product-price')
+          .addClass('v-custom-quantity-price-active')
+          .prepend(
+            `
           <div class="v-custom-quantity-price vqc-ldelem">
             <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${
               free ? 'Grátis' : totalValue
             }</p>
           </div>
           `
-      )
-    })
+          )
+      })
     } catch (e) {
       console.error('enchancementTotalPrice error:', e)
     }
@@ -1220,7 +1230,7 @@ export class CheckoutCustom {
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
-    if("instant-voucher" in sessionStorage) {
+    if ('instant-voucher' in sessionStorage) {
       this.checkInstantVoucherService(orderForm)
     }
     this.enchancementProductCart(orderForm)
