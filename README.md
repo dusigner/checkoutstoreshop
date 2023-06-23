@@ -15,12 +15,8 @@ npm install
 To run in hot module reloading mode:
 
 ```sh
-npm run start
+npm run watch
 ```
-
-Proxy configuration for files
-
-<a href="/docs/proxy/readme.md">Fiddler Proxy</a>
 
 
 ### Build Prod
@@ -28,13 +24,13 @@ Proxy configuration for files
 To create a production build:
 
 ```sh
-npm run build-prod
+npm run build
 ```
 
 ## Running
 
 ```sh
-node dist/bundle.js
+node dist/checkout6-custom.js
 ```
 
 ## Config in node_modules

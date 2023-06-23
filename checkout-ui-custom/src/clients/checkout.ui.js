@@ -1245,7 +1245,6 @@ export class CheckoutCustom {
     this.showCustomDiscounts()
     this.summaryCustom()
     this.createChoiceNewProducts()
-    console.log('couponInfo', orderForm)
     this.bundleItems(orderForm)
     this.wrapSummary()
     this.couponInfo(orderForm)
@@ -1258,7 +1257,7 @@ export class CheckoutCustom {
 
     const updateDebounce = debounce(function () {
       if (orderForm.marketingData) {
-        _this.showCustomMsgCoupon(orderForm)
+        this.showCustomMsgCoupon(orderForm)
       }
     }, 250)
 
@@ -1940,7 +1939,6 @@ export class CheckoutCustom {
       })
 
       $(window).on('orderFormUpdated.vtex', async function (evt, orderForm) {
-        console.log(orderForm)
         _this.update(orderForm)
         _this.showEmptyCart(orderForm)
         // addEventListener('hashchange', async event => {
