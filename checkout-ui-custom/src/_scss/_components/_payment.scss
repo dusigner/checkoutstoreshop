@@ -643,31 +643,99 @@
 					//&:not(#postalCode-finished-loading),
 					//&:not(.vtex-omnishipping-1-x-geolocation) {margin:0 0 20px 0;}
 
-					&.vtex-omnishipping-1-x-addressFormPart1 {order: 1;}
+					&.vtex-omnishipping-1-x-addressFormPart1 {
+            order: 1;
+            display: flex;
+            flex-direction: column;
+          }
+          &.vtex-omnishipping-1-x-addressFormPart1 {
+            .ship-postalCode{
+              order: 1;
+            }
+          }
 					&.vtex-omnishipping-1-x-deliveryGroup {
 						order: 2;
 						margin-bottom: 16px;
 					}
-					&.vtex-omnishipping-1-x-addressForm { order: 4; }
+					&.vtex-omnishipping-1-x-addressForm {
+            order: 1;
+
+            + .vtex-omnishipping-1-x-shippingSectionTitle{
+              order: 4;
+
+              + .vtex-omnishipping-1-x-addressFormPart1 {
+                order: 4;
+
+                + .vtex-omnishipping-1-x-teste {
+                  order: 4;
+                }
+              }
+
+              + .vtex-omnishipping-1-x-btnDelivery{
+                order: 4 !important;
+                font-size: 0;
+                &::after{
+                  content: 'Preencher endereço do cliente';
+                  font-size: 14px;
+                }
+              }
+
+              + .vtex-omnishipping-1-x-backToAddressList {
+                order: 4 !important;
+              }
+
+              + .vtex-omnishipping-1-x-addressList{
+                order: 4;
+              }
+
+              + .vtex-omnishipping-1-x-backToAddressList{
+                order: 4;
+
+                + .vtex-omnishipping-1-x-addressFormPart1 {
+                  order: 4;
+
+                  + .vtex-omnishipping-1-x-teste{
+                    order: 4;
+                  }
+                }
+              }
+            }
+          }
 					&.vtex-omnishipping-1-x-submitPaymentButton { order: 100; }
+
 					&.btn-link.vtex-omnishipping-1-x-btnDelivery {
-						order: 5;
+            order: 1;
 						margin-top: 20px;
 						background: $actionPrimary;
+
 					}
 
 					&#postalCode-finished-loading,
 					&:last-child {
 						margin:0;
 					}
+          &.vtex-omnishipping-1-x-backToAddressList {
+            order: 1 !important;
+          }
 				}
 			}
 
 			.vtex-omnishipping-1-x-shippingSectionTitle {
 				font-weight: bold;
-				font-size: 12px;
+				font-size: 0px;
 				color: #000000;
 				margin-bottom: 16px;
+
+        &:nth-child(7){
+          font-size:0px !important;
+
+          &::after {
+            content:'3. Endereço do Cliente';
+            font-size: 18px !important;
+			font-weight: bold;
+        }
+      }
+
 			}
 
 			.vtex-omnishipping-1-x-scheduledDeliveryList {
@@ -724,9 +792,9 @@
   			align-items:center;
     	}
 
-		.vtex-omnishipping-1-x-linkEdit {
-			display: none;
-		}
+      .vtex-omnishipping-1-x-linkEdit {
+        display: none;
+      }
 
     	.vtex-omnishipping-1-x-deliveryChannelsWrapper,
     	.vtex-omnishipping-1-x-deliveryChannelsToggle {border-radius: $borderRadius;}
@@ -773,6 +841,17 @@
 				svg.person-blue path {fill: $actionPrimary;}
 				.vtex-omnishipping-1-x-btn {color: $actionPrimary;}
 			}
+
+      &.vtex-omnishipping-1-x-shippingDataDev{
+
+        .btn-link.vtex-omnishipping-1-x-btnDelivery:nth-child(10){
+          font-size: 0 !important;
+          &::after {
+            font-size: 14px;
+            content: 'Endere\E7o do Cliente';
+          }
+        }
+      }
 
       @media (max-width: 490px) {
         .vtex-omnishipping-1-x-dateLink {
