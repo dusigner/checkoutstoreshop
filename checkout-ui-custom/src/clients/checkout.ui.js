@@ -287,7 +287,7 @@ export class CheckoutCustom {
         const shippingText =
           isInstallService || isSamsungCare
             ? 'Após a entrega do produto'
-            : '2-5 Dias úteis após a confirmação do pagamento'
+            : ''
 
         const moreInfoHtml = `
             <div class="more-info">
