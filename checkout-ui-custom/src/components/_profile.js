@@ -26,50 +26,70 @@ export default class CustomProfileData {
     return age >= 18 && age <= 120
   }
 
-  insertPartialNewProfileData() {
+  async insertPartialNewProfileData() {
     const _this = this
 
-    const formattedDate = $('#client-birth-date')
-      .val()
-      .split('/')
-      .reverse()
-      .join('-')
+    try {
+      const rewardsOptinIsVisible = $('#RewardsBlock').is(':visible')
+      const saGuid = localStorage.getItem('saGuid')
+      const rewardsAccepted = $('#inputRewards').is(':checked')
+      let sendOptinToMasterdata = false
 
-    const finalDate = new Date(formattedDate)
+      if (
+        saGuid &&
+        rewardsAccepted &&
+        rewardsOptinIsVisible &&
+        window.location.hash === '#/profile'
+      ) {
+        await $.ajax({
+          url: `${_this.rootPath()}/rewards/accept-terms/${saGuid}`,
+          type: 'POST',
+          crossDomain: true,
+          success: (sendOptinToMasterdata = true),
+          fail: (sendOptinToMasterdata = false),
+        })
+      }
 
-    const newData = {
-      email: $('.email').text(),
-      birthDate: finalDate,
-      acceptTermsAndPrivacyPolicy: $('#inputTermAndPolicies').is(':checked'),
-      isNewsletterOptIn: $('#opt-in-newsletter').is(':checked'),
-      isWhatsAppOptIn: $('#inputWhatsapp').is(':checked'),
-      whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
-        ? $('.whatsapp_phone').val()
-        : '',
-      isRewardsAccepted: $('#inputRewards').is(':checked'),
-    }
+      const formattedDate = $('#client-birth-date')
+        .val()
+        .split('/')
+        .reverse()
+        .join('-')
 
-    $.ajax({
-      url: `${_this.rootPath()}/_v/insert/client/partial`,
-      type: 'POST',
-      crossDomain: true,
-      accept: 'application/vnd.vtex.ds.v10+json',
-      contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify(newData),
-      success(data) {
-        window.localStorage.setItem('doc', data.DocumentId)
-      },
-    })
+      const finalDate = new Date(formattedDate)
 
-    const saGuid = localStorage.getItem('saGuid')
-    const rewardsAccepted = $('#inputRewards').is(':checked')
+      const newData = {
+        email: $('.email').text(),
+        birthDate: finalDate,
+        acceptTermsAndPrivacyPolicy: $('#inputTermAndPolicies').is(':checked'),
+        isNewsletterOptIn: $('#opt-in-newsletter').is(':checked'),
+        isWhatsAppOptIn: $('#inputWhatsapp').is(':checked'),
+        whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
+          ? $('.whatsapp_phone').val()
+          : '',
+      }
 
-    if (saGuid && rewardsAccepted) {
-      $.ajax({
-        url: `${_this.rootPath()}/rewards/accept-terms/${saGuid}`,
+      const newDataWithOptin = {
+        ...newData,
+        isRewardsAccepted: true,
+      }
+
+      await $.ajax({
+        url: `${_this.rootPath()}/_v/insert/client/partial`,
         type: 'POST',
         crossDomain: true,
+        accept: 'application/vnd.vtex.ds.v10+json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(
+          sendOptinToMasterdata ? newDataWithOptin : newData
+        ),
+        success(data) {
+          window.localStorage.setItem('doc', data.DocumentId)
+        },
       })
+    } catch (e) {
+      console.error(e)
+      throw new Error()
     }
   }
 
@@ -149,9 +169,13 @@ export default class CustomProfileData {
     }
   }
 
-  saveProfileData() {
-    this.insertPartialNewProfileData()
-    this.updateBirthDateOnSummary()
+  async saveProfileData() {
+    try {
+      await this.insertPartialNewProfileData()
+      this.updateBirthDateOnSummary()
+    } catch (e) {
+      throw new Error()
+    }
   }
 
   validateAge(dataUser) {
