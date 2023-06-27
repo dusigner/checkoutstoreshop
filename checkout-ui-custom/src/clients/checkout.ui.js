@@ -1973,10 +1973,6 @@ export class CheckoutCustom {
           _this.customAddressForm.loadScript()
         }
 
-        if (window.location.hash === '#/cart') {
-          _this.Rewards.cancelRewardsDiscount()
-        }
-
         if (window.location.hash === '#/payment') {
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
@@ -2022,6 +2018,16 @@ export class CheckoutCustom {
       // ok load
       $(window).load(async function () {
         _this.setPixAsDefaultPaymentMethod()
+        if (window.location.hash === '#/cart') {
+          _this.Rewards.cancelRewardsDiscount()
+
+          const checkIfRemove = localStorage.getItem('@samsung/shippingResult', 'remove')
+
+          if (checkIfRemove) {
+            $('.srp-toggle__pickup').click()
+          }
+        }
+
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
         })
