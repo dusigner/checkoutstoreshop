@@ -26,9 +26,9 @@ class AdobeLaunchPixel {
     /* ATTENTION: THOSE FILES ARE RELATED TO STAGING ENVIRONMENT OF ADOBE DTM, EACH ONE OF THESE ARE RELATED TO ONE SPECIFIC COUNTRY/REGION */
     this.scriptFiles = {
       br:
-        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-b91318e516e2.min.js',
+        '//assets.adobedtm.com/72afb75f5516/901a9e1a98ec/launch-a82080575b1a.min.js',
       br_staging:
-        '//assets.adobedtm.com/72afb75f5516/31d056a94978/launch-005f425fd4fc-staging.min.js',
+        '//assets.adobedtm.com/72afb75f5516/901a9e1a98ec/launch-c78d04fd7f6b-staging.min.js'
     }
 
     this.version2 = ['br']
