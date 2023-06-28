@@ -3,79 +3,58 @@
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
 /* eslint eqeqeq: 0 */
+
+const SAMSUNG_CARE_CATEGORY = '/2005/'
 export default class SamsungCarePlus {
   constructor() {
-    this.SAMSUNG_CARE_CATEGORY = '/2005/'
-    this.LINK_SCPLUS = 'linkSCPLUS'
+    this.samsungCareItems = []
   }
 
-  init() {
-    try {
-      const { items } = window.vtexjs.checkout.orderForm
-
-      if (items) {
-        this.validateSamsungCarePlus(items)
-        this.popupSSC(items)
-      }
-    } catch (e) {
-      console.error('SamsungCarePlus error', e)
-    }
+  isSamsungCare(item) {
+    return item && item.productCategoryIds === SAMSUNG_CARE_CATEGORY
   }
 
-  isSamsungCarePlus(item) {
-    return item && item.productCategoryIds === this.SAMSUNG_CARE_CATEGORY
-  }
-
-  validateSamsungCarePlus(items) {
-    const scpItem = items.filter(item => this.isSamsungCarePlus(item))
-
-    if (!scpItem.length) return
-    scpItem.forEach(item => {
-      if ($(`.product-item[data-sku="${item.id}"] .item-link-remove`)) {
-        $(`.product-item[data-sku="${item.id}"] .quantity`).addClass(
-          'quantity-samsungCare'
-        )
-      }
-    })
-
-    const skuMainProduct = scpItem[0].attachments.find(
-      att => att.name === this.LINK_SCPLUS
-    )
-
-    // Se o produto não tiver o attachment do SC+ então há algo errado no carrinho. Remove o seguro.
-    if (!skuMainProduct || !skuMainProduct.content) {
-      this.removeSamsungCarePlus()
+  filterAttachedProducts(samsungCareItem, items) {
+    if (!samsungCareItem) {
+      return
     }
 
-    // Encontra o produto principal.
-    const mainProduct = items.find(
-      item => item.id === skuMainProduct.content.idsku
-    )
+    const { attachments } = samsungCareItem
 
-    // Se não tiver o produto principal então remove o seguro.
-    if (!mainProduct) {
-      this.removeSamsungCarePlus()
-    }
-  }
-
-  removeSamsungCarePlus(toRemove) {
-    const items = toRemove || window.vtexjs.checkout.orderForm.items
-
-    items
-      .filter(item => this.isSamsungCarePlus(item))
-      .forEach(item => {
-        const removeBtn = $(
-          `tr.product-item[data-sku="${item.id}"] td.item-remove a`
-        )
-
-        if (removeBtn.length) {
-          removeBtn[0].click()
-          removeBtn[0].remove()
-        }
+    return items.filter(item => {
+      return attachments.some(attachment => {
+        return item.id === attachment.content.idsku 
       })
+    })
   }
 
-  interceptSamsungCarePlusRequest(event, request) {
+  findAttachedProduct(samsungCareItem, items) {
+    const { attachments } = samsungCareItem
+
+    return items.find(item => {
+      return attachments.some(attachment => {
+        return item.id === attachment.content.idsku 
+      })
+    })
+  }
+
+  isDuplicated(samsungCareItem, items) {
+    if (!items.length) {
+      return
+    }
+
+    return items.some(item => item.id === samsungCareItem.id)
+  }
+
+  isFree(item) {
+    if (!item) {
+      return 
+    }
+
+    return item.sellingPrice <= 1
+  }
+
+  sendSameQuantityAsAttachedItem(event, request) {
     const isUpdateItemRequest = request.url.includes('/items/update/')
 
     if (!isUpdateItemRequest) {
@@ -83,30 +62,22 @@ export default class SamsungCarePlus {
     }
 
     try {
-      function findSamsungCareInCart() {
-        const { items } = window.vtexjs.checkout.orderForm
+      const { items } = window.vtexjs.checkout.orderForm
+      const hasSamsungCareInCart = items.some(this.isSamsungCare)
 
-        return items.filter(item => {
-          const { attachments } = item
-
-          return attachments.some(attachment => {
-            return attachment.name.includes('linkSCPLUS')
-          })
-        })
-      }
-
-      const hasSamsungCareInCart = findSamsungCareInCart()
-
-      if (!hasSamsungCareInCart.length) {
+      if (!hasSamsungCareInCart) {
         return
       }
 
-      const { items } = window.vtexjs.checkout.orderForm
       const payload = JSON.parse(request.data || '{}')
       const { orderItems } = payload
       const [currentItem] = orderItems
 
-      function findSamsungCarePlusById(item) {
+      if (!currentItem.id) {
+        return
+      }
+      
+      function findSamsungCareById(item) {
         const { attachments } = item
 
         return attachments.some(attachment => {
@@ -114,15 +85,16 @@ export default class SamsungCarePlus {
         })
       }
 
-      const samsungCarePlus = items.find(findSamsungCarePlusById)
+      const samsungCare = items.find(findSamsungCareById)
+      const attachedProducts = this.filterAttachedProducts(samsungCare, items)
 
-      if (samsungCarePlus) {
+      if (samsungCare && attachedProducts.length < 2) {
         orderItems.push({
-          seller: samsungCarePlus.seller,
+          seller: samsungCare.seller,
           quantity: currentItem.quantity,
-          id: samsungCarePlus.id,
-          index: items.indexOf(samsungCarePlus),
-          hasBundleItems: !!samsungCarePlus.bundleItems.length,
+          id: samsungCare.id,
+          index: items.indexOf(samsungCare),
+          hasBundleItems: !!samsungCare.bundleItems.length,
         })
         request.data = JSON.stringify(payload)
       }
@@ -130,95 +102,275 @@ export default class SamsungCarePlus {
       console.error(`Erro ao sincronizar quantidade do Samsung Care: ${err}`)
     }
   }
-
-  // Adiciona um botão fake e de remover produto para ssc proteção completa e abre um popup ao clicar
-  popupSSC(items) {
+  
+  mountSamsungCareItems(items) {
     try {
-      const scpItem = items.filter(item => this.isSamsungCarePlus(item))
-      const scpItemFree = scpItem.filter(item => item.sellingPrice === 0)
-      const scpItemFreeIds = scpItemFree.map(item => item.id)
+      const samsungCaresInCart = items.filter(this.isSamsungCare)
+  
+      if (!samsungCaresInCart.length) {
+        return
+      }
+  
+      const samsungCareItems = samsungCaresInCart.reduce((accumulator, samsungCareItem) => {
+        const attachedItem = this.findAttachedProduct(samsungCareItem, items)
+        const isFree = this.isFree(samsungCareItem)
+        const isDuplicated = accumulator.some(item => (
+          item.samsungCareItem.id === samsungCareItem.id
+        ))
+        
+        accumulator.push({ samsungCareItem, attachedItem, isFree, isDuplicated })
+  
+        return accumulator
+      }, [])
+  
+      this.samsungCareItems = samsungCareItems
+    } catch (err) {
+      console.error(`SamsungCarePlus - mountSamsungCareItems: ${err}`);
+    }
+  }
 
-      if(scpItemFree.length){
-        if ($('.fakeRemove').length === 0) {
-          $('.product-item').each(function () {
-            const dataSku = $(this).attr('data-sku')
+  hideQuantityButtons(orderForm) {
+    if (!orderForm) {
+      return
+    }
+
+    const { items } = orderForm
+
+    // empty carty
+    if (!items || !items.length) {
+      return
+    }
+
+    items.filter(this.isSamsungCare).forEach(samsungCareItem => {
+      const $samsungCareElement = $(`.product-item[data-sku="${samsungCareItem.id}"] .quantity`)
+      $samsungCareElement.not('.quantity-samsungCare').addClass('quantity-samsungCare')
+    })
+  }
+
+  removeUnmatched(items) {
+    try {      
+      const unmatchedItems = this.samsungCareItems.reduce((accumulator, item) => {
+        if (items.indexOf(item.samsungCareItem) < 0) {
+          return accumulator
+        }
   
-            if (scpItemFreeIds.includes(dataSku)) {
-              $(
-                '<i title="remover" class="fakeRemove"></i>'
-              ).appendTo($(`.product-item[data-sku=${dataSku}] .item-remove`))
-            }
-          })
-          if (items) {
-            const product = items.filter(item => scpItemFreeIds.includes(item.id))
-  
-            if (product[0] && product[0].attachments[0]) {
-              const nameProduct = product[0].name
-              const { idsku } = product[0].attachments[0].content
-              const idskusc = product[0].id
-  
-              $(document).on('click', '.fakeRemove', function () {
-                $('body').addClass('modalActive')
-                if (
-                  product[0] &&
-                  product[0].attachments[0] &&
-                  product[0].attachments[0].content.idsku
-                ) {
-                  const name = items.filter(
-                    val => val.id === idsku
-                  )
-  
-                  if ($('.modalssc').length == 0 && $('.layerpopup').length == 0) {
-                    $(`<div class="layerpopup"></div>
-                    <div class="modalssc">
-                      <p><b>Atenção</b>: ao excluir <b>${nameProduct}</b>, será removido também 
-                        do seu carrinho o item <b>${name[0].name}</b></p>
-                      <div>
-                        <a>Voltar ao carrinho</a>
-                        <a data-id-sc='${idskusc}' data-id='${idsku}'>Excluir</a>
-                      </div>
-                    </div>`).prependTo($('body'))
-                  }
-                }
-              })
-            }
-          }
-  
-          $(document).on('click', '.modalssc div a', function () {
-            $('.layerpopup, .modalssc').fadeOut('fast', function () {
-              $(this).remove()
-            })
-          })
-          $(document).on('click', '.modalssc div a + a', function () {
-            const productId = $(this).attr('data-id')
-  
-            const interval = 4000
-  
-            items.forEach((el, i) => {
-              setTimeout(function () {
-                const removeList = []
-  
-                if (el.id === productId) {
-                  removeList.push({
-                    index: i,
-                    quantity: 0,
-                  })
-                  const itemsToRemove = removeList
-  
-                  if (itemsToRemove.length > 0) {
-                    return window.vtexjs.checkout
-                      .removeItems(itemsToRemove)
-                      .then(() => {})
-                  }
-                }
-              }, i * interval)
-            })
+        if (!item.attachedItem) {
+          accumulator.push({
+            index: items.indexOf(item.samsungCareItem),
+            quantity: 0
           })
         }
+        return accumulator
+      }, [])
+        
+      if (unmatchedItems.length) {
+        window.cart.loadingItem(true)
+  
+        vtexjs.checkout.removeItems(unmatchedItems, null, false).done(function() {
+          window.cart.loadingItem(false)
+        }).fail(function() {
+          window.cart.loadingItem(false)
+          this.samsungCareItems = []
+        })
+      }
+    } catch (err) {
+      console.error(`SamsungCarePlus - removeUnmatched: ${err}`);
+    }
+  }
+
+  removeDuplicated(items) {
+    try {
+      const duplicatedItems = this.samsungCareItems.reduce((accumulator, item) => {
+        if (items.indexOf(item.samsungCareItem) < 0) {
+          return accumulator
+        }
+  
+        if (item.isDuplicated) {
+          accumulator.push({
+            index: items.indexOf(item.samsungCareItem),
+            quantity: 0
+          })
+        }
+        return accumulator
+      }, [])
+      
+      if (duplicatedItems.length) {
+        window.cart.loadingItem(true)
+  
+        vtexjs.checkout.removeItems(duplicatedItems, null, false).done(function() {
+          window.cart.loadingItem(false)
+        }).fail(function() {
+          window.cart.loadingItem(false)
+          this.samsungCareItems = []
+        })
+      }
+    } catch (err) {
+      console.error(`SamsungCarePlus - removeDuplicated: ${err}`);
+    }
+  }
+
+  removeTogether(samsungCareItem, attachedProduct) {
+    try {
+      const { items } = vtexjs.checkout.orderForm
+
+      if (items.indexOf(samsungCareItem) < 0) {
+        return
+      }
+  
+      const itemsToRemove = [
+        {
+          index: items.indexOf(samsungCareItem),
+          quantity: 0
+        }
+      ]
+
+      // push all attached items
+      items.forEach(item => {
+        if (item.id === attachedProduct.id) {
+          itemsToRemove.push({
+            index: items.indexOf(item),
+            quantity: 0
+          })
+        }
+      })
+    
+      window.cart.loadingItem(true)
+
+      vtexjs.checkout.removeItems(itemsToRemove, null, false).done(function() {
+        window.cart.loadingItem(false)
+      }).fail(function() {
+        window.cart.loadingItem(false)
+      })
+    } catch (err) {
+      console.error(`SamsungCarePlus - removeTogether: ${err}`);
+    }
+  }
+
+  modalRemoveTogether(samsungCareItem, attachedProduct) {
+    try {
+      const _this = this
+  
+      if ($('.layerpopup').length) {
+        return
+      }
+  
+      const $confirmModal = $(`<div class="layerpopup"></div>
+        <div class="modalssc">
+          <p><b>Atenção</b>: ao excluir <b>${samsungCareItem.name}</b>, será removido também 
+            do seu carrinho o item <b>${attachedProduct.name}</b></p>
+          <div>
+            <a class="ssc-cancel-action">Voltar ao carrinho</a>
+            <a class="ssc-remove-together">Excluir</a>
+          </div>
+      </div>`)
+  
+      $confirmModal.prependTo($('body'))
+  
+      $confirmModal.find('.ssc-remove-together').on('click', function() {
+        _this.removeTogether(samsungCareItem, attachedProduct)
+      })
+  
+      $confirmModal.find('.ssc-remove-together, .ssc-cancel-action').on('click', function() {
+        $('.modalssc, .layerpopup').remove()
+      })
+    } catch (err) {
+      console.error(`SamsungCarePlus - modalRemoveTogether: ${err}`);
+    }
+  }
+
+  samsungCareModalTrigger() {
+    try {
+      const _this = this
+  
+      this.samsungCareItems.forEach(item => {
+        if (!item) {
+          return
+        }
+  
+        const { samsungCareItem, attachedItem, isFree } = item
+  
+        if (samsungCareItem && attachedItem && isFree) {
+          const $freeSamsungCareElement = $(`tr.product-item[data-sku="${samsungCareItem.id}"]`)
+          const $removeIcon = $freeSamsungCareElement.find('.item-link-remove')
+          
+          // Remove evento de click da vtex
+          $removeIcon.unbind('click')
+  
+          // Adiciona evento customizado
+          $removeIcon.click(function() {
+            _this.modalRemoveTogether(samsungCareItem, attachedItem)
+          })
+        }
+      })
+    } catch (err) {
+      console.error(`SamsungCarePlus - samsungCareModalTrigger: ${err}`);
+    }
+  }
+
+  updateQuantity(items) {
+   try {
+    const _this = this
+
+    const itemsToUpdate = this.samsungCareItems.reduce((accumulator, item) => {
+      if (items.indexOf(item.attachedItem) < 0) {
+        return accumulator
+      }
+
+      const attachedItemQuantity = items.reduce((accumulatedQuantity, orderFormItem) => {
+        if (orderFormItem.id === item.attachedItem.id) {
+          return accumulatedQuantity + orderFormItem.quantity
+        }
+
+        return accumulatedQuantity
+      }, 0)
+
+      const samsungCareItemQuantity = item.samsungCareItem.quantity
+
+      if ((attachedItemQuantity !== samsungCareItemQuantity)) {
+        accumulator.push({
+          index: items.indexOf(item.samsungCareItem),
+          quantity: attachedItemQuantity
+        })
       }
       
+      return accumulator
+    }, [])
+    
+    if (itemsToUpdate.length) {
+      window.cart.loadingItem(true)
+
+      vtexjs.checkout.updateItems(itemsToUpdate, null, false).done(function (orderForm) {
+        window.cart.loadingItem(false)
+        _this.removeDuplicated(orderForm.items)
+      }).fail(function() {
+        window.cart.loadingItem(false)
+        this.samsungCareItems = []
+      })
+    }
+   } catch (err) {
+     console.error(`SamsungCarePlus - updateQuantity: ${err}`);
+   }
+  }
+
+  sync(orderForm) { 
+    try {
+      if (!orderForm) {
+        return
+      }
+  
+      const { items } = orderForm
+  
+      // empty carty
+      if (!items || !items.length) {
+        return
+      }
+
+      this.mountSamsungCareItems(items)
+      this.updateQuantity(items)
+      this.removeUnmatched(items)
+      this.removeDuplicated(items)
     } catch (err) {
-      console.error(`Erro ao remover produto de Samsung Care Combo Grátis: ${err}`)
+      console.error(`Não foi possível sincronizar Samsung Care items: ${err}`)
     }
   }
 }

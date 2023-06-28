@@ -1258,7 +1258,9 @@ export class CheckoutCustom {
     this.bundleItems(orderForm)
     this.wrapSummary()
     this.couponInfo(orderForm)
-    this.samsungCarePlus.init()
+    this.CheckoutLimit.lockIncrementButtons(orderForm)
+    this.samsungCarePlus.samsungCareModalTrigger()
+    this.samsungCarePlus.hideQuantityButtons(orderForm)
     this.installationService.init()
     new BespokeRefrigerator().init()
 
@@ -1586,34 +1588,6 @@ export class CheckoutCustom {
       })
     }
   }
-  clickModal() {
-    $(document).on('click', '.modalssc div a + a', function () {
-      $('body').addClass('modalClick')
-      const productId = $(this).attr('data-id')
-      const productIdSC = $(this).attr('data-id-sc')
-
-      window.vtexjs.checkout.orderForm.items.forEach(el => {
-        setTimeout(function () {
-          if (el.id === productId) {
-            if ($('body').hasClass('modalClick')) {
-              $(
-                `.table.cart-items tr[data-sku=${productId}]:eq(0) td.item-remove a`
-              ).click()
-            }
-
-            $('body').removeClass('modalClick')
-          }
-        }, 4000)
-
-        setTimeout(function () {
-          $(
-            `.table.cart-items tr[data-sku=${productIdSC}] td.item-remove a`
-          ).click()
-          $('body').removeClass('modalActive')
-        }, 6000)
-      })
-    })
-  }
 
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
@@ -1795,7 +1769,7 @@ export class CheckoutCustom {
     }
 
     this.fixLabels()
-    this.clickModal()
+    this.CheckoutLimit.init()
   }
 
   start() {
@@ -1818,8 +1792,14 @@ export class CheckoutCustom {
 
         // #profile
         _this.profile.bindEvents()
-        $(window).on('checkoutRequestBegin.vtex', function (event, request) {
-          _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
+        
+        $(window).on('checkoutRequestBegin.vtex', function(event, request) {
+          _this.CheckoutLimit.limitQuantity(event, request)
+          _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
+        })
+        $(window).on('checkoutRequestEnd.vtex', function(event, orderForm) {
+          _this.samsungCarePlus.sync(orderForm)
+          _this.CheckoutLimit.sync(orderForm)
         })
       })
       function trackLogin(ssgAccountURL, accessKeyURL) {
@@ -1832,7 +1812,6 @@ export class CheckoutCustom {
         }
       }
       $(document).ajaxComplete(function (event, xhr, settings) {
-        _this.init()
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
@@ -2005,7 +1984,6 @@ export class CheckoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
-        _this.CheckoutLimit.init(orderForm)
       })
 
       $(window).on('attachmentUpdated.vtex', function (evt, orderFormSection) {
@@ -2044,7 +2022,7 @@ export class CheckoutCustom {
         ) {
           _this.TradeIn.validateTradeinCustomData()
           _this.SendAttachment.sendOpenTextField()
-          _this.displayHideSuperChat(window.location.hash)
+          // _this.displayHideSuperChat(window.location.hash)
         }
 
         $(window).one('componentValidated.vtex', () => _this.builder())
