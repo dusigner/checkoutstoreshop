@@ -1769,7 +1769,7 @@ export class CheckoutCustom {
     }
 
     this.fixLabels()
-    this.clickModal()
+    this.CheckoutLimit.init()
   }
 
   start() {
@@ -1792,8 +1792,14 @@ export class CheckoutCustom {
 
         // #profile
         _this.profile.bindEvents()
-        $(window).on('checkoutRequestBegin.vtex', function (event, request) {
-          _this.samsungCarePlus.interceptSamsungCarePlusRequest(event, request)
+        
+        $(window).on('checkoutRequestBegin.vtex', function(event, request) {
+          _this.CheckoutLimit.limitQuantity(event, request)
+          _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
+        })
+        $(window).on('checkoutRequestEnd.vtex', function(event, orderForm) {
+          _this.samsungCarePlus.sync(orderForm)
+          _this.CheckoutLimit.sync(orderForm)
         })
       })
       function trackLogin(ssgAccountURL, accessKeyURL) {
@@ -1806,7 +1812,6 @@ export class CheckoutCustom {
         }
       }
       $(document).ajaxComplete(function (event, xhr, settings) {
-        _this.init()
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
@@ -2017,7 +2022,7 @@ export class CheckoutCustom {
         ) {
           _this.TradeIn.validateTradeinCustomData()
           _this.SendAttachment.sendOpenTextField()
-          _this.displayHideSuperChat(window.location.hash)
+          // _this.displayHideSuperChat(window.location.hash)
         }
 
         $(window).one('componentValidated.vtex', () => _this.builder())
