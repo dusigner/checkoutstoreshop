@@ -146,7 +146,6 @@ export default class Rewards {
       const { orderForm } = window.vtexjs.checkout
       const saGuid = localStorage.getItem('saGuid')
 
-      if (saGuid) return
       if (
         orderForm.items.length === 0 &&
         $('#text-details-rewards').length > 0
@@ -160,7 +159,7 @@ export default class Rewards {
 
       const _checkoutElem = $(`.cart-fixed`)
       const _cartElem = $(`.summary-to-new-components`)
-      const { _component } = createLayoutMessageObs()
+      const { _component } = createLayoutMessageObs(saGuid)
 
       if (
         _checkoutElem.find('#text-details-rewards').length > 0 ||
