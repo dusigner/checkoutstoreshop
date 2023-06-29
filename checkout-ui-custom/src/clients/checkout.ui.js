@@ -9,6 +9,7 @@ import TradeIn from '../components/_tradeIn'
 import SendAttachment from '../components/_sendAttachment'
 import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
+import Messages from '../components/_messages'
 import { rootPath } from '../components/utils/_rootPath'
 import {
   formatNegativeValue,
@@ -50,6 +51,7 @@ export class CheckoutCustom {
     this.hasSelectedDefaultPaymentMethod = false
     this.CheckoutLimit = new CheckoutLimit()
     this.samsungCarePlus = new SamsungCarePlus()
+    this.messages = new Messages()
   }
 
   onDomMutation({ targetNode, callback, disconnectCondition = true }) {
@@ -1778,6 +1780,7 @@ export class CheckoutCustom {
       console.log('Checkout is already started')
 
       $(async function () {
+        _this.messages.init()
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
@@ -2050,6 +2053,7 @@ export class CheckoutCustom {
         _this.shipping.toggleGoToPaymentDisabled()
         _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
         $(window).one('componentValidated.vtex', () => _this.builder())
+        _this.messages.init()
       })
     } catch (error) {
       general()
