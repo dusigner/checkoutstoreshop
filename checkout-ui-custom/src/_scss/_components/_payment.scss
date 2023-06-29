@@ -675,7 +675,7 @@
                 order: 4 !important;
                 font-size: 0;
                 &::after{
-                  content: 'Preencher endereço do cliente';
+                  content: 'Preencher endere\E7o do cliente';
                   font-size: 14px;
                 }
               }
@@ -718,6 +718,25 @@
             order: 1 !important;
           }
 				}
+
+        &.vtex-omnishipping-1-x-btnDelivery:nth-child(5){
+          font-size: 0;
+          &::after {
+            content: 'Preencher Endere\E7o do Cliente';
+            font-size: 14px;
+          }
+        }
+
+        .shp-summary-group.vtex-omnishipping-1-x-SummaryItemGroup:nth-last-child(2){
+          .vtex-omnishipping-1-x-SummaryItemTitle {
+            font-size: 0;
+            &::after{
+              content: 'Endere\E7o do Cliente';
+              font-size: 14px;
+            }
+          }
+        }
+
 			}
 
 			.vtex-omnishipping-1-x-shippingSectionTitle {
@@ -730,11 +749,32 @@
           font-size:0px !important;
 
           &::after {
-            content:'3. Endereço do Cliente';
+            content:'3. Endere\E7o do Cliente';
             font-size: 18px !important;
-			font-weight: bold;
+			      font-weight: bold;
         }
-      }
+
+        }
+
+        &:nth-child(4){
+          font-size:0px !important;
+
+          &::after {
+            content:'2. Endere\E7o do Cliente';
+            font-size: 18px !important;
+			      font-weight: bold;
+        }
+
+        + .vtex-omnishipping-1-x-btnDelivery{
+          order: 4 !important;
+          font-size: 0;
+          &::after{
+            content: 'Preencher endere\E7o do cliente';
+            font-size: 14px;
+          }
+        }
+
+        }
 
 			}
 

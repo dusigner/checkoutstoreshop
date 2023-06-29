@@ -256,11 +256,3 @@ body.v-custom-fnsCustomAddressForm {
   }
 }
 
-.shp-summary-group.vtex-omnishipping-1-x-SummaryItemGroup:nth-child(3)
-  .vtex-omnishipping-1-x-SummaryItemTitle {
-  font-size: 0;
-  &::after{
-    content: 'Endereço do Cliente';
-    font-size: 14px;
-  }
-}
