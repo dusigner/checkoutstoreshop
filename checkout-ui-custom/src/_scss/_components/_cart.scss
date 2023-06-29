@@ -1052,9 +1052,10 @@ h1#cart-title {
       display: grid;
       grid-template-areas:
         "subtotal"
-        "installation_summary"
-        "descontos_total"
+        "eco_troca"
         "cupom"
+        "descontos_total"
+        "installation_summary"
         "cupom_desconto"
         "cupom_instantaneo"
         "entrega";
@@ -1069,6 +1070,10 @@ h1#cart-title {
 
       .coupon-applied {
         grid-area: cupom;
+      }
+
+      .eco_troca {
+        grid-area: eco_troca;
       }
 
       .Discounts {
@@ -1106,7 +1111,7 @@ h1#cart-title {
       }
     }
   }
-  
+
   .installation-summary {
       > td {
         width: 100% !important;
@@ -1503,7 +1508,7 @@ h1#cart-title {
 }
 .srp-toggle__pickup.gray.blue {
   color: #fff !important;
-  
+
 }
 .srp-toggle__pickup.gray {
   color: #000 !important;
