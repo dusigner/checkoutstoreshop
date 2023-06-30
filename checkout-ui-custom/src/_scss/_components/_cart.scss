@@ -1057,13 +1057,14 @@ h1#cart-title {
       display: grid;
       grid-template-areas:
         'subtotal'
+        'eco_troca'
         'discount_in_cash'
-        'installation_summary'
         'cupom'
         'cupom_desconto'
         'cupom_instantaneo'
         'garanteed_tradein'
         'descontos_total'
+        'installation_summary'
         'entrega';
 
       .Items {
@@ -1080,6 +1081,10 @@ h1#cart-title {
 
       .coupon-applied {
         grid-area: cupom;
+      }
+
+      .eco_troca {
+        grid-area: eco_troca;
       }
 
       .Discounts {
