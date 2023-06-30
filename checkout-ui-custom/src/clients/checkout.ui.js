@@ -397,6 +397,8 @@ export class CheckoutCustom {
       const discountsTotal = uniqueDiscounts.map(function (discount) {
         const name = discount.ratesAndBenefitsIdentifier
           ? discount.ratesAndBenefitsIdentifier.name
+          : discount.name
+          ? discount.name
           : ''
 
         const total = itemsDiscounts.reduce(function (acc, current) {
@@ -420,8 +422,8 @@ export class CheckoutCustom {
           value: total,
         }
       })
-
       const elements = discountsTotal.map(discount => {
+        // console.log('discount.name', discount.name)
         if (discount.name.toLowerCase().includes('desconto à vista')) {
           this.hasSelectedDefaultPaymentMethod = true
           const selectedPaymentSystem =
@@ -462,6 +464,17 @@ export class CheckoutCustom {
           return `
               <tr class="discount sc" style="height: 23px;">
                 <td style="margin-left: 10px;">Desc. Samsung Care+</td>
+                <td>
+                  <span style="font-weight: 700" >${formatNegativeValue(
+                    formatCurrencyBRL(discount.value)
+                  )}</span>
+                </td>
+              </tr>`
+        }
+        if (discount.name.toLowerCase().includes('discount@manualprice') && window.vtexjs.checkout.orderForm.customData.customApps.some(app => app.id == 'eco_troca')) {
+          return `
+              <tr class="discount eco_troca" style="height: 23px;">
+                <td style="margin-left: 10px;">Desc. Eco Troca</td>
                 <td>
                   <span style="font-weight: 700" >${formatNegativeValue(
                     formatCurrencyBRL(discount.value)

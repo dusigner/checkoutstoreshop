@@ -1059,6 +1059,7 @@ h1#cart-title {
         'subtotal'
         'discount_in_cash'
         'installation_summary'
+        'eco_troca'
         'cupom'
         'cupom_desconto'
         'cupom_instantaneo'
@@ -1080,6 +1081,10 @@ h1#cart-title {
 
       .coupon-applied {
         grid-area: cupom;
+      }
+
+      .eco_troca {
+        grid-area: eco_troca;
       }
 
       .Discounts {
