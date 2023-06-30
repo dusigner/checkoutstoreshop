@@ -1,13 +1,42 @@
+# empty-project
 
-How to use it?
+Empty project.
 
+## Building and running on localhost
 
-Make your changes inside the src folder.
+First install dependencies:
 
-After you finish:
+```sh
+npm install
+```
 
-1 - Access your terminal and go to checkout-ui-custom folder;
+To run in hot module reloading mode:
 
-2 - Run yarn install (Only if you have never run before);
+```sh
+npm start
+```
 
-3 - Run yarn build for Webpack to generate CSS and JS archives.
+To create a production build:
+
+```sh
+npm run build-prod
+```
+
+## Running
+
+```sh
+node dist/bundle.js
+```
+
+## Config in node_modules
+
+modify "node_modules/parcel-bundler/src/Bundle.js"
+
+// Add the content hash and extension.
+return name + '.' + hash + ext;
+
+For
+
+// Add the content hash and extension.
+return name + ext;
+

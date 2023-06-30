@@ -1,10 +1,35 @@
-### SublimeText ###
-*.sublime-workspace
 
-# App specific
+.cache/
+coverage/
+dist/*
+!dist/index.html
 node_modules/
-npm-debug.log
-build/
+*.log
 
-checkout6-custom.css
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 checkout6-custom.js
+checkout6-custom.js.map
+checkout6-custom.css
+checkout6-custom.css.map
+
+_rewards.js
+_rewards.js.map
+_adobeLaunchPixel.js
+_adobeLaunchPixel.js.map
+_customAddressForm.js.map
+_customAddressForm.js
+
+header.js
+header.js.map
+emptyCart.js.map
+emptyCart.js
+
+index.html
