@@ -1186,7 +1186,6 @@ class AdobeLaunchPixel {
     }
   }
   _trackLogin() {
-    // const loginStorage = localStorage.getItem('loggedCheckout')
     const { orderForm } = window.vtexjs.checkout
     const customerLogged = orderForm.clientProfileData
     try {
