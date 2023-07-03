@@ -117,6 +117,8 @@ class AdobeLaunchPixel {
       // };
       _this._populateDataLayer()
 
+      _this._trackLogin()
+
       _this._addProductToDigitalDataV2()
 
       _this._pageTrack()
@@ -1198,7 +1200,8 @@ class AdobeLaunchPixel {
           window.location.hash === '#/payment' ||
           window.location.hash === '#/profile') {
           window.digitalData.user.loginStatus = true
-        } else if (window.location.hash === '#/cart' ||
+        } 
+        if (window.location.hash === '#/cart' ||
           window.location.hash === '#/email') {
           if (customerLogged !== null) {
             window.digitalData.user.loginStatus = true
