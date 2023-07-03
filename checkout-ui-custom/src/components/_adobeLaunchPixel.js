@@ -120,8 +120,6 @@ class AdobeLaunchPixel {
       _this._trackLogin()
 
       _this._addProductToDigitalDataV2()
-
-      _this._pageTrack()
     }
   }
 
@@ -139,9 +137,6 @@ class AdobeLaunchPixel {
       _this.waitForDataSend()
       _this._trackLogin()
       _this._pageTrack()
-      if (window.location.hash === '#/cart') {
-        _this._pageTrackCart()
-      }
     }
 
     if (_this.observer === null) {
@@ -1010,7 +1005,7 @@ class AdobeLaunchPixel {
               pimSubType: _pimSubType.join(','),
               listPrice: _listPrice.join(','),
             }
-            if (items.length === itemsQuantity.length && window.location.hash === '#/cart') {
+            if (items.length === itemsQuantity.length) {
               _this._pageTrackCart()
             }
           })
@@ -1174,13 +1169,14 @@ class AdobeLaunchPixel {
         window._satellite !== undefined &&
         window._satellite !== null &&
         'track' in window._satellite &&
-        (window.location.hash === '#/email' ||
+        (window.location.hash === '#/cart' ||
+          window.location.hash === '#/email' ||
           window.location.hash === '#/shipping' ||
           window.location.hash === '#/payment' ||
           window.location.hash === '#/profile')
       ) {
         if (window.digitalData.product) {
-          window._satellite.track('page_view')
+          setTimeout(() => { window._satellite.track('page_view') }, 1000)
         }
       }
     } catch (e) {
