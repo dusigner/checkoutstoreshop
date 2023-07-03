@@ -1115,14 +1115,27 @@ export class CheckoutCustom {
 
       if (path === '#/payment') {
         const paymentAmountTotal = orderForm.value
+        const giftRewards = orderForm.paymentData.giftCards.filter(
+          g => g.provider === 'SSG_REWARDS'
+        )
 
+        let discount = 0;
+
+        if(
+          giftRewards.length &&
+          giftRewards[0].inUse &&
+          giftRewards[0].value > 0
+        ) {
+          discount = giftRewards[0].value
+        }
+   
         if (paymentAmountTotal) {
           const _component = `
           <div class="cart-total" style="margin-bottom: 20px; color: #000">
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
               <p class="estimate-shipping">${formatCurrencyBRL(
-                paymentAmountTotal
+                paymentAmountTotal  - discount
               )}</p>
             </div>
           </div>
