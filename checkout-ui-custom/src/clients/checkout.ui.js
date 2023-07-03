@@ -1821,11 +1821,9 @@ export class CheckoutCustom {
       })
       function trackLogin(ssgAccountURL, accessKeyURL) {
         if (ssgAccountURL) {
-          window.digitalData.user.loginStatus = true
           window._satellite.track('samsung_account_login')
         } else if (accessKeyURL) {
-          window.digitalData.user.loginStatus = true
-          window._satellite.track('vtex_account_login')
+          window._satellite.track('shop_guest_login')
         }
       }
       $(document).ajaxComplete(function (event, xhr, settings) {
@@ -1840,7 +1838,7 @@ export class CheckoutCustom {
         }
       })
 
-      $(document).ajaxComplete(function (event, xhr, settings) {
+      $(document).ajaxComplete(function(event, xhr, settings) {
         _this.init()
 
         const acessKeyURL = settings.url.includes('/api/checkout/pub/profiles/')
@@ -1848,10 +1846,8 @@ export class CheckoutCustom {
 
         if (acessKeyURL || ssgAccountURL) {
           const loginSucess = xhr.statusText === 'success'
-
           if (loginSucess) {
             trackLogin(ssgAccountURL, acessKeyURL)
-            window.digitalData.user.loginStatus = true
             fetch(
               `${rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
               {
@@ -1863,22 +1859,25 @@ export class CheckoutCustom {
                 const email = data.user
                 const userProfileId = data.userId
 
-                return fetch(`${rootPath()}/_v/post/updateClientAcessOrigin`, {
-                  method: 'POST',
-                  body: JSON.stringify({
-                    docId: userProfileId,
-                    email,
-                    accessOrigin: 'desktop',
-                  }),
-                })
+                return fetch(
+                  `${rootPath()}/_v/post/updateClientAcessOrigin`,
+                  {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      docId: userProfileId,
+                      email,
+                      accessOrigin: 'desktop',
+                    }),
+                  }
+                )
                   .then(() => {
                     return response
                   })
                   .catch(console.error)
               })
+              window.digitalData.user.loginStatus = true
           } else {
             window.digitalData.user.loginStatus = false
-            window._satellite.track('shop_guest_login')
           }
         }
       })
