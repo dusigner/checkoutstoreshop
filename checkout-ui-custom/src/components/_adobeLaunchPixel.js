@@ -1010,7 +1010,7 @@ class AdobeLaunchPixel {
               pimSubType: _pimSubType.join(','),
               listPrice: _listPrice.join(','),
             }
-            if (items.length === itemsQuantity.length) {
+            if (items.length === itemsQuantity.length && window.location.hash === '#/cart') {
               _this._pageTrackCart()
             }
           })
@@ -1220,10 +1220,9 @@ class AdobeLaunchPixel {
       if (
         window._satellite !== undefined &&
         window._satellite !== null &&
-        'track' in window._satellite &&
-        window.location.hash === '#/cart') {
+        'track' in window._satellite) {
         if (window.digitalData.product) {
-          window._satellite.track('page_view')
+          setTimeout(() => { window._satellite.track('page_view') }, 1000)
         }
       }
     } catch (e) {
