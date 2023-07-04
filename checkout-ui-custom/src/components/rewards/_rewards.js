@@ -76,10 +76,12 @@ export default class Rewards {
   }
 
   putRewardsOnCustomData(orderFormId, points) {
+    const rewardsAccepted = $('#inputRewards').is(':checked')
+
     const newData = {
       total_points_earned: points,
-      terms_accepted: this.userAcceptedRewards,
-      saguid: this.userSaGuid || '0',
+      terms_accepted: rewardsAccepted || this.userAcceptedRewards,
+      saguid: this.userSaGuid || localStorage.getItem('saGuid') || '0',
     }
 
     $.ajax({
