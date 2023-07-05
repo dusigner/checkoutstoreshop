@@ -29,6 +29,85 @@ export default class CustomProfileData {
   async insertPartialNewProfileData() {
     const _this = this
 
+    var dataAtual = new Date();
+    var horaAtual = dataAtual.getHours();
+    var minutoAtual = dataAtual.getMinutes();
+    var segundoAtual = dataAtual.getSeconds();
+    var dia = dataAtual.getDate();
+    var mes = dataAtual.getMonth() + 1;
+    var ano = dataAtual.getFullYear();
+    if (dia < 10) {
+      dia = '0' + dia;
+    }
+    if (mes < 10) {
+      mes = '0' + mes;
+    }
+    if (minutoAtual < 10) {
+      minutoAtual = '0' + minutoAtual;
+    }
+    if (segundoAtual < 10) {
+      segundoAtual = '0' + segundoAtual;
+    }
+    const { email } = window.vtexjs.checkout.orderForm.clientProfileData
+    const { userProfileId } = window.vtexjs.checkout.orderForm
+    let consentChecked = $('#inputWhats').is(':checked')
+    await fetch(`https://pe390--samsungbrshop.myvtex.com/api/dataentities/whatsapp_consentimento/search?_where=email=${email}&_fields=consent,id&_schema=v1`, {
+      method: "GET",
+      withCredentials: true,
+      headers: {
+        "x-vtex-api-appKey": "vtexappkey-samsungbrshop-FOEWUX",
+        "x-vtex-api-appToken": "ALXRGXZTFNPXNXCTHYBGPYQSHUCRSVGUBYBRSGVEUJHTMSTPAZWKAVLNFLPRGPATBHDBLUQOSMJPRSFIETTVIUSWLJLWATFSSKTSIXTPOYCAGUNOTURCXKOMNWJZQHKP",
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .then(async json => {
+        if(json.length > 0) {
+          console.log(json, 'json')
+          await fetch(`https://pe390--samsungbrshop.myvtex.com/api/dataentities/whatsapp_consentimento/documents?_schema=v1&_where=email=${email}`, {
+            method: "PATCH",
+            withCredentials: true,
+            headers: {
+              "x-vtex-api-appKey": "vtexappkey-samsungbrshop-FOEWUX",
+              "x-vtex-api-appToken": "ALXRGXZTFNPXNXCTHYBGPYQSHUCRSVGUBYBRSGVEUJHTMSTPAZWKAVLNFLPRGPATBHDBLUQOSMJPRSFIETTVIUSWLJLWATFSSKTSIXTPOYCAGUNOTURCXKOMNWJZQHKP",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: json[0].id,
+                date: dia + '/' + mes + '/' + ano,
+                hour: horaAtual + ":" + minutoAtual + ":" + segundoAtual,
+                email: email,
+                consent: consentChecked
+            }),
+            })
+            .then(response => response.json())
+            .then(json => {
+              console.log(json, 'entrou no patch')
+            })
+        } else {
+          await fetch(`https://pe390--samsungbrshop.myvtex.com/api/dataentities/whatsapp_consentimento/documents?_schema=v1`, {
+            method: "POST",
+            withCredentials: true,
+            headers: {
+              "x-vtex-api-appKey": "vtexappkey-samsungbrshop-FOEWUX",
+              "x-vtex-api-appToken": "ALXRGXZTFNPXNXCTHYBGPYQSHUCRSVGUBYBRSGVEUJHTMSTPAZWKAVLNFLPRGPATBHDBLUQOSMJPRSFIETTVIUSWLJLWATFSSKTSIXTPOYCAGUNOTURCXKOMNWJZQHKP",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: userProfileId,
+              date: dia + '/' + mes + '/' + ano,
+              hour: horaAtual + ":" + minutoAtual + ":" + segundoAtual,
+              email: email,
+              consent: consentChecked
+            }),
+            })
+            .then(response => response.json())
+            .then(json => {
+              console.log(json, 'entrou no post')
+            })
+        }
+    })
+
     try {
       const rewardsOptinIsVisible = $('#RewardsBlock').is(':visible')
       const saGuid = localStorage.getItem('saGuid')
@@ -116,6 +195,7 @@ export default class CustomProfileData {
     birthDate,
     isNewsletterOptIn,
     acceptTermsAndPrivacyPolicy,
+    isWhatsAppOptIn
   }) {
     try {
       const clientDateBirth = this.convertDateToLocaleDateString(birthDate)
@@ -123,18 +203,33 @@ export default class CustomProfileData {
       $('#client-birth-date').addClass('success').val(clientDateBirth)
       $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
       $('#inputTermAndPolicies').prop('checked', acceptTermsAndPrivacyPolicy)
-
+      $('#inputWhats').prop('checked', isWhatsAppOptIn)
       this.toggleGoToShippingDisabled()
     } catch (err) {
       console.error(`Erro ao preencher dados de perfil de usuário: ${err}`)
     }
   }
 
-  persistClientProfileData() {
+  async persistClientProfileData() {
     const _this = this
 
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
+
+      let jsonData;
+      await fetch(`https://pe390--samsungbrshop.myvtex.com/api/dataentities/whatsapp_consentimento/search?_where=email=${email}&_fields=consent&_schema=v1`, {
+        method: "GET",
+        withCredentials: true,
+        headers: {
+          "x-vtex-api-appKey": "vtexappkey-samsungbrshop-FOEWUX",
+          "x-vtex-api-appToken": "ALXRGXZTFNPXNXCTHYBGPYQSHUCRSVGUBYBRSGVEUJHTMSTPAZWKAVLNFLPRGPATBHDBLUQOSMJPRSFIETTVIUSWLJLWATFSSKTSIXTPOYCAGUNOTURCXKOMNWJZQHKP",
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.json())
+      .then(json => {
+        jsonData = json;
+      })
 
       this.getClientProfileData(email).done(function (data) {
         try {
@@ -142,6 +237,7 @@ export default class CustomProfileData {
             birthDate: data[0].birthDate,
             acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
             isNewsletterOptIn: data[0].isNewsletterOptIn,
+            isWhatsAppOptIn: jsonData[0].consent
           }
 
           _this.fillClientProfileData(profileDataToPersist)
@@ -295,6 +391,38 @@ export default class CustomProfileData {
     $('#client-profile-data p.save-data').after($information)
   }
 
+  async addWhatsappOptIn() {
+    const _this = this
+
+    await $.ajax({
+      url: `${_this.rootPath()}/_v/get/client/${vtexjs.checkout.orderForm.clientProfileData.email}`,
+      headers: {
+        Accept: 'application/vnd.vtex.ds.v10+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        isWhatsAppOptIn: false
+      }),
+      cache: false,
+      crossDomain: true,
+      type: 'GET',
+    }).done(function( data ) {
+      console.log(data, 'data')
+    });
+    if ($('.whatsapp-optin').length) return
+    const $field = `<div class="whatsapp-optin">
+      <h3>Whatsapp (opcional)</h3>
+      <label class="inputOptInWhats checkbox-inline">
+        <input type="checkbox" id="inputWhats" />
+        <span class="custom-checkbox-icon"></span>
+        <span>
+          Desejo receber ofertas e notificações por WhatsApp
+        </span>
+      </label>
+    </div>`
+    $('.newsletter-optin').before($field)
+  }
+
   addNewsletterOptIn() {
     if ($('.newsletter-optin').length) return
     if ($('.newsletter-optin').find('.newsletter-text').length) return
@@ -364,6 +492,7 @@ export default class CustomProfileData {
     if ($('#inputTermAndPolicies').length !== 0) return false
 
     _this.addNewsletterOptIn()
+    _this.addWhatsappOptIn()
     _this.addTermsAndPolicies()
     _this.addRewardsBlock()
 
