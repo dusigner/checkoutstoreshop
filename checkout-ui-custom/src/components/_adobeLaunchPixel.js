@@ -37,6 +37,7 @@ class AdobeLaunchPixel {
     this.observer = null
     this.pageInterval = null
     this.codesCache = []
+    this.cacheProducts = []
     this.productsOrdered = ''
     this.pagesWithMutation = ['checkout']
     this.cacheKey = 'ssgDtmCache'
@@ -128,7 +129,6 @@ class AdobeLaunchPixel {
 
     /* This is to avoid the injection of the script of DTM to the iframe page inside the cart page */
     if (window.location.href.indexOf('upselling') > -1) return
-
     /* If the page type is in the array list of DTM watched pages, don't proceed to do nothing */
     if (_this.pageType === false) return
 
@@ -711,14 +711,13 @@ class AdobeLaunchPixel {
         if (_this.pageType !== false) break
       }
     }
-
     switch (_this.pageType) {
       case 'checkout':
-        window.digitalData.page.pageInfo.pageTrack = 'shop checkout'
         if (window.location.hash === '#/cart') {
           window.digitalData.page.pageInfo.pageTrack = 'shop cart'
+        } else {
+          window.digitalData.page.pageInfo.pageTrack = 'shop checkout'
         }
-
         break
 
       case 'order_failure':
@@ -734,9 +733,13 @@ class AdobeLaunchPixel {
         break
 
       default:
+        if (window.location.hash === '#/cart') {
+          window.digitalData.page.pageInfo.pageTrack = 'shop cart'
+        } else {
+          window.digitalData.page.pageInfo.pageTrack = 'shop checkout'
+        }
         break
     }
-
     let { pathname } = window.location
 
     pathname = _this._removeAccents(pathname).replace('/', '')
@@ -914,6 +917,7 @@ class AdobeLaunchPixel {
     const _productFamily = []
     const _pimSubType = []
     const _listPrice = []
+    const _skuIds = []
     const itemsQuantity = []
 
     const idInterval = setInterval(function () {
@@ -959,7 +963,15 @@ class AdobeLaunchPixel {
               _productDivision.push(scplus.productDivision)
               _productFamily.push(scplus.productFamily)
               _pimSubType.push(scplus.pimSubType)
+              _skuIds.push(scplus.skuId)
 
+              let modelCacheSCPlus = {
+                cacheModelName: `${scplus.model_name}`,
+                cacheModelVariant: `${scplus.modelVariant}`,
+                cacheSkuId: `${scplus.skuId}`
+              }
+
+              _this.cacheProducts.push(modelCacheSCPlus)
               if (
                 window.__RUNTIME__.account === 'samsungbr' ||
                 window.__RUNTIME__.account === 'samsungbrshop'
@@ -968,9 +980,12 @@ class AdobeLaunchPixel {
               } else {
                 _listPrice.push(Number(scplus.listPrice))
               }
+
               itemsQuantity.push(1)
+
             } else {
               const model = await _this._getModel(item)
+
               _modelName.push(`;${model.modelName}`)
               _displayName.push(item.name ? item.name : '')
               _modelVariant.push(item.refId)
@@ -983,6 +998,15 @@ class AdobeLaunchPixel {
               _pimSubType.push(
                 model.pimSubType !== undefined ? model.pimSubType : ''
               )
+              _skuIds.push(item.id)
+
+              let modelCache = {
+                cacheModelName: `${model.modelName}`,
+                cacheModelVariant: `${item.refId}`,
+                cacheSkuId: `${item.id}`
+              }
+
+              _this.cacheProducts.push(modelCache)
 
               if (
                 window.__RUNTIME__.account.indexOf('samsungbr') > -1 ||
@@ -1054,22 +1078,17 @@ class AdobeLaunchPixel {
 
     const hostArr = window.location.host.split('.')
 
-    if (hostArr[0].includes('samsungbrtest')) return 'br'
+    if (hostArr[0].includes('samsungbrtest') || hostArr[0].indexOf("samsungbrshop")) return 'br';
     const tldCode = hostArr[hostArr.length - 1]
-
     if (_this.countryCodes.indexOf(tldCode) > -1) return tldCode
-
     const pathNameArr = window.location.pathname.replace('/', '').split('/')
-
     if (_this.countryCodes.indexOf(pathNameArr[0]) > -1) return pathNameArr[0]
-
     /* If the country code is not in query param or domain, then get the subdomain last two chars: samsungXX */
     return hostArr[0].substr(-2)
   }
 
   _isProduction() {
     const productionSites = ['shop.samsung.com/br', 'shop.samsung.com.br']
-
     for (let i = 0; i < productionSites.length; i++) {
       if (window.location.href.indexOf(productionSites[i]) > -1) {
         return true
@@ -1146,7 +1165,6 @@ class AdobeLaunchPixel {
             if (localStorage) {
               localStorage.setItem(_this.cacheKey, JSON.stringify(newCache))
             }
-
             _this.codesCache = this.response
           } else {
             _this.codesCache = []
@@ -1196,7 +1214,7 @@ class AdobeLaunchPixel {
           window.location.hash === '#/payment' ||
           window.location.hash === '#/profile') {
           window.digitalData.user.loginStatus = true
-        } 
+        }
         if (window.location.hash === '#/cart' ||
           window.location.hash === '#/email') {
           if (customerLogged !== null) {
@@ -1248,6 +1266,7 @@ class AdobeLaunchPixel {
       productDivision: 'shop program',
       productFamily: 'samsung care',
       pimSubType: 'insurance',
+      skuId: product.id,
     }
   }
 
@@ -1260,46 +1279,45 @@ class AdobeLaunchPixel {
   }
 
   _mountDataBuyNow(dataOmni, skuId) {
+    console.log("dataOmni, skuId", dataOmni, skuId)
     const _this = this
     let data = ''
+    
     const findItem = window.vtexjs.checkout.orderForm.items.find(function (
       item
     ) {
       return item.id === skuId
     })
+
+    console.log("Find Item", findItem)
     if (!findItem) return ''
 
-    const findItemFinal = parseInt(findItem.id)
-
     try {
-      const findItemCache = _this.codesCache.find(function (obj) {
-        return obj.sku === findItemFinal
+      console.log("ENTROU NO TRY")
+      const findItemCacheApi = _this.cacheProducts.find(function (objItem) {
+        return objItem.cacheSkuId === findItem.id
       })
-      if (findItemCache) {
+      console.log("findItemCacheApi", findItemCacheApi)
+      if (findItemCacheApi) {
+        console.log("Find Item cache API IF")
         // modelName
         if (dataOmni === 'base') {
-          data =
-            findItemCache.modelName !== ''
-              ? findItemCache.modelName
-              : findItem.productRefId
+          data = findItemCacheApi.cacheModelName
         }
 
         // modelCode
         if (dataOmni === 'variant') {
-          data =
-            findItemCache.modelCode !== ''
-              ? findItemCache.modelCode
-              : findItem.refId
+          data = findItemCacheApi.cacheModelVariant
         }
       } else {
-        data = dataOmni === 'base' ? findItem.productRefId : findItem.refId
+        console.log("entrou no else")
+        data = dataOmni === 'base' ? findItemCacheApi.cacheModelName : findItemCacheApi.cacheModelVariant
       }
     } catch (e) {
       console.error(`_mountDataBuyNow: ${e}`)
     }
-
     const value = dataOmni === 'base' ? `;${data}` : data
-
+    console.log("value FINAL", value)
     return value
   }
 
