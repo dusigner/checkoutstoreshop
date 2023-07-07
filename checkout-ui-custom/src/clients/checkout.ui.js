@@ -1661,6 +1661,7 @@ export class CheckoutCustom {
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
+        _this.shippingEstimateCustom.bindEvents()
         // await this.customAddressFormLoader()
         // #pre-email
         _this.preEmail.bindEvents()

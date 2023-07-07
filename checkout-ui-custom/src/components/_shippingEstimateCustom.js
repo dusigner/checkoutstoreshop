@@ -25,6 +25,14 @@ export default class ShippingEstimateCustom {
       _locale.USA
   }
 
+  _capitalizeText(str) {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+    }
+    return splitStr.join(' '); 
+  } 
+
   getBusinessDays(days) {
     let currentDate = new Date()
     currentDate = new Date(currentDate.getTime())
@@ -85,8 +93,9 @@ export default class ShippingEstimateCustom {
     }
 
     const dateOptions = { weekday: 'short', day: '2-digit', month: 'short' }
+    const formattedShippingEstimate = shippingEstimate.toLocaleDateString(lang, dateOptions).replace(/\.|,|de /g, '')
 
-    return shippingEstimate.toLocaleDateString(lang, dateOptions).replace(/\.|,|de /g, '')
+    return this._capitalizeText(formattedShippingEstimate)
   }
 
   changeShippingTimeInfo() {
@@ -101,6 +110,7 @@ export default class ShippingEstimateCustom {
       '.shp-option-text-time',
       '.pkpmodal-pickup-point-sla',
       '.shp-option-text-package',
+      '[id^="sla-option"]',
       '.srp-delivery-current-many__sla',
       '.shipping-estimate-date:eq(0)',
       '.srp-shipping-current-single__sla',
@@ -114,6 +124,7 @@ export default class ShippingEstimateCustom {
         .orderform-template .cart-template.mini-cart .item,
         .vtex-pickup-points-modal-3-x-pickupPointSlaAvailability,
         .srp-delivery-current-many,
+        .srp-delivery-select optgroup,
         td.shipping-date,
         .srp-shipping-current-single
       `).each(function () {
@@ -145,8 +156,8 @@ export default class ShippingEstimateCustom {
         } else if (selectedSlaDays) {
           days = parseInt(selectedSlaDays.match(/\d+/), 10)
         }
-
-        if (days) {
+ 
+        if (typeof days !== 'undefined') {
           let _delivtext = _this.lang.deliveryDateText
 
           if (
@@ -159,15 +170,24 @@ export default class ShippingEstimateCustom {
             _delivtext = _this.lang.PickupDateText
           } // check if is pickup. OBS: none of others solutions worked, needs constantly update
 
-          const shippingEstimateText = `<strong style="text-transform: capitalize">
-            ${_this.addBusinessDays(days)}
-          </strong>`
-
           $(this)
             .find(mainSTIelems.join(', '))
-            .html(
-              `${_delivtext} ${shippingEstimateText}`
-            )
+            .text(function (i, text) {
+              let newText
+
+              if (days) {
+                newText = `${_delivtext} ${_this.addBusinessDays(days)} - Após aprovação do pagamento`
+              } else {
+                newText = `Disponível no mesmo dia`
+              }
+
+              if ($(this).is('[id^="sla-option"]')) {
+                const price = text.split('-').pop()
+                return `${newText} - ${price}`
+              }
+
+              return newText
+            })
             .addClass('v-changeShippingTimeInfo-elem-active')
         }
 
@@ -194,7 +214,7 @@ export default class ShippingEstimateCustom {
           if (txtselectin !== '' && txtselectin.match(/(day)|(dia)|(día)/gm)) {
             const days = parseInt(txtselectin.match(/\d+/), 10)
 
-            if (days) {
+            if (typeof days !== 'undefined') {
               let _delivtext = _this.lang.deliveryDateText
 
               if (
@@ -205,9 +225,15 @@ export default class ShippingEstimateCustom {
                 _delivtext = _this.lang.PickupDateText
               } // check if is pickup. OBS: none of others solutions worked, needs constantly update
 
-              deliveryDates.push(
-                `${_delivtext} <strong>${_this.addBusinessDays(days)}</strong>`
-              )
+              let newText
+
+              if (days) {
+                newText = `${_delivtext} ${_this.addBusinessDays(days)} - Após aprovação do pagamento`
+              } else {
+                newText = `Disponível no mesmo dia`
+              }
+
+              deliveryDates.push(newText)
             }
           }
         })
@@ -225,30 +251,38 @@ export default class ShippingEstimateCustom {
     }
   }
 
+  bindEvents() {
+    $('body').on('change', '.srp-delivery-select', function() {
+      const textToUpdate = $(this).find(`option#sla-option-${$(this).val()}`).text().split('-')
+      textToUpdate.pop()
+      $('.srp-delivery-current-many__sla').text(textToUpdate.join('-'))
+    })
+  }
+
   init() {
     const _this = this
 
-    if (!this.lang) {
-      this.updateLang()
-    }
-
-    if (!this.lang) {
-      return
-    }
-
-    if (this.holidays.length) {
-      this.changeShippingTimeInfo()
-      return
-    }
-
-    if (!this.fetched) {
-      this.fetched = true // to avoid duplicated requests
-      
-      $.ajax(`${rootPath()}/_v/get/holidays`).done(function (response) {
-        _this.holidays = response
+    try {
+      if (!this.lang) {
+        this.updateLang()
+      }
   
-        _this.changeShippingTimeInfo()
-      })
+      if (this.holidays.length) {
+        this.changeShippingTimeInfo()
+        return
+      }
+  
+      if (!this.fetched) {
+        this.fetched = true // to avoid duplicated requests
+        
+        $.ajax(`${rootPath()}/_v/get/holidays`).done(function (response) {
+          _this.holidays = response
+    
+          _this.changeShippingTimeInfo()
+        })
+      }
+    } catch (err) {
+      console.error('changeShippingTimeInfo Error:', err)
     }
   }
 }
