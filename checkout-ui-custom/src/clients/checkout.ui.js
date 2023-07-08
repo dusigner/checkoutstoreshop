@@ -1288,6 +1288,7 @@ export class CheckoutCustom {
     await this.imgEmptyCart()
 
     const updateDebounce = debounce(function () {
+
       if (orderForm.marketingData) {
         this.showCustomMsgCoupon(orderForm)
       }
