@@ -44,7 +44,7 @@ export default class CustomProfileData {
     };
 
 
-    await fetch("/_v1/private/whatsapp/handleChangeUser", requestOptions)
+    await fetch(`${_this.rootPath()}/_v1/private/whatsapp/handleChangeUser`, requestOptions)
       .then(response => response.json())
       .then(result => result)
       .catch(error => error); 
@@ -162,7 +162,7 @@ export default class CustomProfileData {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
 
       let jsonData;
-      await fetch(`/_v1/private/whatsapp/getUserByEmail/${email}`)
+      await fetch(`${_this.rootPath()}/_v1/private/whatsapp/getUserByEmail/${email}`)
       .then(response => response.json())
       .then(response => {
         jsonData = response;
