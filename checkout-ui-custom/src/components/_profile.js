@@ -28,11 +28,13 @@ export default class CustomProfileData {
 
   async insertPartialNewProfileData() {
     const _this = this
-    const { email } = window.vtexjs.checkout.orderForm.clientProfileData
+    const { email, phone } = window.vtexjs.checkout.orderForm.clientProfileData
+
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     var raw = JSON.stringify({
       "email": email,
+      "phoneNumber": phone
     });
     
     var requestOptions = {
