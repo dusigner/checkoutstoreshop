@@ -336,7 +336,7 @@ export default class CustomProfileData {
         <input type="checkbox" id="inputWhats" />
         <span class="custom-checkbox-icon"></span>
         <span>
-          Desejo receber ofertas e notificações por WhatsApp
+          Desejo receber notificação de ofertas e status do pedido por Whatsapp
         </span>
       </label>
     </div>`
