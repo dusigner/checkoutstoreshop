@@ -10,8 +10,9 @@ import SendAttachment from '../components/_sendAttachment'
 import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
-
+import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import { rootPath } from '../components/utils/_rootPath'
+
 import {
   formatNegativeValue,
   debounce,
@@ -53,6 +54,10 @@ export class CheckoutCustom {
     this.CheckoutLimit = new CheckoutLimit()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
+    
+    if (deliveryDateFormat) {
+      this.shippingEstimateCustom = new ShippingEstimateCustom()
+    }
   }
 
   onDomMutation({ targetNode, callback, disconnectCondition = true }) {
@@ -93,16 +98,6 @@ export class CheckoutCustom {
       childList: true,
       subtree: true,
     })
-  }
-  addEditButtoninLogin() {
-    $('#v-custom-edit-login-data').remove()
-    $('.client-pre-email h3.client-pre-email-h span').append(`
-      <a id="v-custom-edit-login-data" class="link-box-edit btn btn-small" style="" title="${this.lang ? this.lang.editLabel : true
-      }">
-        <i class="icon-edit"></i>
-        <i class="icon-spinner icon-spin icon-3x"></i>
-      </a>
-    `)
   }
 
   addAssemblies(orderForm) {
@@ -717,142 +712,9 @@ export class CheckoutCustom {
     }
   }
 
-  changeShippingTimeInfo() {
-    const _this = this
-
-    $('body').addClass('v-custom-changeShippingTimeInfo')
-    const mainSTIelems = [
-      '.shp-summary-package-time > span',
-      'p.vtex-omnishipping-1-x-sla.sla',
-      '.vtex-omnishipping-1-x-leanShippingTextLabelSingle > span',
-      'span.shipping-date',
-      '.shp-option-text-time',
-      '.pkpmodal-pickup-point-sla',
-      '.shp-option-text-package',
-      '.srp-delivery-current-many__sla',
-      '.shipping-estimate-date:eq(0)',
-      '.srp-shipping-current-single__sla',
-    ]
-
-    try {
-      $(`
-        .vtex-omnishipping-1-x-summaryPackage.shp-summary-package:not(.v-changeShippingTimeInfo-active),
-        .vtex-omnishipping-1-x-leanShippingOption,
-        .vtex-omnishipping-1-x-packageItem:not(.v-changeShippingTimeInfo-active),
-        .orderform-template .cart-template.mini-cart .item,
-        .vtex-pickup-points-modal-3-x-pickupPointSlaAvailability,
-        .srp-delivery-current-many,
-        td.shipping-date,
-        .srp-shipping-current-single
-      `).each(function () {
-        const [logisticsInfo] =
-          window.vtexjs.checkout.orderForm.shippingData.logisticsInfo
-
-        const availableSlas = logisticsInfo.slas
-
-        const { selectedSla } = logisticsInfo
-
-        const selectedSlaDays = availableSlas.find(e => e.name === selectedSla)
-          ? availableSlas.find(e => e.name === selectedSla).shippingEstimate
-          : false
-
-        const txtselectin = $(this)
-          .find(
-            mainSTIelems
-              .map(elem => `${elem}:not(.v-changeShippingTimeInfo-elem-active)`)
-              .join(', ')
-          )
-          .text()
-
-        let days
-
-        if (!$(this).hasClass('srp-delivery-current-many')) {
-          if (txtselectin !== '' && txtselectin.match(/(day)|(dia)|(día)/gm)) {
-            days = parseInt(txtselectin.match(/\d+/), 10)
-          }
-        } else if (selectedSlaDays) {
-          days = parseInt(selectedSlaDays.match(/\d+/), 10)
-        }
-
-        if (days) {
-          let _delivtext = _this.lang.deliveryDateText
-
-          if (
-            $(this)
-              .find(mainSTIelems.join(', '))
-              .text()
-              .toLowerCase()
-              .match(/(ready in up)|(pronto)|(a partir de)|(hasta)/gm)
-          ) {
-            _delivtext = _this.lang.PickupDateText
-          } // check if is pickup. OBS: none of others solutions worked, needs constantly update
-
-          $(this)
-            .find(mainSTIelems.join(', '))
-            .html(
-              `${_delivtext} <strong>${_this.addBusinessDays(days)}</strong>`
-            )
-            .addClass('v-changeShippingTimeInfo-elem-active')
-        }
-
-        $(this).addClass('v-changeShippingTimeInfo-active')
-      })
-
-      // temporaly
-      const shippingPreviewPackges = $(
-        '.srp-delivery-info .srp-packages:not(.v-changeShippingTimeInfo-elem-active)'
-      )
-
-      $('.js-shippingPreviewPackges').remove()
-      if (shippingPreviewPackges.length) {
-        const a = shippingPreviewPackges
-          .text()
-          .split(':')[1]
-          .split(/,| and | e | y /)
-
-        const deliveryDates = []
-
-        $.each(a, function (i) {
-          const txtselectin = a[i]
-
-          if (txtselectin !== '' && txtselectin.match(/(day)|(dia)|(día)/gm)) {
-            const days = parseInt(txtselectin.match(/\d+/), 10)
-
-            if (days) {
-              let _delivtext = _this.lang.deliveryDateText
-
-              if (
-                txtselectin
-                  .toLowerCase()
-                  .match(/(ready in up)|(pronto)|(A partir de)|(hasta)/gm)
-              ) {
-                _delivtext = _this.lang.PickupDateText
-              } // check if is pickup. OBS: none of others solutions worked, needs constantly update
-
-              deliveryDates.push(
-                `${_delivtext} <strong>${_this.addBusinessDays(days)}</strong>`
-              )
-            }
-          }
-        })
-        shippingPreviewPackges
-          .hide()
-          .after(
-            `<p class="black-50 mt3 mb0 js-shippingPreviewPackges">${shippingPreviewPackges.text().split(':')[0]
-            }: ${deliveryDates.join('; ')}</p>`
-          )
-          .addClass('v-changeShippingTimeInfo-active')
-      }
-    } catch (e) {
-      console.error('changeShippingTimeInfo Error:', e)
-    }
-  }
-
   changeShippingTimeInfoInit() {
-    const _this = this
-
-    if (_this.lang && _this.deliveryDateFormat) {
-      _this.changeShippingTimeInfo()
+    if (this.deliveryDateFormat) {
+      this.shippingEstimateCustom.init()
     }
   }
 
@@ -1283,6 +1145,7 @@ export class CheckoutCustom {
     this.samsungCarePlus.hideQuantityButtons(orderForm)
     this.installationService.init()
     new BespokeRefrigerator().init()
+    this.changeShippingTimeInfoInit()
 
     this.TradeIn.init(orderForm)
     await this.imgEmptyCart()
@@ -1685,7 +1548,6 @@ export class CheckoutCustom {
       '.vtex-omnishipping-1-x-linkEdit.link-edit',
       function () {
         setTimeout(() => {
-          // _this.updateLang(_this.orderForm)
           if (_this.customAddressForm) {
             $('body').addClass('v-custom-addressForm-on')
           }
@@ -1780,11 +1642,9 @@ export class CheckoutCustom {
 
     this.updateStep()
     this.builder()
-    this.changeShippingTimeInfoInit()
 
     if (this.orderForm) {
       this.update(this.orderForm)
-      // _this.updateLang(_this.orderForm) // validar
       this.paymentBuilder(this.orderForm)
     }
 
@@ -1802,6 +1662,7 @@ export class CheckoutCustom {
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
+        _this.shippingEstimateCustom.bindEvents()
         // await this.customAddressFormLoader()
         // #pre-email
         _this.preEmail.bindEvents()
@@ -1922,7 +1783,6 @@ export class CheckoutCustom {
         }
         if (_this.orderForm) {
           _this.indexedInItems(_this.orderForm)
-          // _this.updateLang(_this.orderForm)
           _this.paymentBuilder(_this.orderForm)
           _this.customAddressFormInit(_this.orderForm)
           _this.removeCILoader()
