@@ -28,6 +28,30 @@ export default class CustomProfileData {
 
   async insertPartialNewProfileData() {
     const _this = this
+    const { email, phone } = window.vtexjs.checkout.orderForm.clientProfileData
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var raw = JSON.stringify({
+      "email": email,
+      "phoneNumber": phone.replace(/\+/g, "")
+    });
+    
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw
+    };
+
+
+    await fetch(`${_this.rootPath()}/_v1/private/whatsapp/handleChangeUser`, requestOptions)
+      .then(response => response.json())
+      .then(result => result)
+      .catch(error => error); 
+    
+  
+    
+
 
     try {
       const rewardsOptinIsVisible = $('#RewardsBlock').is(':visible')
@@ -116,6 +140,7 @@ export default class CustomProfileData {
     birthDate,
     isNewsletterOptIn,
     acceptTermsAndPrivacyPolicy,
+    isWhatsAppOptIn
   }) {
     try {
       const clientDateBirth = this.convertDateToLocaleDateString(birthDate)
@@ -123,18 +148,25 @@ export default class CustomProfileData {
       $('#client-birth-date').addClass('success').val(clientDateBirth)
       $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
       $('#inputTermAndPolicies').prop('checked', acceptTermsAndPrivacyPolicy)
-
+      $('#inputWhats').prop('checked', isWhatsAppOptIn)
       this.toggleGoToShippingDisabled()
     } catch (err) {
       console.error(`Erro ao preencher dados de perfil de usuário: ${err}`)
     }
   }
 
-  persistClientProfileData() {
+  async persistClientProfileData() {
     const _this = this
 
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
+
+      let jsonData;
+      await fetch(`${_this.rootPath()}/_v1/private/whatsapp/getUserByEmail/${email}`)
+      .then(response => response.json())
+      .then(response => {
+        jsonData = response;
+      })
 
       this.getClientProfileData(email).done(function (data) {
         try {
@@ -142,6 +174,7 @@ export default class CustomProfileData {
             birthDate: data[0].birthDate,
             acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
             isNewsletterOptIn: data[0].isNewsletterOptIn,
+            isWhatsAppOptIn: jsonData.data.consent
           }
 
           _this.fillClientProfileData(profileDataToPersist)
@@ -295,6 +328,21 @@ export default class CustomProfileData {
     $('#client-profile-data p.save-data').after($information)
   }
 
+  async addWhatsappOptIn() {
+    if ($('.whatsapp-optin').length) return
+    const $field = `<div class="whatsapp-optin">
+      <h3>Whatsapp (opcional)</h3>
+      <label class="inputOptInWhats checkbox-inline">
+        <input type="checkbox" id="inputWhats" />
+        <span class="custom-checkbox-icon"></span>
+        <span>
+          Desejo receber notificação de ofertas e status do pedido por Whatsapp
+        </span>
+      </label>
+    </div>`
+    $('.newsletter-optin').before($field)
+  }
+
   addNewsletterOptIn() {
     if ($('.newsletter-optin').length) return
     if ($('.newsletter-optin').find('.newsletter-text').length) return
@@ -364,6 +412,7 @@ export default class CustomProfileData {
     if ($('#inputTermAndPolicies').length !== 0) return false
 
     _this.addNewsletterOptIn()
+    _this.addWhatsappOptIn()
     _this.addTermsAndPolicies()
     _this.addRewardsBlock()
 

@@ -2,7 +2,7 @@ module.exports._locale = {
   BRA: {
     couponInactive: 'Nenhum desconto aplicado. Confira as regras.',
     editLabel: 'Editar',
-    deliveryDateText: 'Entrega até',
+    deliveryDateText: 'Até',
     PickupDateText: 'Pronto até',
     eachLabel: 'cada',
     tomorrowLabel: 'Amanhã',
