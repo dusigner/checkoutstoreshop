@@ -1279,7 +1279,6 @@ class AdobeLaunchPixel {
   }
 
   _mountDataBuyNow(dataOmni, skuId) {
-    console.log("dataOmni, skuId", dataOmni, skuId)
     const _this = this
     let data = ''
     
@@ -1289,17 +1288,13 @@ class AdobeLaunchPixel {
       return item.id === skuId
     })
 
-    console.log("Find Item", findItem)
     if (!findItem) return ''
 
     try {
-      console.log("ENTROU NO TRY")
       const findItemCacheApi = _this.cacheProducts.find(function (objItem) {
         return objItem.cacheSkuId === findItem.id
       })
-      console.log("findItemCacheApi", findItemCacheApi)
       if (findItemCacheApi) {
-        console.log("Find Item cache API IF")
         // modelName
         if (dataOmni === 'base') {
           data = findItemCacheApi.cacheModelName
@@ -1310,14 +1305,12 @@ class AdobeLaunchPixel {
           data = findItemCacheApi.cacheModelVariant
         }
       } else {
-        console.log("entrou no else")
         data = dataOmni === 'base' ? findItemCacheApi.cacheModelName : findItemCacheApi.cacheModelVariant
       }
     } catch (e) {
       console.error(`_mountDataBuyNow: ${e}`)
     }
     const value = dataOmni === 'base' ? `;${data}` : data
-    console.log("value FINAL", value)
     return value
   }
 
