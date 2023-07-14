@@ -54,7 +54,7 @@ export class CheckoutCustom {
     this.CheckoutLimit = new CheckoutLimit()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
-    
+
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
     }
@@ -978,14 +978,14 @@ export class CheckoutCustom {
 
         let discount = 0;
 
-        if(
+        if (
           giftRewards.length &&
           giftRewards[0].inUse &&
           giftRewards[0].value > 0
         ) {
           discount = giftRewards[0].value
         }
-   
+
         if (paymentAmountTotal) {
           const _component = `
           <div class="cart-total" style="margin-bottom: 20px; color: #000">
@@ -1826,6 +1826,10 @@ export class CheckoutCustom {
         }
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
+        }
+
+        if (window.locatiion.hash == '#/shipping') {
+          _this.shipping.removeIfHasntPrice()
         }
 
         if (window.location.hash === '#/cart') {
