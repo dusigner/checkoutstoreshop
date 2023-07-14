@@ -1669,7 +1669,6 @@ export class CheckoutCustom {
 
         // #shipping
         _this.shipping.bindEvents()
-        _this.shipping.limitFieldsCharacters()
 
         // #profile
         _this.profile.bindEvents()
@@ -1831,6 +1830,7 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/cart') {
           _this.Rewards.cancelRewardsDiscount()
+          _this.shipping.removeIfHasntPrice()
         }
 
         if (window.location.hash === '#/payment') {

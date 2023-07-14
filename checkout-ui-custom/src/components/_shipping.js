@@ -284,11 +284,11 @@ export default class CustomShippingData {
       }).length === 0
 
 
-      //used for pickup point
-      if ($pickupReceiverInput.length) {
-        disabled = disabled && $pickupReceiverInput.val().length > 0
-      }
-      ////
+    //used for pickup point
+    if ($pickupReceiverInput.length) {
+      disabled = disabled && $pickupReceiverInput.val().length > 0
+    }
+    ////
 
     $('#btn-go-to-payment').prop('disabled', !disabled)
   }
@@ -396,7 +396,7 @@ export default class CustomShippingData {
       }
     )
 
-   $(document).on(
+    $(document).on(
       'input',
       '#shipping-data p.input.required input, #pickup-receiver:visible',
       function () {
@@ -426,8 +426,18 @@ export default class CustomShippingData {
 
     $(document).on('click',
       '.vtex-omnishipping-1-x-toggle, .react-datepicker__day:not(.react-datepicker__day--disabled)',
-      function() {
+      function () {
         _this.addInvalidSelectedDateMessage()
       }
-    )}
+    )
+  }
+
+  removeIfHasntPrice() {
+    var items = window.vtexjs.checkout.orderForm.items[0].price;
+    var salesChannelItau = vtexjs.checkout.orderForm.salesChannel
+    if (salesChannelItau == 56 && items == 0) {
+      vtexjs.checkout.removeAllItems();
+    }
+  }
+  
 }
