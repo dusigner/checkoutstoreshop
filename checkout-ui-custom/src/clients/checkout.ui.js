@@ -419,7 +419,6 @@ export class CheckoutCustom {
         }
       })
       const elements = discountsTotal.map(discount => {
-        // console.log('discount.name', discount.name)
         if (discount.name.toLowerCase().includes('desconto à vista')) {
           this.hasSelectedDefaultPaymentMethod = true
           const selectedPaymentSystem =
@@ -993,8 +992,8 @@ export class CheckoutCustom {
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
               <p class="estimate-shipping">${formatCurrencyBRL(
-                paymentAmountTotal  - discount
-              )}</p>
+            paymentAmountTotal - discount
+          )}</p>
             </div>
           </div>
         `
@@ -1684,11 +1683,11 @@ export class CheckoutCustom {
           _this.CheckoutLimit.sync(orderForm)
         })
       })
-      function trackLogin(ssgAccountURL, accessKeyURL) {
-        if (ssgAccountURL) {
-          window._satellite.track('samsung_account_login')
-        } else if (accessKeyURL) {
+      function trackLogin(accessKeyURL) {
+        if (accessKeyURL) {
           window._satellite.track('shop_guest_login')
+        } else {
+          window._satellite.track('samsung_account_login')
         }
       }
       $(document).ajaxComplete(function (event, xhr, settings) {
@@ -1705,42 +1704,42 @@ export class CheckoutCustom {
 
       $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
-
-        const acessKeyURL = settings.url.includes('/api/checkout/pub/profiles/')
-        const ssgAccountURL = settings.url.includes('/api/sessions')
-
+        const acessKeyURL = settings.url.includes(`${rootPath()}/api/checkout/pub/profiles/`)
+        const ssgAccountURL = settings.url.includes(`${rootPath()}/api/sessions`)
         if (acessKeyURL || ssgAccountURL) {
           const loginSucess = xhr.statusText === 'success'
           if (loginSucess) {
-            trackLogin(ssgAccountURL, acessKeyURL)
-            fetch(
-              `${rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
-              {
-                credentials: 'include',
-              }
-            )
-              .then(resp => resp.json())
-              .then(data => {
-                const email = data.user
-                const userProfileId = data.userId
+            trackLogin(acessKeyURL)
+            setTimeout(() => {
+              fetch(
+                `${rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
+                {
+                  credentials: 'include',
+                }
+              )
+                .then(resp => resp.json())
+                .then(data => {
+                  const email = data.user
+                  const userProfileId = data.userId
 
-                return fetch(
-                  `${rootPath()}/_v/post/updateClientAcessOrigin`,
-                  {
-                    method: 'POST',
-                    body: JSON.stringify({
-                      docId: userProfileId,
-                      email,
-                      accessOrigin: 'desktop',
-                    }),
-                  }
-                )
-                  .then(() => {
-                    return response
-                  })
-                  .catch(console.error)
-              })
-            window.digitalData.user.loginStatus = true
+                  return fetch(
+                    `${rootPath()}/_v/post/updateClientAcessOrigin`,
+                    {
+                      method: 'POST',
+                      body: JSON.stringify({
+                        docId: userProfileId,
+                        email,
+                        accessOrigin: 'desktop',
+                      }),
+                    }
+                  )
+                    .then(() => {
+                      return response
+                    })
+                    .catch(console.error)
+                })
+              window.digitalData.user.loginStatus = true
+            }, 1000)
           }
         }
       })
