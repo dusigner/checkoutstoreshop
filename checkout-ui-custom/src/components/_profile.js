@@ -26,10 +26,9 @@ export default class CustomProfileData {
     return age >= 18 && age <= 120
   }
 
-  async insertPartialNewProfileData() {
+  async handleUserWhatsapp (){
     const _this = this
     const { email, phone } = window.vtexjs.checkout.orderForm.clientProfileData
-
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     var raw = JSON.stringify({
@@ -43,15 +42,29 @@ export default class CustomProfileData {
       body: raw
     };
 
-
     await fetch(`${_this.rootPath()}/_v1/private/whatsapp/handleChangeUser`, requestOptions)
       .then(response => response.json())
       .then(result => result)
       .catch(error => error); 
-    
-  
-    
+  }
 
+  async insertPartialNewProfileData() {
+    const _this = this
+    const { email } = window.vtexjs.checkout.orderForm.clientProfileData
+    let user;
+    await fetch(`${_this.rootPath()}/_v1/private/whatsapp/getUserByEmail/${email}`)
+      .then(response => response.json())
+      .then(response => {
+        user = response;
+    })
+
+    if('data' in user == false && $('#inputWhats:checked').length > 0) {
+      this.handleUserWhatsapp()
+    } 
+
+    if($('#inputWhats:checked').length > 0 !== user.data.consent) {
+      this.handleUserWhatsapp()
+    }
 
     try {
       const rewardsOptinIsVisible = $('#RewardsBlock').is(':visible')
@@ -333,10 +346,10 @@ export default class CustomProfileData {
     const $field = `<div class="whatsapp-optin">
       <h3>Whatsapp (opcional)</h3>
       <label class="inputOptInWhats checkbox-inline">
-        <input type="checkbox" id="inputWhats" />
+        <input type="checkbox" id="inputWhats" checked />
         <span class="custom-checkbox-icon"></span>
         <span>
-          Desejo receber ofertas e notificações por WhatsApp
+          Desejo receber notificações do status do pedido por WhatsApp 
         </span>
       </label>
     </div>`
