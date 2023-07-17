@@ -633,6 +633,11 @@
     }
 
     &.shipping-data {
+		.shp-summary-group{
+			&:nth-child(2) {
+				order: 0 !important;
+			}
+		  }
 			.box-step {
 				display: flex;
 				flex-wrap: wrap;
