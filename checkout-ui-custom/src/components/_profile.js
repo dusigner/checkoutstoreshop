@@ -36,7 +36,7 @@ export default class CustomProfileData {
     myHeaders.append("Content-Type", "application/json");
     var raw = JSON.stringify({
       "email": email,
-      "phoneNumber": whatsNumber.replace(/\D/g, "")
+      "phoneNumber": "55"+whatsNumber.replace(/\D/g, "")
     });
     
     var requestOptions = {
