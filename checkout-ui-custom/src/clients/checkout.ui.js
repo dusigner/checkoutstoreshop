@@ -1828,7 +1828,7 @@ export class CheckoutCustom {
           _this.customAddressForm.loadScript()
         }
 
-        if (window.locatiion.hash == '#/shipping') {
+        if (window.location.hash == '#/shipping') {
           _this.shipping.removeIfHasntPrice()
         }
 

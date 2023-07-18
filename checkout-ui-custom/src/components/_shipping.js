@@ -433,11 +433,13 @@ export default class CustomShippingData {
   }
 
   removeIfHasntPrice() {
-    var items = window.vtexjs.checkout.orderForm.items[0].price;
-    var salesChannelItau = vtexjs.checkout.orderForm.salesChannel
-    if (salesChannelItau == 56 && items == 0) {
+    const hasInvalidPrice = vtexjs.checkout.orderForm.items.some(item => item.price === 0);
+    const salesChannelItau = vtexjs.checkout.orderForm.salesChannel;
+
+    if (salesChannelItau === "56" && hasInvalidPrice) {
       vtexjs.checkout.removeAllItems();
     }
   }
-  
+
+
 }
