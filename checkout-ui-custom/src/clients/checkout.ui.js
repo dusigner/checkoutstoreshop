@@ -1476,7 +1476,6 @@ export class CheckoutCustom {
     const accountbr = window.__RUNTIME__.account == 'samsungbr'
     const accountbrshop = window.__RUNTIME__.account == 'samsungbrshop'
     const notMyvtex = window.location.href.indexOf('myvtex') == -1
-
     if (
       ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) ||
       (accountbrshop && notMyvtex)
@@ -1654,7 +1653,7 @@ export class CheckoutCustom {
   start() {
     const _this = this
     try {
-      console.log('Checkout is already started')
+      console.log('Checkout is already started!')
 
       $(async function () {
         _this.messages.init()
@@ -1686,8 +1685,6 @@ export class CheckoutCustom {
       function trackLogin(accessKeyURL) {
         if (accessKeyURL) {
           window._satellite.track('shop_guest_login')
-        } else {
-          window._satellite.track('samsung_account_login')
         }
       }
       $(document).ajaxComplete(function (event, xhr, settings) {
@@ -1705,8 +1702,7 @@ export class CheckoutCustom {
       $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
         const acessKeyURL = settings.url.includes(`${rootPath()}/api/checkout/pub/profiles/`)
-        const ssgAccountURL = settings.url.includes(`${rootPath()}/api/sessions`)
-        if (acessKeyURL || ssgAccountURL) {
+        if (acessKeyURL) {
           const loginSucess = xhr.statusText === 'success'
           if (loginSucess) {
             trackLogin(acessKeyURL)
