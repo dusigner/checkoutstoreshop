@@ -9,7 +9,10 @@ import TradeIn from '../components/_tradeIn'
 import SendAttachment from '../components/_sendAttachment'
 import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
+import Messages from '../components/_messages'
+import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import { rootPath } from '../components/utils/_rootPath'
+
 import {
   formatNegativeValue,
   debounce,
@@ -50,6 +53,11 @@ export class CheckoutCustom {
     this.hasSelectedDefaultPaymentMethod = false
     this.CheckoutLimit = new CheckoutLimit()
     this.samsungCarePlus = new SamsungCarePlus()
+    this.messages = new Messages()
+    
+    if (deliveryDateFormat) {
+      this.shippingEstimateCustom = new ShippingEstimateCustom()
+    }
   }
 
   onDomMutation({ targetNode, callback, disconnectCondition = true }) {
@@ -90,17 +98,6 @@ export class CheckoutCustom {
       childList: true,
       subtree: true,
     })
-  }
-  addEditButtoninLogin() {
-    $('#v-custom-edit-login-data').remove()
-    $('.client-pre-email h3.client-pre-email-h span').append(`
-      <a id="v-custom-edit-login-data" class="link-box-edit btn btn-small" style="" title="${
-        this.lang ? this.lang.editLabel : true
-      }">
-        <i class="icon-edit"></i>
-        <i class="icon-spinner icon-spin icon-3x"></i>
-      </a>
-    `)
   }
 
   addAssemblies(orderForm) {
@@ -294,11 +291,10 @@ export class CheckoutCustom {
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
               <p class="estimate-shipping">${shippingText}</p>
               <p class="instantvoucher">
-                <a class="selecaovoucher" href='${
-                  detailUrl.split('/p')[0] +
-                  '/instant-voucher?skuId=' +
-                  orderForm.items[i].id
-                }'>Voltar à seleção de cupom instantâneo</a>
+                <a class="selecaovoucher" href='${detailUrl.split('/p')[0] +
+          '/instant-voucher?skuId=' +
+          orderForm.items[i].id
+          }'>Voltar à seleção de cupom instantâneo</a>
               </p>
             </div>
           `
@@ -397,15 +393,17 @@ export class CheckoutCustom {
       const discountsTotal = uniqueDiscounts.map(function (discount) {
         const name = discount.ratesAndBenefitsIdentifier
           ? discount.ratesAndBenefitsIdentifier.name
-          : ''
+          : discount.name
+            ? discount.name
+            : ''
 
         const total = itemsDiscounts.reduce(function (acc, current) {
           const isDiscountInCash = current.ratesAndBenefitsIdentifier
             ? current.ratesAndBenefitsIdentifier.name
 
-                .toLowerCase()
-                .includes('desconto à vista') &&
-              name.toLowerCase().includes('desconto à vista')
+              .toLowerCase()
+              .includes('desconto à vista') &&
+            name.toLowerCase().includes('desconto à vista')
             : ''
 
           if (current.name === discount.name || isDiscountInCash) {
@@ -420,7 +418,6 @@ export class CheckoutCustom {
           value: total,
         }
       })
-
       const elements = discountsTotal.map(discount => {
         if (discount.name.toLowerCase().includes('desconto à vista')) {
           this.hasSelectedDefaultPaymentMethod = true
@@ -440,8 +437,8 @@ export class CheckoutCustom {
               <td style="margin-left: 10px;">Desconto ${paymentSystemName}</td>
               <td>
                 <span style="font-weight: 700">${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
+            formatCurrencyBRL(discount.value)
+          )}</span>
               </td>
             </tr>`
         }
@@ -452,8 +449,8 @@ export class CheckoutCustom {
                 <td style="margin-left: 10px;">Desc. Cupom Instantâneo</td>
                 <td>
                   <span style="font-weight: 700" >${formatNegativeValue(
-                    formatCurrencyBRL(discount.value)
-                  )}</span>
+            formatCurrencyBRL(discount.value)
+          )}</span>
                 </td>
               </tr>`
         }
@@ -464,8 +461,19 @@ export class CheckoutCustom {
                 <td style="margin-left: 10px;">Desc. Samsung Care+</td>
                 <td>
                   <span style="font-weight: 700" >${formatNegativeValue(
-                    formatCurrencyBRL(discount.value)
-                  )}</span>
+            formatCurrencyBRL(discount.value)
+          )}</span>
+                </td>
+              </tr>`
+        }
+        if (discount.name.toLowerCase().includes('discount@manualprice') && window.vtexjs.checkout.orderForm.customData.customApps.some(app => app.id == 'eco_troca')) {
+          return `
+              <tr class="discount eco_troca" style="height: 23px;">
+                <td style="margin-left: 10px;">Desc. Eco Troca</td>
+                <td>
+                  <span style="font-weight: 700" >${formatNegativeValue(
+            formatCurrencyBRL(discount.value)
+          )}</span>
                 </td>
               </tr>`
         }
@@ -475,8 +483,8 @@ export class CheckoutCustom {
               <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
               <td>
                 <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
+            formatCurrencyBRL(discount.value)
+          )}</span>
               </td>
             </tr>`
         }
@@ -487,8 +495,8 @@ export class CheckoutCustom {
               <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
               <td>
                 <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
+            formatCurrencyBRL(discount.value)
+          )}</span>
               </td>
             </tr>`
         }
@@ -505,8 +513,8 @@ export class CheckoutCustom {
               <td style="margin-left: 10px;">Desc. Cupom</td>
               <td>
                 <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
+          formatCurrencyBRL(discount.value)
+        )}</span>
               </td>
             </tr>`
       })
@@ -592,16 +600,16 @@ export class CheckoutCustom {
         accumulator +
         (item.priceTags.length
           ? item.priceTags.filter(_pricetag => {
-              return _pricetag.ratesAndBenefitsIdentifier
-                ? _pricetag.ratesAndBenefitsIdentifier.matchedParameters[
-                    'couponCode@Marketing'
-                  ] === _coupon
-                : 0
-            }).length
+            return _pricetag.ratesAndBenefitsIdentifier
+              ? _pricetag.ratesAndBenefitsIdentifier.matchedParameters[
+              'couponCode@Marketing'
+              ] === _coupon
+              : 0
+          }).length
           : 0)
       )
     },
-    0)
+      0)
 
     if (!_coupon || couponItemsCount > 0) {
       $('.coupon-applied-message').remove()
@@ -703,143 +711,9 @@ export class CheckoutCustom {
     }
   }
 
-  changeShippingTimeInfo() {
-    const _this = this
-
-    $('body').addClass('v-custom-changeShippingTimeInfo')
-    const mainSTIelems = [
-      '.shp-summary-package-time > span',
-      'p.vtex-omnishipping-1-x-sla.sla',
-      '.vtex-omnishipping-1-x-leanShippingTextLabelSingle > span',
-      'span.shipping-date',
-      '.shp-option-text-time',
-      '.pkpmodal-pickup-point-sla',
-      '.shp-option-text-package',
-      '.srp-delivery-current-many__sla',
-      '.shipping-estimate-date:eq(0)',
-      '.srp-shipping-current-single__sla',
-    ]
-
-    try {
-      $(`
-        .vtex-omnishipping-1-x-summaryPackage.shp-summary-package:not(.v-changeShippingTimeInfo-active),
-        .vtex-omnishipping-1-x-leanShippingOption,
-        .vtex-omnishipping-1-x-packageItem:not(.v-changeShippingTimeInfo-active),
-        .orderform-template .cart-template.mini-cart .item,
-        .vtex-pickup-points-modal-3-x-pickupPointSlaAvailability,
-        .srp-delivery-current-many,
-        td.shipping-date,
-        .srp-shipping-current-single
-      `).each(function () {
-        const [logisticsInfo] =
-          window.vtexjs.checkout.orderForm.shippingData.logisticsInfo
-
-        const availableSlas = logisticsInfo.slas
-
-        const { selectedSla } = logisticsInfo
-
-        const selectedSlaDays = availableSlas.find(e => e.name === selectedSla)
-          ? availableSlas.find(e => e.name === selectedSla).shippingEstimate
-          : false
-
-        const txtselectin = $(this)
-          .find(
-            mainSTIelems
-              .map(elem => `${elem}:not(.v-changeShippingTimeInfo-elem-active)`)
-              .join(', ')
-          )
-          .text()
-
-        let days
-
-        if (!$(this).hasClass('srp-delivery-current-many')) {
-          if (txtselectin !== '' && txtselectin.match(/(day)|(dia)|(día)/gm)) {
-            days = parseInt(txtselectin.match(/\d+/), 10)
-          }
-        } else if (selectedSlaDays) {
-          days = parseInt(selectedSlaDays.match(/\d+/), 10)
-        }
-
-        if (days) {
-          let _delivtext = _this.lang.deliveryDateText
-
-          if (
-            $(this)
-              .find(mainSTIelems.join(', '))
-              .text()
-              .toLowerCase()
-              .match(/(ready in up)|(pronto)|(a partir de)|(hasta)/gm)
-          ) {
-            _delivtext = _this.lang.PickupDateText
-          } // check if is pickup. OBS: none of others solutions worked, needs constantly update
-
-          $(this)
-            .find(mainSTIelems.join(', '))
-            .html(
-              `${_delivtext} <strong>${_this.addBusinessDays(days)}</strong>`
-            )
-            .addClass('v-changeShippingTimeInfo-elem-active')
-        }
-
-        $(this).addClass('v-changeShippingTimeInfo-active')
-      })
-
-      // temporaly
-      const shippingPreviewPackges = $(
-        '.srp-delivery-info .srp-packages:not(.v-changeShippingTimeInfo-elem-active)'
-      )
-
-      $('.js-shippingPreviewPackges').remove()
-      if (shippingPreviewPackges.length) {
-        const a = shippingPreviewPackges
-          .text()
-          .split(':')[1]
-          .split(/,| and | e | y /)
-
-        const deliveryDates = []
-
-        $.each(a, function (i) {
-          const txtselectin = a[i]
-
-          if (txtselectin !== '' && txtselectin.match(/(day)|(dia)|(día)/gm)) {
-            const days = parseInt(txtselectin.match(/\d+/), 10)
-
-            if (days) {
-              let _delivtext = _this.lang.deliveryDateText
-
-              if (
-                txtselectin
-                  .toLowerCase()
-                  .match(/(ready in up)|(pronto)|(A partir de)|(hasta)/gm)
-              ) {
-                _delivtext = _this.lang.PickupDateText
-              } // check if is pickup. OBS: none of others solutions worked, needs constantly update
-
-              deliveryDates.push(
-                `${_delivtext} <strong>${_this.addBusinessDays(days)}</strong>`
-              )
-            }
-          }
-        })
-        shippingPreviewPackges
-          .hide()
-          .after(
-            `<p class="black-50 mt3 mb0 js-shippingPreviewPackges">${
-              shippingPreviewPackges.text().split(':')[0]
-            }: ${deliveryDates.join('; ')}</p>`
-          )
-          .addClass('v-changeShippingTimeInfo-active')
-      }
-    } catch (e) {
-      console.error('changeShippingTimeInfo Error:', e)
-    }
-  }
-
   changeShippingTimeInfoInit() {
-    const _this = this
-
-    if (_this.lang && _this.deliveryDateFormat) {
-      _this.changeShippingTimeInfo()
+    if (this.deliveryDateFormat) {
+      this.shippingEstimateCustom.init()
     }
   }
 
@@ -982,15 +856,13 @@ export class CheckoutCustom {
     const tooltip = `
       <div class="vcustom-customTax-resume">
        ${customtax
-         .map(
-           i =>
-             `<p class="vcustom-customTax-resume__i"><span class="n">${
-               i.name
-             }</span><span class="v">${
-               orderForm.storePreferencesData.currencySymbol
-             } ${(i.value / 100).toFixed(2)}</span></p>`
-         )
-         .join('')}
+        .map(
+          i =>
+            `<p class="vcustom-customTax-resume__i"><span class="n">${i.name
+            }</span><span class="v">${orderForm.storePreferencesData.currencySymbol
+            } ${(i.value / 100).toFixed(2)}</span></p>`
+        )
+        .join('')}
       </div>
     `
 
@@ -1026,9 +898,8 @@ export class CheckoutCustom {
 
       const _summaryOrder = `
         <div class="summaryOrder">
-          <h6>Resumo do pedido (${itemsQuantity} ${
-        quantitySelectedItems.length <= 1 ? 'item' : 'itens'
-      })</h6>
+          <h6>Resumo do pedido (${itemsQuantity} ${quantitySelectedItems.length <= 1 ? 'item' : 'itens'
+        })</h6>
           <ul>
             ${listItems}
           </ul>
@@ -1080,8 +951,7 @@ export class CheckoutCustom {
           .prepend(
             `
           <div class="v-custom-quantity-price vqc-ldelem">
-            <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${
-              free ? 'Grátis' : totalValue
+            <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${free ? 'Grátis' : totalValue
             }</p>
           </div>
           `
@@ -1102,15 +972,28 @@ export class CheckoutCustom {
 
       if (path === '#/payment') {
         const paymentAmountTotal = orderForm.value
+        const giftRewards = orderForm.paymentData.giftCards.filter(
+          g => g.provider === 'SSG_REWARDS'
+        )
 
+        let discount = 0;
+
+        if(
+          giftRewards.length &&
+          giftRewards[0].inUse &&
+          giftRewards[0].value > 0
+        ) {
+          discount = giftRewards[0].value
+        }
+   
         if (paymentAmountTotal) {
           const _component = `
           <div class="cart-total" style="margin-bottom: 20px; color: #000">
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
               <p class="estimate-shipping">${formatCurrencyBRL(
-                paymentAmountTotal
-              )}</p>
+            paymentAmountTotal - discount
+          )}</p>
             </div>
           </div>
         `
@@ -1146,8 +1029,7 @@ export class CheckoutCustom {
         if (_this.lastOrderFormTotalPrice !== orderForm.value) {
           _this.lastOrderFormTotalPrice = orderForm.value
           _this.termPrice = await fetch(
-            `${rootPath()}/api/checkout/pub/orderForm/${
-              orderForm.orderFormId
+            `${rootPath()}/api/checkout/pub/orderForm/${orderForm.orderFormId
             }/installments?paymentSystem=2`
           )
             .then(response => response.json())
@@ -1178,16 +1060,15 @@ export class CheckoutCustom {
                 <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
                   <p class="ref-id">Total</p>
                   <p class="estimate-shipping">${formatCurrencyBRL(
-                    inCashPrice
-                  )}</p>
+          inCashPrice
+        )}</p>
                 </div>
-                ${
-                  percentDiscount > 0
-                    ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
+                ${percentDiscount > 0
+            ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
                         <p>(${percentDiscount}% de desconto)</p>
                       </div>`
-                    : ''
-                }
+            : ''
+          }
 
                 <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p class="gross-total">
@@ -1263,11 +1144,13 @@ export class CheckoutCustom {
     this.samsungCarePlus.hideQuantityButtons(orderForm)
     this.installationService.init()
     new BespokeRefrigerator().init()
+    this.changeShippingTimeInfoInit()
 
     this.TradeIn.init(orderForm)
     await this.imgEmptyCart()
 
     const updateDebounce = debounce(function () {
+
       if (orderForm.marketingData) {
         this.showCustomMsgCoupon(orderForm)
       }
@@ -1317,7 +1200,7 @@ export class CheckoutCustom {
     if (
       !this.accordionPayments ||
       $('.payment-group-list-btn').find('.v-custom-payment-item-wrap').length >
-        0
+      0
     ) {
       return false
     }
@@ -1326,8 +1209,7 @@ export class CheckoutCustom {
 
     $('.payment-group-item').each(function () {
       $(this).wrap(
-        `<div class='v-custom-payment-item-wrap ${
-          $(this).hasClass('active') ? 'active' : ''
+        `<div class='v-custom-payment-item-wrap ${$(this).hasClass('active') ? 'active' : ''
         }'></div>`
       )
     })
@@ -1481,7 +1363,7 @@ export class CheckoutCustom {
                 if (itemsToRemove.length > 0) {
                   return window.vtexjs.checkout
                     .removeItems(itemsToRemove)
-                    .then(() => {})
+                    .then(() => { })
                 }
               }, 2000)
             }
@@ -1580,7 +1462,7 @@ export class CheckoutCustom {
               if (itemsToRemove.length > 0) {
                 return window.vtexjs.checkout
                   .removeItems(itemsToRemove)
-                  .then(() => {})
+                  .then(() => { })
               }
             }
           }, i * interval)
@@ -1665,7 +1547,6 @@ export class CheckoutCustom {
       '.vtex-omnishipping-1-x-linkEdit.link-edit',
       function () {
         setTimeout(() => {
-          // _this.updateLang(_this.orderForm)
           if (_this.customAddressForm) {
             $('body').addClass('v-custom-addressForm-on')
           }
@@ -1760,11 +1641,9 @@ export class CheckoutCustom {
 
     this.updateStep()
     this.builder()
-    this.changeShippingTimeInfoInit()
 
     if (this.orderForm) {
       this.update(this.orderForm)
-      // _this.updateLang(_this.orderForm) // validar
       this.paymentBuilder(this.orderForm)
     }
 
@@ -1778,9 +1657,11 @@ export class CheckoutCustom {
       console.log('Checkout is already started')
 
       $(async function () {
+        _this.messages.init()
         _this.bind()
         _this.customAddressFormLoader()
         _this.rtlUI()
+        _this.shippingEstimateCustom.bindEvents()
         // await this.customAddressFormLoader()
         // #pre-email
         _this.preEmail.bindEvents()
@@ -1792,23 +1673,21 @@ export class CheckoutCustom {
 
         // #profile
         _this.profile.bindEvents()
-        
-        $(window).on('checkoutRequestBegin.vtex', function(event, request) {
+
+        $(window).on('checkoutRequestBegin.vtex', function (event, request) {
           _this.CheckoutLimit.limitQuantity(event, request)
           _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
         })
-        $(window).on('checkoutRequestEnd.vtex', function(event, orderForm) {
+        $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
           _this.samsungCarePlus.sync(orderForm)
           _this.CheckoutLimit.sync(orderForm)
         })
       })
-      function trackLogin(ssgAccountURL, accessKeyURL) {
-        if (ssgAccountURL) {
-          window.digitalData.user.loginStatus = true
+      function trackLogin(accessKeyURL) {
+        if (accessKeyURL) {
+          window._satellite.track('shop_guest_login')
+        } else {
           window._satellite.track('samsung_account_login')
-        } else if (accessKeyURL) {
-          window.digitalData.user.loginStatus = true
-          window._satellite.track('vtex_account_login')
         }
       }
       $(document).ajaxComplete(function (event, xhr, settings) {
@@ -1825,43 +1704,42 @@ export class CheckoutCustom {
 
       $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
-
-        const acessKeyURL = settings.url.includes('/api/checkout/pub/profiles/')
-        const ssgAccountURL = settings.url.includes('/api/sessions')
-
+        const acessKeyURL = settings.url.includes(`${rootPath()}/api/checkout/pub/profiles/`)
+        const ssgAccountURL = settings.url.includes(`${rootPath()}/api/sessions`)
         if (acessKeyURL || ssgAccountURL) {
           const loginSucess = xhr.statusText === 'success'
-
           if (loginSucess) {
-            trackLogin(ssgAccountURL, acessKeyURL)
-            window.digitalData.user.loginStatus = true
-            fetch(
-              `${rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
-              {
-                credentials: 'include',
-              }
-            )
-              .then(resp => resp.json())
-              .then(data => {
-                const email = data.user
-                const userProfileId = data.userId
+            trackLogin(acessKeyURL)
+            setTimeout(() => {
+              fetch(
+                `${rootPath()}/api/vtexid/pub/authenticated/user?fields=email,userProfileId`,
+                {
+                  credentials: 'include',
+                }
+              )
+                .then(resp => resp.json())
+                .then(data => {
+                  const email = data.user
+                  const userProfileId = data.userId
 
-                return fetch(`${rootPath()}/_v/post/updateClientAcessOrigin`, {
-                  method: 'POST',
-                  body: JSON.stringify({
-                    docId: userProfileId,
-                    email,
-                    accessOrigin: 'desktop',
-                  }),
+                  return fetch(
+                    `${rootPath()}/_v/post/updateClientAcessOrigin`,
+                    {
+                      method: 'POST',
+                      body: JSON.stringify({
+                        docId: userProfileId,
+                        email,
+                        accessOrigin: 'desktop',
+                      }),
+                    }
+                  )
+                    .then(() => {
+                      return response
+                    })
+                    .catch(console.error)
                 })
-                  .then(() => {
-                    return response
-                  })
-                  .catch(console.error)
-              })
-          } else {
-            window.digitalData.user.loginStatus = false
-            window._satellite.track('shop_guest_login')
+              window.digitalData.user.loginStatus = true
+            }, 1000)
           }
         }
       })
@@ -1904,7 +1782,6 @@ export class CheckoutCustom {
         }
         if (_this.orderForm) {
           _this.indexedInItems(_this.orderForm)
-          // _this.updateLang(_this.orderForm)
           _this.paymentBuilder(_this.orderForm)
           _this.customAddressFormInit(_this.orderForm)
           _this.removeCILoader()
@@ -2056,6 +1933,7 @@ export class CheckoutCustom {
         _this.shipping.toggleGoToPaymentDisabled()
         _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
         $(window).one('componentValidated.vtex', () => _this.builder())
+        _this.messages.init()
       })
     } catch (error) {
       general()

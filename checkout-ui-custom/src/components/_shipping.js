@@ -414,7 +414,7 @@ export default class CustomShippingData {
 
     $('body').on(
       'input',
-      'input#ship-street, input#ship-complement, input#ship-neighborhood',
+      'input#ship-street, input#ship-complement, input#ship-neighborhood, input#ship-reference',
       function () {
         const regexp = /[^A-Za-z0-9\s]+$/
 

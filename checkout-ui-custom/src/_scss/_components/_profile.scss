@@ -109,6 +109,7 @@
   }
 
   .newsletter-optin,
+  .whatsapp-optin,
   .terms-and-policies,
   .rewards-block {
     margin-bottom: 32px;
@@ -175,11 +176,13 @@
       }
     }
   }
-  .newsletter-optin{
+  .newsletter-optin,  
+  .whatsapp-optin{
     .newsletter-text{
       display: none;
     }
-    .newsletter-text-correct{
+    .newsletter-text-correct,
+    .whatsapp-text-correct {
       display: block;
     }
   }
