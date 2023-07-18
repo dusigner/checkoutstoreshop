@@ -1355,6 +1355,15 @@ h1#cart-title {
       outline: initial;
     }
 
+    .vtex-omnishipping-1-x-shippingDataDev{
+      .vtex-omnishipping-1-x-btnDelivery {
+        order: 1;
+        margin-top: 20px;
+        background: $actionPrimary;
+
+      }
+    }
+
     .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation
       input {
       @extend %input-style;

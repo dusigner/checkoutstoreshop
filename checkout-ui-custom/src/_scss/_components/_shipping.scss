@@ -129,6 +129,15 @@
       display: none;
     }
 
+    .vtex-omnishipping-1-x-teste {
+      p.input {
+        @extend %field;
+      }
+    }
+
+    .vtex-omnishipping-1-x-addressFormPart1 {
+        margin-bottom: 16px;
+    }
     span {
       font-size: 12px;
       color: #000000;
@@ -428,10 +437,14 @@
 }
 
 .vtex-omnishipping-1-x-deliverTitle {
-  color: #000000;
-  font-family: SamsungOne;
-  font-weight: 700 !important;
-  font-size: 18px;
+    color: #000000;
+    font-family: SamsungOne;
+    font-weight: 700 !important;
+    font-size: 18px;
+
+    + .vtex-omnishipping-1-x-addressFormPart1 {
+      order: 2;
+    }
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-alert {
   display: none !important;
