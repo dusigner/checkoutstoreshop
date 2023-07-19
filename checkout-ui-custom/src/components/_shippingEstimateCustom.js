@@ -47,7 +47,6 @@ export default class ShippingEstimateCustom {
     const _this = this
     const currentDate = new Date()
     const shippingEstimate = new Date()
-    console.log("days", days)
     shippingEstimate.setDate(this.getBusinessDays(days))
 
     const holidays = this.holidays.filter((holiday) => {
