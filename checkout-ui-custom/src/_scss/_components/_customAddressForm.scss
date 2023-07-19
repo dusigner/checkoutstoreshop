@@ -250,9 +250,31 @@ body.v-custom-fnsCustomAddressForm {
   font-size: 0 !important;
   &::after {
     // content: 'Endereço do Cliente';
-    content: '3. Endere\E7o do Cliente';
+    content: '3. Endereço do Cliente';
+    color: #000000;
     font-size: 18px;
-    font-weight: bold;
+    font-family: SamsungOne;
+    font-weight: 700 !important;
   }
 }
 
+.shp-summary-group.vtex-omnishipping-1-x-SummaryItemGroup:nth-child(3)
+  .vtex-omnishipping-1-x-SummaryItemTitle {
+  font-size: 0;
+  &::after {
+    content: 'Endereço do Cliente';
+    font-size: 14px;
+  }
+}
+.vtex-omnishipping-1-x-addressList .vtex-omnishipping-1-x-addressItemOption:not(.vtex-omnishipping-1-x-active):not(:first-child) {
+	display: none !important;
+}
+.vtex-omnishipping-1-x-deliveryGroup #delivery-packages-options + .vtex-omnishipping-1-x-shippingSectionTitle {
+  color: #000;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  font-family: SamsungOne;
+  &::after {
+    display: none;
+  }
+}
