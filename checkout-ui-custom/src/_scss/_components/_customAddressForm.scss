@@ -266,9 +266,11 @@ body.v-custom-fnsCustomAddressForm {
     font-size: 14px;
   }
 }
-.vtex-omnishipping-1-x-addressList .vtex-omnishipping-1-x-addressItemOption:not(.vtex-omnishipping-1-x-active):not(:first-child) {
+.vtex-omnishipping-1-x-addressList .vtex-omnishipping-1-x-addressItemOption:not(.vtex-omnishipping-1-x-active):not(:first-child),
+.vtex-omnishipping-1-x-addressFormPart1 .vtex-omnishipping-1-x-addressItemOption:not(.vtex-omnishipping-1-x-active) {
 	display: none !important;
 }
+
 .vtex-omnishipping-1-x-deliveryGroup #delivery-packages-options + .vtex-omnishipping-1-x-shippingSectionTitle {
   color: #000;
   font-weight: 600 !important;
