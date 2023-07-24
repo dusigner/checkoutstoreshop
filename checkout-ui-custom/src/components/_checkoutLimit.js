@@ -111,11 +111,14 @@ export default class CheckoutLimit {
   triggerWarning(itemsToUpdate) {
     try {
       const _this = this
-  
-      return Swal.fire({
-        icon: "warning",
-        text: `A quantidade do produto ${itemsToUpdate.name} será atualizada para ${_this.limit} unidades.`
-      })
+    
+      if(_this.limit != null){
+        return Swal.fire({
+          icon: "warning",
+          text: `A quantidade do produto ${itemsToUpdate.name} será atualizada para ${_this.limit} unidades.`
+        })
+      }
+
     } catch (err) {
       console.error(`CheckoutLimit - triggerWarning: ${err}`)
     }

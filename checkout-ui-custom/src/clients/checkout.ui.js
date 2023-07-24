@@ -11,6 +11,7 @@ import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
 import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
+import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 
 import {
@@ -52,6 +53,7 @@ export class CheckoutCustom {
     this.SendAttachment = new SendAttachment()
     this.hasSelectedDefaultPaymentMethod = false
     this.CheckoutLimit = new CheckoutLimit()
+    this.CSP = new CSP()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
     
@@ -1140,6 +1142,7 @@ export class CheckoutCustom {
     this.wrapSummary()
     this.couponInfo(orderForm)
     this.CheckoutLimit.lockIncrementButtons(orderForm)
+    this.CSP.init(orderForm)
     this.samsungCarePlus.samsungCareModalTrigger()
     this.samsungCarePlus.hideQuantityButtons(orderForm)
     this.installationService.init()
@@ -1644,10 +1647,12 @@ export class CheckoutCustom {
     if (this.orderForm) {
       this.update(this.orderForm)
       this.paymentBuilder(this.orderForm)
+      this.CSP.init(this.orderForm)
     }
 
     this.fixLabels()
     this.CheckoutLimit.init()
+    
   }
 
   start() {
