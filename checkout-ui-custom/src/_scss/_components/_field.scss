@@ -9,6 +9,10 @@
 		margin-bottom: 7px !important;
 	}
 
+    select {
+      @extend %select-style;
+    }
+
     input {
         @extend %input-style;
     }

@@ -54,7 +54,7 @@ export class CheckoutCustom {
     this.CheckoutLimit = new CheckoutLimit()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
-    
+
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
     }
@@ -978,14 +978,14 @@ export class CheckoutCustom {
 
         let discount = 0;
 
-        if(
+        if (
           giftRewards.length &&
           giftRewards[0].inUse &&
           giftRewards[0].value > 0
         ) {
           discount = giftRewards[0].value
         }
-   
+
         if (paymentAmountTotal) {
           const _component = `
           <div class="cart-total" style="margin-bottom: 20px; color: #000">
@@ -1476,7 +1476,6 @@ export class CheckoutCustom {
     const accountbr = window.__RUNTIME__.account == 'samsungbr'
     const accountbrshop = window.__RUNTIME__.account == 'samsungbrshop'
     const notMyvtex = window.location.href.indexOf('myvtex') == -1
-
     if (
       ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) ||
       (accountbrshop && notMyvtex)
@@ -1654,7 +1653,7 @@ export class CheckoutCustom {
   start() {
     const _this = this
     try {
-      console.log('Checkout is already started')
+      console.log('Checkout is already started!')
 
       $(async function () {
         _this.messages.init()
@@ -1669,7 +1668,6 @@ export class CheckoutCustom {
 
         // #shipping
         _this.shipping.bindEvents()
-        _this.shipping.limitFieldsCharacters()
 
         // #profile
         _this.profile.bindEvents()
@@ -1686,8 +1684,6 @@ export class CheckoutCustom {
       function trackLogin(accessKeyURL) {
         if (accessKeyURL) {
           window._satellite.track('shop_guest_login')
-        } else {
-          window._satellite.track('samsung_account_login')
         }
       }
       $(document).ajaxComplete(function (event, xhr, settings) {
@@ -1705,8 +1701,7 @@ export class CheckoutCustom {
       $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
         const acessKeyURL = settings.url.includes(`${rootPath()}/api/checkout/pub/profiles/`)
-        const ssgAccountURL = settings.url.includes(`${rootPath()}/api/sessions`)
-        if (acessKeyURL || ssgAccountURL) {
+        if (acessKeyURL) {
           const loginSucess = xhr.statusText === 'success'
           if (loginSucess) {
             trackLogin(acessKeyURL)
@@ -1829,8 +1824,13 @@ export class CheckoutCustom {
           _this.customAddressForm.loadScript()
         }
 
+        if (window.location.hash == '#/shipping') {
+          _this.shipping.removeIfHasntPrice()
+        }
+
         if (window.location.hash === '#/cart') {
           _this.Rewards.cancelRewardsDiscount()
+          _this.shipping.removeIfHasntPrice()
         }
 
         if (window.location.hash === '#/payment') {
@@ -1877,6 +1877,16 @@ export class CheckoutCustom {
       // ok load
       $(window).load(async function () {
         _this.setPixAsDefaultPaymentMethod()
+        if (window.location.hash === '#/cart') {
+          _this.Rewards.cancelRewardsDiscount()
+
+          const checkIfRemove = localStorage.getItem('@samsung/shippingResult', 'remove')
+
+          if (checkIfRemove) {
+            $('.srp-toggle__pickup').click()
+          }
+        }
+
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
         })

@@ -1204,6 +1204,8 @@ class AdobeLaunchPixel {
   _trackLogin() {
     const { orderForm } = window.vtexjs.checkout
     const customerLogged = orderForm.clientProfileData
+    const saGuid = localStorage.getItem('saGuid')
+    const loginStatus = window.digitalData.user.loginStatus
     try {
       if (
         window._satellite !== undefined &&
@@ -1213,13 +1215,21 @@ class AdobeLaunchPixel {
         if (window.location.hash === '#/shipping' ||
           window.location.hash === '#/payment' ||
           window.location.hash === '#/profile') {
-          window.digitalData.user.loginStatus = true
+          if (!loginStatus && saGuid) {
+            window.digitalData.user.loginStatus = true
+            window._satellite.track('samsung_account_login')
+          } else {
+            window.digitalData.user.loginStatus = true
+          }
         }
         if (window.location.hash === '#/cart' ||
           window.location.hash === '#/email') {
           if (customerLogged !== null) {
             window.digitalData.user.loginStatus = true
           } else {
+            if(saGuid){
+              localStorage.setItem('saGuid', '')
+            }
             window.digitalData.user.loginStatus = false
           }
         }
@@ -1281,7 +1291,7 @@ class AdobeLaunchPixel {
   _mountDataBuyNow(dataOmni, skuId) {
     const _this = this
     let data = ''
-    
+
     const findItem = window.vtexjs.checkout.orderForm.items.find(function (
       item
     ) {
@@ -1322,7 +1332,6 @@ class AdobeLaunchPixel {
       .shift()
     const accountBRShop = account.replace('shop', '')
 
-    // const rootPath = window.__RUNTIME__.rootPath;
     let productDivision = ''
     let productFamily = ''
     let allCategories = ''

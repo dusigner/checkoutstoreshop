@@ -7,11 +7,6 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
     "cy-r": "cd cy-runner && node cy-runner"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{ts,js,tsx,jsx}": [
       "eslint --fix",
@@ -27,7 +22,6 @@
     "eslint": "^6.8.0",
     "eslint-config-vtex": "^12.2.1",
     "eslint-config-vtex-react": "^6.2.1",
-    "husky": "^4.2.0",
     "lint-staged": "^10.0.2",
     "prettier": "detect",
     "typescript": "^3.7.5"
