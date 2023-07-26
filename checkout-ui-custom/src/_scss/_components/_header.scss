@@ -1,10 +1,9 @@
 body {
-
   &.v-custom-step-cart,
   &.v-custom-step-email {
     padding-top: 125px;
 
-    @media(max-width: $mobileWidth) {
+    @media (max-width: $mobileWidth) {
       padding-top: 73px;
     }
   }
@@ -17,7 +16,7 @@ body {
     .cart-template.mini-cart {
       top: 127px;
 
-      @media(max-width: $mobileWidth) {
+      @media (max-width: $mobileWidth) {
         top: 0;
       }
     }
@@ -26,7 +25,7 @@ body {
   .main-header {
     text-align: center;
     position: fixed;
-    background-color: #FFF;
+    background-color: #fff;
     color: #000;
     box-sizing: border-box;
 
@@ -37,8 +36,7 @@ body {
 
     .container {
       display: grid;
-      grid-template-areas:
-        'logo steps steps secure';
+      grid-template-areas: 'logo steps steps secure';
       align-items: center;
       justify-content: space-between;
 
@@ -55,7 +53,9 @@ body {
 
     > .container {
       &:before,
-      &:after {display: none;}
+      &:after {
+        display: none;
+      }
     }
 
     .checkout-secure-buy {
@@ -75,6 +75,32 @@ body {
       grid-area: logo;
       display: flex;
       min-height: 85px;
+      align-items: center;
+
+      #partnerPlaceholder {
+        display: block;
+        width: 84px;
+        height: 29px;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: 100%;
+      }
+
+      #logoSpacerBar {
+        width: 1px;
+        height: 34px;
+        background-color: #aaaaaa;
+        margin: 0 13px 0 14px;
+        display: none;
+      }
+
+      img {
+        display: none;
+
+        @media (max-width: 490px) {
+          width: 87px;
+        }
+      }
 
       @media (max-width: $mobileWidth) {
         min-height: 28px;
@@ -115,15 +141,15 @@ body {
     margin-bottom: 32px;
 
     @media (max-width: $mobileWidth) {
-    margin: 16px 24px;
+      margin: 16px 24px;
     }
 
     &:before {
-      content: "<";
+      content: '<';
       display: flex;
       font-size: 21px;
       font-weight: bold;
-      color: #000
+      color: #000;
     }
 
     #orderform-minicart-to-cart {
@@ -134,4 +160,3 @@ body {
     }
   }
 }
-
