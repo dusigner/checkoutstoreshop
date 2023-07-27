@@ -34,11 +34,16 @@ export default class CSP {
     // console.log('result validade', compareResult)
 
     if(compareResult.deliveryOption == 'delivery'){
+      document.querySelector('.box-step.shipping-summary-placeholder') && document.querySelector('.box-step.shipping-summary-placeholder').classList.add("delivery-class")
+      document.querySelector('.pickup-in-point-class') && document.querySelector('.box-step.shipping-summary-placeholder').classList.remove("pickup-in-point-class")
       if(document.querySelector('.customTitleStep1')){
         document.querySelector('.customTitleStep1').style.display = 'none'
+        
       }
     }
     if(compareResult.deliveryOption == 'pickup-in-point'){
+      document.querySelector('.delivery-class') && document.querySelector('.box-step.shipping-summary-placeholder').classList.remove("delivery-class")
+      document.querySelector('.box-step.shipping-summary-placeholder') && document.querySelector('.box-step.shipping-summary-placeholder').classList.add("pickup-in-point-class")
       if(document.querySelector('.customTitleStep1')){
         document.querySelector('.customTitleStep1').style.display = 'show'
       }else{

@@ -706,6 +706,13 @@
               }
             }
           }
+
+          &.vtex-omnishipping-1-x-teste {
+            p.input {
+              @extend %field;
+            }
+          }
+
 					&.vtex-omnishipping-1-x-submitPaymentButton { order: 100; }
 
 					&.btn-link.vtex-omnishipping-1-x-btnDelivery {

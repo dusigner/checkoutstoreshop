@@ -232,6 +232,20 @@ body {
 
     &.shipping-summary-placeholder {
       margin-top: 0;
+
+      &.pickup-in-point-class{
+        .shp-summary-group{
+          &:nth-child(1){
+            order: 1 !important;
+          }
+          &:nth-child(2){
+            order: 2 !important;
+          }
+        }
+      }
+      &.delivery-class{
+        
+      }
     }
   }
 
