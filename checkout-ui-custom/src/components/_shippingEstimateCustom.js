@@ -90,9 +90,13 @@ export default class ShippingEstimateCustom {
   }
 
   addBusinessDays(days, lang = window.i18n.options.lng) {
+    const currentDate = new Date()
     const shippingEstimate = this.getShippingEstimate(days)
+
+    const isSameYear = shippingEstimate.getFullYear() === currentDate.getFullYear()
+    const isSameMonth = isSameYear && shippingEstimate.getMonth() === currentDate.getMonth()
     
-    if ((shippingEstimate.getDate() - new Date().getDate()) === 1) {
+    if (isSameMonth && (shippingEstimate.getDate() - currentDate.getDate()) === 1) {
       return this.lang.tomorrowLabel || 'Amanhã'
     }
 
