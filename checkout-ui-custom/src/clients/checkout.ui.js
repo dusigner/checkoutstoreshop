@@ -444,6 +444,18 @@ export class CheckoutCustom {
             </tr>`
         }
 
+        if (discount.name.toLowerCase().includes(' b5q5 hand raiser')) {
+          return `
+            <tr class="discount garanteed-tradein" style="height: 23px;">
+              <td style="margin-left: 10px;">Desc. Registro Lançamento</td>
+              <td>
+                <span style="font-weight: 700" >${formatNegativeValue(
+                  formatCurrencyBRL(discount.value)
+                )}</span>
+              </td>
+            </tr>`
+        }
+
         if (discount.name.toLowerCase().includes('cupom instantâneo')) {
           return `
               <tr class="discount instant_voucher" style="height: 23px;">
