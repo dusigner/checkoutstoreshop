@@ -1,0 +1,91 @@
+$desktop-breakpoint: 768px;
+
+.topBanners {
+    width: 100%;
+    background-color: #2189ff;
+    overflow: hidden;
+    height: 48px;
+    font-family: 'SamsungOne',arial,sans-serif;
+    font-weight: bold;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.33;
+    display: flex;
+    justify-content: center;
+
+    .topBannersWraper {
+        max-width: 1440px;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: calc(100% - 40px) 40px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .slick-slider {
+        text-align: center;
+        display: flex;
+        align-items: center;
+    }
+
+    .slick-slide {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .slick-slider:hover + .toggleAutoplay .iconPause {
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBjbGFzcz0icGxheSIgZm9jdXNhYmxlPSJmYWxzZSIgd2lkdGg9Ijk2IiAgaGVpZ2h0PSI5NiIgPjxkZWZzPjxzeW1ib2wgdmlld0JveD0iMCAwIDk2IDk2IiBpZD0icGxheS1ib2xkIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xOS4zODQgNi45MjJjMS43LS43OTcgMy42NjMtLjY0IDUuMjkuMzc1bC4yMi4xNDQgNTIuMzUgMzUuODdjMS41NzggMS4wODEgMi41MTMgMi44MDUgMi41MTMgNC42OSAwIDEuNzk5LS44NTMgMy40NTItMi4zMDIgNC41MzhsLS4yMTEuMTUtNTIuMzUgMzUuODcxYTUuNzIgNS43MiAwIDAxLTMuMjMyIDEuMDI0Yy0uODczIDAtMS43MjktLjIxLTIuNTA5LS42Mi0xLjc1NS0uOTI2LTIuODIzLTIuNzA0LTIuOTA1LTQuNzEyTDE2LjI0MiA4NFYxMmMwLTIuMDI2Ljk5OS0zLjg1IDIuNjk3LTQuODQ0bC4yMTYtLjEyLjIyOS0uMTE0eiI+PC9wYXRoPjwvc3ltYm9sPjwvZGVmcz4KICAgICAgICAgICAgPHVzZSB4bGluazpocmVmPSIjcGxheS1ib2xkIiBocmVmPSIjcGxheS1ib2xkIiBmaWxsPSIjRkZGRkZGIj48L3VzZT4KICAgICAgICAgIDwvc3ZnPg==")
+    }
+
+    .iconPlay {
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBjbGFzcz0icGxheSIgZm9jdXNhYmxlPSJmYWxzZSIgd2lkdGg9Ijk2IiAgaGVpZ2h0PSI5NiIgPjxkZWZzPjxzeW1ib2wgdmlld0JveD0iMCAwIDk2IDk2IiBpZD0icGxheS1ib2xkIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xOS4zODQgNi45MjJjMS43LS43OTcgMy42NjMtLjY0IDUuMjkuMzc1bC4yMi4xNDQgNTIuMzUgMzUuODdjMS41NzggMS4wODEgMi41MTMgMi44MDUgMi41MTMgNC42OSAwIDEuNzk5LS44NTMgMy40NTItMi4zMDIgNC41MzhsLS4yMTEuMTUtNTIuMzUgMzUuODcxYTUuNzIgNS43MiAwIDAxLTMuMjMyIDEuMDI0Yy0uODczIDAtMS43MjktLjIxLTIuNTA5LS42Mi0xLjc1NS0uOTI2LTIuODIzLTIuNzA0LTIuOTA1LTQuNzEyTDE2LjI0MiA4NFYxMmMwLTIuMDI2Ljk5OS0zLjg1IDIuNjk3LTQuODQ0bC4yMTYtLjEyLjIyOS0uMTE0eiI+PC9wYXRoPjwvc3ltYm9sPjwvZGVmcz4KICAgICAgICAgICAgPHVzZSB4bGluazpocmVmPSIjcGxheS1ib2xkIiBocmVmPSIjcGxheS1ib2xkIiBmaWxsPSIjRkZGRkZGIj48L3VzZT4KICAgICAgICAgIDwvc3ZnPg==")
+    }
+    
+    .iconPause {
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBjbGFzcz0icGF1c2UiIGZvY3VzYWJsZT0iZmFsc2UiIHdpZHRoPSI5NiIgIGhlaWdodD0iOTYiID48ZGVmcz48c3ltYm9sIHZpZXdCb3g9IjAgMCA5NiA5NiIgaWQ9InBhdXNlLWJvbGQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTM5IDguNWEzLjUwMyAzLjUwMyAwIDAxMy40OTUgMy4zMDhMNDIuNSAxMnY3MmEzLjUwMyAzLjUwMyAwIDAxLTMuMzA4IDMuNDk1TDM5IDg3LjVIMjFhMy41MDMgMy41MDMgMCAwMS0zLjQ5NS0zLjMwOEwxNy41IDg0VjEyYTMuNTAzIDMuNTAzIDAgMDEzLjMwOC0zLjQ5NUwyMSA4LjVoMTh6bTM2IDBhMy41MDMgMy41MDMgMCAwMTMuNDk1IDMuMzA4TDc4LjUgMTJ2NzJhMy41MDMgMy41MDMgMCAwMS0zLjMwOCAzLjQ5NUw3NSA4Ny41SDU3YTMuNTAzIDMuNTAzIDAgMDEtMy40OTUtMy4zMDhMNTMuNSA4NFYxMmEzLjUwMyAzLjUwMyAwIDAxMy4zMDgtMy40OTVMNTcgOC41aDE4eiI+PC9wYXRoPjwvc3ltYm9sPjwvZGVmcz4KICAgICAgICAgICAgPHVzZSB4bGluazpocmVmPSIjcGF1c2UtYm9sZCIgaHJlZj0iI3BhdXNlLWJvbGQiIGZpbGw9IiNGRkZGRkYiPjwvdXNlPgogICAgICAgICAgPC9zdmc+")
+    }
+    
+    .icon {
+        width: 12px;
+        display: block;
+        height: 12px;
+        background-size: contain;
+    }
+
+    .toggleAutoplay {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        background: transparent;
+    }
+
+    .desktopImage {
+        display: block;
+    }
+    
+    // Estilos para mobile
+    .mobileImage {
+        display: none;
+    }
+}
+
+@media screen and (max-width: $desktop-breakpoint) {
+    .topBanners {
+        font-size: 3.33333333vw;
+    }
+    .desktopImage {
+        display: none;
+      }
+    
+      .mobileImage {
+        display: block;
+      }
+}
