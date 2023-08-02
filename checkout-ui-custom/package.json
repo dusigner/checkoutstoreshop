@@ -11,16 +11,18 @@
     "start": "parcel src/index.html",
     "watch": "parcel watch src/index.html --out-dir ./",
     "build": "parcel build src/index.html --out-dir ./ --public-url ./ --no-source-maps --no-content-hash && rm *.map"
-    
   },
   "dependencies": {
-    "axios": "^1.4.0"
+    "axios": "^1.4.0",
+    "jquery": "^3.7.0",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/plugin-transform-destructuring": "^7.22.5",
     "@babel/plugin-transform-runtime": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
+    "@types/slick-carousel": "^1.6.37",
     "autoprefixer": "^10.4.14",
     "babel-eslint": "6.x",
     "babel-loader": "6.x",
