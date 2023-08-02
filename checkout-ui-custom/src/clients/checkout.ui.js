@@ -12,6 +12,7 @@ import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
 import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import FidelidadeCustomizations from '../components/_fidelidade'
+import TopBanners from '../components/_topBanners'
 import { rootPath } from '../components/utils/_rootPath'
 
 import {
@@ -56,6 +57,7 @@ export class CheckoutCustom {
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
     this.fidelidade = new FidelidadeCustomizations()
+    this.topBanners = new TopBanners()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1683,6 +1685,7 @@ export class CheckoutCustom {
       $(async function () {
         _this.messages.init()
         _this.bind()
+        _this.topBanners.init()
         _this.customAddressFormLoader()
         _this.rtlUI()
         _this.shippingEstimateCustom.bindEvents()
