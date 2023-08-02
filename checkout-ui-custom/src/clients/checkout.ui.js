@@ -1840,7 +1840,12 @@ export class CheckoutCustom {
         // })
         const rewardsBoot = await import('../components/rewards/_rewards')
 
-        _this.Rewards = rewardsBoot.bootstrapRewards()
+        // VERIFY IF SOME FIDELITY PARTNER DOESNT ACCEPT REWARDS, THEN DONT SHOW REWARDS INFOS
+        const doesntAcceptRewards =
+          window.localStorage.getItem('partnerRewards') === 'false'
+        if (!doesntAcceptRewards) {
+          _this.Rewards = rewardsBoot.bootstrapRewards()
+        }
 
         _this.Rewards.showObsRewards()
 
