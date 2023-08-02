@@ -424,7 +424,7 @@ export default class BespokeRefrigerator {
         })
 
       await fetch(
-        `${thePath}/api/dataentities/GB/search?_fields=service,pairing,seller`
+        `${thePath}/api/dataentities/GB/search?_fields=service,pairing,seller&an=samsungbrshop`
       )
         .then(response => response.json())
         .then(response => {

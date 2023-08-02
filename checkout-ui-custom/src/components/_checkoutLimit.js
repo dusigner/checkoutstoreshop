@@ -111,6 +111,10 @@ export default class CheckoutLimit {
   triggerWarning(itemsToUpdate) {
     try {
       const _this = this
+
+      if (!_this.limit) {
+        return
+      }
   
       return Swal.fire({
         icon: "warning",
@@ -127,9 +131,13 @@ export default class CheckoutLimit {
       return
     }
 
-    fetch(`${this.rootPath()}/api/dataentities/LS/search?_fields=limit`)
+    fetch(`${this.rootPath()}/api/dataentities/LS/search?_fields=limit&an=samsungbrshop`)
       .then(response => response.json())
       .then(response => {
+        if (!response.length) {
+          return
+        }
+
         this.limit = parseInt(response[0].limit)
         sessionStorage.skuLimit = response[0].limit
       })
