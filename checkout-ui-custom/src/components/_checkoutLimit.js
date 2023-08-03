@@ -249,6 +249,10 @@ export default class CheckoutLimit {
   }
 
   sync(orderForm) {
+    if (!this.limit) {
+      return
+    }
+
     try {
       this.mountItemsToUpdate(orderForm)
       this.updateQuantities()
