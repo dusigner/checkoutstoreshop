@@ -867,6 +867,10 @@
 			.vtex-omnishipping-1-x-leanShippingGroupList {
 				border: 0;
 				margin: 0;
+         
+        & + .vtex-omnishipping-1-x-shippingSectionTitle{
+          display: none;
+        }
 			}
 
 			.vtex-pickup-points-modal-3-x-modalDetailsBackLnk svg path,
