@@ -15,9 +15,8 @@ export default class TradeIn {
         : ''
 
     const transport = getTransport ? JSON.parse(getTransport) : ''
-
-    if (items.length && transport.length) {
-      this.checkTradeIn(items, transport)
+    if (items.length && transport.length && localStorage.getItem('transport')) {
+      await this.checkTradeIn(items, transport)
     } else if (
       !items.length &&
       transport.length &&
@@ -33,7 +32,7 @@ export default class TradeIn {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
   }
 
-  checkTradeIn(items, transport) {
+  async checkTradeIn(items, transport) {
     let totalTradeIn = 0
 
     if (transport.length) {
@@ -72,7 +71,7 @@ export default class TradeIn {
     } else if (totalTradeIn === 0) {
       $('#total-details-tradein').remove()
       $('#text-details-tradein').remove()
-      this.removeCustomDataTradeIn()
+      await this.removeCustomDataTradeIn()
 
       return
     }
@@ -141,17 +140,16 @@ export default class TradeIn {
 
   async removeCustomDataTradeIn() {
     const { orderFormId } = window.vtexjs.checkout.orderForm
-
     localStorage.removeItem('transport')
 
     await $.ajax({
       url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
-      type: 'POST',
+      type: 'DELETE',
     })
 
     await $.ajax({
       url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
-      type: 'POST',
+      type: 'DELETE',
     })
   }
 
