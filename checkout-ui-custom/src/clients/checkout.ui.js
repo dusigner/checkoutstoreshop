@@ -1497,19 +1497,18 @@ export class CheckoutCustom {
 
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
-    const accountbr = window.__RUNTIME__.account == 'samsungbr'
-    const accountbrshop = window.__RUNTIME__.account == 'samsungbrshop'
     const notMyvtex = window.location.href.indexOf('myvtex') == -1
-    if (
-      ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) ||
-      (accountbrshop && notMyvtex)
-    ) {
+    if ($('.link-logout-container').is(':visible') && notMyvtex) {
       $('#is-not-me').removeAttr('href')
       $('body').on('click', '#is-not-me', function () {
-        const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId}`
+        const returnUrl = `${
+          window.vtex.endpointAPI.split('/api')[0]
+        }/checkout/changeToAnonymousUser/${
+          window.vtexjs.checkout.orderForm.orderFormId
+        }`
 
         window.location.assign(
-          `https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbrshop&returnUrl=${returnUrl}`
+          `${window.vtex.endpointAPI}/pub/logout?scope=${window.vtex.accountName}&returnUrl=${returnUrl}`
         )
       })
     }
