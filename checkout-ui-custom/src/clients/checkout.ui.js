@@ -1841,7 +1841,7 @@ export class CheckoutCustom {
 
         // VERIFY IF SOME FIDELITY PARTNER DOESNT ACCEPT REWARDS, THEN DONT SHOW REWARDS INFOS
         const doesntAcceptRewards =
-          window.localStorage.getItem('partnerRewards') === 'false'
+          window.sessionStorage.getItem('partnerRewards') === 'false'
         if (!doesntAcceptRewards) {
           _this.Rewards = rewardsBoot.bootstrapRewards()
         }
