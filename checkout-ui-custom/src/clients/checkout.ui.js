@@ -273,22 +273,30 @@ export class CheckoutCustom {
     try {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-
         if (_trElem.find('td.product-name').find('.more-info').length === 1) {
           return
         }
 
+        const logisticsInfoData = orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' && orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+                                  ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span>`
+                                  : orderForm.shippingData.logisticsInfo[i].selectedSla === null
+                                  ? '' 
+                                  : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
+
         const refId = orderForm.items[i].refId || ''
         const { detailUrl } = orderForm.items[i]
         const isInstallService = detailUrl.includes('/install-service/p')
-        const isSamsungCare = detailUrl.includes('/samsung-care-/p')
+        const isSamsungCare = detailUrl.includes('/samsung-care-')
 
         const shippingText =
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
+        
+
         const moreInfoHtml = `
-            <div class="more-info">
+            <div class="more-info ${isInstallService || isSamsungCare ? "isServices" : ""}">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
               <p class="instantvoucher">
                 <a class="selecaovoucher" href='${
@@ -1979,3 +1987,96 @@ export class CheckoutCustom {
     }
   }
 }
+
+
+
+
+
+
+
+[
+  {
+      "itemIndex": 0,
+      "selectedSla": "Normal",
+      "selectedDeliveryChannel": "delivery",
+      "addressId": "6c3dcdcfb2f54c599f3f3e1d90f6966b",
+      "shipsTo": [
+          "BRA"
+      ],
+      "itemId": "4875"
+  },
+  {
+      "itemIndex": 1,
+      "selectedSla": "Normal",
+      "selectedDeliveryChannel": "delivery",
+      "addressId": "6c3dcdcfb2f54c599f3f3e1d90f6966b",
+      "shipsTo": [
+          "BRA"
+      ],
+      "itemId": "4718"
+  },
+  {
+      "itemIndex": 2,
+      "selectedSla": "Ship to Store (CSPPinheiros)",
+      "selectedDeliveryChannel": "pickup-in-point",
+      "addressId": "3382353277232",
+      "slas": [
+          {
+              "id": "Ship to Store (CSPPinheiros)",
+              "deliveryChannel": "pickup-in-point",
+              "name": "Ship to Store (CSPPinheiros)",
+              "deliveryIds": [
+                  {
+                      "courierId": "D2C_SP Capital_BOPIS_CAJ_MX",
+                      "warehouseId": "S823-FC3A-Virtual",
+                      "dockId": "CSP_BOPIS_SP_ALL",
+                      "courierName": "D2C Phase 4 - CSP_BOPIS -  Origin: SP Capital MX",
+                      "quantity": 1,
+                      "kitItemDetails": []
+                  }
+              ],
+              "shippingEstimate": "3bd",
+              "shippingEstimateDate": null,
+              "lockTTL": null,
+              "availableDeliveryWindows": [],
+              "deliveryWindow": null,
+              "price": 0,
+              "listPrice": 3890,
+              "tax": 0,
+              "pickupStoreInfo": {
+                  "isPickupStore": true,
+                  "friendlyName": "Centro de Serviço Pinheiros - Avenida Pedroso de Morais, 670 - São Paulo",
+                  "address": {
+                      "addressType": "pickup",
+                      "receiverName": null,
+                      "addressId": "CSPPinheiros",
+                      "isDisposable": true,
+                      "postalCode": "05420-001",
+                      "city": "São Paulo",
+                      "state": "SP",
+                      "country": "BRA",
+                      "street": "Avenida Pedroso de Morais",
+                      "number": "670",
+                      "neighborhood": "Pinheiros",
+                      "complement": "",
+                      "reference": null,
+                      "geoCoordinates": [
+                          -46.69089,
+                          -23.56421
+                      ]
+                  },
+                  "additionalInfo": "",
+                  "dockId": "CSP_BOPIS_SP_ALL"
+              },
+              "pickupPointId": "1_CSPPinheiros",
+              "pickupDistance": 10.852076530456543,
+              "polygonName": "",
+              "transitTime": "2bd"
+          }
+      ],
+      "shipsTo": [
+          "BRA"
+      ],
+      "itemId": "3511"
+  }
+]

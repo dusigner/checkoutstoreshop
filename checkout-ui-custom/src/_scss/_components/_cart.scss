@@ -1774,3 +1774,22 @@ button#find-pickup-link:hover {
 p.input.ship-receiverName {
   width: 100%;
 }
+
+.shipping-data {
+  color: #000;
+  font-size: 12px;
+  span {
+    font-weight: 700;
+    color: #006BEA;
+  }
+}
+
+.ref-id {
+  margin-bottom: 0;
+}
+
+.isServices {
+  .shipping-data {
+    display: none;
+  }
+}
