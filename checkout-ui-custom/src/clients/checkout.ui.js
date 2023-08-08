@@ -1677,7 +1677,7 @@ export class CheckoutCustom {
   start() {
     const _this = this
     try {
-      console.log('Checkout is already started!')
+      console.log('Checkout is already started!!')
 
       $(async function () {
         _this.messages.init()
