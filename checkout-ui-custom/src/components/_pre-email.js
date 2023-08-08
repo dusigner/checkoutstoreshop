@@ -89,7 +89,7 @@ export default class CustomPreEmail {
         if (domain !== undefined || domain !== null) {
           setTimeout(function () {
             fetch(
-              `${_this.rootPath()}/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain`,
+              `${_this.rootPath()}/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain&an=samsungbrshop`,
               {
                 type: 'GET',
                 headers: {
