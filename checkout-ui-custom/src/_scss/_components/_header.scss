@@ -28,11 +28,10 @@ body {
     background-color: #fff;
     color: #000;
     box-sizing: border-box;
-
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 200;
+    z-index: 9999;
 
     .container {
       display: grid;
