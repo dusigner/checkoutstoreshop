@@ -50,6 +50,14 @@ export default class CSP {
         document.querySelector('.step.shipping-data .accordion-heading .accordion-toggle').insertAdjacentHTML('afterend','<p class="vtex-omnishipping-1-x-shippingSectionTitle customTitleStep1">1. Escolher opções de retirada</p>')
       }
     }
+
+    if(compareResult.deliveryOption == null) {
+      let element = document.querySelector('.shp-info-pickup-identified + .vtex-omnishipping-1-x-btnDelivery')
+      document.querySelector('#shipping-data').classList.add("pickup-and-delivery-class")
+      if(element) {
+        element.click()
+      }
+    }
   }
 
   init(orderForm) {
