@@ -136,8 +136,18 @@ export default class ShippingEstimateCustom {
         td.shipping-date,
         .srp-shipping-current-single
       `).each(function () {
-        const [logisticsInfo] =
-          window.vtexjs.checkout.orderForm.shippingData.logisticsInfo
+        const orderForm = window.vtexjs.checkout.orderForm
+        const shippingData = orderForm.shippingData
+
+        if (!shippingData) {
+          return
+        }
+
+        if (!shippingData.logisticsInfo.length) {
+          return
+        }
+
+        const [logisticsInfo] = shippingData.logisticsInfo
 
         const availableSlas = logisticsInfo.slas
 
