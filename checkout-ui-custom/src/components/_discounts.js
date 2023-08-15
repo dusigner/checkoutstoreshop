@@ -176,6 +176,8 @@ export default class Discounts {
       return
     }
 
+    const hasDiscountWithTitle = _this.discounts.some(discount => discount.title)
+
     // Descontos sem títulos cadastrados
     $totalizers.each(function(_, element) {
       const $totalizer = $(element)
@@ -183,7 +185,7 @@ export default class Discounts {
 
       const $trOtherDiscounts = _this._discountTemplate({ 
         identifier: 'other-discounts',
-        title: _this.discounts.length ? 'Outros' : 'Descontos',
+        title: hasDiscountWithTitle ? 'Outros' : 'Descontos',
         value: otherDiscountsTotals
       })
 
