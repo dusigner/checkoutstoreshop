@@ -1793,3 +1793,16 @@ p.input.ship-receiverName {
     display: none;
   }
 }
+
+.cart-more-options {
+  .srp-content {
+    h2.srp-main-title {
+      font-size: 0;
+      &::after {
+        content: "Opções de Entrega";
+        display: block;
+        font-size: 20px;
+      }
+    }
+  }
+}
