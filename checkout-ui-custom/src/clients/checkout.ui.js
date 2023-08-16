@@ -1133,6 +1133,8 @@ export class CheckoutCustom {
     }
   }
   async update(orderForm) {
+    const _this = this
+
     this.ApplyCoupon(orderForm)
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
@@ -1177,7 +1179,7 @@ export class CheckoutCustom {
 
     const updateDebounce = debounce(function () {
       if (orderForm.marketingData) {
-        this.showCustomMsgCoupon(orderForm)
+        _this.showCustomMsgCoupon(orderForm)
       }
     }, 250)
 
@@ -1706,6 +1708,7 @@ export class CheckoutCustom {
         $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
           _this.samsungCarePlus.sync(orderForm)
           _this.CheckoutLimit.sync(orderForm)
+          _this.installationService.sync(orderForm)
         })
       })
       function trackLogin(accessKeyURL) {
