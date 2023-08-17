@@ -242,3 +242,7 @@
     width: 95%;
   }
 }
+
+body[class*="samsungbrshopapp-"] #render-cartman {
+  display: none !important;
+}
