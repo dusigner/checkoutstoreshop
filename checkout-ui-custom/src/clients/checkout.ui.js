@@ -1655,6 +1655,12 @@ export class CheckoutCustom {
   }
 
   init() {
+            
+    if(window.location && this.orderForm){
+      const hash = window.location.hash
+      this.handleOrderFromEndless(hash, this.orderForm)
+    }
+
     if (window.vtex) {
       window.vtex.showInstallmentsPreviewValue = true
     }
@@ -1980,4 +1986,26 @@ export class CheckoutCustom {
       general()
     }
   }
+
+  /**
+   * Essa função é responsável por limpar os dados pessoais (clientProfielData).
+   * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar 
+   * para o cliente.
+   */
+  handleOrderFromEndless(hash, orderForm){
+    if(hash !== '#/cart') return
+
+    const isOrderFromEndless = orderForm.customData.customApps.some(customApp => customApp.id === 'endlessaisle')
+    if(!isOrderFromEndless) return
+
+    if(!orderForm.clientProfileData) return
+
+    if(!orderForm.clientProfileData.email) return
+
+    fetch(`${rootPath()}/checkout/changeToAnonymousUser/${orderForm.orderFormId}`)
+    .then(() => {
+      location.reload()
+    })
+  }
+
 }
