@@ -70,10 +70,11 @@ export default class Discounts {
           rateAndBenefitsIdentifierId: id
         })
         
+        const isFrete = name.toLowerCase().includes(' frete') || name.toLowerCase().includes(" (frete")
         const title = additionalInfo ? additionalInfo.title : undefined
         const currentDiscount = acc.find(discount => discount.identifier === id)
 
-        if (!currentDiscount && discountValue) {
+        if (!currentDiscount && discountValue && !isFrete) {
           const discount = {
             identifier: id,
             name,
