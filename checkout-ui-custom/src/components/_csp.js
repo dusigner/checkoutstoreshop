@@ -31,10 +31,11 @@ export default class CSP {
 
     const compareResult = this.checkSelectedDeliveryChannelEquality(logistics)
 
-    // console.log('result validade', compareResult)
+    console.log('result validade', compareResult)
 
     if(compareResult.deliveryOption == 'delivery'){
       document.querySelector('.box-step.shipping-summary-placeholder') && document.querySelector('.box-step.shipping-summary-placeholder').classList.add("delivery-class")
+      document.querySelector('#shipping-data').classList.remove("pickup-and-delivery-class")
       document.querySelector('.pickup-in-point-class') && document.querySelector('.box-step.shipping-summary-placeholder').classList.remove("pickup-in-point-class")
       if(document.querySelector('.customTitleStep1')){
         document.querySelector('.customTitleStep1').style.display = 'none'
@@ -43,6 +44,7 @@ export default class CSP {
     }
     if(compareResult.deliveryOption == 'pickup-in-point'){
       document.querySelector('.delivery-class') && document.querySelector('.box-step.shipping-summary-placeholder').classList.remove("delivery-class")
+      document.querySelector('#shipping-data').classList.remove("pickup-and-delivery-class")
       document.querySelector('.box-step.shipping-summary-placeholder') && document.querySelector('.box-step.shipping-summary-placeholder').classList.add("pickup-in-point-class")
       if(document.querySelector('.customTitleStep1')){
         document.querySelector('.customTitleStep1').style.display = 'show'
@@ -53,6 +55,8 @@ export default class CSP {
 
     if(compareResult.deliveryOption == null) {
       let element = document.querySelector('.shp-info-pickup-identified + .vtex-omnishipping-1-x-btnDelivery')
+      document.querySelector('.pickup-in-point-class') && document.querySelector('.box-step.shipping-summary-placeholder').classList.remove("pickup-in-point-class")
+      document.querySelector('.delivery-class') && document.querySelector('.box-step.shipping-summary-placeholder').classList.remove("delivery-class")
       document.querySelector('#shipping-data').classList.add("pickup-and-delivery-class")
       if(element) {
         element.click()
