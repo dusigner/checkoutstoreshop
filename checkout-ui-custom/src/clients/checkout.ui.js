@@ -12,8 +12,8 @@ import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
 import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import FidelidadeCustomizations from '../components/_fidelidade'
-import TopBanners from '../components/_topBanners'
 import Discounts from '../components/_discounts'
+// import TopBanners from '../components/_topBanners'
 import { rootPath } from '../components/utils/_rootPath'
 
 import {
@@ -58,7 +58,7 @@ export class CheckoutCustom {
     this.messages = new Messages()
     this.discounts = new Discounts()
     this.fidelidade = new FidelidadeCustomizations()
-    this.topBanners = new TopBanners()
+    // this.topBanners = new TopBanners()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1150,6 +1150,26 @@ export class CheckoutCustom {
       }
     })
   }
+
+  scrollToPaymentCard(orderForm) {
+    const paymentLength = orderForm.paymentData.payments.length;
+    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem;
+  
+    if (paymentLength == 1 && paymentSystem == 2) {
+        const paymentCardsGroup = document.querySelector('.payment-group-item-cards');
+      
+        if (paymentCardsGroup) {
+            const offsetTop = paymentCardsGroup.offsetTop;
+
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    }
+}
+
+
   defaultPaymentMethod() {
     try {
       // Default Payment Method: PIX
@@ -1501,7 +1521,7 @@ export class CheckoutCustom {
       $(async function () {
         _this.messages.init()
         _this.bind()
-        _this.topBanners.init()
+        // _this.topBanners.init()
         _this.customAddressFormLoader()
         _this.rtlUI()
         _this.shippingEstimateCustom.bindEvents()
@@ -1523,6 +1543,7 @@ export class CheckoutCustom {
         $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
           _this.samsungCarePlus.sync(orderForm)
           _this.CheckoutLimit.sync(orderForm)
+          _this.installationService.sync(orderForm)
         })
       })
       function trackLogin(accessKeyURL) {
@@ -1689,6 +1710,7 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
+          _this.scrollToPaymentCard(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
