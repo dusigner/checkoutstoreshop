@@ -148,12 +148,12 @@ export default class TradeIn {
       window.vtexjs.checkout.sendAttachment('openTextField', { value: null })
       await $.ajax({
         url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
-        type: 'DELETE',
+        type: 'POST',
       })
   
       await $.ajax({
         url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
-        type: 'DELETE',
+        type: 'POST',
       })
     }
   }

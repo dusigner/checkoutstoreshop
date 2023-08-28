@@ -11,8 +11,7 @@ import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
 import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
-import FidelidadeCustomizations from '../components/_fidelidade'
-// import TopBanners from '../components/_topBanners'
+import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 
 import {
@@ -54,6 +53,7 @@ export class CheckoutCustom {
     this.SendAttachment = new SendAttachment()
     this.hasSelectedDefaultPaymentMethod = false
     this.CheckoutLimit = new CheckoutLimit()
+    this.CSP = new CSP()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
     this.fidelidade = new FidelidadeCustomizations()
@@ -275,22 +275,30 @@ export class CheckoutCustom {
     try {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-
         if (_trElem.find('td.product-name').find('.more-info').length === 1) {
           return
         }
 
+        const logisticsInfoData = orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' && orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+                                  ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br /> Até ${orderForm.shippingData.logisticsInfo[i].slas[0].shippingEstimate.replace('bd', '')} dias úteis após a confirmação do pagamento`
+                                  : orderForm.shippingData.logisticsInfo[i].selectedSla === null
+                                  ? '' 
+                                  : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
+
         const refId = orderForm.items[i].refId || ''
         const { detailUrl } = orderForm.items[i]
         const isInstallService = detailUrl.includes('/install-service/p')
-        const isSamsungCare = detailUrl.includes('/samsung-care-/p')
+        const isSamsungCare = detailUrl.includes('/samsung-care-')
 
         const shippingText =
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
+        
+
         const moreInfoHtml = `
-            <div class="more-info">
+            <div class="more-info ${isInstallService || isSamsungCare ? "isServices" : ""}">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
               <p class="instantvoucher">
                 <a class="selecaovoucher" href='${
@@ -1168,6 +1176,7 @@ export class CheckoutCustom {
     this.wrapSummary()
     this.couponInfo(orderForm)
     this.CheckoutLimit.lockIncrementButtons(orderForm)
+    this.CSP.init(orderForm)
     this.samsungCarePlus.samsungCareModalTrigger()
     this.samsungCarePlus.hideQuantityButtons(orderForm)
     this.installationService.init()
@@ -1335,6 +1344,26 @@ export class CheckoutCustom {
       }
     })
   }
+
+  scrollToPaymentCard(orderForm) {
+    const paymentLength = orderForm.paymentData.payments.length;
+    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem;
+  
+    if (paymentLength == 1 && paymentSystem == 2) {
+        const paymentCardsGroup = document.querySelector('.payment-group-item-cards');
+      
+        if (paymentCardsGroup) {
+            const offsetTop = paymentCardsGroup.offsetTop;
+
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    }
+}
+
+
   defaultPaymentMethod() {
     try {
       // Default Payment Method: PIX
@@ -1677,11 +1706,12 @@ export class CheckoutCustom {
     if (this.orderForm) {
       this.update(this.orderForm)
       this.paymentBuilder(this.orderForm)
+      this.CSP.init(this.orderForm)
     }
 
     this.fixLabels()
     this.CheckoutLimit.init()
-    this.fidelidade.init()
+    
   }
 
   start() {
@@ -1881,6 +1911,7 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
+          _this.scrollToPaymentCard(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
