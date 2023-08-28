@@ -4,24 +4,66 @@
 export default class InstallationService {
   constructor() {
     this.INSTALLATION_URL = '/install-service/p'
+    this.error = null
   }
 
-  init() {
+  removeInstallations(items) {
     try {
-      const { items } = window.vtexjs.checkout.orderForm
-      const hasInstallation = this.hasInstallationService(items)
+      const installationServices = this.getInstallationItems(items)
+  
+      if (!installationServices.length) {
+        return
+      }
+  
+      const itemsToRemove = installationServices.reduce((acc, currentInstallation) => {
+        const hasAttachedItem = this._findAttachedItem(currentInstallation, items)
 
-      if (!hasInstallation) return
+        if (!hasAttachedItem) {
+          acc.push({
+            index: items.indexOf(currentInstallation),
+            quantity: 0
+          })
+        }
+  
+        return acc
+      }, [])
 
-      this.validateInstallationService(items)
-    } catch (e) {
-      console.error('installationService error', e)
+      // prevent infinite loop
+      if (this.error) {
+        return
+      }
+
+      if (itemsToRemove.length) {
+        window.cart.loadingItem(true)
+  
+        vtexjs.checkout.removeItems(itemsToRemove, null, false).done(function() {
+          window.cart.loadingItem(false)
+        }).fail(function() {
+          window.cart.loadingItem(false)
+          this.error = true // prevent infinite loop
+        })
+      }
+    } catch (err) {
+      console.error(`Não foi possível remover items de instalação: ${err}`)
     }
   }
 
-  validateInstallationService(items) {
+  _findAttachedItem(installationItem, items) {
+    const { attachments } = installationItem
+
+    const attachmentItem = attachments.find(attachment => (
+      items.some(item => item.refId === attachment.content.refId)
+    ))
+
+    return attachmentItem
+  }
+
+  getInstallationItems(items) {
+    return items.filter((item) => item.detailUrl.includes(this.INSTALLATION_URL))
+  }
+
+  addClassToInstallationItems(items) {
     const installations = this.getInstallationItems(items)
-    const relatedItems = this.getRelatedInstallationItems(items)
 
     installations.forEach(installation => {
       if ($(`.product-item[data-sku="${installation.id}"] .item-link-remove`)) {
@@ -30,70 +72,33 @@ export default class InstallationService {
         )
       }
     })
+  }
 
-    // Caso a quantidade de itens e a quantidade de instalações sejam iguais então não falta items.
-    if (installations.length === relatedItems.length) return
+  sync(orderForm) {
+    try {
+      if (!orderForm) {
+        return
+      }
+  
+      const { items } = orderForm
+  
+      // empty carty
+      if (!items || !items.length) {
+        return
+      }
 
-    // Verifica se removeu um produto. Caso sim, remove a instalação dele.
-    if (installations.length > relatedItems.length) {
-      const intallationsToRemove = installations.filter(installation => {
-        const relatedItemToInstallation = relatedItems.find(
-          item => item.refId === installation.attachments[0].content.refId
-        )
-
-        if (relatedItemToInstallation) return false
-
-        return true
-      })
-
-      this.removeInstallations(intallationsToRemove)
+      this.removeInstallations(items)
+    } catch (err) {
+      console.error(`Não foi possível sincronizar items de instalação: ${err}`)
     }
   }
 
-  removeInstallations(installations) {
-    installations.forEach(installation => {
-      const removeBtn = $(
-        `tr.product-item[data-sku="${installation.id}"] td.item-remove a`
-      )
-
-      if (removeBtn.length) {
-        removeBtn[0].click()
-        removeBtn[0].remove()
-      }
-    })
-  }
-
-  // Encontrar as instalações.
-  getInstallationItems(items) {
-    return items.filter(item => this.isInstallationService(item))
-  }
-
-  // Encontrar os produtos que estão relacionados com as instalações.
-  getRelatedInstallationItems(items) {
-    const installationItems = this.getInstallationItems(items)
-
-    const relatedItems = []
-
-    installationItems.forEach(installationitem => {
-      const related = items.find(
-        item => item.refId === installationitem.attachments[0].content.refId
-      )
-
-      if (related) {
-        relatedItems.push(related)
-      }
-    })
-
-    return relatedItems
-  }
-
-  hasInstallationService(items) {
-    return !!items.find(
-      item => this.isInstallationService(item) && item.attachments.length
-    )
-  }
-
-  isInstallationService(item) {
-    return item.detailUrl.includes(this.INSTALLATION_URL) && item.attachments.length
+  init() {
+    try {
+      const { items } = window.vtexjs.checkout.orderForm
+      this.addClassToInstallationItems(items)
+    } catch (e) {
+      console.error('installationService error', e)
+    }
   }
 }

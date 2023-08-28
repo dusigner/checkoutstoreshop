@@ -47,7 +47,6 @@ export default class ShippingEstimateCustom {
     const _this = this
     const currentDate = new Date()
     const shippingEstimate = new Date()
-
     shippingEstimate.setDate(this.getBusinessDays(days))
 
     const holidays = this.holidays.filter((holiday) => {
@@ -56,17 +55,17 @@ export default class ShippingEstimateCustom {
 
       const isWeekend = holidayDate.getDay() === 0 || holidayDate.getDay() === 6
   
-      return holidayStartDate >= currentDate && holidayStartDate <= Date.parse(shippingEstimate) && !isWeekend
+      return holidayStartDate >= Date.parse(currentDate) && holidayStartDate <= Date.parse(shippingEstimate) && !isWeekend
     })
 
     let daysWithHolidays = days + holidays.length
-    let businessDays = this.getBusinessDays(daysWithHolidays)
+    let businessDaysWithHolidays = this.getBusinessDays(daysWithHolidays)
     let aditionalDays = 0
     
     // recursive function
     function addOneMoreDayIfHoliday() {
       const d = new Date()
-      d.setDate(businessDays)
+      d.setDate(businessDaysWithHolidays)
         
       const isHoliday = _this.holidays.some(holiday => (
         new Date(holiday.startDate).toLocaleDateString() === d.toLocaleDateString()
@@ -74,21 +73,30 @@ export default class ShippingEstimateCustom {
 
       if (isHoliday) {
         aditionalDays++
-        businessDays = _this.getBusinessDays(daysWithHolidays + aditionalDays)
+        businessDaysWithHolidays = this.getBusinessDays(daysWithHolidays + aditionalDays)
         addOneMoreDayIfHoliday()
       }
     }
 
     addOneMoreDayIfHoliday()
-    shippingEstimate.setDate(businessDays)
+    if (holidays.length || aditionalDays) {
+      const shippingEstimateWithHolidays = new Date()
+      shippingEstimateWithHolidays.setDate(businessDaysWithHolidays)
+      
+      return shippingEstimateWithHolidays
+    }
 
     return shippingEstimate
   }
 
   addBusinessDays(days, lang = window.i18n.options.lng) {
+    const currentDate = new Date()
     const shippingEstimate = this.getShippingEstimate(days)
+
+    const isSameYear = shippingEstimate.getFullYear() === currentDate.getFullYear()
+    const isSameMonth = isSameYear && shippingEstimate.getMonth() === currentDate.getMonth()
     
-    if ((shippingEstimate.getDate() - new Date().getDate()) === 1) {
+    if (isSameMonth && (shippingEstimate.getDate() - currentDate.getDate()) === 1) {
       return this.lang.tomorrowLabel || 'Amanhã'
     }
 
@@ -128,8 +136,18 @@ export default class ShippingEstimateCustom {
         td.shipping-date,
         .srp-shipping-current-single
       `).each(function () {
-        const [logisticsInfo] =
-          window.vtexjs.checkout.orderForm.shippingData.logisticsInfo
+        const orderForm = window.vtexjs.checkout.orderForm
+        const shippingData = orderForm.shippingData
+
+        if (!shippingData) {
+          return
+        }
+
+        if (!shippingData.logisticsInfo.length) {
+          return
+        }
+
+        const [logisticsInfo] = shippingData.logisticsInfo
 
         const availableSlas = logisticsInfo.slas
 

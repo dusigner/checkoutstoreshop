@@ -140,8 +140,10 @@ export default class SendAttachment {
       window.vtexjs.checkout.sendAttachment('openTextField', {
         value: `${obsToOpenTextField}`,
       })
+      localStorage.setItem('tradeInCustom', `${obsToOpenTextField}`)
     } else {
       window.vtexjs.checkout.sendAttachment('openTextField', { value: null })
+      localStorage.setItem('tradeInCustom', null)
     }
 
     window.vtexjs.checkout.getOrderForm()

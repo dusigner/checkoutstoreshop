@@ -141,18 +141,21 @@ export default class TradeIn {
 
   async removeCustomDataTradeIn() {
     const { orderFormId } = window.vtexjs.checkout.orderForm
-
-    localStorage.removeItem('transport')
-
-    await $.ajax({
-      url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
-      type: 'POST',
-    })
-
-    await $.ajax({
-      url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
-      type: 'POST',
-    })
+    const openTextField = localStorage.getItem('tradeInCustom')
+    if(openTextField !== null || openTextField !== "null"){
+      localStorage.removeItem('tradeInCustom')
+      localStorage.removeItem('transport')
+      window.vtexjs.checkout.sendAttachment('openTextField', { value: null })
+      await $.ajax({
+        url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
+        type: 'POST',
+      })
+  
+      await $.ajax({
+        url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
+        type: 'POST',
+      })
+    }
   }
 
   async validateTradeinCustomData() {

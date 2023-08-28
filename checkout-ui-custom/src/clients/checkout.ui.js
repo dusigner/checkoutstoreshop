@@ -56,7 +56,9 @@ export class CheckoutCustom {
     this.CSP = new CSP()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
-    
+    this.fidelidade = new FidelidadeCustomizations()
+    // this.topBanners = new TopBanners()
+
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
     }
@@ -284,19 +286,18 @@ export class CheckoutCustom {
         const isSamsungCare = detailUrl.includes('/samsung-care-/p')
 
         const shippingText =
-          isInstallService || isSamsungCare
-            ? 'Após a entrega do produto'
-            : ''
+          isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
         const moreInfoHtml = `
             <div class="more-info">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
               <p class="estimate-shipping">${shippingText}</p>
               <p class="instantvoucher">
-                <a class="selecaovoucher" href='${detailUrl.split('/p')[0] +
-          '/instant-voucher?skuId=' +
-          orderForm.items[i].id
-          }'>Voltar à seleção de cupom instantâneo</a>
+                <a class="selecaovoucher" href='${
+                  detailUrl.split('/p')[0] +
+                  '/instant-voucher?skuId=' +
+                  orderForm.items[i].id
+                }'>Voltar à seleção de cupom instantâneo</a>
               </p>
             </div>
           `
@@ -396,16 +397,16 @@ export class CheckoutCustom {
         const name = discount.ratesAndBenefitsIdentifier
           ? discount.ratesAndBenefitsIdentifier.name
           : discount.name
-            ? discount.name
-            : ''
+          ? discount.name
+          : ''
 
         const total = itemsDiscounts.reduce(function (acc, current) {
           const isDiscountInCash = current.ratesAndBenefitsIdentifier
             ? current.ratesAndBenefitsIdentifier.name
 
-              .toLowerCase()
-              .includes('desconto à vista') &&
-            name.toLowerCase().includes('desconto à vista')
+                .toLowerCase()
+                .includes('desconto à vista') &&
+              name.toLowerCase().includes('desconto à vista')
             : ''
 
           if (current.name === discount.name || isDiscountInCash) {
@@ -439,8 +440,20 @@ export class CheckoutCustom {
               <td style="margin-left: 10px;">Desconto ${paymentSystemName}</td>
               <td>
                 <span style="font-weight: 700">${formatNegativeValue(
-            formatCurrencyBRL(discount.value)
-          )}</span>
+                  formatCurrencyBRL(discount.value)
+                )}</span>
+              </td>
+            </tr>`
+        }
+
+        if (discount.name.toLowerCase().includes(' b5q5 hand raiser')) {
+          return `
+            <tr class="discount garanteed-tradein" style="height: 23px;">
+              <td style="margin-left: 10px;">Desc. Registro Lançamento</td>
+              <td>
+                <span style="font-weight: 700" >${formatNegativeValue(
+                  formatCurrencyBRL(discount.value)
+                )}</span>
               </td>
             </tr>`
         }
@@ -451,8 +464,8 @@ export class CheckoutCustom {
                 <td style="margin-left: 10px;">Desc. Cupom Instantâneo</td>
                 <td>
                   <span style="font-weight: 700" >${formatNegativeValue(
-            formatCurrencyBRL(discount.value)
-          )}</span>
+                    formatCurrencyBRL(discount.value)
+                  )}</span>
                 </td>
               </tr>`
         }
@@ -463,19 +476,24 @@ export class CheckoutCustom {
                 <td style="margin-left: 10px;">Desc. Samsung Care+</td>
                 <td>
                   <span style="font-weight: 700" >${formatNegativeValue(
-            formatCurrencyBRL(discount.value)
-          )}</span>
+                    formatCurrencyBRL(discount.value)
+                  )}</span>
                 </td>
               </tr>`
         }
-        if (discount.name.toLowerCase().includes('discount@manualprice') && window.vtexjs.checkout.orderForm.customData.customApps.some(app => app.id == 'eco_troca')) {
+        if (
+          discount.name.toLowerCase().includes('discount@manualprice') &&
+          window.vtexjs.checkout.orderForm.customData.customApps.some(
+            app => app.id == 'eco_troca'
+          )
+        ) {
           return `
               <tr class="discount eco_troca" style="height: 23px;">
                 <td style="margin-left: 10px;">Desc. Eco Troca</td>
                 <td>
                   <span style="font-weight: 700" >${formatNegativeValue(
-            formatCurrencyBRL(discount.value)
-          )}</span>
+                    formatCurrencyBRL(discount.value)
+                  )}</span>
                 </td>
               </tr>`
         }
@@ -485,8 +503,8 @@ export class CheckoutCustom {
               <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
               <td>
                 <span style="font-weight: 700" >${formatNegativeValue(
-            formatCurrencyBRL(discount.value)
-          )}</span>
+                  formatCurrencyBRL(discount.value)
+                )}</span>
               </td>
             </tr>`
         }
@@ -497,8 +515,8 @@ export class CheckoutCustom {
               <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
               <td>
                 <span style="font-weight: 700" >${formatNegativeValue(
-            formatCurrencyBRL(discount.value)
-          )}</span>
+                  formatCurrencyBRL(discount.value)
+                )}</span>
               </td>
             </tr>`
         }
@@ -515,8 +533,8 @@ export class CheckoutCustom {
               <td style="margin-left: 10px;">Desc. Cupom</td>
               <td>
                 <span style="font-weight: 700" >${formatNegativeValue(
-          formatCurrencyBRL(discount.value)
-        )}</span>
+                  formatCurrencyBRL(discount.value)
+                )}</span>
               </td>
             </tr>`
       })
@@ -602,16 +620,16 @@ export class CheckoutCustom {
         accumulator +
         (item.priceTags.length
           ? item.priceTags.filter(_pricetag => {
-            return _pricetag.ratesAndBenefitsIdentifier
-              ? _pricetag.ratesAndBenefitsIdentifier.matchedParameters[
-              'couponCode@Marketing'
-              ] === _coupon
-              : 0
-          }).length
+              return _pricetag.ratesAndBenefitsIdentifier
+                ? _pricetag.ratesAndBenefitsIdentifier.matchedParameters[
+                    'couponCode@Marketing'
+                  ] === _coupon
+                : 0
+            }).length
           : 0)
       )
     },
-      0)
+    0)
 
     if (!_coupon || couponItemsCount > 0) {
       $('.coupon-applied-message').remove()
@@ -858,13 +876,15 @@ export class CheckoutCustom {
     const tooltip = `
       <div class="vcustom-customTax-resume">
        ${customtax
-        .map(
-          i =>
-            `<p class="vcustom-customTax-resume__i"><span class="n">${i.name
-            }</span><span class="v">${orderForm.storePreferencesData.currencySymbol
-            } ${(i.value / 100).toFixed(2)}</span></p>`
-        )
-        .join('')}
+         .map(
+           i =>
+             `<p class="vcustom-customTax-resume__i"><span class="n">${
+               i.name
+             }</span><span class="v">${
+               orderForm.storePreferencesData.currencySymbol
+             } ${(i.value / 100).toFixed(2)}</span></p>`
+         )
+         .join('')}
       </div>
     `
 
@@ -900,8 +920,9 @@ export class CheckoutCustom {
 
       const _summaryOrder = `
         <div class="summaryOrder">
-          <h6>Resumo do pedido (${itemsQuantity} ${quantitySelectedItems.length <= 1 ? 'item' : 'itens'
-        })</h6>
+          <h6>Resumo do pedido (${itemsQuantity} ${
+        quantitySelectedItems.length <= 1 ? 'item' : 'itens'
+      })</h6>
           <ul>
             ${listItems}
           </ul>
@@ -953,7 +974,8 @@ export class CheckoutCustom {
           .prepend(
             `
           <div class="v-custom-quantity-price vqc-ldelem">
-            <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${free ? 'Grátis' : totalValue
+            <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${
+              free ? 'Grátis' : totalValue
             }</p>
           </div>
           `
@@ -978,24 +1000,24 @@ export class CheckoutCustom {
           g => g.provider === 'SSG_REWARDS'
         )
 
-        let discount = 0;
+        let discount = 0
 
-        if(
+        if (
           giftRewards.length &&
           giftRewards[0].inUse &&
           giftRewards[0].value > 0
         ) {
           discount = giftRewards[0].value
         }
-   
+
         if (paymentAmountTotal) {
           const _component = `
           <div class="cart-total" style="margin-bottom: 20px; color: #000">
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
               <p class="estimate-shipping">${formatCurrencyBRL(
-            paymentAmountTotal - discount
-          )}</p>
+                paymentAmountTotal - discount
+              )}</p>
             </div>
           </div>
         `
@@ -1031,7 +1053,8 @@ export class CheckoutCustom {
         if (_this.lastOrderFormTotalPrice !== orderForm.value) {
           _this.lastOrderFormTotalPrice = orderForm.value
           _this.termPrice = await fetch(
-            `${rootPath()}/api/checkout/pub/orderForm/${orderForm.orderFormId
+            `${rootPath()}/api/checkout/pub/orderForm/${
+              orderForm.orderFormId
             }/installments?paymentSystem=2`
           )
             .then(response => response.json())
@@ -1062,15 +1085,16 @@ export class CheckoutCustom {
                 <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
                   <p class="ref-id">Total</p>
                   <p class="estimate-shipping">${formatCurrencyBRL(
-          inCashPrice
-        )}</p>
+                    inCashPrice
+                  )}</p>
                 </div>
-                ${percentDiscount > 0
-            ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
+                ${
+                  percentDiscount > 0
+                    ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
                         <p>(${percentDiscount}% de desconto)</p>
                       </div>`
-            : ''
-          }
+                    : ''
+                }
 
                 <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p class="gross-total">
@@ -1109,6 +1133,8 @@ export class CheckoutCustom {
     }
   }
   async update(orderForm) {
+    const _this = this
+
     this.ApplyCoupon(orderForm)
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
@@ -1153,9 +1179,8 @@ export class CheckoutCustom {
     await this.imgEmptyCart()
 
     const updateDebounce = debounce(function () {
-
       if (orderForm.marketingData) {
-        this.showCustomMsgCoupon(orderForm)
+        _this.showCustomMsgCoupon(orderForm)
       }
     }, 250)
 
@@ -1203,7 +1228,7 @@ export class CheckoutCustom {
     if (
       !this.accordionPayments ||
       $('.payment-group-list-btn').find('.v-custom-payment-item-wrap').length >
-      0
+        0
     ) {
       return false
     }
@@ -1212,7 +1237,8 @@ export class CheckoutCustom {
 
     $('.payment-group-item').each(function () {
       $(this).wrap(
-        `<div class='v-custom-payment-item-wrap ${$(this).hasClass('active') ? 'active' : ''
+        `<div class='v-custom-payment-item-wrap ${
+          $(this).hasClass('active') ? 'active' : ''
         }'></div>`
       )
     })
@@ -1310,6 +1336,26 @@ export class CheckoutCustom {
       }
     })
   }
+
+  scrollToPaymentCard(orderForm) {
+    const paymentLength = orderForm.paymentData.payments.length;
+    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem;
+  
+    if (paymentLength == 1 && paymentSystem == 2) {
+        const paymentCardsGroup = document.querySelector('.payment-group-item-cards');
+      
+        if (paymentCardsGroup) {
+            const offsetTop = paymentCardsGroup.offsetTop;
+
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    }
+}
+
+
   defaultPaymentMethod() {
     try {
       // Default Payment Method: PIX
@@ -1366,7 +1412,7 @@ export class CheckoutCustom {
                 if (itemsToRemove.length > 0) {
                   return window.vtexjs.checkout
                     .removeItems(itemsToRemove)
-                    .then(() => { })
+                    .then(() => {})
                 }
               }, 2000)
             }
@@ -1465,7 +1511,7 @@ export class CheckoutCustom {
               if (itemsToRemove.length > 0) {
                 return window.vtexjs.checkout
                   .removeItems(itemsToRemove)
-                  .then(() => { })
+                  .then(() => {})
               }
             }
           }, i * interval)
@@ -1476,19 +1522,18 @@ export class CheckoutCustom {
 
   // CUSTOMIZAÇÃO PARA TRATAR ERRO NO LOGOUT POR CONTA DO AKAMAI (/BR)
   customizeLogOut() {
-    const accountbr = window.__RUNTIME__.account == 'samsungbr'
-    const accountbrshop = window.__RUNTIME__.account == 'samsungbrshop'
     const notMyvtex = window.location.href.indexOf('myvtex') == -1
-    if (
-      ($('.link-logout-container').is(':visible') && accountbr && notMyvtex) ||
-      (accountbrshop && notMyvtex)
-    ) {
+    if ($('.link-logout-container').is(':visible') && notMyvtex) {
       $('#is-not-me').removeAttr('href')
       $('body').on('click', '#is-not-me', function () {
-        const returnUrl = `https://shop.samsung.com/br/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId}`
+        const returnUrl = `${
+          window.vtex.endpointAPI.split('/api')[0]
+        }/checkout/changeToAnonymousUser/${
+          window.vtexjs.checkout.orderForm.orderFormId
+        }`
 
         window.location.assign(
-          `https://shop.samsung.com/br/api/vtexid/pub/logout?scope=samsungbrshop&returnUrl=${returnUrl}`
+          `${window.vtex.endpointAPI}/pub/logout?scope=${window.vtex.accountName}&returnUrl=${returnUrl}`
         )
       })
     }
@@ -1658,11 +1703,12 @@ export class CheckoutCustom {
   start() {
     const _this = this
     try {
-      console.log('Checkout is already started!')
+      console.log('Checkout is already started!!')
 
       $(async function () {
         _this.messages.init()
         _this.bind()
+        // _this.topBanners.init()
         _this.customAddressFormLoader()
         _this.rtlUI()
         _this.shippingEstimateCustom.bindEvents()
@@ -1673,7 +1719,6 @@ export class CheckoutCustom {
 
         // #shipping
         _this.shipping.bindEvents()
-        _this.shipping.limitFieldsCharacters()
 
         // #profile
         _this.profile.bindEvents()
@@ -1685,6 +1730,7 @@ export class CheckoutCustom {
         $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
           _this.samsungCarePlus.sync(orderForm)
           _this.CheckoutLimit.sync(orderForm)
+          _this.installationService.sync(orderForm)
         })
       })
       function trackLogin(accessKeyURL) {
@@ -1706,7 +1752,9 @@ export class CheckoutCustom {
 
       $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
-        const acessKeyURL = settings.url.includes(`${rootPath()}/api/checkout/pub/profiles/`)
+        const acessKeyURL = settings.url.includes(
+          `${rootPath()}/api/checkout/pub/profiles/`
+        )
         if (acessKeyURL) {
           const loginSucess = xhr.statusText === 'success'
           if (loginSucess) {
@@ -1819,7 +1867,12 @@ export class CheckoutCustom {
         // })
         const rewardsBoot = await import('../components/rewards/_rewards')
 
-        _this.Rewards = rewardsBoot.bootstrapRewards()
+        // VERIFY IF SOME FIDELITY PARTNER DOESNT ACCEPT REWARDS, THEN DONT SHOW REWARDS INFOS
+        const doesntAcceptRewards =
+          window.sessionStorage.getItem('partnerRewards') === 'false'
+        if (!doesntAcceptRewards) {
+          _this.Rewards = rewardsBoot.bootstrapRewards()
+        }
 
         _this.Rewards.showObsRewards()
 
@@ -1830,11 +1883,21 @@ export class CheckoutCustom {
           _this.customAddressForm.loadScript()
         }
 
+        if (window.location.hash == '#/shipping') {
+          _this.shipping.removeIfHasntPrice()
+        }
+
+        if (window.location.hash === '#/cart') {
+          _this.Rewards.cancelRewardsDiscount()
+          _this.shipping.removeIfHasntPrice()
+        }
+
         if (window.location.hash === '#/payment') {
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
+          _this.scrollToPaymentCard(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
@@ -1877,7 +1940,10 @@ export class CheckoutCustom {
         if (window.location.hash === '#/cart') {
           _this.Rewards.cancelRewardsDiscount()
 
-          const checkIfRemove = localStorage.getItem('@samsung/shippingResult', 'remove')
+          const checkIfRemove = localStorage.getItem(
+            '@samsung/shippingResult',
+            'remove'
+          )
 
           if (checkIfRemove) {
             $('.srp-toggle__pickup').click()

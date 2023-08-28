@@ -115,7 +115,7 @@ export default class SamsungCarePlus {
         const attachedItem = this.findAttachedProduct(samsungCareItem, items)
         const isFree = this.isFree(samsungCareItem)
         const isDuplicated = accumulator.some(item => (
-          item.samsungCareItem.id === samsungCareItem.id
+          JSON.stringify(item.samsungCareItem.attachments) === JSON.stringify(samsungCareItem.attachments)
         ))
         
         accumulator.push({ samsungCareItem, attachedItem, isFree, isDuplicated })
@@ -366,9 +366,9 @@ export default class SamsungCarePlus {
       }
 
       this.mountSamsungCareItems(items)
+      this.removeDuplicated(items)
       this.updateQuantity(items)
       this.removeUnmatched(items)
-      this.removeDuplicated(items)
     } catch (err) {
       console.error(`Não foi possível sincronizar Samsung Care items: ${err}`)
     }

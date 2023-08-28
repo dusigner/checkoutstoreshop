@@ -130,9 +130,13 @@ export default class CheckoutLimit {
       return
     }
 
-    fetch(`${this.rootPath()}/api/dataentities/LS/search?_fields=limit`)
+    fetch(`${this.rootPath()}/api/dataentities/LS/search?_fields=limit&an=samsungbrshop`)
       .then(response => response.json())
       .then(response => {
+        if (!response.length) {
+          return
+        }
+
         this.limit = parseInt(response[0].limit)
         sessionStorage.skuLimit = response[0].limit
       })
@@ -252,6 +256,10 @@ export default class CheckoutLimit {
   }
 
   sync(orderForm) {
+    if (!this.limit) {
+      return
+    }
+
     try {
       this.mountItemsToUpdate(orderForm)
       this.updateQuantities()
