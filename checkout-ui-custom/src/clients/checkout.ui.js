@@ -275,22 +275,30 @@ export class CheckoutCustom {
     try {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-
         if (_trElem.find('td.product-name').find('.more-info').length === 1) {
           return
         }
 
+        const logisticsInfoData = orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' && orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+                                  ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br /> Até ${orderForm.shippingData.logisticsInfo[i].slas[0].shippingEstimate.replace('bd', '')} dias úteis após a confirmação do pagamento`
+                                  : orderForm.shippingData.logisticsInfo[i].selectedSla === null
+                                  ? '' 
+                                  : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
+
         const refId = orderForm.items[i].refId || ''
         const { detailUrl } = orderForm.items[i]
         const isInstallService = detailUrl.includes('/install-service/p')
-        const isSamsungCare = detailUrl.includes('/samsung-care-/p')
+        const isSamsungCare = detailUrl.includes('/samsung-care-')
 
         const shippingText =
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
+        
+
         const moreInfoHtml = `
-            <div class="more-info">
+            <div class="more-info ${isInstallService || isSamsungCare ? "isServices" : ""}">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
               <p class="instantvoucher">
                 <a class="selecaovoucher" href='${

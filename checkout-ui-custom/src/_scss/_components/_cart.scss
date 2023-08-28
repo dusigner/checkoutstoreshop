@@ -1774,3 +1774,35 @@ button#find-pickup-link:hover {
 p.input.ship-receiverName {
   width: 100%;
 }
+
+.shipping-data {
+  color: #000;
+  font-size: 12px;
+  span {
+    font-weight: 700;
+    color: #006BEA;
+  }
+}
+
+.ref-id {
+  margin-bottom: 0;
+}
+
+.isServices {
+  .shipping-data {
+    display: none;
+  }
+}
+
+.cart-more-options {
+  .srp-content {
+    h2.srp-main-title {
+      font-size: 0;
+      &::after {
+        content: "Opções de Entrega";
+        display: block;
+        font-size: 20px;
+      }
+    }
+  }
+}
