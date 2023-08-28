@@ -31,7 +31,6 @@ export default class CSP {
 
     const compareResult = this.checkSelectedDeliveryChannelEquality(logistics)
 
-    console.log('result validade', compareResult)
 
     if(compareResult.deliveryOption == 'delivery'){
       document.querySelector('.box-step.shipping-summary-placeholder') && document.querySelector('.box-step.shipping-summary-placeholder').classList.add("delivery-class")
