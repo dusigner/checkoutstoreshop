@@ -10,6 +10,7 @@ import SendAttachment from '../components/_sendAttachment'
 import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
+import FidelidadeCustomizations from '../components/_fidelidade'
 import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
@@ -1902,7 +1903,7 @@ export class CheckoutCustom {
         }
 
         if (window.location.hash === '#/cart') {
-          _this.Rewards.cancelRewardsDiscount()
+          _this.Rewards?.cancelRewardsDiscount()
           _this.shipping.removeIfHasntPrice()
         }
 
