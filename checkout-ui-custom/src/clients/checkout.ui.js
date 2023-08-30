@@ -1853,7 +1853,7 @@ export class CheckoutCustom {
   handleOrderFromEndless(hash, orderForm){
     if(hash !== '#/cart') return
 
-    const isOrderFromEndless = orderForm.customData.customApps.some(customApp => customApp.id === 'endlessaisle')
+    const isOrderFromEndless = orderForm.customData?.customApps?.some(customApp => customApp.id === 'endlessaisle')
     if(!isOrderFromEndless) return
 
     if(!orderForm.clientProfileData) return
