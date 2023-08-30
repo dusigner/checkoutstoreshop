@@ -10,10 +10,10 @@ import SendAttachment from '../components/_sendAttachment'
 import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
-import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import FidelidadeCustomizations from '../components/_fidelidade'
 import Discounts from '../components/_discounts'
-// import TopBanners from '../components/_topBanners'
+import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
+import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 
 import {
@@ -54,6 +54,7 @@ export class CheckoutCustom {
     this.SendAttachment = new SendAttachment()
     this.hasSelectedDefaultPaymentMethod = false
     this.CheckoutLimit = new CheckoutLimit()
+    this.CSP = new CSP()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
     this.discounts = new Discounts()
@@ -276,22 +277,30 @@ export class CheckoutCustom {
     try {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-
         if (_trElem.find('td.product-name').find('.more-info').length === 1) {
           return
         }
 
+        const logisticsInfoData = orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' && orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+                                  ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br /> Até ${orderForm.shippingData.logisticsInfo[i].slas[0].shippingEstimate.replace('bd', '')} dias úteis após a confirmação do pagamento`
+                                  : orderForm.shippingData.logisticsInfo[i].selectedSla === null
+                                  ? '' 
+                                  : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
+
         const refId = orderForm.items[i].refId || ''
         const { detailUrl } = orderForm.items[i]
         const isInstallService = detailUrl.includes('/install-service/p')
-        const isSamsungCare = detailUrl.includes('/samsung-care-/p')
+        const isSamsungCare = detailUrl.includes('/samsung-care-')
 
         const shippingText =
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
+        
+
         const moreInfoHtml = `
-            <div class="more-info">
+            <div class="more-info ${isInstallService || isSamsungCare ? "isServices" : ""}">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
               <p class="instantvoucher">
                 <a class="selecaovoucher" href='${
@@ -983,6 +992,7 @@ export class CheckoutCustom {
     this.wrapSummary()
     this.couponInfo(orderForm)
     this.CheckoutLimit.lockIncrementButtons(orderForm)
+    this.CSP.init(orderForm)
     this.samsungCarePlus.samsungCareModalTrigger()
     this.samsungCarePlus.hideQuantityButtons(orderForm)
     this.installationService.init()
@@ -1492,6 +1502,12 @@ export class CheckoutCustom {
   }
 
   init() {
+            
+    if(window.location && this.orderForm){
+      const hash = window.location.hash
+      this.handleOrderFromEndless(hash, this.orderForm)
+    }
+
     if (window.vtex) {
       window.vtex.showInstallmentsPreviewValue = true
     }
@@ -1506,11 +1522,12 @@ export class CheckoutCustom {
     if (this.orderForm) {
       this.update(this.orderForm)
       this.paymentBuilder(this.orderForm)
+      this.CSP.init(this.orderForm)
     }
 
     this.fixLabels()
     this.CheckoutLimit.init()
-    this.fidelidade.init()
+    
   }
 
   start() {
@@ -1701,7 +1718,7 @@ export class CheckoutCustom {
         }
 
         if (window.location.hash === '#/cart') {
-          _this.Rewards.cancelRewardsDiscount()
+          _this.Rewards?.cancelRewardsDiscount()
           _this.shipping.removeIfHasntPrice()
         }
 
@@ -1827,4 +1844,26 @@ export class CheckoutCustom {
       general()
     }
   }
+
+  /**
+   * Essa função é responsável por limpar os dados pessoais (clientProfielData).
+   * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar 
+   * para o cliente.
+   */
+  handleOrderFromEndless(hash, orderForm){
+    if(hash !== '#/cart') return
+
+    const isOrderFromEndless = orderForm.customData.customApps.some(customApp => customApp.id === 'endlessaisle')
+    if(!isOrderFromEndless) return
+
+    if(!orderForm.clientProfileData) return
+
+    if(!orderForm.clientProfileData.email) return
+
+    fetch(`${rootPath()}/checkout/changeToAnonymousUser/${orderForm.orderFormId}`)
+    .then(() => {
+      location.reload()
+    })
+  }
+
 }

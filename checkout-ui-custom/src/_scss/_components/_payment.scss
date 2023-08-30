@@ -706,6 +706,13 @@
               }
             }
           }
+
+          &.vtex-omnishipping-1-x-teste {
+            p.input {
+              @extend %field;
+            }
+          }
+
 					&.vtex-omnishipping-1-x-submitPaymentButton { order: 100; }
 
 					&.btn-link.vtex-omnishipping-1-x-btnDelivery {
@@ -761,6 +768,7 @@
 
         }
 
+        &:nth-child(3),
         &:nth-child(4){
           font-size:0px !important;
 
@@ -859,6 +867,10 @@
 			.vtex-omnishipping-1-x-leanShippingGroupList {
 				border: 0;
 				margin: 0;
+         
+        & + .vtex-omnishipping-1-x-shippingSectionTitle{
+          display: none;
+        }
 			}
 
 			.vtex-pickup-points-modal-3-x-modalDetailsBackLnk svg path,
