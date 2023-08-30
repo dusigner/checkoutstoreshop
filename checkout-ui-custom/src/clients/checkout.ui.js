@@ -11,12 +11,12 @@ import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
 import FidelidadeCustomizations from '../components/_fidelidade'
+import Discounts from '../components/_discounts'
 import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 
 import {
-  formatNegativeValue,
   debounce,
   formatCurrencyBRL,
 } from '../components/_utils'
@@ -57,6 +57,7 @@ export class CheckoutCustom {
     this.CSP = new CSP()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
+    this.discounts = new Discounts()
     this.fidelidade = new FidelidadeCustomizations()
     // this.topBanners = new TopBanners()
 
@@ -368,191 +369,6 @@ export class CheckoutCustom {
       ) {
         $('body').addClass(prefixClass + hashstep)
       }
-    }
-  }
-
-  showCustomDiscounts() {
-    try {
-      const { items } = window.vtexjs.checkout.orderForm
-      const _trElem = $(`.Discounts`)
-
-      if (!items.length) return
-
-      const itemsDiscounts = items
-        .map(function (item) {
-          return item.priceTags
-        })
-        .flat()
-        .filter(item => item.value < 0)
-
-      const uniqueDiscounts = itemsDiscounts.filter(function (discount) {
-        return (
-          itemsDiscounts.findIndex(
-            i =>
-              i.name === discount.name ||
-              (i.ratesAndBenefitsIdentifier &&
-                i.ratesAndBenefitsIdentifier.name
-                  .toLowerCase()
-                  .includes('desconto à vista') &&
-                discount.ratesAndBenefitsIdentifier &&
-                discount.ratesAndBenefitsIdentifier.name
-                  .toLowerCase()
-                  .includes('desconto à vista'))
-          ) === itemsDiscounts.indexOf(discount)
-        )
-      })
-
-      const discountsTotal = uniqueDiscounts.map(function (discount) {
-        const name = discount.ratesAndBenefitsIdentifier
-          ? discount.ratesAndBenefitsIdentifier.name
-          : discount.name
-          ? discount.name
-          : ''
-
-        const total = itemsDiscounts.reduce(function (acc, current) {
-          const isDiscountInCash = current.ratesAndBenefitsIdentifier
-            ? current.ratesAndBenefitsIdentifier.name
-
-                .toLowerCase()
-                .includes('desconto à vista') &&
-              name.toLowerCase().includes('desconto à vista')
-            : ''
-
-          if (current.name === discount.name || isDiscountInCash) {
-            return (acc += current.value)
-          }
-
-          return acc
-        }, 0)
-
-        return {
-          name,
-          value: total,
-        }
-      })
-      const elements = discountsTotal.map(discount => {
-        if (discount.name.toLowerCase().includes('desconto à vista')) {
-          this.hasSelectedDefaultPaymentMethod = true
-          const selectedPaymentSystem =
-            window.vtexjs.checkout.orderForm.paymentData.payments[0]
-              .paymentSystem
-
-          const paymentSystemName =
-            window.vtexjs.checkout.orderForm.paymentData.paymentSystems.find(
-              paymentSystem => {
-                return paymentSystem.id == selectedPaymentSystem
-              }
-            ).name
-
-          return `
-            <tr class="discount discount_in_cash" style="height: 23px;">
-              <td style="margin-left: 10px;">Desconto ${paymentSystemName}</td>
-              <td>
-                <span style="font-weight: 700">${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-        }
-
-        if (discount.name.toLowerCase().includes(' b5q5 hand raiser')) {
-          return `
-            <tr class="discount garanteed-tradein" style="height: 23px;">
-              <td style="margin-left: 10px;">Desc. Registro Lançamento</td>
-              <td>
-                <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-        }
-
-        if (discount.name.toLowerCase().includes('cupom instantâneo')) {
-          return `
-              <tr class="discount instant_voucher" style="height: 23px;">
-                <td style="margin-left: 10px;">Desc. Cupom Instantâneo</td>
-                <td>
-                  <span style="font-weight: 700" >${formatNegativeValue(
-                    formatCurrencyBRL(discount.value)
-                  )}</span>
-                </td>
-              </tr>`
-        }
-
-        if (discount.name.toLowerCase().includes(' care')) {
-          return `
-              <tr class="discount sc" style="height: 23px;">
-                <td style="margin-left: 10px;">Desc. Samsung Care+</td>
-                <td>
-                  <span style="font-weight: 700" >${formatNegativeValue(
-                    formatCurrencyBRL(discount.value)
-                  )}</span>
-                </td>
-              </tr>`
-        }
-        if (
-          discount.name.toLowerCase().includes('discount@manualprice') &&
-          window.vtexjs.checkout.orderForm.customData.customApps.some(
-            app => app.id == 'eco_troca'
-          )
-        ) {
-          return `
-              <tr class="discount eco_troca" style="height: 23px;">
-                <td style="margin-left: 10px;">Desc. Eco Troca</td>
-                <td>
-                  <span style="font-weight: 700" >${formatNegativeValue(
-                    formatCurrencyBRL(discount.value)
-                  )}</span>
-                </td>
-              </tr>`
-        }
-        if (discount.name.toLowerCase().includes('garanteed')) {
-          return `
-            <tr class="discount garanteed-tradein" style="height: 23px;">
-              <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
-              <td>
-                <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-        }
-
-        if (discount.name.toLowerCase().includes('garanteed')) {
-          return `
-            <tr class="discount garanteed-tradein" style="height: 23px;">
-              <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
-              <td>
-                <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-        }
-
-        if (
-          discount.name.toLowerCase().includes(' frete') ||
-          discount.name.toLowerCase().includes(' (frete')
-        ) {
-          return ``
-        }
-
-        return `
-            <tr class="discount cupon" style="height: 23px;">
-              <td style="margin-left: 10px;">Desc. Cupom</td>
-              <td>
-                <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-      })
-
-      $('.totalizers-list .discount').remove()
-
-      _trElem.before(`${elements.join()}`)
-    } catch (e) {
-      console.error('showCustomDiscounts error', e)
     }
   }
 
@@ -1170,7 +986,6 @@ export class CheckoutCustom {
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
     this.showCustomMsgInstallation(orderForm)
-    this.showCustomDiscounts()
     this.summaryCustom()
     this.createChoiceNewProducts()
     this.bundleItems(orderForm)
@@ -1938,6 +1753,14 @@ export class CheckoutCustom {
         _this.shipping.toggleGoToPaymentDisabled()
       })
 
+      $(window).on('componentValidated.vtex', function() {
+        try {
+          _this.discounts.init(vtexjs.checkout.orderForm)
+        } catch (err) {
+          console.error(`${err}`)
+        }
+      })
+
       $(window).on('attachmentUpdated.vtex', function (evt, orderFormSection) {
         switch (orderFormSection) {
           case 'shippingData':
@@ -2030,7 +1853,7 @@ export class CheckoutCustom {
   handleOrderFromEndless(hash, orderForm){
     if(hash !== '#/cart') return
 
-    const isOrderFromEndless = orderForm.customData.customApps.some(customApp => customApp.id === 'endlessaisle')
+    const isOrderFromEndless = orderForm.customData?.customApps?.some(customApp => customApp.id === 'endlessaisle')
     if(!isOrderFromEndless) return
 
     if(!orderForm.clientProfileData) return
