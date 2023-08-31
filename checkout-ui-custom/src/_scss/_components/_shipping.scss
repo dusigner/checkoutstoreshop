@@ -407,11 +407,14 @@
   margin-top: 0 !important;
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-shippingSectionTitle,
-.v-custom-step-shipping .vtex-omnishipping-1-x-receiverTitle {
-  color: #000;
-  font-weight: 400 !important;
-  font-size: 12px !important;
-  font-family: SamsungOne;
+.v-custom-step-shipping .vtex-omnishipping-1-x-receiverTitle,
+[for="pickup-receiver"] {
+    color:#000;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    font-family: SamsungOne;
+    display: block;
+    margin: 10px 0 10px;
 }
 .v-custom-step-shipping .vtex-omnishipping-1-x-shippingSectionTitle {
   margin-bottom: 10px !important;
@@ -608,4 +611,35 @@
 
 .estimate-shipping {
   margin: 0;
+}
+
+.container {
+  .checkout-container {
+    .pickup-and-delivery-class {
+      .step.shipping-data {
+        .vtex-omnishipping-1-x-deliveryGroup {
+          order: 1 !important;
+        }
+        .vtex-omnishipping-1-x-shippingSectionTitle {
+          display: block !important;
+          font-size: 14px !important;
+          &:nth-child(3) {
+            font-size: 14px !important;
+          }
+        }
+        .vtex-omnishipping-1-x-deliveryGroup {
+          + .vtex-omnishipping-1-x-shippingSectionTitle {
+            font-size: 0 !important;
+          }
+        }
+        #delivery-packages-options {
+          + .vtex-omnishipping-1-x-shippingSectionTitle {
+            &:after {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  } 
 }

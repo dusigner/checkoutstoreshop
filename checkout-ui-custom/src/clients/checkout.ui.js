@@ -10,13 +10,13 @@ import SendAttachment from '../components/_sendAttachment'
 import CheckoutLimit from '../components/_checkoutLimit'
 import SamsungCarePlus from '../components/_samsungCarePlus'
 import Messages from '../components/_messages'
-import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import FidelidadeCustomizations from '../components/_fidelidade'
-// import TopBanners from '../components/_topBanners'
+import Discounts from '../components/_discounts'
+import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
+import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 
 import {
-  formatNegativeValue,
   debounce,
   formatCurrencyBRL,
 } from '../components/_utils'
@@ -59,8 +59,10 @@ export class CheckoutCustom {
     this.SendAttachment = new SendAttachment()
     this.hasSelectedDefaultPaymentMethod = false
     this.CheckoutLimit = new CheckoutLimit()
+    this.CSP = new CSP()
     this.samsungCarePlus = new SamsungCarePlus()
     this.messages = new Messages()
+    this.discounts = new Discounts()
     this.fidelidade = new FidelidadeCustomizations()
     // this.topBanners = new TopBanners()
 
@@ -280,22 +282,30 @@ export class CheckoutCustom {
     try {
       $.each(orderForm.items, function (i) {
         const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-
         if (_trElem.find('td.product-name').find('.more-info').length === 1) {
           return
         }
 
+        const logisticsInfoData = orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' && orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+                                  ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br /> Até ${orderForm.shippingData.logisticsInfo[i].slas[0].shippingEstimate.replace('bd', '')} dias úteis após a confirmação do pagamento`
+                                  : orderForm.shippingData.logisticsInfo[i].selectedSla === null
+                                  ? '' 
+                                  : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
+
         const refId = orderForm.items[i].refId || ''
         const { detailUrl } = orderForm.items[i]
         const isInstallService = detailUrl.includes('/install-service/p')
-        const isSamsungCare = detailUrl.includes('/samsung-care-/p')
+        const isSamsungCare = detailUrl.includes('/samsung-care-')
 
         const shippingText =
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
+        
+
         const moreInfoHtml = `
-            <div class="more-info">
+            <div class="more-info ${isInstallService || isSamsungCare ? "isServices" : ""}">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
+              <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
               <p class="instantvoucher">
                 <a class="selecaovoucher" href='${
@@ -358,191 +368,6 @@ export class CheckoutCustom {
       ) {
         $('body').addClass(prefixClass + hashstep)
       }
-    }
-  }
-
-  showCustomDiscounts() {
-    try {
-      const { items } = window.vtexjs.checkout.orderForm
-      const _trElem = $(`.Discounts`)
-
-      if (!items.length) return
-
-      const itemsDiscounts = items
-        .map(function (item) {
-          return item.priceTags
-        })
-        .flat()
-        .filter(item => item.value < 0)
-
-      const uniqueDiscounts = itemsDiscounts.filter(function (discount) {
-        return (
-          itemsDiscounts.findIndex(
-            i =>
-              i.name === discount.name ||
-              (i.ratesAndBenefitsIdentifier &&
-                i.ratesAndBenefitsIdentifier.name
-                  .toLowerCase()
-                  .includes('desconto à vista') &&
-                discount.ratesAndBenefitsIdentifier &&
-                discount.ratesAndBenefitsIdentifier.name
-                  .toLowerCase()
-                  .includes('desconto à vista'))
-          ) === itemsDiscounts.indexOf(discount)
-        )
-      })
-
-      const discountsTotal = uniqueDiscounts.map(function (discount) {
-        const name = discount.ratesAndBenefitsIdentifier
-          ? discount.ratesAndBenefitsIdentifier.name
-          : discount.name
-          ? discount.name
-          : ''
-
-        const total = itemsDiscounts.reduce(function (acc, current) {
-          const isDiscountInCash = current.ratesAndBenefitsIdentifier
-            ? current.ratesAndBenefitsIdentifier.name
-
-                .toLowerCase()
-                .includes('desconto à vista') &&
-              name.toLowerCase().includes('desconto à vista')
-            : ''
-
-          if (current.name === discount.name || isDiscountInCash) {
-            return (acc += current.value)
-          }
-
-          return acc
-        }, 0)
-
-        return {
-          name,
-          value: total,
-        }
-      })
-      const elements = discountsTotal.map(discount => {
-        if (discount.name.toLowerCase().includes('desconto à vista')) {
-          this.hasSelectedDefaultPaymentMethod = true
-          const selectedPaymentSystem =
-            window.vtexjs.checkout.orderForm.paymentData.payments[0]
-              .paymentSystem
-
-          const paymentSystemName =
-            window.vtexjs.checkout.orderForm.paymentData.paymentSystems.find(
-              paymentSystem => {
-                return paymentSystem.id == selectedPaymentSystem
-              }
-            ).name
-
-          return `
-            <tr class="discount discount_in_cash" style="height: 23px;">
-              <td style="margin-left: 10px;">Desconto ${paymentSystemName}</td>
-              <td>
-                <span style="font-weight: 700">${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-        }
-
-        if (discount.name.toLowerCase().includes(' b5q5 hand raiser')) {
-          return `
-            <tr class="discount garanteed-tradein" style="height: 23px;">
-              <td style="margin-left: 10px;">Desc. Registro Lançamento</td>
-              <td>
-                <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-        }
-
-        if (discount.name.toLowerCase().includes('cupom instantâneo')) {
-          return `
-              <tr class="discount instant_voucher" style="height: 23px;">
-                <td style="margin-left: 10px;">Desc. Cupom Instantâneo</td>
-                <td>
-                  <span style="font-weight: 700" >${formatNegativeValue(
-                    formatCurrencyBRL(discount.value)
-                  )}</span>
-                </td>
-              </tr>`
-        }
-
-        if (discount.name.toLowerCase().includes(' care')) {
-          return `
-              <tr class="discount sc" style="height: 23px;">
-                <td style="margin-left: 10px;">Desc. Samsung Care+</td>
-                <td>
-                  <span style="font-weight: 700" >${formatNegativeValue(
-                    formatCurrencyBRL(discount.value)
-                  )}</span>
-                </td>
-              </tr>`
-        }
-        if (
-          discount.name.toLowerCase().includes('discount@manualprice') &&
-          window.vtexjs.checkout.orderForm.customData.customApps.some(
-            app => app.id == 'eco_troca'
-          )
-        ) {
-          return `
-              <tr class="discount eco_troca" style="height: 23px;">
-                <td style="margin-left: 10px;">Desc. Eco Troca</td>
-                <td>
-                  <span style="font-weight: 700" >${formatNegativeValue(
-                    formatCurrencyBRL(discount.value)
-                  )}</span>
-                </td>
-              </tr>`
-        }
-        if (discount.name.toLowerCase().includes('garanteed')) {
-          return `
-            <tr class="discount garanteed-tradein" style="height: 23px;">
-              <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
-              <td>
-                <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-        }
-
-        if (discount.name.toLowerCase().includes('garanteed')) {
-          return `
-            <tr class="discount garanteed-tradein" style="height: 23px;">
-              <td style="margin-left: 10px;">Vale Mais - Troca Smart</td>
-              <td>
-                <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-        }
-
-        if (
-          discount.name.toLowerCase().includes(' frete') ||
-          discount.name.toLowerCase().includes(' (frete')
-        ) {
-          return ``
-        }
-
-        return `
-            <tr class="discount cupon" style="height: 23px;">
-              <td style="margin-left: 10px;">Desc. Cupom</td>
-              <td>
-                <span style="font-weight: 700" >${formatNegativeValue(
-                  formatCurrencyBRL(discount.value)
-                )}</span>
-              </td>
-            </tr>`
-      })
-
-      $('.totalizers-list .discount').remove()
-
-      _trElem.before(`${elements.join()}`)
-    } catch (e) {
-      console.error('showCustomDiscounts error', e)
     }
   }
 
@@ -1159,13 +984,13 @@ export class CheckoutCustom {
     this.setParentIndex(orderForm)
     this.indexedInItems(orderForm)
     this.showCustomMsgInstallation(orderForm)
-    this.showCustomDiscounts()
     this.summaryCustom()
     this.createChoiceNewProducts()
     this.bundleItems(orderForm)
     this.wrapSummary()
     this.couponInfo(orderForm)
     this.CheckoutLimit.lockIncrementButtons(orderForm)
+    this.CSP.init(orderForm)
     this.samsungCarePlus.samsungCareModalTrigger()
     this.samsungCarePlus.hideQuantityButtons(orderForm)
     this.installationService.init()
@@ -1333,6 +1158,26 @@ export class CheckoutCustom {
       }
     })
   }
+
+  scrollToPaymentCard(orderForm) {
+    const paymentLength = orderForm.paymentData.payments.length;
+    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem;
+  
+    if (paymentLength == 1 && paymentSystem == 2) {
+        const paymentCardsGroup = document.querySelector('.payment-group-item-cards');
+      
+        if (paymentCardsGroup) {
+            const offsetTop = paymentCardsGroup.offsetTop;
+
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    }
+}
+
+
   defaultPaymentMethod() {
     try {
       // Default Payment Method: PIX
@@ -1655,6 +1500,12 @@ export class CheckoutCustom {
   }
 
   init() {
+            
+    if(window.location && this.orderForm){
+      const hash = window.location.hash
+      this.handleOrderFromEndless(hash, this.orderForm)
+    }
+
     if (window.vtex) {
       window.vtex.showInstallmentsPreviewValue = true
     }
@@ -1669,11 +1520,12 @@ export class CheckoutCustom {
     if (this.orderForm) {
       this.update(this.orderForm)
       this.paymentBuilder(this.orderForm)
+      this.CSP.init(this.orderForm)
     }
 
     this.fixLabels()
     this.CheckoutLimit.init()
-    this.fidelidade.init()
+    
   }
 
   start() {
@@ -1862,7 +1714,7 @@ export class CheckoutCustom {
         }
 
         if (window.location.hash === '#/cart') {
-          _this.Rewards.cancelRewardsDiscount()
+          _this.Rewards?.cancelRewardsDiscount()
           _this.shipping.removeIfHasntPrice()
         }
 
@@ -1871,6 +1723,7 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
+          _this.scrollToPaymentCard(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
@@ -1894,6 +1747,14 @@ export class CheckoutCustom {
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
+      })
+
+      $(window).on('componentValidated.vtex', function() {
+        try {
+          _this.discounts.init(vtexjs.checkout.orderForm)
+        } catch (err) {
+          console.error(`${err}`)
+        }
       })
 
       $(window).on('attachmentUpdated.vtex', function (evt, orderFormSection) {
@@ -1978,4 +1839,26 @@ export class CheckoutCustom {
       general()
     }
   }
+
+  /**
+   * Essa função é responsável por limpar os dados pessoais (clientProfielData).
+   * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar 
+   * para o cliente.
+   */
+  handleOrderFromEndless(hash, orderForm){
+    if(hash !== '#/cart') return
+
+    const isOrderFromEndless = orderForm.customData?.customApps?.some(customApp => customApp.id === 'endlessaisle')
+    if(!isOrderFromEndless) return
+
+    if(!orderForm.clientProfileData) return
+
+    if(!orderForm.clientProfileData.email) return
+
+    fetch(`${rootPath()}/checkout/changeToAnonymousUser/${orderForm.orderFormId}`)
+    .then(() => {
+      location.reload()
+    })
+  }
+
 }
