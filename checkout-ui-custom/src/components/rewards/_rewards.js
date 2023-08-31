@@ -7,13 +7,7 @@ import {
 import { rootPath } from '../utils/_rootPath'
 import { PAYLOAD_REWARDS_DEFAULT } from './constants/_payloadRequest'
 
-export function bootstrapRewards() {
-  const bootstrapRewards = new Rewards()
-
-  return bootstrapRewards
-}
-
-export default class Rewards {
+export class Rewards {
   constructor() {
     this.userAcceptedRewards = false
     this.emailUserRewards = ''

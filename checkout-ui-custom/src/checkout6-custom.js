@@ -1,6 +1,3 @@
-//Não remover o import
-import './checkout6-custom.scss'
-
 import { CheckoutCustom } from './clients/checkout.ui'
 
 window.vcustom = {

@@ -20,6 +20,11 @@ import {
   debounce,
   formatCurrencyBRL,
 } from '../components/_utils'
+import { customHeader } from '../components/headerCustom/header'
+import { Rewards } from '../components/rewards/_rewards'
+import { fnsCustomAddressForm } from '../components/_customAddressForm'
+import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
+import { createLayoutEmptyCart } from '../components/emptyCart'
 
 export class CheckoutCustom {
   constructor({
@@ -310,8 +315,7 @@ export class CheckoutCustom {
   }
 
   async imgEmptyCart() {
-    const carEmpty = await import('../components/emptyCart')
-    carEmpty.createLayoutEmptyCart()
+    createLayoutEmptyCart()
   }
 
   async customAddressFormLoader() {
@@ -328,12 +332,7 @@ export class CheckoutCustom {
 
     if (_this.customAddressForm) {
       if (window.location.hash === '#/shipping') {
-        const customAddressFormBoot = await import(
-          '../components/_customAddressForm'
-        )
-
-        _this.customAddressForm =
-          customAddressFormBoot.bootstrapFnsCustomAddressForm()
+        _this.customAddressForm = new fnsCustomAddressForm()
       }
     }
   }
@@ -1148,8 +1147,7 @@ export class CheckoutCustom {
       const { hash } = event.target.location
 
       if (showHeader.includes(hash)) {
-        const header = await import('../components/headerCustom/header')
-        header.customHeader(hash)
+        customHeader()
       }
     })
 
@@ -1839,17 +1837,15 @@ export class CheckoutCustom {
         // const { hash } = event.target.location
 
         if (showHeader.includes(window.location.hash)) {
-          const header = await import('../components/headerCustom/header')
-          header.customHeader(window.location.hash)
+          customHeader()
         }
         // })
-        const rewardsBoot = await import('../components/rewards/_rewards')
 
         // VERIFY IF SOME FIDELITY PARTNER DOESNT ACCEPT REWARDS, THEN DONT SHOW REWARDS INFOS
         const doesntAcceptRewards =
           window.sessionStorage.getItem('partnerRewards') === 'false'
         if (!doesntAcceptRewards) {
-          _this.Rewards = rewardsBoot.bootstrapRewards()
+          _this.Rewards = new Rewards()
         }
 
         _this.Rewards.showObsRewards()
@@ -1957,9 +1953,8 @@ export class CheckoutCustom {
         window.vtexjs.checkout.getOrderForm().done(function () {
           _this.addMedalliaScript()
         })
-        const AdobeLaunch = await import('../components/_adobeLaunchPixel')
 
-        AdobeLaunch.adobeLaunchInit()
+        adobeLaunchInit()
 
         _this.checkProfileFocus()
         _this.changeShippingTimeInfoInit()

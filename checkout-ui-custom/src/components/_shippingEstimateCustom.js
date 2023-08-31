@@ -1,5 +1,4 @@
-const { _locale } = require('../components/_locale-infos')
-
+import { _locale } from '../components/_locale-infos'
 import { rootPath } from './utils/_rootPath'
 
 /* eslint-disable no-prototype-builtins */
@@ -304,4 +303,3 @@ export default class ShippingEstimateCustom {
     }
   }
 }
-  

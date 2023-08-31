@@ -1,7 +1,6 @@
-export function customHeader(hash) {
+export function customHeader() {
   function _conditionalHeader() {
     try {
-      // steps(hash)
       steps(window.location.hash)
       /* eslint-disable-next-line no-restricted-globals */
       addEventListener('hashchange', event => {
