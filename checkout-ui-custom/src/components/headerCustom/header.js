@@ -41,7 +41,18 @@ export function customHeader(hash) {
         }
       })
 
-      
+    }
+  }
+
+  function _fixLinkSteps() {
+    const currentUrl = window.location.href
+    const newUrlProfile = 'br/checkout/#/profile'
+    const newUrlShipping = 'br/checkout/#/shipping'
+
+    if (currentUrl.indexOf("/br") !== -1) {
+      $('.v-custom-step-profile').attr('data-url', newUrlProfile);
+      $('.v-custom-step-shipping').attr('data-url', newUrlShipping);
+      console.log("A URL contém '/br'");
     }
   }
 
@@ -53,4 +64,5 @@ export function customHeader(hash) {
   
   _conditionalHeader()
   _fixBackToCartLink()
+  _fixLinkSteps()
 }
