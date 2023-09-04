@@ -1533,7 +1533,7 @@ export class CheckoutCustom {
     try {
       console.log('Checkout is already started!!')
 
-      $(async function () {
+      $(function () {
         _this.messages.init()
         _this.bind()
         // _this.topBanners.init()
@@ -1551,16 +1551,18 @@ export class CheckoutCustom {
         // #profile
         _this.profile.bindEvents()
 
-        $(window).on('checkoutRequestBegin.vtex', function (event, request) {
-          _this.CheckoutLimit.limitQuantity(event, request)
-          _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
-        })
-        $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
-          _this.samsungCarePlus.sync(orderForm)
-          _this.CheckoutLimit.sync(orderForm)
-          _this.installationService.sync(orderForm)
-        })
       })
+
+      $(window).on('checkoutRequestBegin.vtex', function (event, request) {
+        _this.CheckoutLimit.limitQuantity(event, request)
+        _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
+      })
+      $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
+        _this.samsungCarePlus.sync(orderForm)
+        _this.CheckoutLimit.sync(orderForm)
+        _this.installationService.sync(orderForm)
+      })
+
       function trackLogin(accessKeyURL) {
         if (accessKeyURL) {
           window._satellite.track('shop_guest_login')
