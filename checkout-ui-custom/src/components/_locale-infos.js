@@ -1,4 +1,4 @@
-module.exports._locale = {
+export const _locale = {
   BRA: {
     couponInactive: 'Nenhum desconto aplicado. Confira as regras.',
     editLabel: 'Editar',

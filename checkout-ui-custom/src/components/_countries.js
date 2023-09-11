@@ -493,7 +493,7 @@
 // }
 
 // _countries.find(i=>i[0]=="US")
-module.exports._countries = [
+export const _countries = [
   ['AF', 'AFG'],
   ['AX', 'ALA'],
   ['AL', 'ALB'],
@@ -747,7 +747,7 @@ module.exports._countries = [
 ]
 
 // _cities.find(i => i.countryShortCode=="US")
-module.exports._cities = [
+export const _cities = [
   {
     countryName: 'Afghanistan',
     countryShortCode: 'AF',
@@ -20249,7 +20249,7 @@ module.exports._cities = [
   },
 ]
 
-module.exports._addressPlaceholder = {
+export const _addressPlaceholder = {
   ARG: 'Eg: Av. del Libertador 1473, Buenos Aires',
   BOL: 'Eg: Av Arce, 2556, La Paz',
   BRA: 'Ex: Av Paulista, 1578, São Paulo',

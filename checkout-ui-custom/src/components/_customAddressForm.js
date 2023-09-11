@@ -2,8 +2,8 @@
 /* eslint-disable no-console */
 /* eslint-disable func-names */
 /* eslint-disable max-params */
-const { _locale } = require('./_locale-infos.js')
-const { _countries, _cities, _addressPlaceholder } = require('./_countries.js')
+import { _locale } from '../components/_locale-infos'
+import { _countries, _cities, _addressPlaceholder } from './_countries.js'
 
 // temporaly workaorund
 window.callbackMap = () => {
@@ -11,16 +11,9 @@ window.callbackMap = () => {
     window.vcustom.checkout.customAddressFormInit(orderForm)
   })
 }
-
-
-export function bootstrapFnsCustomAddressForm() {
-  const bootstrap = new fnsCustomAddressForm()
-
-  return bootstrap
-}
 // end temporaly workaorund
 
-class fnsCustomAddressForm {
+export class fnsCustomAddressForm {
   constructor({ active = false } = {}) {
     this.BodyFormClasses = ['v-custom-addressForm-on', 'v-custom-googleForm-on']
     this.active = active
@@ -977,5 +970,3 @@ class fnsCustomAddressForm {
     }
   }
 }
-
-module.exports = fnsCustomAddressForm

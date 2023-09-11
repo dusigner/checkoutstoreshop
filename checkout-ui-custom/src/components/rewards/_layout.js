@@ -1,4 +1,4 @@
-const { formatNumberBRL } = require('../_utils')
+import { formatNumberBRL } from '../_utils'
 
 function createLayoutGroupCalcRewards({ totalPointsUser }) {
   return `

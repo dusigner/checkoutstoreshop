@@ -11,13 +11,6 @@ import { _isSCPlus } from './utils/adobe/getIsSCPlus'
 import { getPaymentMethod } from './utils/adobe/paymentMethod'
 import { SITE_CODE_STRING } from './utils/adobe/siteCodeString'
 
-
-export function adobeLaunchInit() {
-  const settingsAdobe = new AdobeLaunchPixel()
-
-  settingsAdobe.init()
-}
-
 class AdobeLaunchPixel {
   constructor() {
     /* List of pages where the DTM transformation is enabled */
@@ -1377,4 +1370,10 @@ class AdobeLaunchPixel {
         }
       })
   }
+}
+
+export function adobeLaunchInit() {
+  const settingsAdobe = new AdobeLaunchPixel()
+
+  settingsAdobe.init()
 }
