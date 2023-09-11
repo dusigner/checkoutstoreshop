@@ -4,21 +4,19 @@
 export default class BespokeRefrigerator {
   constructor() {
     this.SKU_BESPOKE_PAIR = ''
-    this.SKU_MAIN = []
+    this.PRODUCTS_MAIN = []
+    this.PRODUCT_COMPOSTIONS = []
     this.SKU_BESPOKE_SERVICE = ''
     this.SELLER = ''
-    this.CATEGORYID =
-      window.location.href.indexOf('samsungbrshop.') >= 0 ||
-      window.location.host.split('.')[0].indexOf('shop') >= 0
-        ? '/3/33/39/2043/'
-        : '/2044/'
   }
 
   removeButtons({ items }) {
     if ($('.product-item')) {
       items.forEach(item => {
         if (
-          item.productCategoryIds === this.CATEGORYID ||
+          this.PRODUCTS_MAIN.includes(item.productId) || 
+          this.PRODUCT_COMPOSTIONS.includes(item.id) || 
+          this.SKU_BESPOKE_PAIR === item.id || 
           item.name.indexOf('Instalação Geladeira') > 0
         ) {
           if ($(`.product-item[data-sku="${item.id}"]`)) {
@@ -68,9 +66,7 @@ export default class BespokeRefrigerator {
               ).addClass('disabled')
             }
           }
-        }
-
-        if (item.productCategoryIds !== this.CATEGORYID) {
+        }else {
           if ($(`.product-item[data-sku="${item.id}"]`)) {
             if ($(`.product-item[data-sku="${item.id}"] .item-link-remove`)) {
               $(`.product-item[data-sku="${item.id}"] .item-link-remove`).show()
@@ -150,19 +146,28 @@ export default class BespokeRefrigerator {
   }
 
   clearBespokeRefrigerator(items, skuEdited, isRedirect) {
-    let category = ''
-
+    let productId = ''
+    let itemId = ''
     items.forEach(el => {
       if (skuEdited.toString() === el.id) {
-        category = el.productCategoryIds
+        productId = el.productId
+        itemId = el.id
       }
     })
 
     const removeList = []
 
-    if (category === this.CATEGORYID) {
+    if (
+      this.PRODUCTS_MAIN.includes(productId) || 
+      this.PRODUCT_COMPOSTIONS.includes(itemId) || 
+      this.SKU_BESPOKE_PAIR === itemId
+    ) {
       items.forEach((el, i) => {
-        if (el.productCategoryIds === this.CATEGORYID) {
+        if (
+          this.PRODUCTS_MAIN.includes(el.productId) || 
+          this.PRODUCT_COMPOSTIONS.includes(el.id) || 
+          this.SKU_BESPOKE_PAIR === el.id
+        ) {
           // id bespoke
           removeList.push({
             index: i,
@@ -215,18 +220,16 @@ export default class BespokeRefrigerator {
     }
 
     listSKU = [...new Set(listSKU)]
-
     items.forEach((currentItem, i) => {
       if (currentItem.id === skuDeleted.toString()) {
         pairingQtdRemove = currentItem.quantity
       }
 
       const sku = listSKU.find(skuCurrent => skuCurrent === currentItem.id)
-
       if (sku) {
         updateList.push({
           index: i,
-          quantity: 0,
+          quantity: --currentItem.quantity,
         })
       }
 
@@ -322,8 +325,8 @@ export default class BespokeRefrigerator {
     const addbespokeBtn = setInterval(() => {
       if ($('.product-item').length > 0) {
         items.forEach(item => {
-          this.SKU_MAIN.forEach(sku => {
-            if (sku === item.id) {
+          this.PRODUCTS_MAIN.forEach(productId => {
+            if (productId === item.productId) {
               if (
                 $(`.product-item[data-sku='${item.id}']`).find('.editBespoke')
                   .length === 0
@@ -398,31 +401,27 @@ export default class BespokeRefrigerator {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       const thePath =
-        window.location.pathname.split('/')[1] === 'br' ? 'br' : ''
+      window.location.pathname.split('/')[1] === 'br' ? 'br' : ''
 
-      let url
+      const product_url = `${thePath}/_v/get/getBespokeProducts`
+      const compositions_url = `${thePath}/_v/get/getBespokeCompositions`
 
-      if (
-        window.location.href.indexOf('samsungbrshop.') >= 0 ||
-        window.location.host.indexOf('shop.') >= 0
-      ) {
-        url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/3/33/39/2043&_from=0&_to=49`
-      } else {
-        url = `${thePath}/api/catalog_system/pub/products/search?fq=C:/2044/`
-      }
-
-      await fetch(url)
+      await fetch(product_url)
         .then(response => response.json())
-        .then(response => {
-          response.forEach(product => {
-            if (product.productName.indexOf('parelhamento') < 0) {
-              product.items.forEach(currentItem => {
-                this.SKU_MAIN.push(currentItem.itemId)
-              })
-            }
+        .then(products => {
+          products.forEach(product => {
+            this.PRODUCTS_MAIN.push(product.productId)
           })
         })
 
+      await fetch(compositions_url)
+        .then(response => response.json())
+        .then(compositons => {
+          compositons.forEach(composition => {
+            this.PRODUCT_COMPOSTIONS.push(composition.doorId)
+          })
+        })
+        
       await fetch(
         `${thePath}/api/dataentities/GB/search?_fields=service,pairing,seller&an=samsungbrshop`
       )
