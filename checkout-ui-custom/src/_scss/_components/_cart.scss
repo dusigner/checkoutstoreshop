@@ -174,11 +174,17 @@ h1#cart-title {
   }
 
   td.shipping-date {
-    display: none;
+    display: block !important;
   }
 
   td.shipping-date.empty {
     display: none;
+  }
+
+  span.shipping-estimate-date.v-changeShippingTimeInfo-elem-active {
+    color: #000;
+    font-weight: normal;
+    font-size: 12px;
   }
 
   tbody {
@@ -263,6 +269,7 @@ h1#cart-title {
         grid-template-columns: 1fr 5fr 1fr;
         grid-template-areas:
           'image name price'
+          'image shipping-estimate-date no-area'
           'image quantity item-remove';
         position: relative;
         padding: 20px 0;
@@ -274,6 +281,7 @@ h1#cart-title {
           grid-template-areas:
             'item-remove item-remove'
             'name image'
+            'shipping-estimate-date image'
             'quantity price';
           padding: 10px 0;
         }
@@ -439,6 +447,9 @@ h1#cart-title {
 
         &.shipping-date {
           order: 3;
+          grid-area: shipping-estimate-date;
+          padding-top: 0;
+          text-align: left;
         }
 
         &.product-price {

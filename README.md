@@ -57,23 +57,3 @@ vtex publish
 ```
 
 Após isso instale a versão na account na WS de master.
-
-## Config in node_modules
-
-modify "checkout-ui-custom\node_modules\parcel-bundler\src\Bundle.js"
-
-From:
-
-```sh
-// Add the content hash and extension.
-return name + '.' + hash + ext;
-```
-
-To:
-
-```sh
-// Add the content hash and extension.
-return name + ext;
-```
-
-OBS: Map files ./dist with files checkout web 
