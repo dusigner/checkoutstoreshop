@@ -120,8 +120,7 @@ export default class ShippingEstimateCustom {
       '[id^="sla-option"]',
       '.srp-delivery-current-many__sla',
       '.shipping-estimate-date:eq(0)',
-      '.srp-shipping-current-single__sla',
-      '.shipping-data'
+      '.srp-shipping-current-single__sla'
     ]
 
     try {

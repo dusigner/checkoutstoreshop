@@ -287,7 +287,7 @@ export class CheckoutCustom {
         }
 
         const logisticsInfoData = orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' && orderForm.shippingData.logisticsInfo[i].selectedSla !== null
-          ? `Opção de entrega selecionada: <span class="delivery-option-selected">${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
+          ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
           : orderForm.shippingData.logisticsInfo[i].selectedSla === null
           ? '' 
           : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
