@@ -626,6 +626,19 @@ h1#cart-title {
         }
       }
 
+      .service-links-wrapper {
+        @media (max-width: $mobileWidth) {
+          grid-column-start: 1;
+          grid-column-end: 3;
+        }
+      }
+
+      a.service-link {
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: underline;
+      }
+
       &.v-custom-indexed-item {
         &:last-child {
           margin-bottom: 20px;
@@ -1493,17 +1506,6 @@ h1#cart-title {
       }
     }
   }
-}
-
-.selecaovoucher {
-  font-family: 'SamsungOne' !important;
-  font-size: 14px !important;
-  font-weight: 400 !important;
-  text-decoration: underline !important;
-  color: #2189ff !important;
-}
-tr.product-item:not(.coupom-instantvoucher) .instantvoucher {
-  display: none;
 }
 
 // end split cart in 2 columns

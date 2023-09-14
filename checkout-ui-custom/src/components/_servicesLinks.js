@@ -1,0 +1,114 @@
+const CHECK_SERVICES = {
+  ['samsungCare']: (refId, orderForm) => {
+    return orderForm.items.some(item => {
+      const { attachments } = item
+
+      return attachments.some(attachment => {
+        return attachment.content.refId === refId
+      })
+    })
+  },
+  ['installation']: function (refId, orderForm) {
+    return orderForm.items.some(item => {
+      const { attachments } = item
+
+      return attachments.some(attachment => {
+        return attachment.content.refId === refId
+      })
+    })
+  },
+  ['instantVoucher']: function (refId, orderForm) {
+    const currentItem = orderForm.items.find(item => item.refId === refId)
+    const { priceTags } = currentItem
+
+    return priceTags.some(priceTag => {
+      const { identifier } = priceTag
+      const { ratesAndBenefitsData } = orderForm
+
+      if (!ratesAndBenefitsData) {
+        return false
+      }
+
+      const { rateAndBenefitsIdentifiers } = ratesAndBenefitsData
+
+      const isInstantVoucherApplied = rateAndBenefitsIdentifiers.some(item => (
+        item.id === identifier && item.name.toLowerCase().includes('instant')
+      ))
+
+      return isInstantVoucherApplied
+    })
+  }
+}
+
+export class ServicesLinks {
+  constructor() {
+    this.serviceLinks = JSON.parse(localStorage.getItem('servicesLinks') || '[]')
+  }
+
+  _renderLink({ serviceId, skuId, linkText, linkUrl, showLink } = {}) {
+    const $item = $(`tr.product-item[data-sku="${skuId}"]`)
+    const alreadyRendered = $item.find('td.service-links-wrapper').length
+
+    if (alreadyRendered) {
+      return
+    }
+
+    if (showLink) {
+      return $item.find('td.quantity').after(`
+        <td class="empty-gap"></td>
+        <td class="service-links-wrapper" id="${serviceId}-${skuId}" >
+          <a class="service-link" href="${linkUrl}">
+            ${linkText}
+          </a>
+        </td>
+      `)
+    }
+  }
+
+  _priorizeInstantVoucherLink() {
+    const instantVoucherLinks = this.serviceLinks.filter(service => service.serviceId === 'instantVoucher')
+    const otherServices = this.serviceLinks.filter(service => service.serviceId !== 'instantVoucher')
+
+    this.serviceLinks = [...instantVoucherLinks, ...otherServices]
+  }
+
+  init(orderForm) {
+    try {
+      this._priorizeInstantVoucherLink()
+      
+      if (!orderForm.items) {
+        return
+      }
+
+      if (!orderForm.items.length) {
+        return
+      }
+
+      this.serviceLinks.forEach(({ serviceId, skuId, refId, linkText }) => {
+        const currentItem = orderForm.items.find(item => item.id === skuId)
+        const checkServicesFunction = CHECK_SERVICES[serviceId]
+        const skipInstantVoucherLink = (serviceId === 'instantVoucher') && ['5', '11', '12'].includes(orderForm.salesChannel)
+
+        if (!currentItem || !checkServicesFunction || skipInstantVoucherLink) {
+          return
+        }
+
+        const isInstantVoucher = serviceId === 'instantVoucher'
+        const productUrl = `${currentItem.detailUrl}?skuId=${skuId}&scroll=${serviceId}`
+        const instantVoucherUrl = `${currentItem.detailUrl.split('/p')[0]}/instant-voucher?skuId=${skuId}`
+        const linkUrl = isInstantVoucher ? instantVoucherUrl : productUrl
+        const hasServiceInCart = checkServicesFunction(refId, orderForm)
+
+        this._renderLink({
+          serviceId,
+          skuId,
+          linkText,
+          linkUrl,
+          showLink: !hasServiceInCart
+        })
+      })
+    } catch (err) {
+      console.error(`Ocorreu um erro ao adicionar links de serviços: ${err}`)
+    }
+  }
+}

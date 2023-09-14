@@ -25,6 +25,7 @@ import { Rewards } from '../components/rewards/_rewards'
 import { fnsCustomAddressForm } from '../components/_customAddressForm'
 import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
+import { ServicesLinks } from '../components/_servicesLinks'
 
 export class CheckoutCustom {
   constructor({
@@ -64,6 +65,7 @@ export class CheckoutCustom {
     this.messages = new Messages()
     this.discounts = new Discounts()
     this.fidelidade = new FidelidadeCustomizations()
+    this.servicesLinks = new ServicesLinks()
     // this.topBanners = new TopBanners()
 
     if (deliveryDateFormat) {
@@ -300,20 +302,11 @@ export class CheckoutCustom {
         const shippingText =
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
-        
-
         const moreInfoHtml = `
             <div class="more-info ${isInstallService || isSamsungCare ? "isServices" : ""}">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
               <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
-              <p class="instantvoucher">
-                <a class="selecaovoucher" href='${
-                  detailUrl.split('/p')[0] +
-                  '/instant-voucher?skuId=' +
-                  orderForm.items[i].id
-                }'>Voltar à seleção de cupom instantâneo</a>
-              </p>
             </div>
           `
 
@@ -558,29 +551,6 @@ export class CheckoutCustom {
   changeShippingTimeInfoInit() {
     if (this.deliveryDateFormat) {
       this.shippingEstimateCustom.init()
-    }
-  }
-
-  checkInstantVoucherService(orderForm) {
-    const cupomInstantVoucher = JSON.parse(
-      sessionStorage.getItem('instant-voucher')
-    )
-    const instantVoucherIdSku = Object.keys(cupomInstantVoucher)
-
-    try {
-      $.each(orderForm.items, function (i) {
-        const _trElem = $(`.table.cart-items tbody tr.product-item:eq(${i})`)
-        $.each(instantVoucherIdSku, function (j) {
-          if (
-            cupomInstantVoucher[`${instantVoucherIdSku[j]}`].length > 0 &&
-            orderForm.items[i].productId === instantVoucherIdSku[j]
-          ) {
-            _trElem.addClass('coupom-instantvoucher')
-          }
-        })
-      })
-    } catch (e) {
-      console.error('checkInstantVoucherService error:', e)
     }
   }
 
@@ -963,9 +933,6 @@ export class CheckoutCustom {
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
-    if ('instant-voucher' in sessionStorage) {
-      this.checkInstantVoucherService(orderForm)
-    }
     this.enchancementProductCart(orderForm)
     addEventListener('hashchange', async event => {
       const showHeader = ['#/payment', '#/shipping', '#/profile']
@@ -996,6 +963,7 @@ export class CheckoutCustom {
     this.installationService.init()
     new BespokeRefrigerator().init()
     this.changeShippingTimeInfoInit()
+    this.servicesLinks.init(orderForm)
 
     this.TradeIn.init(orderForm)
     await this.imgEmptyCart()
