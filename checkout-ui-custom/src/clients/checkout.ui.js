@@ -289,10 +289,10 @@ export class CheckoutCustom {
         }
 
         const logisticsInfoData = orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' && orderForm.shippingData.logisticsInfo[i].selectedSla !== null
-                                  ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br /> Até ${orderForm.shippingData.logisticsInfo[i].slas[0].shippingEstimate.replace('bd', '')} dias úteis após a confirmação do pagamento`
-                                  : orderForm.shippingData.logisticsInfo[i].selectedSla === null
-                                  ? '' 
-                                  : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
+          ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
+          : orderForm.shippingData.logisticsInfo[i].selectedSla === null
+          ? '' 
+          : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
 
         const refId = orderForm.items[i].refId || ''
         const { detailUrl } = orderForm.items[i]
@@ -1594,6 +1594,7 @@ export class CheckoutCustom {
       $(document).ajaxComplete(function (event, xhr, settings) {
         _this.init()
       })
+
       $(window).on('hashchange', function () {
         const cartItems = document.querySelector('.cart-items')
         if (

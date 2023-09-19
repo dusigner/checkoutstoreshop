@@ -28,15 +28,3 @@ npm run build-prod
 node dist/bundle.js
 ```
 
-## Config in node_modules
-
-modify "node_modules/parcel-bundler/src/Bundle.js"
-
-// Add the content hash and extension.
-return name + '.' + hash + ext;
-
-For
-
-// Add the content hash and extension.
-return name + ext;
-
