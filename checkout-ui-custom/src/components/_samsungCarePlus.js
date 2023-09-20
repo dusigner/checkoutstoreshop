@@ -278,6 +278,98 @@ export default class SamsungCarePlus {
     }
   }
 
+  removeSamsungCare(samsungCareItem) {
+    return new Promise((resolve, reject) => {
+      try {
+        const { items } = vtexjs.checkout.orderForm;
+  
+        if (items.indexOf(samsungCareItem) < 0) {
+          resolve('Item não encontrado no carrinho');
+          return;
+        }
+  
+        const itemsToRemove = [
+          {
+            index: items.indexOf(samsungCareItem),
+            quantity: 0,
+          },
+        ];
+  
+        window.cart.loadingItem(true);
+  
+        vtexjs.checkout
+          .removeItems(itemsToRemove, null, false)
+          .done(function () {
+            window.cart.loadingItem(false);
+            resolve(true);
+          })
+          .fail(function () {
+            window.cart.loadingItem(false);
+            reject(false);
+          });
+      } catch (err) {
+        console.error(`SamsungCarePlus - removeSamsungCare: ${err}`);
+        reject('Erro inesperado');
+      }
+    });
+  }
+  
+
+  modalRemoveConfirm(samsungCareItem) {
+    try {
+      const _this = this
+  
+      if ($('.layerpopup').length) {
+        return
+      }
+  
+      const $confirmModal = $(`<div class="layerpopup"></div>
+        <div class="modalssc ssc-modal-confirm">
+          <a class="ssc-cancel-action ssc-button-close"></a>
+          <h2>Não perca a oportunidade de Proteger seu dispositivo!</h2>
+          <p>Tem certeza que deseja remover o seguro Samsung Care+?</p>
+          <div>
+            <a class="ssc-remove-together">Sim</a>
+            <a class="ssc-cancel-action bg-blue">Não</a>
+          </div>
+        </div>`)
+
+      const $successModal = $(`<div class="layerpopup"></div>
+        <div class="modalssc ssc-modal-success">
+          <a class="ssc-cancel-action ssc-button-close"></a>
+          <h2>Seguro Samsung Care+ removido com sucesso!</h2>
+          <div>
+            <a class="ssc-cancel-action bg-blue">Continuar</a>
+          </div>
+      </div>`)
+  
+      $confirmModal.prependTo($('body'))
+  
+      $confirmModal.find('.ssc-remove-together').on('click', function() {
+        $('.modalssc, .layerpopup').remove()
+        _this.removeSamsungCare(samsungCareItem).then((result) => {
+          result 
+          ? $successModal.prependTo($('body')) 
+          : $confirmModal.prependTo($('body'))
+        }).catch((error) => {
+          console.error(error) 
+        })
+
+      })
+
+
+  
+      $confirmModal.find('.ssc-cancel-action').on('click', function() {
+        $('.modalssc, .layerpopup').remove()
+      })
+      $successModal.find('.ssc-cancel-action').on('click', function() {
+        $('.modalssc, .layerpopup').remove()
+      })
+    } catch (err) {
+      console.error(`SamsungCarePlus - modalRemoveConfirm: ${err}`);
+    }
+  }
+
   samsungCareModalTrigger() {
     try {
       const _this = this
@@ -289,16 +381,23 @@ export default class SamsungCarePlus {
   
         const { samsungCareItem, attachedItem, isFree } = item
   
-        if (samsungCareItem && attachedItem && isFree) {
-          const $freeSamsungCareElement = $(`tr.product-item[data-sku="${samsungCareItem.id}"]`)
-          const $removeIcon = $freeSamsungCareElement.find('.item-link-remove')
+        if (samsungCareItem && attachedItem) {
+          const $samsungCareElement = $(`tr.product-item[data-sku="${samsungCareItem.id}"]`)
+          const $removeIcon = $samsungCareElement.find('.item-link-remove')
           
           // Remove evento de click da vtex
           $removeIcon.unbind('click')
-  
-          // Adiciona evento customizado
+          
+          if(isFree) {
+            // Adiciona evento customizado
+            $removeIcon.click(function() {
+              _this.modalRemoveTogether(samsungCareItem, attachedItem)
+            })
+            return
+          } 
+
           $removeIcon.click(function() {
-            _this.modalRemoveTogether(samsungCareItem, attachedItem)
+            _this.modalRemoveConfirm(samsungCareItem)
           })
         }
       })
