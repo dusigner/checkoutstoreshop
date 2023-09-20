@@ -6,7 +6,7 @@ export const _locale = {
     PickupDateText: 'Pronto até',
     eachLabel: 'cada',
     tomorrowLabel: 'Amanhã',
-    cartSubmitButton: 'Continuar',
+    cartSubmitButton: 'Fechar pedido',
     checkoutStepsLabelCart: 'Carrinho',
     checkoutStepsLabelIdentification: 'Dados Pessoais',
     checkoutStepsLabelShipping: 'Entrega',
