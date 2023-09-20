@@ -50,6 +50,9 @@ export class CheckoutCustom {
     this.hideEmailStep = hideEmailStep
     this.lastOrderFormTotalPrice = 0
     this.termPrice = 0
+    this.subtotalTotalizer = 0
+    this.discountTotalizer = 0
+
     this.Rewards = null
 
     this.preEmail = new CustomPreEmail()
@@ -873,6 +876,11 @@ export class CheckoutCustom {
         const percentDiscount = Math.floor(
           100 - (inCashPrice / _this.termPrice) * 100
         )
+      
+        if(orderForm && orderForm.totalizers){
+          _this.subtotalTotalizer = orderForm.totalizers.find(item => item.id === 'Items').value
+          _this.discountTotalizer = orderForm.totalizers.find(item => item.id === 'Discounts').value
+        }
 
         const _component = `
               <div class="cart-total" style="margin-bottom: 20px; color: #000">
@@ -889,10 +897,17 @@ export class CheckoutCustom {
                       </div>`
                     : ''
                 }
-
-                <div class="discount-price" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                    <p class="gross-total">
-                      Ou parcelado em até 12x
+                ${!!_this.subtotalTotalizer && !!_this.discountTotalizer && (
+                  `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
+                    <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subtotalTotalizer)}</span> <b style="color:#006bea">Economia de ${formatCurrencyBRL(Math.abs(_this.discountTotalizer))} </b>
+                  </div>`
+                )}
+                <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
+                    <p>Ou parcelado em até 12x 
+                        <span 
+                          class="custom-tooltip">
+                        i
+                        </span>
                     </p>
                     <p class="discount-total" style="font-weight: 700;">
                       ${formatCurrencyBRL(_this.termPrice)}
@@ -901,17 +916,11 @@ export class CheckoutCustom {
               </div>
             `
 
-        if (path !== '#/cart') {
-          if (_trElem.find('.cart-total').length === 0) {
-            _trElem.prepend(_component)
-          }
-        } else if (path === '#/cart') {
-          if (_trElem.find('.cart-total').length === 0) {
-            _trElem.prepend(_component)
-          } else {
-            _trElem.find('.cart-total').remove()
-            _trElem.prepend(_component)
-          }
+        if (_trElem.find('.cart-total').length === 0) {
+          _trElem.prepend(_component)
+        } else {
+          _trElem.find('.cart-total').remove()
+          _trElem.prepend(_component)
         }
       }
     } catch (e) {
@@ -941,6 +950,7 @@ export class CheckoutCustom {
       if (showHeader.includes(hash)) {
         customHeader()
       }
+      this.enchancementSummaryCart(orderForm, window.location.hash)
     })
 
     if (!$('body').hasClass('modalActive')) {
