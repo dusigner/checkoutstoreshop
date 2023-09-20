@@ -890,20 +890,13 @@ export class CheckoutCustom {
                     inCashPrice
                   )}</p>
                 </div>
-                ${
-                  percentDiscount > 0
-                    ? `<div class="discount-percent" style="font-size: 12px; display: flex; justify-content: flex-end;">
-                        <p>(${percentDiscount}% de desconto)</p>
-                      </div>`
-                    : ''
-                }
                 ${!!_this.subtotalTotalizer && !!_this.discountTotalizer && (
                   `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
                     <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subtotalTotalizer)}</span> <b style="color:#006bea">Economia de ${formatCurrencyBRL(Math.abs(_this.discountTotalizer))} </b>
                   </div>`
                 )}
                 <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                    <p>Ou parcelado em até 12x 
+                    <p>Ou parcelado em até 12x
                         <span 
                           class="custom-tooltip">
                         i
