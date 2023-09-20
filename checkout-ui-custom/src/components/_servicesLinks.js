@@ -56,6 +56,7 @@ export class ServicesLinks {
     if (showLink) {
       return $item.find('td.quantity').after(`
         <td class="empty-gap"></td>
+        <td class="empty-gap"></td>
         <td class="service-links-wrapper" id="${serviceId}-${skuId}" >
           <a class="service-link" href="${linkUrl}">
             ${linkText}
