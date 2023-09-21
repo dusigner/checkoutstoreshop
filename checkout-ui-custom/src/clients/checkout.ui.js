@@ -886,11 +886,11 @@ export class CheckoutCustom {
                     inCashPrice
                   )}</p>
                 </div>
-                ${!!_this.subtotalTotalizer && !!_this.discountTotalizer && !!_this.subtotalTotalizer.value && !!_this.discountTotalizer.value && (
+                ${!!_this.subtotalTotalizer && !!_this.discountTotalizer && !!_this.subtotalTotalizer.value && !!_this.discountTotalizer.value ? (
                   `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
                     <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subtotalTotalizer.value)}</span> <b style="color:#006bea">Economia de ${formatCurrencyBRL(Math.abs(_this.discountTotalizer.value))} </b>
                   </div>`
-                )}
+                ) : ''}
                 <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p>Ou parcelado em até 12x
                         <span 
