@@ -46,7 +46,7 @@ export default class Discounts {
       <tr id="discount-${identifier}" class="discount cupon" style="height: 23px;">
         <td style="margin-left: 10px;">${title}</td>
         <td>
-          <span style="font-weight: 700">${formatNegativeValue(
+          <span>${formatNegativeValue(
             formatCurrencyBRL(value)
           )}</span>
         </td>

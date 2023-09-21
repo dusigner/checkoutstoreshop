@@ -268,7 +268,7 @@ h1#cart-title {
       border-bottom: 1px solid $muted5;
 
       .best-price {
-        .new-product-price.discount {
+        .new-product-price {
           text-decoration: line-through;
         }
       }
@@ -560,6 +560,7 @@ h1#cart-title {
 
         i.icon-question-sign {
           color: $actionPrimary;
+          display: none;
         }
 
         .add-item-attachment-container,
@@ -1150,18 +1151,19 @@ h1#cart-title {
       display: grid;
       grid-template-areas:
         'subtotal'
+        'descontos_total'
         'eco_troca'
         'discount_in_cash'
         'cupom'
         'cupom_desconto'
         'cupom_instantaneo'
         'garanteed_tradein'
-        'descontos_total'
         'installation_summary'
         'entrega';
 
       .Items {
         grid-area: subtotal;
+        font-weight: bold;
       }
 
       .installation-summary {
@@ -1191,6 +1193,11 @@ h1#cart-title {
 
       .srp-summary-result {
         grid-area: entrega;
+        font-weight: bold;
+
+        .monetary {
+          color: #006bea;
+        }
       }
     }
 
@@ -1283,6 +1290,44 @@ h1#cart-title {
   tfoot {
     display: none;
   }
+
+  .custom-tooltip {
+    color: #FFF;
+    background: #006bea;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+    position: relative;
+  }
+
+  .custom-tooltip::after {
+    content: "Ao continuar, você escolherá o meio de pagamento do seu pedido";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background-color: #006bea;
+    color: #FFF;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s, visibility 0.2s;
+  }
+  
+  .custom-tooltip:hover::after {
+    visibility: visible;
+    opacity: 1;
+  }
+
 }
 
 .summary-coupon {
