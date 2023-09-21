@@ -28,7 +28,7 @@ export default class CustomProfileData {
 
   async handleUserWhatsapp (){
     const _this = this
-    const { email, phone } = window.vtexjs.checkout.orderForm.clientProfileData
+    const email = window.vtexjs?.checkout?.orderForm?.clientProfileData?.email || document.getElementById('client-email')?.value
     const whatsNumber = $('#client-phone').val()
 
 
@@ -53,15 +53,17 @@ export default class CustomProfileData {
 
   async insertPartialNewProfileData() {
     const _this = this
-    const { email } = window.vtexjs.checkout.orderForm.clientProfileData
+    const email = window.vtexjs?.checkout?.orderForm?.clientProfileData?.email || document.getElementById('client-email')?.value
+
     let user;
     await fetch(`${_this.rootPath()}/_v1/private/whatsapp/getUserByEmail/${email}`)
       .then(response => response.json())
       .then(response => {
         user = response;
     })
-
+    
     if('data' in user == false && $('#inputWhats:checked').length > 0) {
+
       this.handleUserWhatsapp()
     } 
 
