@@ -777,8 +777,8 @@ export class CheckoutCustom {
     } catch (e) {
       console.error('enchancementTotalPrice error:', e)
     }
-    this.discountValueSubtotal()
     this.subTotalSummary(orderForm)
+    this.discountValueSubtotal()
   }
   subTotalSummary(orderForm) {
     const _this = this
@@ -799,7 +799,7 @@ export class CheckoutCustom {
     let subTotalValueFinal = valoresSubTotalArray.reduce((accumulator, value) => accumulator + value, 0);
     let discountPrices = orderForm.totalizers[0].value - subTotalValueFinal
     let hasDiscount = orderForm.totalizers.filter(val => val.id === 'Discounts')
-    let discountTotal = hasDiscount ? discountPrices + hasDiscount[0].value : discountPrices
+    let discountTotal = discountPrices + hasDiscount[0].value
     _subTotalElement.val(subTotalValueFinal)
     _subTotalElement.text(formatCurrencyBRL(subTotalValueFinal))
     _containerTotalizers.find('.value-discount-subtotal').text(formatCurrencyBRL(discountPrices))
@@ -816,7 +816,7 @@ export class CheckoutCustom {
     if (_containerTotalizers.find('.discount-subtotal-container').length === 0) {
       $(`.summary-totalizers .totalizers-list`).find('.Items').after(
         `<tr class="discount-subtotal-container" style="height: 23px;">
-          <td style="margin-left: 10px;">Pagamento a vista</td>
+          <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
           <td>
             <span class="value-discount-subtotal" style="font-weight: 700"></span>
           </td>
