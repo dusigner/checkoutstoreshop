@@ -1554,7 +1554,6 @@ export class CheckoutCustom {
     this.builder()
 
     if (this.orderForm) {
-      // this.enchancementTotalPrice(this.orderForm)
       this.update(this.orderForm)
       this.paymentBuilder(this.orderForm)
       this.CSP.init(this.orderForm)
