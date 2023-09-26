@@ -19,6 +19,7 @@ import { rootPath } from '../components/utils/_rootPath'
 import {
   debounce,
   formatCurrencyBRL,
+  formatNegativeValue,
 } from '../components/_utils'
 import { customHeader } from '../components/headerCustom/header'
 import { Rewards } from '../components/rewards/_rewards'
@@ -778,10 +779,10 @@ export class CheckoutCustom {
       console.error('enchancementTotalPrice error:', e)
     }
     this.subTotalSummary(orderForm)
-    this.discountValueSubtotal()
   }
   subTotalSummary(orderForm) {
     const _this = this
+
     if (!_this.quantityPriceCart) return
 
     const _containerTotalizers = $('.summary-totalizers .totalizers-list')
@@ -791,37 +792,67 @@ export class CheckoutCustom {
     const _elementListPrice = $('td.product-price').find('.new-product-price')
 
     let valoresSubTotalArray = [];
+
     _elementListPrice.each(function () {
       let valor = $(this).val();
       if (valor != "")
         valoresSubTotalArray.push(parseInt(valor));
     });
+
     let subTotalValueFinal = valoresSubTotalArray.reduce((accumulator, value) => accumulator + value, 0);
     let discountPrices = orderForm.totalizers[0].value - subTotalValueFinal
-    let hasDiscount = orderForm.totalizers.filter(val => val.id === 'Discounts')
-    let discountTotal = discountPrices + hasDiscount[0].value
+    let discountFinalFormatted = formatNegativeValue(formatCurrencyBRL(discountPrices))
     _subTotalElement.val(subTotalValueFinal)
     _subTotalElement.text(formatCurrencyBRL(subTotalValueFinal))
-    _containerTotalizers.find('.value-discount-subtotal').text(formatCurrencyBRL(discountPrices))
-    _discountElement.text(formatCurrencyBRL(discountTotal))
+
     if (valoresSubTotalArray.length > 0 && _subTotalElement.val() === `${subTotalValueFinal}`) {
       _containerTotalizers.css("display", "block")
     } else {
       _containerTotalizers.css("display", "none")
     }
-  }
 
-  discountValueSubtotal() {
-    const _containerTotalizers = $(`.summary-totalizers .totalizers-list`)
-    if (_containerTotalizers.find('.discount-subtotal-container').length === 0) {
-      $(`.summary-totalizers .totalizers-list`).find('.Items').after(
-        `<tr class="discount-subtotal-container" style="height: 23px;">
-          <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
-          <td>
-            <span class="value-discount-subtotal" style="font-weight: 700"></span>
-          </td>
-        </tr>`
-      )
+    if (orderForm.value === subTotalValueFinal) {
+      $(`.discount-subtotal-container`).remove()
+      $(`.new-discount-value-container`).remove()
+      $(`.new-discount-total-container`).remove()
+    } else {
+      if (discountPrices) {
+        let hasDiscount = orderForm.totalizers?.filter(val => val.id === 'Discounts')
+        let discountTotal = discountPrices + hasDiscount[0]?.value
+        _discountElement.text(formatNegativeValue(formatCurrencyBRL(discountTotal)))
+        if (hasDiscount.length > 0) {
+          if (_containerTotalizers.find('.discount-subtotal-container').length === 0) {
+            $(`.summary-totalizers .totalizers-list`).find('.Items').after(
+              `<tr class="discount-subtotal-container" style="height: 23px;">
+                <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
+                <td>
+                  <span class="value-discount-subtotal" style="font-weight: 700">${discountFinalFormatted}</span>
+                </td>
+              </tr>`
+            )
+          }
+          $(`.new-discount-value-container`).remove()
+          $(`.new-discount-total-container`).remove()
+        } else {
+          if (_containerTotalizers.find('.new-discount-value-container').length === 0 && _containerTotalizers.find('.new-discount-total-container').length === 0) {
+            $(`.summary-totalizers .totalizers-list`).find('.Items').after(
+              `<tr class="new-discount-value-container" style="height: 23px;">
+              <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
+              <td>
+                <span class="new-value-discount-total" style="font-weight: 700">${discountFinalFormatted}</span>
+              </td>
+            </tr>
+            <tr class="new-discount-total-container" style="height: 23px;">
+              <td style="font-weight: 700">Descontos Totais</td>
+              <td>
+                <span class="new-discount-total" style="font-weight: 700">${discountFinalFormatted}</span>
+              </td>
+            </tr>`
+            )
+          }
+          $(`.discount-subtotal-container`).remove()
+        }
+      }
     }
   }
 
@@ -914,8 +945,8 @@ export class CheckoutCustom {
               console.error('onTerm Price error', e)
             })
         }
-      
-        if(orderForm && orderForm.totalizers){
+
+        if (orderForm && orderForm.totalizers) {
           _this.subtotalTotalizer = orderForm.totalizers.find(item => item.id === 'Items')
           _this.discountTotalizer = orderForm.totalizers.find(item => item.id === 'Discounts')
         }
@@ -929,10 +960,10 @@ export class CheckoutCustom {
         )}</p>
                 </div>
                 ${!!_this.subtotalTotalizer && !!_this.discountTotalizer && !!_this.subtotalTotalizer.value && !!_this.discountTotalizer.value ? (
-                  `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
+            `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
                     <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subtotalTotalizer.value)}</span> <b style="color:#006bea">Economia de ${formatCurrencyBRL(Math.abs(_this.discountTotalizer.value))} </b>
                   </div>`
-                ) : ''}
+          ) : ''}
                 <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p>Ou parcelado em até 12x
                         <span 
