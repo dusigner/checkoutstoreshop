@@ -974,6 +974,7 @@ export class CheckoutCustom {
     }, 250)
 
     updateDebounce()
+    this.prepareNativeEVoucher()
   }
 
   paymentBuilder(orderForm) {
@@ -1477,6 +1478,8 @@ export class CheckoutCustom {
       window.vtex.showInstallmentsPreviewValue = true
     }
 
+    this.prepareNativeEVoucher()
+
     this.orderForm = window.vtexjs ? window.vtexjs.checkout.orderForm : false
 
     general()
@@ -1829,6 +1832,37 @@ export class CheckoutCustom {
     .then(() => {
       location.reload()
     })
+  }
+
+  prepareNativeEVoucher (){
+
+    // const vouchersToRemove = [
+    //   'rewards',
+    //   'vipclub'
+    // ]
+
+    // const checkElement = setInterval(()=>{
+
+    //   if(document.querySelector('.gift-card-provider-group')){
+
+    //     console.log('prepareNativeEVoucher: tem gift-card-provider-group')
+    //     document.querySelector('.gift-card-provider-group').style.display='none'
+  
+    //     document.querySelectorAll('tbody[data-bind="foreach: giftCards"] tr').forEach(el => {
+    //       vouchersToRemove.map(program => {
+    //         if(el.innerText.toLowerCase().indexOf(program) >= 0){
+    //           el.remove()
+    //         }
+    //       })
+    //     })
+        
+    //     document.querySelector('.gift-card-provider-group').style.display='block'
+    //   }
+
+    //   clearInterval(checkElement)
+    //   console.log('prepareNativeEVoucher: sai do loop')
+    
+    // },10000)
   }
 
 }

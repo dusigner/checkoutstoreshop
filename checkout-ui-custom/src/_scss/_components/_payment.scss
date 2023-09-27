@@ -1329,8 +1329,19 @@
 	grid-area: giftcard-content;
 }
 
-.gift-card-provider-group{
+.gift-card-provider-group-ssg_rewards, .gift-card-provider{
   display: none;
+}
+
+.payment-discoints-table .code,
+.payment-discoints-table .action a {
+  color: #000;
+  font-weight: bold;
+}
+
+.payment-discoints-table .number .muted {
+  color: #006BEA;
+  font-weight: bold;
 }
 
 #rewards-remove-discount:hover {
