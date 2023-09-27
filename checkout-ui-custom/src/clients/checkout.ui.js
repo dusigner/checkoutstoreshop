@@ -16,10 +16,7 @@ import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 
-import {
-  debounce,
-  formatCurrencyBRL,
-} from '../components/_utils'
+import { debounce, formatCurrencyBRL } from '../components/_utils'
 import { customHeader } from '../components/headerCustom/header'
 import { Rewards } from '../components/rewards/_rewards'
 import { fnsCustomAddressForm } from '../components/_customAddressForm'
@@ -291,11 +288,20 @@ export class CheckoutCustom {
           return
         }
 
-        const logisticsInfoData = orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' && orderForm.shippingData.logisticsInfo[i].selectedSla !== null
-          ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
-          : orderForm.shippingData.logisticsInfo[i].selectedSla === null
-          ? '' 
-          : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(pickup => pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla).pickupStoreInfo.friendlyName}</span><br /> Retirada após confirmação via e-mail`;
+        const logisticsInfoData =
+          orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel ===
+            'delivery' &&
+          orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+            ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
+            : orderForm.shippingData.logisticsInfo[i].selectedSla === null
+            ? ''
+            : `Retirada em: <span>${
+                orderForm.shippingData.logisticsInfo[i].slas.find(
+                  pickup =>
+                    pickup.name ===
+                    orderForm.shippingData.logisticsInfo[i].selectedSla
+                ).pickupStoreInfo.friendlyName
+              }</span><br /> Retirada após confirmação via e-mail`
 
         const refId = orderForm.items[i].refId || ''
         const { detailUrl } = orderForm.items[i]
@@ -306,7 +312,9 @@ export class CheckoutCustom {
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
         const moreInfoHtml = `
-            <div class="more-info ${isInstallService || isSamsungCare ? "isServices" : ""}">
+            <div class="more-info ${
+              isInstallService || isSamsungCare ? 'isServices' : ''
+            }">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
               <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
@@ -872,10 +880,14 @@ export class CheckoutCustom {
               console.error('onTerm Price error', e)
             })
         }
-      
-        if(orderForm && orderForm.totalizers){
-          _this.subtotalTotalizer = orderForm.totalizers.find(item => item.id === 'Items')
-          _this.discountTotalizer = orderForm.totalizers.find(item => item.id === 'Discounts')
+
+        if (orderForm && orderForm.totalizers) {
+          _this.subtotalTotalizer = orderForm.totalizers.find(
+            item => item.id === 'Items'
+          )
+          _this.discountTotalizer = orderForm.totalizers.find(
+            item => item.id === 'Discounts'
+          )
         }
 
         const _component = `
@@ -886,11 +898,20 @@ export class CheckoutCustom {
                     inCashPrice
                   )}</p>
                 </div>
-                ${!!_this.subtotalTotalizer && !!_this.discountTotalizer && !!_this.subtotalTotalizer.value && !!_this.discountTotalizer.value ? (
-                  `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
-                    <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subtotalTotalizer.value)}</span> <b style="color:#006bea">Economia de ${formatCurrencyBRL(Math.abs(_this.discountTotalizer.value))} </b>
+                ${
+                  !!_this.subtotalTotalizer &&
+                  !!_this.discountTotalizer &&
+                  !!_this.subtotalTotalizer.value &&
+                  !!_this.discountTotalizer.value
+                    ? `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
+                    <span style="text-decoration: line-through">${formatCurrencyBRL(
+                      _this.subtotalTotalizer.value
+                    )}</span> <b style="color:#006bea">Economia de ${formatCurrencyBRL(
+                        Math.abs(_this.discountTotalizer.value)
+                      )} </b>
                   </div>`
-                ) : ''}
+                    : ''
+                }
                 <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p>Ou parcelado em até 12x
                         <span 
@@ -1127,23 +1148,24 @@ export class CheckoutCustom {
   }
 
   scrollToPaymentCard(orderForm) {
-    const paymentLength = orderForm.paymentData.payments.length;
-    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem;
-  
+    const paymentLength = orderForm.paymentData.payments.length
+    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem
+
     if (paymentLength == 1 && paymentSystem == 2) {
-        const paymentCardsGroup = document.querySelector('.payment-group-item-cards');
-      
-        if (paymentCardsGroup) {
-            const offsetTop = paymentCardsGroup.offsetTop;
+      const paymentCardsGroup = document.querySelector(
+        '.payment-group-item-cards'
+      )
 
-            window.scrollTo({
-                top: offsetTop,
-                behavior: 'smooth'
-            });
-        }
+      if (paymentCardsGroup) {
+        const offsetTop = paymentCardsGroup.offsetTop
+
+        window.scrollTo({
+          top: offsetTop,
+          behavior: 'smooth',
+        })
+      }
     }
-}
-
+  }
 
   defaultPaymentMethod() {
     try {
@@ -1467,8 +1489,7 @@ export class CheckoutCustom {
   }
 
   init() {
-            
-    if(window.location && this.orderForm){
+    if (window.location && this.orderForm) {
       const hash = window.location.hash
       this.handleOrderFromEndless(hash, this.orderForm)
     }
@@ -1492,7 +1513,6 @@ export class CheckoutCustom {
 
     this.fixLabels()
     this.CheckoutLimit.init()
-    
   }
 
   start() {
@@ -1517,7 +1537,6 @@ export class CheckoutCustom {
 
         // #profile
         _this.profile.bindEvents()
-
       })
 
       $(window).on('checkoutRequestBegin.vtex', function (event, request) {
@@ -1719,7 +1738,7 @@ export class CheckoutCustom {
         _this.shipping.toggleGoToPaymentDisabled()
       })
 
-      $(window).on('componentValidated.vtex', function() {
+      $(window).on('componentValidated.vtex', function () {
         try {
           _this.discounts.init(vtexjs.checkout.orderForm)
         } catch (err) {
@@ -1812,23 +1831,25 @@ export class CheckoutCustom {
 
   /**
    * Essa função é responsável por limpar os dados pessoais (clientProfielData).
-   * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar 
+   * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar
    * para o cliente.
    */
-  handleOrderFromEndless(hash, orderForm){
-    if(hash !== '#/cart') return
+  handleOrderFromEndless(hash, orderForm) {
+    if (hash !== '#/cart') return
 
-    const isOrderFromEndless = orderForm.customData?.customApps?.some(customApp => customApp.id === 'endlessaisle')
-    if(!isOrderFromEndless) return
+    const isOrderFromEndless = orderForm.customData?.customApps?.some(
+      customApp => customApp.id === 'endlessaisle'
+    )
+    if (!isOrderFromEndless) return
 
-    if(!orderForm.clientProfileData) return
+    if (!orderForm.clientProfileData) return
 
-    if(!orderForm.clientProfileData.email) return
+    if (!orderForm.clientProfileData.email) return
 
-    fetch(`${rootPath()}/checkout/changeToAnonymousUser/${orderForm.orderFormId}`)
-    .then(() => {
+    fetch(
+      `${rootPath()}/checkout/changeToAnonymousUser/${orderForm.orderFormId}`
+    ).then(() => {
       location.reload()
     })
   }
-
 }
