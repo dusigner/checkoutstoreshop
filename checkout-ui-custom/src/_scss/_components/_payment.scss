@@ -1329,8 +1329,11 @@
 	grid-area: giftcard-content;
 }
 
-.gift-card-provider-group-ssg_rewards, .gift-card-provider{
-  display: none;
+.gift-card-provider-group-ssg_rewards, 
+.gift-card-provider, 
+.partialValue, 
+.payment-discoints-table .number span:not(.muted){
+  display: none !important;
 }
 
 .payment-discoints-table .code,
