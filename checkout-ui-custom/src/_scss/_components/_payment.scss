@@ -1354,6 +1354,19 @@
   font-weight: bold;
 }
 
+.payment-discoints-table .action a[data-i18n="global.addCredit"] {
+	font-size: 0!important;
+    align-items: center;
+    justify-content: center;
+  }
+
+.payment-discoints-table .action a[data-i18n="global.addCredit"]::before {
+	content:'Utilizar crédito';
+	color: #000;
+	font-size: 14px;
+	font-weight: bold;
+  }
+
 .payment-discoints-table .number .muted {
   color: #006BEA;
   font-weight: bold;
