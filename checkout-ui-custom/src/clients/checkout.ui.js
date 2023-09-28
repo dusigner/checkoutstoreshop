@@ -888,7 +888,7 @@ export class CheckoutCustom {
                 </div>
                 ${!!_this.subtotalTotalizer && !!_this.discountTotalizer && !!_this.subtotalTotalizer.value && !!_this.discountTotalizer.value ? (
                   `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
-                    <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subtotalTotalizer.value)}</span> <b style="color:#006bea">Economia de ${formatCurrencyBRL(Math.abs(_this.discountTotalizer.value))} </b>
+                    <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subtotalTotalizer.value)}</span> <b style="color:#2189FF">Economia de ${formatCurrencyBRL(Math.abs(_this.discountTotalizer.value))} </b>
                   </div>`
                 ) : ''}
                 <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
@@ -924,6 +924,16 @@ export class CheckoutCustom {
       $('body').removeClass('v-custom-cart-empty')
     }
   }
+
+  shippingColor(orderForm) {
+    const shippingTotalizer = orderForm.totalizers.find(
+      item => item.id === 'Shipping'
+    )
+    if (shippingTotalizer && shippingTotalizer.value <= 0.1) {
+      $('.srp-summary-result .monetary').addClass('textBlue')
+    }
+  }
+
   async update(orderForm) {
     const _this = this
 
@@ -932,6 +942,8 @@ export class CheckoutCustom {
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
+    this.shippingColor(orderForm)
+    
     addEventListener('hashchange', async event => {
       const showHeader = ['#/payment', '#/shipping', '#/profile']
       const { hash } = event.target.location
