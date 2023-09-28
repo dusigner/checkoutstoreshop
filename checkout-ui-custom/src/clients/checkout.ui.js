@@ -945,6 +945,16 @@ export class CheckoutCustom {
       $('body').removeClass('v-custom-cart-empty')
     }
   }
+
+  shippingColor(orderForm) {
+    const shippingTotalizer = orderForm.totalizers.find(
+      item => item.id === 'Shipping'
+    )
+    if (shippingTotalizer && shippingTotalizer.value <= 0.1) {
+      $('.srp-summary-result .monetary').addClass('textBlue')
+    }
+  }
+
   async update(orderForm) {
     const _this = this
 
@@ -953,6 +963,8 @@ export class CheckoutCustom {
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
+    this.shippingColor(orderForm)
+    
     addEventListener('hashchange', async event => {
       const showHeader = ['#/payment', '#/shipping', '#/profile']
       const { hash } = event.target.location

@@ -1195,8 +1195,8 @@ h1#cart-title {
         grid-area: entrega;
         font-weight: bold;
 
-        .monetary {
-          color: #006bea;
+        .monetary.textBlue {
+          color: #2189FF;
         }
       }
     }
@@ -1293,7 +1293,7 @@ h1#cart-title {
 
   .custom-tooltip {
     color: #FFF;
-    background: #006bea;
+    background: #2189FF;
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -1313,7 +1313,7 @@ h1#cart-title {
     left: 50%;
     transform: translateX(-50%);
     padding: 5px 10px;
-    background-color: #006bea;
+    background-color: #2189FF;
     color: #FFF;
     border-radius: 5px;
     font-size: 12px;

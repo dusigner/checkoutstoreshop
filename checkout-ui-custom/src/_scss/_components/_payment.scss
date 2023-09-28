@@ -1329,8 +1329,67 @@
 	grid-area: giftcard-content;
 }
 
-.gift-card-provider-group{
-  display: none;
+.payment-discounts-list table tr:nth-child(2){
+    flex-wrap: nowrap !important;
+}
+
+.gift-card-provider-group-ssg_rewards, 
+.gift-card-provider, 
+.partialValue, 
+.payment-discoints-table .number span:not(.muted){
+  display: none !important;
+}
+.payment-discoints-table .code:before {
+    content: 'Crédito disponível:';
+    font-weight: bold;
+}
+
+.payment-discoints-table .code {
+  color: #000;
+  font-weight: normal;
+}
+
+.payment-discoints-table .action a {
+  color: #000;
+  font-weight: bold;
+}
+
+.payment-discoints-table .action a[data-i18n="global.addCredit"] {
+	font-size: 0!important;
+    align-items: center;
+    justify-content: center;
+  }
+
+.payment-discoints-table .action a[data-i18n="global.addCredit"]::before {
+	content:'Utilizar crédito';
+	color: #000;
+	font-size: 14px;
+	font-weight: bold;
+	position: relative;
+    top: 3px;
+  }
+
+.payment-discoints-table .number .muted {
+  color: #006BEA;
+  font-weight: bold;
+}
+
+.payment-discoints-table .number {
+	min-width: 100px;
+  }
+
+.gift-card-section {
+    background: #F5F7FE !important;
+    padding: 15px 15px 5px 15px !important;
+	margin-bottom: 10px;
+}
+
+.payment-discounts-list {
+	margin-bottom: 0px !important;
+}
+
+.gift-card-provider-group {
+    margin-bottom: 10px;
 }
 
 #rewards-remove-discount:hover {
