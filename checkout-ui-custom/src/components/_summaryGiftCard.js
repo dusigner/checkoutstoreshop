@@ -58,14 +58,30 @@ export default class SummaryGiftCard {
         }
       })
       
-      if (total) {
+      if (total > 0) {
         $('.estimate-shipping').text(formatCurrencyBRL(total, false))
+      }
+      if (total <= 0 && vale > 0) {
+        $('.estimate-shipping').text(formatCurrencyBRL('000', false))
       }
 
     }
   }
 
+  removeGlobalName(){
+    const checkTerm = setInterval(()=>{
+      if(document.querySelectorAll('.gift-card-friendly-name')){
+        document.querySelectorAll('.gift-card-friendly-name').forEach(el => {
+          if(el.innerText.indexOf('global') >= 0)
+          el.innerText = el.innerText.split('.')[1]
+        })
+        clearInterval(checkTerm)
+      }
+    },100)
+  }
+
   init(orderForm) {
     this.giftCard(orderForm)
+    this.removeGlobalName()
   }
 }

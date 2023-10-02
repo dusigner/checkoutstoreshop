@@ -1572,6 +1572,7 @@ export class CheckoutCustom {
       this.update(this.orderForm)
       this.paymentBuilder(this.orderForm)
       this.CSP.init(this.orderForm)
+      this.SummaryGiftCard.init(this.orderForm)
     }
 
     this.fixLabels()

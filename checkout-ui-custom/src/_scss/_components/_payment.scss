@@ -1136,7 +1136,7 @@
 			 tbody {
 		    border-top:1px solid $muted4;
 		    padding: 14px 0;
-  			display: grid;
+  			display: grid !important;
 
   			tr {
 			    &.CustomTax:not(.CustomTax--total) {
@@ -1390,6 +1390,14 @@ margin-bottom: 0px !important;
 
 .gift-card-provider-group {
   margin-bottom: 10px;
+}
+.srp-summary-voucher{
+  margin-top: 2px;
+  margin-bottom: 2px;
+  grid-area: evoucher;
+  .monetaryvoucher{
+    margin-left: auto;
+  }
 }
 
 #rewards-remove-discount:hover {
