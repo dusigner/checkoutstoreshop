@@ -826,7 +826,7 @@ export class CheckoutCustom {
               `<tr class="discount-subtotal-container" style="height: 23px;">
                 <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
                 <td>
-                  <span class="value-discount-subtotal" style="font-weight: 700">${discountFinalFormatted}</span>
+                  <span class="value-discount-subtotal">${discountFinalFormatted}</span>
                 </td>
               </tr>`
             )
