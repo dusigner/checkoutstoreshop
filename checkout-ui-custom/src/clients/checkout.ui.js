@@ -806,7 +806,7 @@ export class CheckoutCustom {
     _subTotalElement.text(formatCurrencyBRL(subTotalValueFinal))
 
     if (valoresSubTotalArray.length > 0 && _subTotalElement.val() === `${subTotalValueFinal}`) {
-      _containerTotalizers.css("display", "block")
+      _containerTotalizers.css("display", "flex")
     } else {
       _containerTotalizers.css("display", "none")
     }
@@ -823,10 +823,10 @@ export class CheckoutCustom {
         if (hasDiscount.length > 0) {
           if (_containerTotalizers.find('.discount-subtotal-container').length === 0) {
             $(`.summary-totalizers .totalizers-list`).find('.Items').after(
-              `<tr class="discount-subtotal-container" style="height: 23px;">
+              `<tr class="discount-subtotal-container" style="height: 23px; order: 2;">
                 <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
                 <td>
-                  <span class="value-discount-subtotal" style="font-weight: 700">${discountFinalFormatted}</span>
+                  <span class="value-discount-subtotal">${discountFinalFormatted}</span>
                 </td>
               </tr>`
             )
@@ -836,18 +836,18 @@ export class CheckoutCustom {
         } else {
           if (_containerTotalizers.find('.new-discount-value-container').length === 0 && _containerTotalizers.find('.new-discount-total-container').length === 0) {
             $(`.summary-totalizers .totalizers-list`).find('.Items').after(
-              `<tr class="new-discount-value-container" style="height: 23px;">
-              <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
-              <td>
-                <span class="new-value-discount-total" style="font-weight: 700">${discountFinalFormatted}</span>
-              </td>
-            </tr>
-            <tr class="new-discount-total-container" style="height: 23px;">
-              <td style="font-weight: 700">Descontos Totais</td>
-              <td>
-                <span class="new-discount-total" style="font-weight: 700">${discountFinalFormatted}</span>
-              </td>
-            </tr>`
+              `<tr class="new-discount-value-container" style="height: 23px; order: 2;">
+                <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
+                <td>
+                  <span class="new-value-discount-total">${discountFinalFormatted}</span>
+                </td>
+              </tr>
+              <tr class="new-discount-total-container" style="height: 23px; order: 1;">
+                <td style="font-weight: 700">Descontos Totais</td>
+                <td>
+                  <span class="new-discount-total" style="font-weight: 700">${discountFinalFormatted}</span>
+                </td>
+              </tr>`
             )
           }
           $(`.discount-subtotal-container`).remove()
@@ -960,7 +960,7 @@ export class CheckoutCustom {
         )}</p>
                 </div>
                 ${!!_this.subtotalTotalizer && !!_this.discountTotalizer && !!_this.subtotalTotalizer.value && !!_this.discountTotalizer.value ? (
-                  `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
+            `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
                     <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subtotalTotalizer.value)}</span> <b style="color:#2189FF">Economia de ${formatCurrencyBRL(Math.abs(_this.discountTotalizer.value))} </b>
                   </div>`
           ) : ''}
@@ -1016,7 +1016,7 @@ export class CheckoutCustom {
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
     this.shippingColor(orderForm)
-    
+
     addEventListener('hashchange', async event => {
       const showHeader = ['#/payment', '#/shipping', '#/profile']
       const { hash } = event.target.location

@@ -1164,36 +1164,48 @@ h1#cart-title {
       .Items {
         grid-area: subtotal;
         font-weight: bold;
+        order: 0;
+      }
+
+      .Shipping {
+        order: 2;
       }
 
       .installation-summary {
         grid-area: installation_summary;
+        order: 2;
       }
 
       .discount.discount_in_cash {
         grid-area: discount_in_cash;
+        order: 2;
       }
 
       .coupon-applied {
         grid-area: cupom;
+        order: 2;
       }
 
       .eco_troca {
         grid-area: eco_troca;
+        order: 2;
       }
 
       .Discounts {
         grid-area: descontos_total;
         max-height: 23px;
+        order: 1;
       }
 
       .discount.garanteed-tradein {
         grid-area: garanteed_tradein;
+        order: 2;
       }
 
       .srp-summary-result {
         grid-area: entrega;
         font-weight: bold;
+        order: 2;
 
         .monetary.textBlue {
           color: #2189FF;
@@ -1211,6 +1223,7 @@ h1#cart-title {
         grid-area: totalizers-list;
         border-bottom: 1px solid #cbcbcb;
         margin-bottom: 16px;
+        flex-direction: column;
       }
     }
 
@@ -1258,6 +1271,7 @@ h1#cart-title {
     display: flex !important;
     justify-content: space-between;
     border: none !important;
+    order: 2;
 
     &.CustomTax:not(.CustomTax--total) {
       display: none !important;
