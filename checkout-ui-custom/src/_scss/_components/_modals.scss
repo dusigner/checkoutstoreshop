@@ -23,3 +23,13 @@
 .payment-confirmation-message {
   width:100%;
 }
+
+#checkoutMainContainer .modal {
+  top: 90px;
+}
+
+@media (max-width: 769px) {
+  #checkoutMainContainer .modal {
+    top: 140px;
+  }
+}
