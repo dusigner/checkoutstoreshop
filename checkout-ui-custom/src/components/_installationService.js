@@ -10,23 +10,29 @@ export default class InstallationService {
   removeInstallations(items) {
     try {
       const installationServices = this.getInstallationItems(items)
-  
+
       if (!installationServices.length) {
         return
       }
-  
-      const itemsToRemove = installationServices.reduce((acc, currentInstallation) => {
-        const hasAttachedItem = this._findAttachedItem(currentInstallation, items)
 
-        if (!hasAttachedItem) {
-          acc.push({
-            index: items.indexOf(currentInstallation),
-            quantity: 0
-          })
-        }
-  
-        return acc
-      }, [])
+      const itemsToRemove = installationServices.reduce(
+        (acc, currentInstallation) => {
+          const hasAttachedItem = this._findAttachedItem(
+            currentInstallation,
+            items
+          )
+
+          if (!hasAttachedItem) {
+            acc.push({
+              index: items.indexOf(currentInstallation),
+              quantity: 0,
+            })
+          }
+
+          return acc
+        },
+        []
+      )
 
       // prevent infinite loop
       if (this.error) {
@@ -35,13 +41,16 @@ export default class InstallationService {
 
       if (itemsToRemove.length) {
         window.cart.loadingItem(true)
-  
-        vtexjs.checkout.removeItems(itemsToRemove, null, false).done(function() {
-          window.cart.loadingItem(false)
-        }).fail(function() {
-          window.cart.loadingItem(false)
-          this.error = true // prevent infinite loop
-        })
+
+        vtexjs.checkout
+          .removeItems(itemsToRemove, null, false)
+          .done(function () {
+            window.cart.loadingItem(false)
+          })
+          .fail(function () {
+            window.cart.loadingItem(false)
+            this.error = true // prevent infinite loop
+          })
       }
     } catch (err) {
       console.error(`Não foi possível remover items de instalação: ${err}`)
@@ -51,15 +60,15 @@ export default class InstallationService {
   _findAttachedItem(installationItem, items) {
     const { attachments } = installationItem
 
-    const attachmentItem = attachments.find(attachment => (
+    const attachmentItem = attachments.find(attachment =>
       items.some(item => item.refId === attachment.content.refId)
-    ))
+    )
 
     return attachmentItem
   }
 
   getInstallationItems(items) {
-    return items.filter((item) => item.detailUrl.includes(this.INSTALLATION_URL))
+    return items.filter(item => item.detailUrl.includes(this.INSTALLATION_URL))
   }
 
   addClassToInstallationItems(items) {
@@ -79,9 +88,9 @@ export default class InstallationService {
       if (!orderForm) {
         return
       }
-  
+
       const { items } = orderForm
-  
+
       // empty carty
       if (!items || !items.length) {
         return

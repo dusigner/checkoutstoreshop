@@ -3,45 +3,61 @@
 @font-face {
   font-family: SamsungOne;
   src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.eot);
-  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.eot#iefix) format("embedded-opentype"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.woff2) format("woff2"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.woff) format("woff"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.ttf) format("truetype");
+  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.eot#iefix)
+      format('embedded-opentype'),
+    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.woff2)
+      format('woff2'),
+    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.woff)
+      format('woff'),
+    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.ttf)
+      format('truetype');
   font-weight: 400;
-  font-style: normal
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: SamsungOne;
   src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.eot);
-  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.eot#iefix) format("embedded-opentype"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.woff2) format("woff2"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.woff) format("woff"), url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.ttf) format("truetype");
+  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.eot#iefix)
+      format('embedded-opentype'),
+    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.woff2)
+      format('woff2'),
+    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.woff)
+      format('woff'),
+    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.ttf)
+      format('truetype');
   font-weight: 700;
-  font-style: normal
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-	font-family: 'SamsungSharpSans';
-	src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.eot);
-	src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.eot?#iefix)
-			format('embedded-opentype'),
-		url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.woff)
-			format('woff');
-	font-weight: bold;
-	font-style: normal;
+  font-family: 'SamsungSharpSans';
+  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.eot);
+  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.eot?#iefix)
+      format('embedded-opentype'),
+    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.woff)
+      format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
 }
 
 $base: #ffffff; // body bg...
 $baseInverted: #21364f; // general
 
-$actionPrimary: #2189FF; //links, buttons borders, backgrounds
+$actionPrimary: #2189ff; //links, buttons borders, backgrounds
 $actionPrimaryDarken: #1d63be; // usually 15% more
 
 $actionSecondary: #f1f7ff;
 
-
 $emphasis: #000000;
 $disabled: #999999;
 
-$success: #2189FF; // success button, cta, usually the "checkout", "login", "pay"
-$successDarken: #006BEA;  // usually 15% more
-$successFaded: #006BEA;
+$success: #2189ff; // success button, cta, usually the "checkout", "login", "pay"
+$successDarken: #006bea; // usually 15% more
+$successFaded: #006bea;
 
 $danger: #ff4c4c;
 $dangerFaded: #ffe6e6;
@@ -51,7 +67,7 @@ $warningFaded: #fff6e0;
 
 $muted1: #000000; //titles & borders
 $muted2: #000000; //borders
-$muted3: #DDDDDD; //borders
+$muted3: #dddddd; //borders
 $muted4: #cbcbcb; //borders
 $muted5: #00000033; //borders
 $muted6: #f3f3f3; //borders & bg
@@ -59,23 +75,22 @@ $muted6: #f3f3f3; //borders & bg
 // CHECKOUT VARS
 
 $fontSize: 14px;
-$borderRadius:20px;
-$btnBorderRadius:20px;
+$borderRadius: 20px;
+$btnBorderRadius: 20px;
 
 $maxWrapper: 1440px;
 $inputHeight: 40px;
 
-$bordersContainers:none; // 2px solid $muted5
+$bordersContainers: none; // 2px solid $muted5
 
 //font
 
 $fontFamily: 'SamsungOne';
 
-
 // NOT included on admin -- kept for future (no change!)
 
-$showCouponField:true;
-$countingSteps:true;
-$showCheckoutSteps:true;
-$buttonShadow:false;
-$mobileWidth:690px;
+$showCouponField: true;
+$countingSteps: true;
+$showCheckoutSteps: true;
+$buttonShadow: false;
+$mobileWidth: 690px;
