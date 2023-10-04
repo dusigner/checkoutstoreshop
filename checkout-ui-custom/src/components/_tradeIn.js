@@ -5,16 +5,15 @@ export default class TradeIn {
   async init(orderForm) {
     const { items } = orderForm
 
-    const customDataDomain = orderForm.customData
-      ? orderForm.customData.customApps.filter(i => i.id === 'domain')
-      : []
+    const customDataDomain =
+      orderForm.customData?.customApps.filter(i => i.id === 'domain') || []
 
-    const getTransport =
+    const transport =
       customDataDomain.length > 0
-        ? customDataDomain[0].fields.trade_in_option_selected
-        : ''
-
-    const transport = getTransport ? JSON.parse(getTransport) : ''
+        ? JSON.parse(
+            customDataDomain[0].fields.trade_in_option_selected || '[]'
+          )
+        : []
 
     if (items.length && transport.length) {
       this.checkTradeIn(items, transport)
@@ -23,46 +22,41 @@ export default class TradeIn {
       transport.length &&
       localStorage.getItem('transport')
     ) {
-      $('#total-details-tradein').remove()
-      $('#text-details-tradein').remove()
+      this.removeTradeInDetails()
       await this.removeCustomDataTradeIn()
     }
   }
 
+  removeTradeInDetails() {
+    $('#total-details-tradein').remove()
+    $('#text-details-tradein').remove()
+  }
+
   rootPath() {
-    return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+    return window.__RUNTIME__.rootPath || ''
   }
 
   checkTradeIn(items, transport) {
-    let totalTradeIn = 0
+    const totalTradeIn = transport.reduce((total, itemLinkTradeIn) => {
+      const itemLinkTradeInValid = items.filter(
+        orderItem => orderItem.productId === itemLinkTradeIn.mainProductId
+      ).length
 
-    if (transport.length) {
-      for (let i = 0; i < transport.length; i++) {
-        let totalItemTradeIn = 0
-        const itemLinkTradeIn = transport[i]
-        let itemLinkTradeInValid = 0
-
-        for (let j = 0; j < items.length; j++) {
-          if (itemLinkTradeIn.mainProductId === items[j].productId) {
-            ++itemLinkTradeInValid
-          }
-        }
-
-        if (itemLinkTradeInValid > 0) {
-          for (let k = 0; k < itemLinkTradeIn.evaluatedProducts.length; k++) {
-            if (k > 0 && totalItemTradeIn > 0) {
-              totalItemTradeIn += itemLinkTradeIn.evaluatedProducts[k].price
-            } else {
-              totalItemTradeIn +=
-                itemLinkTradeIn.evaluatedProducts[k].price +
-                parseFloat(itemLinkTradeIn.boostSSG)
-            }
-          }
-        }
-
-        totalTradeIn += totalItemTradeIn
+      if (itemLinkTradeInValid > 0) {
+        const totalItemTradeIn = itemLinkTradeIn.evaluatedProducts.reduce(
+          (itemTotal, evaluatedProduct, k) => {
+            const price =
+              k > 0
+                ? evaluatedProduct.price
+                : evaluatedProduct.price + parseFloat(itemLinkTradeIn.boostSSG)
+            return itemTotal + price
+          },
+          0
+        )
+        return total + totalItemTradeIn
       }
-    }
+      return total
+    }, 0)
 
     if (totalTradeIn > 0) {
       this.showTotalTradeIn(totalTradeIn)
@@ -70,24 +64,13 @@ export default class TradeIn {
         `${formatCurrencyBRL(totalTradeIn, false)}*`
       )
     } else if (totalTradeIn === 0) {
-      $('#total-details-tradein').remove()
-      $('#text-details-tradein').remove()
+      this.removeTradeInDetails()
       this.removeCustomDataTradeIn()
-
-      return
     }
 
-    const newTransport = transport.filter(item => {
-      const hasMainProduct =
-        items.filter(orderItem => orderItem.productId === item.mainProductId)
-          .length > 0
-
-      if (hasMainProduct) {
-        return item
-      }
-
-      return ''
-    })
+    const newTransport = transport.filter(item =>
+      items.some(orderItem => orderItem.productId === item.mainProductId)
+    )
 
     if (newTransport.length < transport.length) {
       this.putCustomData(newTransport, totalTradeIn)
@@ -96,9 +79,9 @@ export default class TradeIn {
 
   showTotalTradeIn(totalTradeIn) {
     try {
-      const _checkoutElem = $(`.summary-template-holder`)
+      const _checkoutElem = $('.summary-template-holder')
       const _component = `
-        <tbody id="total-details-tradein" >
+        <tbody id="total-details-tradein">
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
             <td style="font-size: 14px; color: #000000; font-weight: 400; max-width: 245px;">Bônus Troca Smart - Dinheiro creditado em conta após a entrega do(s) aparelho(s) usado(s) e avaliação da Trocafone:</td>
             <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(
@@ -129,84 +112,98 @@ export default class TradeIn {
 
     $('#total-tradein-value').text(`${formatCurrencyBRL(total, false)}*`)
 
-    await $.ajax({
-      url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/domain`,
-      type: 'PUT',
-      crossDomain: true,
-      accept: 'application/vnd.vtex.ds.v10+json',
-      contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify(newData),
-    })
+    try {
+      await $.ajax({
+        url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/domain`,
+        type: 'PUT',
+        crossDomain: true,
+        accept: 'application/vnd.vtex.ds.v10+json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(newData),
+      })
+    } catch (error) {
+      console.error('Error in putCustomData:', error)
+    }
   }
 
   async removeCustomDataTradeIn() {
+    const t0 = performance.now()
+
     const { orderFormId } = window.vtexjs.checkout.orderForm
     const openTextField = localStorage.getItem('tradeInCustom')
-    if(openTextField !== null || openTextField !== "null"){
+
+    if (openTextField !== null && openTextField !== 'null') {
       localStorage.removeItem('tradeInCustom')
       localStorage.removeItem('transport')
       window.vtexjs.checkout.sendAttachment('openTextField', { value: null })
-      await $.ajax({
-        url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
-        type: 'POST',
-      })
-  
-      await $.ajax({
-        url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
-        type: 'POST',
-      })
+
+      const deleteRequests = [
+        $.ajax({
+          url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
+          type: 'POST',
+        }),
+        $.ajax({
+          url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
+          type: 'POST',
+        }),
+      ]
+
+      // chamadas em paralelo reduzindo bons segundos das requisições
+      await Promise.all(deleteRequests)
+        .then(() => {
+          console.log('Dados personalizados excluídos com sucesso.')
+
+          const t1 = performance.now()
+          console.log('Este código levou ', t1 - t0, ' milissegundos.')
+        })
+        .catch(error => {
+          console.error('Erro ao excluir dados personalizados:', error)
+        })
     }
   }
 
   async validateTradeinCustomData() {
-    const customDataDomain = window.vtexjs.checkout.orderForm.customData
-      ? window.vtexjs.checkout.orderForm.customData.customApps.filter(
-          i => i.id === 'domain'
-        )
-      : []
+    const customDataDomain =
+      window.vtexjs.checkout.orderForm.customData?.customApps.filter(
+        i => i.id === 'domain'
+      ) || []
 
-    const getTransport =
+    const transport =
       customDataDomain.length > 0
-        ? customDataDomain[0].fields.trade_in_option_selected
-        : ''
-
-    const transport = getTransport ? JSON.parse(getTransport) : ''
+        ? JSON.parse(
+            customDataDomain[0].fields.trade_in_option_selected || '[]'
+          )
+        : []
 
     let total = 0
     const arrayPromise = []
     const arrayProductsTrocafone = []
 
     if (!!transport && transport.length > 0) {
-      await transport.map(mainProduct => {
-        mainProduct.evaluatedProducts.map(async item => {
+      transport.forEach(mainProduct => {
+        mainProduct.evaluatedProducts.forEach(item => {
           arrayProductsTrocafone.push(item)
         })
-
-        return ''
       })
 
-      arrayProductsTrocafone.map(item => {
+      arrayProductsTrocafone.forEach(item => {
         const request = fetch(
           `${this.rootPath()}/p4v1/tradeinCheckImei/${item.imei}/${
             item.boosted
           }`
         )
           .then(response => response.json())
-          .then(response => {
-            return {
-              ...response,
-              imei: item.imei,
-            }
-          })
+          .then(response => ({
+            ...response,
+            imei: item.imei,
+          }))
 
         arrayPromise.push(request)
-
-        return ''
       })
 
       Promise.all(arrayPromise).then(values => {
-        transport.map(mainProduct => {
-          mainProduct.evaluatedProducts.map(async item => {
+        transport.forEach(mainProduct => {
+          mainProduct.evaluatedProducts.forEach(item => {
             const resultTrocafone = values.find(v => v.imei === item.imei)
 
             if (
@@ -226,7 +223,6 @@ export default class TradeIn {
                 if (!!grading && !!grading.price) {
                   item.price = grading.price
                   total += item.price
-
                   return
                 }
               }
@@ -234,10 +230,13 @@ export default class TradeIn {
 
             total += item.price
           })
-
-          return ''
         })
-        if (JSON.stringify(transport) !== getTransport) {
+
+        const transportString = JSON.stringify(transport)
+        if (
+          transportString !==
+          customDataDomain[0].fields.trade_in_option_selected
+        ) {
           this.putCustomData(transport, total)
         }
       })
