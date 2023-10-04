@@ -1645,7 +1645,8 @@ export class CheckoutCustom {
     try {
       console.log('Checkout is already started!!')
 
-      $(document).ready(function () {
+      _this.init()
+      $(function () {
         _this.messages.init()
         _this.bind()
         // _this.topBanners.init()
@@ -1683,8 +1684,6 @@ export class CheckoutCustom {
 
       // !ATENTION
       $(document).ajaxComplete(function (event, xhr, settings) {
-        _this.init()
-
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
@@ -1694,6 +1693,8 @@ export class CheckoutCustom {
             _this.shipping.addInvalidSelectedDateMessage()
           }
         }
+
+        _this.init()
 
         const acessKeyURL = settings.url.includes(
           `${rootPath()}/api/checkout/pub/profiles/`
