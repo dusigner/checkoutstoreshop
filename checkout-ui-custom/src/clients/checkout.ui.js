@@ -16,7 +16,11 @@ import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 
-import { debounce, formatCurrencyBRL } from '../components/_utils'
+import {
+  debounce,
+  formatCurrencyBRL,
+  formatNegativeValue,
+} from '../components/_utils'
 import { customHeader } from '../components/headerCustom/header'
 import { Rewards } from '../components/rewards/_rewards'
 import { fnsCustomAddressForm } from '../components/_customAddressForm'
@@ -757,8 +761,8 @@ export class CheckoutCustom {
         }
 
         const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
-        const onTermValue = _trElem.find('.total-price:eq(0)').text()
-
+        const listPriceTotalValue =
+          orderForm.items[i].listPrice * orderForm.items[i].quantity
         const free =
           orderForm.items[i].sellingPrice == 1 ||
           orderForm.items[i].sellingPrice == 0
@@ -767,7 +771,10 @@ export class CheckoutCustom {
 
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
-        _trElem.find('.new-product-price').text(onTermValue)
+        _trElem
+          .find('.new-product-price')
+          .text(formatCurrencyBRL(listPriceTotalValue))
+        _trElem.find('.new-product-price').val(listPriceTotalValue)
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
@@ -789,7 +796,111 @@ export class CheckoutCustom {
     } catch (e) {
       console.error('enchancementTotalPrice error:', e)
     }
+    this.subTotalSummary(orderForm)
   }
+  subTotalSummary(orderForm) {
+    const _this = this
+
+    if (!_this.quantityPriceCart) return
+
+    const _containerTotalizers = $('.summary-totalizers .totalizers-list')
+    const _subTotalElement = $(
+      `.summary-totalizers .totalizers-list .Items`
+    ).find('.monetary')
+    const _discountElement = $(
+      `.summary-totalizers .totalizers-list .Discounts`
+    ).find('.monetary')
+
+    const _elementListPrice = $('td.product-price').find('.new-product-price')
+
+    let valoresSubTotalArray = []
+
+    _elementListPrice.each(function () {
+      let valor = $(this).val()
+      if (valor != '') valoresSubTotalArray.push(parseInt(valor))
+    })
+
+    let subTotalValueFinal = valoresSubTotalArray.reduce(
+      (accumulator, value) => accumulator + value,
+      0
+    )
+    let discountPrices = orderForm.totalizers[0].value - subTotalValueFinal
+    let discountFinalFormatted = formatNegativeValue(
+      formatCurrencyBRL(discountPrices)
+    )
+    _subTotalElement.val(subTotalValueFinal)
+    _subTotalElement.text(formatCurrencyBRL(subTotalValueFinal))
+
+    if (
+      valoresSubTotalArray.length > 0 &&
+      _subTotalElement.val() === `${subTotalValueFinal}`
+    ) {
+      _containerTotalizers.css('display', 'block')
+    } else {
+      _containerTotalizers.css('display', 'none')
+    }
+
+    if (orderForm.value === subTotalValueFinal) {
+      $(`.discount-subtotal-container`).remove()
+      $(`.new-discount-value-container`).remove()
+      $(`.new-discount-total-container`).remove()
+    } else {
+      if (discountPrices) {
+        let hasDiscount = orderForm.totalizers?.filter(
+          val => val.id === 'Discounts'
+        )
+        let discountTotal = discountPrices + hasDiscount[0]?.value
+        _discountElement.text(
+          formatNegativeValue(formatCurrencyBRL(discountTotal))
+        )
+        if (hasDiscount.length > 0) {
+          if (
+            _containerTotalizers.find('.discount-subtotal-container').length ===
+            0
+          ) {
+            $(`.summary-totalizers .totalizers-list`)
+              .find('.Items')
+              .after(
+                `<tr class="discount-subtotal-container" style="height: 23px;">
+                <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
+                <td>
+                  <span class="value-discount-subtotal" style="font-weight: 700">${discountFinalFormatted}</span>
+                </td>
+              </tr>`
+              )
+          }
+          $(`.new-discount-value-container`).remove()
+          $(`.new-discount-total-container`).remove()
+        } else {
+          if (
+            _containerTotalizers.find('.new-discount-value-container')
+              .length === 0 &&
+            _containerTotalizers.find('.new-discount-total-container')
+              .length === 0
+          ) {
+            $(`.summary-totalizers .totalizers-list`)
+              .find('.Items')
+              .after(
+                `<tr class="new-discount-value-container" style="height: 23px;">
+              <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
+              <td>
+                <span class="new-value-discount-total" style="font-weight: 700">${discountFinalFormatted}</span>
+              </td>
+            </tr>
+            <tr class="new-discount-total-container" style="height: 23px;">
+              <td style="font-weight: 700">Descontos Totais</td>
+              <td>
+                <span class="new-discount-total" style="font-weight: 700">${discountFinalFormatted}</span>
+              </td>
+            </tr>`
+              )
+          }
+          $(`.discount-subtotal-container`).remove()
+        }
+      }
+    }
+  }
+
   async enchancementSummaryCart(orderForm, path) {
     try {
       if (orderForm.value == 0) {
@@ -1508,13 +1619,12 @@ export class CheckoutCustom {
     }
 
     if (window.vtex) {
-      window.vtex.showInstallmentsPreviewValue = true
+      window.vtex.showInstallmentsPreviewValue = false
     }
 
     this.orderForm = window.vtexjs ? window.vtexjs.checkout.orderForm : false
 
     general()
-
     this.updateStep()
     this.builder()
 
@@ -1535,7 +1645,7 @@ export class CheckoutCustom {
     try {
       console.log('Checkout is already started!!')
 
-      $(function () {
+      $(document).ready(function () {
         _this.messages.init()
         _this.bind()
         // _this.topBanners.init()
@@ -1558,6 +1668,7 @@ export class CheckoutCustom {
         _this.CheckoutLimit.limitQuantity(event, request)
         _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
       })
+
       $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
         _this.samsungCarePlus.sync(orderForm)
         _this.CheckoutLimit.sync(orderForm)
@@ -1572,6 +1683,8 @@ export class CheckoutCustom {
 
       // !ATENTION
       $(document).ajaxComplete(function (event, xhr, settings) {
+        _this.init()
+
         if (settings.url.includes('/attachments/shippingData')) {
           _this.shipping.validadePostalCode(window.vtexjs.checkout.orderForm)
           _this.shipping.toggleGoToPaymentDisabled()
@@ -1582,7 +1695,6 @@ export class CheckoutCustom {
           }
         }
 
-        _this.init()
         const acessKeyURL = settings.url.includes(
           `${rootPath()}/api/checkout/pub/profiles/`
         )
