@@ -748,16 +748,21 @@ export class CheckoutCustom {
 
         const totalValue = _trElem.find('.total-selling-price:eq(0)').text()
         const listPriceTotalValue = orderForm.items[i].listPrice * orderForm.items[i].quantity
-        const free =
-          orderForm.items[i].sellingPrice == 1 ||
-          orderForm.items[i].sellingPrice == 0
+        const sellingPrice = orderForm.items[i].sellingPrice
+        const free = sellingPrice == 1 || sellingPrice == 0
+
+        const listPriceFormated = formatCurrencyBRL(listPriceTotalValue)
 
         free ? _trElem.addClass('gratuito') : null
 
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
-        _trElem.find('.new-product-price').text(formatCurrencyBRL(listPriceTotalValue))
+        _trElem.find('.new-product-price').text(listPriceFormated)
         _trElem.find('.new-product-price').val(listPriceTotalValue)
+
+        if(sellingPrice < listPriceTotalValue){
+          _trElem.find('.new-product-price').addClass('line-through')
+        }
 
         _trElem.find('td.product-price').find('.vqc-ldelem').remove()
 
