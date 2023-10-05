@@ -15,6 +15,7 @@ import Discounts from '../components/_discounts'
 import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
+import SummaryGiftCard from '../components/_summaryGiftCard'
 
 import {
   debounce,
@@ -71,6 +72,7 @@ export class CheckoutCustom {
     this.fidelidade = new FidelidadeCustomizations()
     this.servicesLinks = new ServicesLinks()
     // this.topBanners = new TopBanners()
+    this.SummaryGiftCard = new SummaryGiftCard()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1053,6 +1055,7 @@ export class CheckoutCustom {
     new BespokeRefrigerator().init()
     this.changeShippingTimeInfoInit()
     this.servicesLinks.init(orderForm)
+    this.SummaryGiftCard.init(orderForm)
 
     this.TradeIn.init(orderForm)
     await this.imgEmptyCart()
@@ -1574,6 +1577,7 @@ export class CheckoutCustom {
       this.update(this.orderForm)
       this.paymentBuilder(this.orderForm)
       this.CSP.init(this.orderForm)
+      this.SummaryGiftCard.init(this.orderForm)
     }
 
     this.fixLabels()
