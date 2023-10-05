@@ -824,10 +824,15 @@ export class CheckoutCustom {
       (accumulator, value) => accumulator + value,
       0
     )
-    let discountPrices = orderForm.totalizers[0].value - subTotalValueFinal
-    let discountFinalFormatted = formatNegativeValue(
-      formatCurrencyBRL(discountPrices)
-    )
+    let discountPrices = 0
+    let discountFinalFormatted = 0
+
+    if (orderForm.totalizers.length > 0) {
+      discountPrices = orderForm.totalizers[0].value - subTotalValueFinal
+      discountFinalFormatted = formatNegativeValue(
+        formatCurrencyBRL(discountPrices)
+      )
+    }
     _subTotalElement.val(subTotalValueFinal)
     _subTotalElement.text(formatCurrencyBRL(subTotalValueFinal))
 
