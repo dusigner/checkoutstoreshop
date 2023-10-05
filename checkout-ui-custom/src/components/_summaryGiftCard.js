@@ -84,7 +84,7 @@ export default class SummaryGiftCard {
         })
         clearInterval(checkTerm)
       }
-    },100)
+    },50)
   }
 
   init(orderForm) {
