@@ -268,7 +268,7 @@ h1#cart-title {
       border-bottom: 1px solid $muted5;
 
       .best-price {
-        .new-product-price {
+        .new-product-price.line-through {
           text-decoration: line-through;
         }
       }
