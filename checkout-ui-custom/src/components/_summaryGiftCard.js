@@ -77,6 +77,13 @@ export default class SummaryGiftCard {
         })
         clearInterval(checkTerm)
       }
+      if(document.querySelectorAll('.payment-discoints-table span[data-bind="text: friendlyName"]')){
+        document.querySelectorAll('.payment-discoints-table span[data-bind="text: friendlyName"]').forEach(el => {
+          if(el.innerText.indexOf('global') >= 0)
+          el.innerText = el.innerText.split('.')[1]
+        })
+        clearInterval(checkTerm)
+      }
     },100)
   }
 
