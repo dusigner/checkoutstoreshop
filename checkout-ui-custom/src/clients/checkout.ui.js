@@ -852,7 +852,7 @@ export class CheckoutCustom {
               <tr class="new-discount-total-container" style="height: 23px; order: 1;">
                 <td style="font-weight: 700">Descontos Totais</td>
                 <td>
-                  <span class="new-discount-total" style="font-weight: 700">${discountFinalFormatted}</span>
+                  <span class="new-discount-total">${discountFinalFormatted}</span>
                 </td>
               </tr>`
             )
