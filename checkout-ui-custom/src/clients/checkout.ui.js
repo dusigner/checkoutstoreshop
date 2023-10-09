@@ -952,8 +952,9 @@ export class CheckoutCustom {
               console.error('onTerm Price error', e)
             })
         }
-        const discounts = orderForm.totalizers?.filter(val => val.id === 'Discounts')
-
+        const discounts = orderForm.totalizers.filter(val => val.id === 'Discounts')
+        const discountValue = Math.abs(discounts && discounts.length ? discounts[0].value : 0) + Math.abs(_this.discountPrices || 0)
+  
         const _component = `
               <div class="cart-total" style="margin-bottom: 20px; color: #000">
                 <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
@@ -962,11 +963,11 @@ export class CheckoutCustom {
                    inCashPrice
                 )}</p>
                 </div>
-                ${!!_this.subTotalValueFinal && !!_this.discountPrices && !!discounts && !!discounts.length ? (
-            `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
+                ${!!_this.subTotalValueFinal && !!discountValue ? (
+                  `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
                     <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subTotalValueFinal)}</span> <b style="color:#2189FF">Economia de ${formatCurrencyBRL(Math.abs(_this.discountPrices) + Math.abs(discounts[0].value))} </b>
                   </div>`
-          ) : ''}
+                ) : ''}
                 <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p>Ou parcelado em até 12x
                         <span 
