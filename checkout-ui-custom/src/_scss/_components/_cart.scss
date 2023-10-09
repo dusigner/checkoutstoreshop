@@ -1948,3 +1948,10 @@ p.input.ship-receiverName {
     }
   }
 }
+
+#checkoutMainContainer .address-summary,
+#checkoutMainContainer .shp-summary-package-time {
+  span {
+    color: #555
+  }
+}
