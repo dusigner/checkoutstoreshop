@@ -1,151 +1,138 @@
-/* eslint-disable padding-line-between-statements */
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-console */
-/* eslint eqeqeq: 0 */
-/* eslint-disable no-useless-escape */
-
 import { formatCurrencyBRL } from './_utils'
 
 export default class SendAttachment {
+  // Método para verificar se um item pertence à categoria de instalação
   isInstallation(item) {
-    return item.productCategoryIds.indexOf('2027') !== -1
+    return item.productCategoryIds.includes('2027')
   }
 
+  // Método principal para enviar texto para o campo openTextField
   sendOpenTextField() {
-    let obsToOpenTextField = ''
+    const { items, customData } = window.vtexjs.checkout.orderForm
+    const obsToOpenTextField = []
 
-    const { items } = window.vtexjs.checkout.orderForm
-    const customData = window.vtexjs.checkout.orderForm.customData || false
-    const tradeInCustomData =
-      customData && customData.customApps.find(item => item.id === 'domain')
+    this.processTransportInfo(customData, items, obsToOpenTextField)
+    this.processInstallationInfo(items, obsToOpenTextField)
+    this.processInStoreInfo(obsToOpenTextField)
 
-    const transportCustomData =
-      tradeInCustomData && tradeInCustomData.fields.trade_in_option_selected
+    const finalText = this.createFinalText(obsToOpenTextField)
+    this.sendFinalTextToOpenTextField(finalText)
 
-    const transport = transportCustomData ? JSON.parse(transportCustomData) : []
+    window.vtexjs.checkout.getOrderForm()
+  }
 
-    // TRADE-IN
-    if (transport.length) {
-      for (let i = 0; i < transport.length; i++) {
+  // Cria a string final a ser enviada para o campo openTextField
+  createFinalText(obsToOpenTextField) {
+    return obsToOpenTextField.length
+      ? obsToOpenTextField.map(item => JSON.stringify(item)).join(', ')
+      : null
+  }
+
+  // Envia a string final para o campo openTextField e armazena no localStorage
+  sendFinalTextToOpenTextField(finalText) {
+    window.vtexjs.checkout.sendAttachment('openTextField', { value: finalText })
+    localStorage.setItem('tradeInCustom', finalText)
+  }
+
+  // ====================================================== //
+  // ======================= TRADEIN ====================== //
+  // ====================================================== //
+  processTransportInfo(customData, items, obsToOpenTextField) {
+    const transportCustomData = customData?.customApps?.find(
+      item => item.id === 'domain'
+    )
+    const transport = transportCustomData?.fields?.trade_in_option_selected
+      ? JSON.parse(transportCustomData.fields.trade_in_option_selected)
+      : []
+
+    transport.forEach(itemLinkTradeIn => {
+      const itemLinkTradeInValid = items.filter(
+        item => itemLinkTradeIn.mainProductId === item.productId
+      )
+
+      if (itemLinkTradeInValid.length > 0) {
         let totalItemTradeIn = 0
-        const itemLinkTradeIn = transport[i]
-        let itemLinkTradeInValid = 0
         let ean = ''
 
-        for (let j = 0; j < items.length; j++) {
-          if (itemLinkTradeIn.mainProductId === items[j].productId) {
-            ean = items[j].ean
-            ++itemLinkTradeInValid
+        itemLinkTradeIn.evaluatedProducts.forEach((evaluatedProduct, k) => {
+          if (k > 0 && totalItemTradeIn > 0) {
+            totalItemTradeIn += evaluatedProduct.price
+          } else {
+            totalItemTradeIn +=
+              evaluatedProduct.price + parseFloat(itemLinkTradeIn.boostSSG)
           }
-        }
-        if (itemLinkTradeInValid > 0) {
-          for (let k = 0; k < itemLinkTradeIn.evaluatedProducts.length; k++) {
-            if (k > 0 && totalItemTradeIn > 0) {
-              totalItemTradeIn += itemLinkTradeIn.evaluatedProducts[k].price
-            } else {
-              totalItemTradeIn +=
-                itemLinkTradeIn.evaluatedProducts[k].price +
-                parseFloat(itemLinkTradeIn.boostSSG)
-            }
-          }
+        })
 
-          obsToOpenTextField += `{'ean':'${ean}', 'isTradeIn':'true', 'trocaSmartValue': '${formatCurrencyBRL(
-            totalItemTradeIn,
-            false
-          )}'}, `
-        }
+        ean = itemLinkTradeInValid[0].ean
+        obsToOpenTextField.push({
+          ean,
+          isTradeIn: 'true',
+          trocaSmartValue: formatCurrencyBRL(totalItemTradeIn, false),
+        })
       }
-    }
+    })
+  }
 
-    // INSTALLATION
-    const productsInstallation = window.vtexjs.checkout.orderForm.items.filter(
-      item => this.isInstallation(item)
+  // ====================================================== //
+  // ===================== INSTALATION ==================== //
+  // ====================================================== //
+  processInstallationInfo(items, obsToOpenTextField) {
+    const productsInstallation = items.filter(item => this.isInstallation(item))
+
+    const installationInProduct = productsInstallation.filter(product =>
+      product.attachments.some(
+        attachment => attachment.name === 'linkInstallation'
+      )
     )
 
-    const installationInProduct = []
+    installationInProduct.forEach(install => {
+      window.vtexjs.checkout.orderForm.shippingData.logisticsInfo.forEach(
+        logistic => {
+          if (logistic.itemId === install.id) {
+            logistic.slas.forEach(sla => {
+              if (logistic.selectedSla === sla.id) {
+                const estimative = parseInt(
+                  sla.shippingEstimate.replace(/[^0-9\.]+/g, ''),
+                  10
+                )
 
-    if (productsInstallation) {
-      window.vtexjs.checkout.orderForm.items.filter(item => {
-        if (productsInstallation) {
-          productsInstallation.filter(service => {
-            if (
-              service.attachments.length &&
-              service.attachments[0].name === 'linkInstallation'
-            ) {
-              if (item.refId == service.attachments[0].content.refId) {
-                installationInProduct.push(item)
+                obsToOpenTextField.push({
+                  isInstallation: 'true',
+                  sku: install.refId,
+                  estimate: estimative + 1,
+                  price: formatCurrencyBRL(install.price),
+                })
               }
-            }
-
-            return ''
-          })
-        }
-
-        return ''
-      })
-
-      installationInProduct.map(install => {
-        window.vtexjs.checkout.orderForm.shippingData.logisticsInfo.map(
-          logistic => {
-            if (logistic.itemId == install.id) {
-              logistic.slas.map(sla => {
-                if (logistic.selectedSla == sla.id) {
-                  const estimative = parseInt(
-                    sla.shippingEstimate.replace(/[^0-9\.]+/g, ''),
-                    10
-                  )
-
-                  obsToOpenTextField += `{'isInstallation':'true','sku':'${
-                    install.refId
-                  }','estimate':'${estimative +
-                    1}','price': '${formatCurrencyBRL(install.price)}'}, `
-                }
-
-                return ''
-              })
-            }
-
-            return ''
+            })
           }
-        )
+        }
+      )
+    })
+  }
 
-        return ''
-      })
-    }
+  // ====================================================== //
+  // ======================= INSTORE ====================== //
+  // ====================================================== //
+  processInStoreInfo(obsToOpenTextField) {
+    const orderForm = window.vtexjs.checkout.orderForm
 
-    // IN STORE
-    const of = window.vtexjs.checkout.orderForm
-
-    if (of) {
+    if (orderForm) {
       const ofMarketingData =
-        !!of.marketingData === false
+        !!orderForm.marketingData === false
           ? false
-          : !!of.marketingData.marketingTags !== false
+          : !!orderForm.marketingData.marketingTags !== false
 
       if (ofMarketingData) {
-        const isInStore = of.marketingData.marketingTags.some(
-          tag => tag.toLowerCase() == 'instore'
+        const isInStore = orderForm.marketingData.marketingTags.some(
+          tag => tag.toLowerCase() === 'instore'
         )
 
         if (isInStore) {
-          if (of.openTextField.value.indexOf('instore') < 0) {
-            obsToOpenTextField += `{'instore': '${window.vtexjs.checkout.orderForm.openTextField.value}'}, `
+          if (orderForm.openTextField.value.indexOf('instore') < 0) {
+            obsToOpenTextField.push({ instore: orderForm.openTextField.value })
           }
         }
       }
     }
-
-    // SEND FINAL TEXT TO OPENTEXTFIELD
-    if (obsToOpenTextField) {
-      window.vtexjs.checkout.sendAttachment('openTextField', {
-        value: `${obsToOpenTextField}`,
-      })
-      localStorage.setItem('tradeInCustom', `${obsToOpenTextField}`)
-    } else {
-      window.vtexjs.checkout.sendAttachment('openTextField', { value: null })
-      localStorage.setItem('tradeInCustom', null)
-    }
-
-    window.vtexjs.checkout.getOrderForm()
   }
 }
