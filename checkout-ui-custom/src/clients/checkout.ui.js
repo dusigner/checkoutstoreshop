@@ -52,8 +52,8 @@ export class CheckoutCustom {
     this.hideEmailStep = hideEmailStep
     this.lastOrderFormTotalPrice = 0
     this.termPrice = 0
-    this.subtotalTotalizer = 0
-    this.discountTotalizer = 0
+    this.subTotalValueFinal = null
+    this.discountPrices = null
 
     this.Rewards = null
 
@@ -825,44 +825,27 @@ export class CheckoutCustom {
       if (valor != '') valoresSubTotalArray.push(parseInt(valor))
     })
 
-    let subTotalValueFinal = valoresSubTotalArray.reduce(
-      (accumulator, value) => accumulator + value,
-      0
-    )
-    let discountPrices = 0
-    let discountFinalFormatted = 0
+    _this.subTotalValueFinal = valoresSubTotalArray.reduce((accumulator, value) => accumulator + value, 0);
+    _this.discountPrices = orderForm.totalizers[0].value - _this.subTotalValueFinal
+    let discountFinalFormatted = formatNegativeValue(formatCurrencyBRL(_this.discountPrices))
+    _subTotalElement.val(_this.subTotalValueFinal)
+    _subTotalElement.text(formatCurrencyBRL(_this.subTotalValueFinal))
 
-    if (orderForm.totalizers.length > 0) {
-      discountPrices = orderForm.totalizers[0].value - subTotalValueFinal
-      discountFinalFormatted = formatNegativeValue(
-        formatCurrencyBRL(discountPrices)
-      )
-    }
-    _subTotalElement.val(subTotalValueFinal)
-    _subTotalElement.text(formatCurrencyBRL(subTotalValueFinal))
-
-    if (
-      valoresSubTotalArray.length > 0 &&
-      _subTotalElement.val() === `${subTotalValueFinal}`
-    ) {
-      _containerTotalizers.css('display', 'flex')
+    if (valoresSubTotalArray.length > 0 && _subTotalElement.val() === `${this.subTotalValueFinal}`) {
+      _containerTotalizers.css("display", "flex")
     } else {
       _containerTotalizers.css('display', 'none')
     }
 
-    if (orderForm.value === subTotalValueFinal) {
+    if (orderForm.value === _this.subTotalValueFinal) {
       $(`.discount-subtotal-container`).remove()
       $(`.new-discount-value-container`).remove()
       $(`.new-discount-total-container`).remove()
     } else {
-      if (discountPrices) {
-        let hasDiscount = orderForm.totalizers?.filter(
-          val => val.id === 'Discounts'
-        )
-        let discountTotal = discountPrices + hasDiscount[0]?.value
-        _discountElement.text(
-          formatNegativeValue(formatCurrencyBRL(discountTotal))
-        )
+      if (_this.discountPrices) {
+        let hasDiscount = orderForm.totalizers?.filter(val => val.id === 'Discounts')
+        let discountTotal = _this.discountPrices + hasDiscount[0]?.value
+        _discountElement.text(formatNegativeValue(formatCurrencyBRL(discountTotal)))
         if (hasDiscount.length > 0) {
           if (
             _containerTotalizers.find('.discount-subtotal-container').length ===
@@ -1001,38 +984,22 @@ export class CheckoutCustom {
               console.error('onTerm Price error', e)
             })
         }
-
-        if (orderForm && orderForm.totalizers) {
-          _this.subtotalTotalizer = orderForm.totalizers.find(
-            item => item.id === 'Items'
-          )
-          _this.discountTotalizer = orderForm.totalizers.find(
-            item => item.id === 'Discounts'
-          )
-        }
-
+        const discounts = orderForm.totalizers.filter(val => val.id === 'Discounts')
+        const discountValue = Math.abs(discounts && discounts.length ? discounts[0].value : 0) + Math.abs(_this.discountPrices || 0)
+  
         const _component = `
               <div class="cart-total" style="margin-bottom: 20px; color: #000">
                 <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
                   <p class="ref-id">Total</p>
                   <p class="estimate-shipping">${formatCurrencyBRL(
-                    inCashPrice
-                  )}</p>
+                   inCashPrice
+                )}</p>
                 </div>
-                ${
-                  !!_this.subtotalTotalizer &&
-                  !!_this.discountTotalizer &&
-                  !!_this.subtotalTotalizer.value &&
-                  !!_this.discountTotalizer.value
-                    ? `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
-                    <span style="text-decoration: line-through">${formatCurrencyBRL(
-                      _this.subtotalTotalizer.value
-                    )}</span> <b style="color:#2189FF">Economia de ${formatCurrencyBRL(
-                        Math.abs(_this.discountTotalizer.value)
-                      )} </b>
+                ${!!_this.subTotalValueFinal && !!discountValue ? (
+                  `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
+                    <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subTotalValueFinal)}</span> <b style="color:#2189FF">Economia de ${formatCurrencyBRL(Math.abs(_this.discountPrices) + Math.abs(discounts[0].value))} </b>
                   </div>`
-                    : ''
-                }
+                ) : ''}
                 <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p>Ou parcelado em até 12x
                         <span 
