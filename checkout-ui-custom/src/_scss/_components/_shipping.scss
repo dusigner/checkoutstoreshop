@@ -455,7 +455,7 @@
 
 .pkpmodal {
   border: none !important;
-  z-index: 99999;
+  z-index: 99999 !important;
     @media (min-width: 1024px){
       height: 530px !important;
     }
