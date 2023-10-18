@@ -14,6 +14,7 @@ body.v-custom-step-cart {
 // empty cart
 
 body.v-custom-cart-empty {
+
   #cart-title,
   #shipping-preview-container,
   .summary-template-holder,
@@ -82,33 +83,34 @@ h1#cart-title {
 }
 
 .layerpopup {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 99998;
   background: rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
 
 .modalssc {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 20px;
   padding: 20px;
-  position: fixed;
-  z-index: 99999;
-  left: 50%;
-  transform: translate(-50%, 50%);
   background: #fff;
-  top: auto;
-
-  @media (max-width: 764px) {
-    width: 75%;
-  }
+  border-radius: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 400px;
 }
 
-.modalssc > div {
+.layerpopup::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.modalssc>div {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -126,7 +128,7 @@ h1#cart-title {
   transition: visibility 0s 2s, opacity 2s linear;
 }
 
-.modalssc > div a {
+.modalssc>div a {
   width: 43%;
   border: 1px #000 solid;
   border-radius: 20px;
@@ -145,7 +147,7 @@ h1#cart-title {
   }
 }
 
-.modalssc > div a + a {
+.modalssc>div a+a {
   color: #fff;
   background: #000;
 }
@@ -154,10 +156,6 @@ h1#cart-title {
 .modalssc.ssc-modal-success {
   width: 312px;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-end;
 
   h2 {
     font-size: 18px;
@@ -175,14 +173,6 @@ h1#cart-title {
   }
 }
 
-.ssc-modal-confirm {
-  height: 295px;
-}
-
-.ssc-modal-success {
-  height: 225px;
-}
-
 .ssc-button-close {
   width: 19px;
   height: 19px;
@@ -192,8 +182,10 @@ h1#cart-title {
   justify-content: center;
   position: relative;
   cursor: pointer;
+  float: right;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     width: 100%;
     height: 2px;
@@ -205,6 +197,7 @@ h1#cart-title {
   &::before {
     transform: rotate(45deg);
   }
+
   &::after {
     transform: rotate(-45deg);
   }
@@ -235,6 +228,7 @@ h1#cart-title {
     }
 
     &.item-attachments-content {
+
       input,
       select {
         @extend %input-style;
@@ -315,7 +309,7 @@ h1#cart-title {
         display: none;
       }
 
-      > .v-custom-bundles {
+      >.v-custom-bundles {
         width: 100%;
       }
 
@@ -361,12 +355,13 @@ h1#cart-title {
         border: none;
 
         &.product-name {
+
           .add-service-container,
           .clone-item.btn,
           .add-item-attachment-container {
             margin: 10px 0;
 
-            + p {
+            +p {
               display: none;
             }
           }
@@ -457,7 +452,7 @@ h1#cart-title {
                 }
               }
 
-              > *:last-child {
+              >*:last-child {
                 @media (max-width: $mobileWidth) {
                   margin-bottom: -7px;
                 }
@@ -466,7 +461,7 @@ h1#cart-title {
           }
 
           &.v-custom-quantity-price-active {
-            > .list-price {
+            >.list-price {
               display: none !important;
             }
           }
@@ -624,7 +619,7 @@ h1#cart-title {
       }
 
       &.v-custom-indexedItems-in {
-        & + tr.item-unavailable {
+        &+tr.item-unavailable {
           display: none;
         }
       }
@@ -752,17 +747,14 @@ h1#cart-title {
         border-bottom: none;
       }
 
-      &.v-custom-assemblies-in .v-custom-product-item-wrap {
-      }
+      &.v-custom-assemblies-in .v-custom-product-item-wrap {}
 
-      &.v-custom-assemblies-in.v-custom-indexed-item
-        .v-custom-product-item-wrap {
-        .v-custom-assemblies {
-        }
+      &.v-custom-assemblies-in.v-custom-indexed-item .v-custom-product-item-wrap {
+        .v-custom-assemblies {}
       }
     }
 
-    > tr.v-custom-indexed-item {
+    >tr.v-custom-indexed-item {
       display: none;
     }
   }
@@ -796,6 +788,7 @@ h1#cart-title {
   }
 
   td.product-name {
+
     a,
     a:hover {
       color: #000;
@@ -1021,7 +1014,7 @@ h1#cart-title {
         }
       }
 
-      > div {
+      >div {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1246,7 +1239,7 @@ h1#cart-title {
   }
 
   .installation-summary {
-    > td {
+    >td {
       width: 100% !important;
     }
 
@@ -1337,7 +1330,7 @@ h1#cart-title {
     opacity: 0;
     transition: opacity 0.2s, visibility 0.2s;
   }
-  
+
   .custom-tooltip:hover::after {
     visibility: visible;
     opacity: 1;
@@ -1381,10 +1374,11 @@ h1#cart-title {
       color: #000;
       font-size: 14px;
     }
+
     .srp-pickup-info {
       .srp-address-title {
         &::after {
-          content: 'Ver mais ' 'op\00E7\00F5''es';
+          content: 'Ver mais ''op\00E7\00F5''es';
           word-spacing: 0;
           color: #000000;
           font-size: 12px;
@@ -1396,6 +1390,7 @@ h1#cart-title {
         }
       }
     }
+
     .srp-delivery-header {
       .srp-address-title {
         &::after {
@@ -1508,7 +1503,7 @@ h1#cart-title {
       outline: initial;
     }
 
-    .vtex-omnishipping-1-x-shippingDataDev{
+    .vtex-omnishipping-1-x-shippingDataDev {
       .vtex-omnishipping-1-x-btnDelivery {
         order: 1;
         margin-top: 20px;
@@ -1517,8 +1512,7 @@ h1#cart-title {
       }
     }
 
-    .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation
-      input {
+    .vtex-shipping-preview-0-x-addressFormPart1.vtex-shipping-preview-0-x-geolocation input {
       @extend %input-style;
     }
 
@@ -1652,50 +1646,44 @@ h1#cart-title {
 .sellerInformation {
   font-size: 12px;
   color: #767676;
+
   span {
     color: #0077c8;
     font-weight: bold;
   }
 }
+
 .sla-info {
   .sla-price {
     display: none;
   }
 }
-.cart-template.full-cart
-  .summary-template-holder
-  .cart-more-options
-  .srp-toggle__pickup {
+
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__pickup {
   display: block;
   border: none;
 }
+
 .srp-toggle__wrapper.flex.br-pill.shadow-4.relative {
   border-radius: 20px;
   box-shadow: none !important;
   max-width: 200px;
   border: 1px #dddddd solid;
 }
-.cart-template.full-cart
-  .summary-template-holder
-  .cart-more-options
-  .srp-toggle__current,
-.cart-template.full-cart
-  .summary-template-holder
-  .cart-more-options
-  .srp-toggle__current
-  label {
+
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current,
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current label {
   width: 50%;
   border-radius: 20px;
   background: #363636;
   box-shadow: none;
   border: none;
 }
-.cart-template.full-cart
-  .summary-template-holder
-  .cart-more-options
-  .srp-toggle__current {
+
+.cart-template.full-cart .summary-template-holder .cart-more-options .srp-toggle__current {
   background: #000;
 }
+
 .srp-toggle__pickup,
 .srp-toggle__delivery {
   position: relative;
@@ -1704,31 +1692,39 @@ h1#cart-title {
   text-transform: capitalize !important;
   font-weight: 700;
 }
+
 .srp-toggle__pickup.gray.blue {
   color: #fff !important;
 }
+
 .srp-toggle__pickup.gray {
   color: #000 !important;
 }
+
 .srp-toggle__delivery.gray {
   color: #000 !important;
 }
+
 .srp-toggle__delivery.gray.blue {
   color: #fff !important;
 }
+
 a.srp-address-title {
   color: #006bea !important;
 }
+
 .srp-shipping-current-single__price {
   color: #000 !important;
   font-weight: 700;
 }
+
 .srp-pickup-info a.srp-address-title:after {
-  content: 'Ver mais ' 'op\00E7\00F5''es';
+  content: 'Ver mais ''op\00E7\00F5''es';
   display: block;
   font-size: 12px;
   text-decoration: underline;
 }
+
 button#find-pickup-link {
   border-radius: 20px;
   border: solid 2px #000;
@@ -1739,22 +1735,23 @@ button#find-pickup-link {
   appearance: none;
   transition: ease 0.1s;
 }
+
 button#find-pickup-link:hover {
   background: #000;
   color: #fff;
 }
-.orderform-template
-  #shipping-data
-  .shipping-container
-  #postalCode-finished-loading {
+
+.orderform-template #shipping-data .shipping-container #postalCode-finished-loading {
   display: block;
 }
+
 .pickup-point-info {
   display: flex;
   align-items: center;
   width: 100%;
   border-radius: 3px !important;
   border-color: #d6d6d6 !important;
+
   .pickup-marker-blue {
     width: 20px !important;
     height: 20px;
@@ -1763,16 +1760,20 @@ button#find-pickup-link:hover {
     margin: 20px;
   }
 }
+
 .pickup-point-wrapper {
   padding-left: 10px;
   position: relative;
 }
+
 .button-details-pickup-point {
   display: none;
 }
+
 .pickup-point-name {
   color: #0077c8;
 }
+
 .button-change-pickup-point {
   max-width: 256px;
   height: 40px;
@@ -1784,57 +1785,72 @@ button#find-pickup-link:hover {
   font-size: 14px;
   transition: ease 0.1s;
   text-shadow: none;
+
   &:hover {
     background: #000;
     color: #fff;
   }
 }
+
 .shp-lean-option-active {
   background: none;
   border: none;
   box-shadow: none;
 }
+
 .shp-lean {
   border: none;
 }
+
 .shp-option-text-price {
   color: #4b830d;
   font-size: 14px;
   font-weight: bold;
 }
+
 .vtex-omnishipping-1-x- {
   &sellerText {
     display: none;
   }
+
   &package {
     border-radius: 3px !important;
     border-color: #d6d6d6 !important;
   }
+
   &priceItems {
     display: flex;
     justify-content: flex-start;
   }
+
   &productItems {
     justify-content: flex-start;
   }
+
   &item {
     width: auto;
   }
+
   &hr {
     display: none;
   }
+
   &package .sla {
     text-align: left;
   }
+
   &itemImgWrapper {
     width: auto;
   }
+
   &package {
     justify-content: flex-start !important;
   }
+
   &packageItems {
     justify-content: flex-start;
   }
+
   &addressSummaryActive {
     display: flex;
     align-items: center;
@@ -1842,6 +1858,7 @@ button#find-pickup-link:hover {
     border-radius: 3px !important;
     border-color: #d6d6d6 !important;
   }
+
   &addressSummaryActive .address-summary {
     display: block;
     align-items: center;
@@ -1850,23 +1867,28 @@ button#find-pickup-link:hover {
     border-color: #d6d6d6 !important;
     background-position: 3% 50% !important;
     padding-left: 10% !important;
+
     .link-edit {
       display: none;
     }
   }
+
   &address div {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
   }
+
   &address div .ship-number {
     max-width: 24%;
   }
+
   &address div input,
   &address div .ship-number {
     width: 100% !important;
   }
-  &submitPaymentButton.btn-submit-wrapper.btn-go-to-payment-wrapper + div {
+
+  &submitPaymentButton.btn-submit-wrapper.btn-go-to-payment-wrapper+div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1877,8 +1899,9 @@ button#find-pickup-link:hover {
     left: 0;
     z-index: 50;
   }
+
   &btnDelivery {
-    + div {
+    +div {
       position: fixed;
       width: 100%;
       height: 100vh;
@@ -1889,30 +1912,38 @@ button#find-pickup-link:hover {
     }
   }
 }
+
 .pickup-packages {
   margin-bottom: 30px;
 }
+
 .shipping-has-pickups {
   max-width: 250px;
 }
+
 .orderform-template #shipping-data input[type='text']#ship-number {
   max-width: initial !important;
 }
+
 .input.ship-complement.text {
   width: 70% !important;
 }
+
 .srp-toggle__current {
   border: 0 !important;
   background: #000;
 }
+
 .orderform-template #shipping-data input {
   height: 45px !important;
   background: #fff !important;
   max-width: initial !important;
 }
+
 .orderform-template #shipping-data .shipping-container .ship-reference {
   width: 100%;
 }
+
 p.input.ship-receiverName {
   width: 100%;
 }
@@ -1920,6 +1951,7 @@ p.input.ship-receiverName {
 .shipping-data {
   color: #000;
   font-size: 12px;
+
   span {
     font-weight: 700;
     color: #006BEA;
@@ -1940,6 +1972,7 @@ p.input.ship-receiverName {
   .srp-content {
     h2.srp-main-title {
       font-size: 0;
+
       &::after {
         content: "Opções de Entrega";
         display: block;

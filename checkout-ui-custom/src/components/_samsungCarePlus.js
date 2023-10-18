@@ -254,7 +254,7 @@ export default class SamsungCarePlus {
         return
       }
   
-      const $confirmModal = $(`<div class="layerpopup"></div>
+      const $confirmModal = $(`<div class="layerpopup">
         <div class="modalssc">
           <p><b>Atenção</b>: ao excluir <b>${samsungCareItem.name}</b>, será removido também 
             do seu carrinho o item <b>${attachedProduct.name}</b></p>
@@ -262,6 +262,7 @@ export default class SamsungCarePlus {
             <a class="ssc-cancel-action">Voltar ao carrinho</a>
             <a class="ssc-remove-together">Excluir</a>
           </div>
+      </div>
       </div>`)
   
       $confirmModal.prependTo($('body'))
@@ -323,25 +324,27 @@ export default class SamsungCarePlus {
         return
       }
   
-      const $confirmModal = $(`<div class="layerpopup"></div>
-        <div class="modalssc ssc-modal-confirm">
-          <a class="ssc-cancel-action ssc-button-close"></a>
-          <h2>Não perca a oportunidade de Proteger seu dispositivo!</h2>
-          <p>Tem certeza que deseja remover o seguro Samsung Care+?</p>
-          <div>
-            <a class="ssc-remove-together">Sim</a>
-            <a class="ssc-cancel-action bg-blue">Não</a>
+      const $confirmModal = $(`<div class="layerpopup">
+          <div class="modalssc ssc-modal-confirm">
+            <a class="ssc-cancel-action ssc-button-close"></a>
+            <h2>Não perca a oportunidade de Proteger seu dispositivo!</h2>
+            <p>Tem certeza que deseja remover o seguro Samsung Care+?</p>
+            <div>
+              <a class="ssc-remove-together">Sim</a>
+              <a class="ssc-cancel-action bg-blue">Não</a>
+            </div>
           </div>
         </div>`)
 
-      const $successModal = $(`<div class="layerpopup"></div>
-        <div class="modalssc ssc-modal-success">
-          <a class="ssc-cancel-action ssc-button-close"></a>
-          <h2>Seguro Samsung Care+ removido com sucesso!</h2>
-          <div>
-            <a class="ssc-cancel-action bg-blue">Continuar</a>
+      const $successModal = $(`<div class="layerpopup">
+          <div class="modalssc ssc-modal-success">
+            <a class="ssc-cancel-action ssc-button-close"></a>
+            <h2>Seguro Samsung Care+ removido com sucesso!</h2>
+            <div>
+              <a class="ssc-cancel-action bg-blue">Continuar</a>
+            </div>
           </div>
-      </div>`)
+        </div>`)
   
       $confirmModal.prependTo($('body'))
   
