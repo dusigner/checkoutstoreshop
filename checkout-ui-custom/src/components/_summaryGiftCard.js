@@ -87,8 +87,39 @@ export default class SummaryGiftCard {
     },50)
   }
 
+  checkGiftBlock(){
+    const checkElement = setInterval(()=>{
+      if(document.querySelector('.payment-discounts-alert-wrap')){
+        clearInterval(checkElement)
+
+        document.querySelector('.payment-discounts-alert-wrap').addEventListener('click', (e)=>{
+          e.preventDefault()
+
+          Swal.fire({
+            text:'Para acessar seus créditos, é necessário efetuar o login, deseja continuar?',
+            showCancelButton: true,
+            confirmButtonColor: '#000',
+            cancelButtonColor: 'red',
+            confirmButtonText: 'Continuar',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+              confirmButton: 'btn btn-success btn-custom btn-accept',
+              cancelButton: 'btn btn-danger btn-custom btn-reject'
+            }
+          }).then((result) => {
+            if (result.value) {
+              vtexid.start()
+            }
+          })
+
+        })
+      }
+    },300)
+  }
+
   init(orderForm) {
     this.giftCard(orderForm)
     this.removeGlobalName()
+    this.checkGiftBlock()
   }
 }
