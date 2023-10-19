@@ -128,12 +128,10 @@ body {
   }
 
   #go-to-cart-button-custom {
-   
     max-height: 34px;
     gap: 4px;
     max-width: 1280px;
     width: 100%;
-    margin: -35px auto 5px;
     position: inherit; 
 
     @media (max-width: $mobileWidth) {
