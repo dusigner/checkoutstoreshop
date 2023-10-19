@@ -128,17 +128,20 @@ body {
   }
 
   #go-to-cart-button-custom {
-    display: none;
+    display: flex !important;
+    margin-left: 16px !important;
     max-height: 34px;
     gap: 4px;
     max-width: 1280px;
     width: 100%;
-    margin: 0 auto;
+    margin: -35px auto 5px;
     position: inherit;
-    margin-bottom: 32px;
+    
 
     @media (max-width: $mobileWidth) {
-      margin: 16px 24px;
+      margin-left: 16px;
+      margin-top: 34px !important;
+      display: flex; 
     }
 
     &:before {
