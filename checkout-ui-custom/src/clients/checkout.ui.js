@@ -1870,6 +1870,15 @@ export class CheckoutCustom {
             'remove'
           )
 
+          const checkIfPickupIsTrue = localStorage.getItem(
+            'srp-toggle__pickupClickedOnPdp',
+            'true'
+          )
+
+          if (checkIfPickupIsTrue) {
+            $('.srp-toggle__pickup').click()
+          }
+
           if (checkIfRemove) {
             $('.srp-toggle__pickup').click()
           }
