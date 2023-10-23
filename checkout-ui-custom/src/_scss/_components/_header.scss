@@ -128,17 +128,15 @@ body {
   }
 
   #go-to-cart-button-custom {
-    display: none;
     max-height: 34px;
     gap: 4px;
     max-width: 1280px;
     width: 100%;
-    margin: 0 auto;
-    position: inherit;
-    margin-bottom: 32px;
+    position: inherit; 
 
     @media (max-width: $mobileWidth) {
-      margin: 16px 24px;
+      margin-left: 16px;
+      margin-top: 140px !important;
     }
 
     &:before {
