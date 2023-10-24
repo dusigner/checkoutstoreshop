@@ -1866,7 +1866,6 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount()
 
           const checkIfPickupIsTrue = localStorage.getItem('srp-toggle__pickupClickedOnPdp');
-          console.log('checkIfPickupIsTrue: ', checkIfPickupIsTrue);
 
           if (checkIfPickupIsTrue === 'true') {
               $('.srp-toggle__pickup').click();
