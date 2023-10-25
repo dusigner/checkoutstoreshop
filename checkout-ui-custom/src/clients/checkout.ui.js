@@ -1865,13 +1865,14 @@ export class CheckoutCustom {
         if (window.location.hash === '#/cart') {
           _this.Rewards.cancelRewardsDiscount()
 
-          const checkIfRemove = localStorage.getItem(
-            '@samsung/shippingResult',
-            'remove'
-          )
+          const checkIfPickupIsTrue = localStorage.getItem('srp-toggle__pickupClickedOnPdp');
 
-          if (checkIfRemove) {
-            $('.srp-toggle__pickup').click()
+          if (checkIfPickupIsTrue === 'true') {
+              $('.srp-toggle__pickup').click();
+              localStorage.removeItem('srp-toggle__pickupClickedOnPdp');
+          } else {
+              $('.srp-toggle__delivery').click();
+              localStorage.removeItem('srp-toggle__pickupClickedOnPdp');
           }
         }
 
