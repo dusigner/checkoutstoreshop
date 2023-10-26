@@ -87,8 +87,22 @@ export default class SummaryGiftCard {
     },50)
   }
 
+  checkGiftBlock(){
+    const checkElement = setInterval(()=>{
+      if(document.querySelector('.payment-discounts-alert-wrap')){
+        clearInterval(checkElement)
+
+        document.querySelector('.payment-discounts-alert-wrap').addEventListener('click', (e)=>{
+          e.preventDefault()
+          vtexid.start()
+        })
+      }
+    },300)
+  }
+
   init(orderForm) {
     this.giftCard(orderForm)
     this.removeGlobalName()
+    this.checkGiftBlock()
   }
 }
