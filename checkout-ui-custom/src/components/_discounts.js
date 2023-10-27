@@ -150,12 +150,12 @@ export default class Discounts {
       const $totalizer = $(element)
       const $tr = $totalizer.find('.Discounts')
       const $trDiscountsWithTitle = discountsWithTitle.reduce((acc, next) => {
-        const exits = acc.find(item => item.title.toLowerCase().trim() === next.title.toLowerCase().trim());
-        if (!exits) {
+        const exists = acc.find(item => item.title.toLowerCase().trim() === next.title.toLowerCase().trim());
+        if (!exists) {
           return [...acc, next]
         }
 
-        exits.value += next.value
+        exists.value += next.value
 
         return acc
       },[]).map((item) => {
