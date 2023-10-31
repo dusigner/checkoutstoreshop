@@ -804,6 +804,7 @@ export class CheckoutCustom {
     this.subTotalSummary(orderForm)
   }
   subTotalSummary(orderForm) {
+  try {
     const _this = this
 
     if (!_this.quantityPriceCart) return
@@ -892,6 +893,9 @@ export class CheckoutCustom {
         }
       }
     }
+  } catch (e) {
+    console.error("subTotalSummary", e)
+  }
   }
 
   async enchancementSummaryCart(orderForm, path) {
