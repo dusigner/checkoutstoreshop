@@ -679,6 +679,19 @@ export class CheckoutCustom {
     }
   }
 
+  addMercadoPagoScript() {
+    try {
+      const script = document.createElement('script')
+      script.src = 'https://www.mercadopago.com/v2/security.js'
+      script.setAttribute('output', 'vtex.deviceFingerprint')
+      script.setAttribute('view', 'checkout')
+
+      document.body.appendChild(script)
+    } catch (e) {
+      console.error('addMercadoPagoScript error:', e)
+    }
+  }
+
   condensedTaxes(orderForm) {
     const customtax = orderForm.totalizers.filter(val => val.id === 'CustomTax')
 
@@ -825,14 +838,23 @@ export class CheckoutCustom {
       if (valor != '') valoresSubTotalArray.push(parseInt(valor))
     })
 
-    _this.subTotalValueFinal = valoresSubTotalArray.reduce((accumulator, value) => accumulator + value, 0);
-    _this.discountPrices = orderForm.totalizers[0].value - _this.subTotalValueFinal
-    let discountFinalFormatted = formatNegativeValue(formatCurrencyBRL(_this.discountPrices))
+    _this.subTotalValueFinal = valoresSubTotalArray.reduce(
+      (accumulator, value) => accumulator + value,
+      0
+    )
+    _this.discountPrices =
+      orderForm.totalizers[0].value - _this.subTotalValueFinal
+    let discountFinalFormatted = formatNegativeValue(
+      formatCurrencyBRL(_this.discountPrices)
+    )
     _subTotalElement.val(_this.subTotalValueFinal)
     _subTotalElement.text(formatCurrencyBRL(_this.subTotalValueFinal))
 
-    if (valoresSubTotalArray.length > 0 && _subTotalElement.val() === `${this.subTotalValueFinal}`) {
-      _containerTotalizers.css("display", "flex")
+    if (
+      valoresSubTotalArray.length > 0 &&
+      _subTotalElement.val() === `${this.subTotalValueFinal}`
+    ) {
+      _containerTotalizers.css('display', 'flex')
     } else {
       _containerTotalizers.css('display', 'none')
     }
@@ -843,9 +865,13 @@ export class CheckoutCustom {
       $(`.new-discount-total-container`).remove()
     } else {
       if (_this.discountPrices) {
-        let hasDiscount = orderForm.totalizers?.filter(val => val.id === 'Discounts')
+        let hasDiscount = orderForm.totalizers?.filter(
+          val => val.id === 'Discounts'
+        )
         let discountTotal = _this.discountPrices + hasDiscount[0]?.value
-        _discountElement.text(formatNegativeValue(formatCurrencyBRL(discountTotal)))
+        _discountElement.text(
+          formatNegativeValue(formatCurrencyBRL(discountTotal))
+        )
         if (hasDiscount.length > 0) {
           if (
             _containerTotalizers.find('.discount-subtotal-container').length ===
@@ -984,22 +1010,33 @@ export class CheckoutCustom {
               console.error('onTerm Price error', e)
             })
         }
-        const discounts = orderForm.totalizers.filter(val => val.id === 'Discounts')
-        const discountValue = Math.abs(discounts && discounts.length ? discounts[0].value : 0) + Math.abs(_this.discountPrices || 0)
-  
+        const discounts = orderForm.totalizers.filter(
+          val => val.id === 'Discounts'
+        )
+        const discountValue =
+          Math.abs(discounts && discounts.length ? discounts[0].value : 0) +
+          Math.abs(_this.discountPrices || 0)
+
         const _component = `
               <div class="cart-total" style="margin-bottom: 20px; color: #000">
                 <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
                   <p class="ref-id">Total</p>
                   <p class="estimate-shipping">${formatCurrencyBRL(
-                   inCashPrice
-                )}</p>
+                    inCashPrice
+                  )}</p>
                 </div>
-                ${!!_this.subTotalValueFinal && !!discountValue ? (
-                  `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
-                    <span style="text-decoration: line-through">${formatCurrencyBRL(_this.subTotalValueFinal)}</span> <b style="color:#2189FF">Economia de ${formatCurrencyBRL(Math.abs(_this.discountPrices) + Math.abs(discounts[0].value))} </b>
+                ${
+                  !!_this.subTotalValueFinal && !!discountValue
+                    ? `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
+                    <span style="text-decoration: line-through">${formatCurrencyBRL(
+                      _this.subTotalValueFinal
+                    )}</span> <b style="color:#2189FF">Economia de ${formatCurrencyBRL(
+                        Math.abs(_this.discountPrices) +
+                          Math.abs(discounts[0].value)
+                      )} </b>
                   </div>`
-                ) : ''}
+                    : ''
+                }
                 <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
                     <p>Ou parcelado em até 12x
                         <span 
@@ -1865,14 +1902,16 @@ export class CheckoutCustom {
         if (window.location.hash === '#/cart') {
           _this.Rewards.cancelRewardsDiscount()
 
-          const checkIfPickupIsTrue = localStorage.getItem('srp-toggle__pickupClickedOnPdp');
+          const checkIfPickupIsTrue = localStorage.getItem(
+            'srp-toggle__pickupClickedOnPdp'
+          )
 
           if (checkIfPickupIsTrue === 'true') {
-              $('.srp-toggle__pickup').click();
-              localStorage.removeItem('srp-toggle__pickupClickedOnPdp');
+            $('.srp-toggle__pickup').click()
+            localStorage.removeItem('srp-toggle__pickupClickedOnPdp')
           } else {
-              $('.srp-toggle__delivery').click();
-              localStorage.removeItem('srp-toggle__pickupClickedOnPdp');
+            $('.srp-toggle__delivery').click()
+            localStorage.removeItem('srp-toggle__pickupClickedOnPdp')
           }
         }
 
@@ -1905,6 +1944,7 @@ export class CheckoutCustom {
 
         window.vtexjs.checkout.getOrderForm().done(function () {
           _this.addMedalliaScript()
+          _this.addMercadoPagoScript()
         })
 
         adobeLaunchInit()
@@ -1913,9 +1953,6 @@ export class CheckoutCustom {
         _this.changeShippingTimeInfoInit()
         _this.indexedInItems(window.vtexjs.checkout.orderForm)
 
-        window.vtexjs.checkout.getOrderForm().done(function () {
-          _this.addMedalliaScript()
-        })
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
         }
