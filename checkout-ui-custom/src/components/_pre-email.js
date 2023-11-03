@@ -75,53 +75,9 @@ export default class CustomPreEmail {
     }, 100)
   }
 
-  loginEmail() {
-    const _this = this
-
-    $(document).on(
-      'keyup',
-      '#client-pre-email, #client-email',
-      async function () {
-        const email = $('#client-pre-email').val()
-        let domain = email.split('@')
-
-        domain = domain[1]
-        if (domain !== undefined || domain !== null) {
-          setTimeout(function () {
-            fetch(
-              `${_this.rootPath()}/api/dataentities/DM/search?_where=domain=${domain}&ativo=1&_fields=domain&an=samsungbrshop`,
-              {
-                type: 'GET',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-              }
-            ).then(response => {
-              response.json().then(data => {
-                if ($('.wrongdomain').length === 0) {
-                  $(
-                    `<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`
-                  ).insertBefore($('#btn-client-pre-email'))
-                  $(
-                    `<span class="wrongdomain">O domínio <strong>${data[0].domain}</strong> está correto?</span>`
-                  ).appendTo($('body.v-custom-step-profile .client-email'))
-                  setTimeout(function () {
-                    $('.wrongdomain').remove()
-                  }, 5000)
-                }
-              })
-            })
-          }, 1000)
-        }
-      }
-    )
-  }
-
   bindEvents() {
     const _this = this
 
-    _this.loginEmail()
     $(document).on('click', '#btn-samsung-account', function () {
       _this.openSamsungAccountModal()
     })
