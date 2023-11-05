@@ -1,6 +1,6 @@
 export default class CheckoutLimit {
   constructor() {
-    this.limit = 5
+    this.limit = null
     this.itemsToUpdate = {
       duplicatedItems: [],
       singleItems: []
