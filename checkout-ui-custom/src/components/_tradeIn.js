@@ -164,7 +164,7 @@ export default class TradeIn {
 
   async validateTradeinCustomData() {
     const customDataDomain =
-      window.vtexjs.checkout.orderForm.customData?.customApps.filter(
+      window.vtexjs.checkout.orderForm?.customData?.customApps.filter(
         i => i.id === 'domain'
       ) || []
 

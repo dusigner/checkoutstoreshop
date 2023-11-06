@@ -1863,7 +1863,7 @@ export class CheckoutCustom {
       $(window).load(async function () {
         _this.setPixAsDefaultPaymentMethod()
         if (window.location.hash === '#/cart') {
-          _this.Rewards.cancelRewardsDiscount()
+          _this.Rewards?.cancelRewardsDiscount()
 
           const checkIfPickupIsTrue = localStorage.getItem('srp-toggle__pickupClickedOnPdp');
 
