@@ -180,6 +180,8 @@ export class Rewards {
       })
     )
 
+    this.showRewardsCalc()
+    
     const { orderForm } = window.vtexjs.checkout
 
     if (orderForm.paymentData.giftCards) {
