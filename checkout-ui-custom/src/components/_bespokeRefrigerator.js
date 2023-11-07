@@ -405,6 +405,7 @@ export default class BespokeRefrigerator {
 
       const product_url = `${thePath}/_v/get/getBespokeProducts`
       const compositions_url = `${thePath}/_v/get/getBespokeCompositions`
+      const servicePairing_url = `${thePath}/_v/get/getServicePairing`
 
       await fetch(product_url)
         .then(response => response.json())
@@ -422,9 +423,7 @@ export default class BespokeRefrigerator {
           })
         })
         
-      await fetch(
-        `${thePath}/api/dataentities/GB/search?_fields=service,pairing,seller&an=samsungbrshop`
-      )
+      await fetch(servicePairing_url)
         .then(response => response.json())
         .then(response => {
           const { service, pairing, seller } = response[0]

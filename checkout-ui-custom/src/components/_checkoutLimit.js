@@ -130,7 +130,7 @@ export default class CheckoutLimit {
       return
     }
 
-    fetch(`${this.rootPath()}/api/dataentities/LS/search?_fields=limit&an=samsungbrshop`)
+    fetch(`${this.rootPath()}/_v/get/getLimitSkuCart`)
       .then(response => response.json())
       .then(response => {
         if (!response.length) {
