@@ -42,7 +42,6 @@ export default class CheckoutLimit {
       if (duplicatedItem) {
         quantity += duplicatedItem.quantity
       }
-
       if (duplicatedItem && quantity > this.limit) {
          orderItems.push({
           seller: duplicatedItem.seller,
@@ -96,7 +95,6 @@ export default class CheckoutLimit {
         if (duplicatedItem) {
           quantity += duplicatedItem.quantity
         }
-  
         if (quantity >= this.limit) {
           this.lockItem(item.id)
         } else {
@@ -124,24 +122,6 @@ export default class CheckoutLimit {
     }
   }
 
-  setLimit() {
-    if (sessionStorage.skuLimit) {
-      this.limit = parseInt(sessionStorage.skuLimit)
-      return
-    }
-
-    fetch(`${this.rootPath()}/_v/get/getLimitSkuCart`)
-      .then(response => response.json())
-      .then(response => {
-        if (!response.length) {
-          return
-        }
-
-        this.limit = parseInt(response[0].limit)
-        sessionStorage.skuLimit = response[0].limit
-      })
-  }
-
   mountItemsToUpdate(orderForm) {
     try {
       if (!orderForm) {
@@ -165,7 +145,6 @@ export default class CheckoutLimit {
         if (duplicatedItem) {
           quantity += duplicatedItem.quantity
         }
-  
         if (quantity > this.limit) {
           const singleItemToUpdate = {
             index: items.indexOf(item),
@@ -269,10 +248,6 @@ export default class CheckoutLimit {
   }
 
   init() {
-    try {
-      this.setLimit()
-    } catch (err) {
-      console.error(`CheckoutLimit - init: ${err}`)
-    }
+    this.limit = 5
   }
 }
