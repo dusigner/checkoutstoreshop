@@ -128,9 +128,12 @@ body {
   }
 
   #go-to-cart-button-custom {
+    display: none;
     max-height: 34px;
     gap: 4px;
     max-width: 1280px;
+    margin: 0 auto;
+    margin-bottom: 32px;
     width: 100%;
     position: inherit; 
 
