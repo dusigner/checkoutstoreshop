@@ -1,6 +1,8 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
+import Cookies from 'js-cookie'
+
 export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -138,12 +140,13 @@ export default class CustomProfileData {
   getAuthorization() {
     const _this = this
 
+    const cookieValue = Cookies.get('janus_sid')
+
     return $.ajax({
       url: `${_this.rootPath()}/_v/private/mdw`,
       headers: {
-        Accept: 'application/vnd.vtex.ds.v10+json',
         'Content-Type': 'application/json',
-        vtexAuth: '7f9f89c9-0889-4ff2-92da-b694931a8bcb'
+        vtexAuth: cookieValue
       },
       cache: false,
       crossDomain: true,
