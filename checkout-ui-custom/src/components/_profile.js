@@ -160,7 +160,6 @@ export default class CustomProfileData {
     return $.ajax({
       url: `${_this.rootPath()}/_v/get/client/${email}`,
       headers: {
-        Accept: 'application/vnd.vtex.ds.v10+json',
         'Content-Type': 'application/json',
         authorizationsamsung: `Bearer ${token}`
       },
