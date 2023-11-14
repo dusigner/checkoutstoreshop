@@ -1,6 +1,8 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
+import Cookies from 'js-cookie'
+
 export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -135,14 +137,31 @@ export default class CustomProfileData {
     }
   }
 
-  getClientProfileData(email) {
+  getAuthorization() {
+    const _this = this
+
+    const cookieValue = Cookies.get('janus_sid')
+
+    return $.ajax({
+      url: `${_this.rootPath()}/_v/private/mdw`,
+      headers: {
+        'Content-Type': 'application/json',
+        vtexAuth: cookieValue
+      },
+      cache: false,
+      crossDomain: true,
+      type: 'GET',
+    })
+  }
+
+  getClientProfileData(email, token) {
     const _this = this
 
     return $.ajax({
       url: `${_this.rootPath()}/_v/get/client/${email}`,
       headers: {
-        Accept: 'application/vnd.vtex.ds.v10+json',
         'Content-Type': 'application/json',
+        authorizationsamsung: `Bearer ${token}`
       },
       cache: false,
       crossDomain: true,
@@ -186,22 +205,26 @@ export default class CustomProfileData {
         jsonData = response;
       })
 
-      this.getClientProfileData(email).done(function (data) {
-        try {
-          const profileDataToPersist = {
-            birthDate: data[0].birthDate,
-            acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
-            isNewsletterOptIn: data[0].isNewsletterOptIn,
-            isWhatsAppOptIn: jsonData.data.consent
+      this.getAuthorization().done(function (data) {
+        console.log('token', data.token)
+        this.getClientProfileData(email, data.token).done(function (data) {
+          try {
+            const profileDataToPersist = {
+              birthDate: data[0].birthDate,
+              acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
+              isNewsletterOptIn: data[0].isNewsletterOptIn,
+              isWhatsAppOptIn: jsonData.data.consent
+            }
+  
+            _this.fillClientProfileData(profileDataToPersist)
+            setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
+          } catch (err) {
+            console.error(`Erro ao recuperar dados de perfil de usuário: ${err}`)
+            setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
           }
-
-          _this.fillClientProfileData(profileDataToPersist)
-          setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
-        } catch (err) {
-          console.error(`Erro ao recuperar dados de perfil de usuário: ${err}`)
-          setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
-        }
+        })
       })
+
     } catch (err) {
       console.error(`Erro ao recuperar dados de perfil de usuário: ${err}`)
       setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
@@ -676,19 +699,22 @@ export default class CustomProfileData {
 
     if ($birthDateFieldValue.is(':empty')) {
       const { email } = orderForm.clientProfileData
-
-      _this.getClientProfileData(email).done(function (data) {
-        if (!data) return
-
-        const dataBirthDate = data[0].birthDate
-
-        if (dataBirthDate) {
-          const clientDateBirth =
-            _this.convertDateToLocaleDateString(dataBirthDate)
-
-          $birthDateFieldValue.text(clientDateBirth)
-        }
+      _this.getAuthorization().done(function (data) {
+        _this.getClientProfileData(email, data.token).done(function (data) {
+          if (!data) return
+  
+          const dataBirthDate = data[0].birthDate
+  
+          if (dataBirthDate) {
+            const clientDateBirth =
+              _this.convertDateToLocaleDateString(dataBirthDate)
+  
+            $birthDateFieldValue.text(clientDateBirth)
+          }
+        })
       })
+        
+      
     }
   }
 }
