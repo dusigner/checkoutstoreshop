@@ -1652,6 +1652,10 @@ export class CheckoutCustom {
       this.paymentBuilder(this.orderForm)
       this.CSP.init(this.orderForm)
       this.SummaryGiftCard.init(this.orderForm)
+      if (window.location.hash === '#/payment') {
+        this.verifyCSP(this.orderForm)
+      }
+      
     }
 
     this.fixLabels()
@@ -1774,6 +1778,9 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
+          if (_this.orderForm) {
+            _this.verifyCSP(_this.orderForm)
+          }
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
