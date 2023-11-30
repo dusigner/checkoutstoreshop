@@ -1861,7 +1861,6 @@ export class CheckoutCustom {
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
-          _this.verifyCSP(orderForm)
           _this.scrollToPaymentCard(orderForm)
         }
 
