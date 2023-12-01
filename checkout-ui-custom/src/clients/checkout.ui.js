@@ -54,7 +54,6 @@ export class CheckoutCustom {
     this.termPrice = 0
     this.subTotalValueFinal = null
     this.discountPrices = null
-    this.discountPriceFinal = null
 
     this.Rewards = null
 
@@ -905,7 +904,7 @@ export class CheckoutCustom {
               <tr class="new-discount-total-container" style="height: 23px; order: 1;">
                 <td style="font-weight: 700">Descontos Totais</td>
                 <td>
-                  <span class="new-discount-total" value="${discountFinalFormatted}">${discountFinalFormatted}</span>
+                  <span class="new-discount-total">${discountFinalFormatted}</span>
                 </td>
               </tr>`
                 )
@@ -1014,7 +1013,7 @@ export class CheckoutCustom {
         const discountValue =
           Math.abs(discounts && discounts.length > 0 ? discounts[0]?.value : 0) +
           Math.abs(_this.discountPrices ? _this.discountPrices : 0)
-          
+
         const _component =
           `
             <div class="cart-total" style="margin-bottom: 20px; color: #000">
