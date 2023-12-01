@@ -1290,25 +1290,29 @@ export class CheckoutCustom {
     })
   }
 
-  scrollToPaymentCard(orderForm) {
-    const paymentLength = orderForm.paymentData.payments.length
-    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem
+  // scrollToPaymentCard(orderForm) {
+  //   const paymentLength = orderForm.paymentData.payments.length
+  //   const paymentSystem = orderForm.paymentData.payments[0].paymentSystem
 
-    if (paymentLength == 1 && paymentSystem == 2) {
-      const paymentCardsGroup = document.querySelector(
-        '.payment-group-item-cards'
-      )
+  //   if (paymentLength == 1 && paymentSystem == 2) {
+  //     const paymentCardsGroup = document.querySelector(
+  //       '.payment-group-item-cards'
+  //       )
+  //       console.log('paymentCardsGroup: ', paymentCardsGroup);
 
-      if (paymentCardsGroup) {
-        const offsetTop = paymentCardsGroup.offsetTop
+  //     if (paymentCardsGroup) {
+  //       // const offsetTop = paymentCardsGroup.offsetTop();
+  //       // console.log('offsetTop: ', offsetTop);
 
-        window.scrollTo({
-          top: offsetTop,
-          behavior: 'smooth',
-        })
-      }
-    }
-  }
+  //       // window.scrollTo({
+  //       //   top: offsetTop,
+  //       //   behavior: 'smooth',
+  //       // })
+        
+        
+  //     }
+  //   }
+  // }
 
   defaultPaymentMethod() {
     try {
@@ -1855,7 +1859,7 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
-          _this.scrollToPaymentCard(orderForm)
+          // _this.scrollToPaymentCard(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
