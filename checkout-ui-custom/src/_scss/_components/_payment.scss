@@ -82,6 +82,13 @@
 
 	#payment-data {
 
+    #payment-group-MercadoCreditoPaymentGroup {
+      background: url(https://samsungbrshop.vteximg.com.br/arquivos/mercado-credito.png) !important;
+      background-repeat: no-repeat !important;
+      background-size: 24px !important;
+      background-position: 7% 50% !important;
+    }
+
     #payment-group-customPrivate_501PaymentGroup {
       .payment-group-item-text {
         padding-left: 0px;
@@ -165,7 +172,7 @@
         }
       }
 
-
+      
       @media screen and (max-width: 768px) {
         max-width: none;
       }
