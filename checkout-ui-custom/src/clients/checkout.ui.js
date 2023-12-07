@@ -1279,26 +1279,6 @@ export class CheckoutCustom {
     })
   }
 
-  scrollToPaymentCard(orderForm) {
-    const paymentLength = orderForm.paymentData.payments.length
-    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem
-
-    if (paymentLength == 1 && paymentSystem == 2) {
-      const paymentCardsGroup = document.querySelector(
-        '.payment-group-item-cards'
-      )
-
-      if (paymentCardsGroup) {
-        const offsetTop = paymentCardsGroup.offsetTop
-
-        window.scrollTo({
-          top: offsetTop,
-          behavior: 'smooth',
-        })
-      }
-    }
-  }
-
   defaultPaymentMethod() {
     try {
       // Default Payment Method: PIX
@@ -1848,7 +1828,7 @@ export class CheckoutCustom {
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
-          _this.scrollToPaymentCard(orderForm)
+          _this.verifyCSP(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
