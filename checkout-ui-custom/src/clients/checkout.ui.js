@@ -396,7 +396,7 @@ export class CheckoutCustom {
             ? formatCurrencyBRL(item.sellingPrice)
             : 'Grátis'
         
-        const textColor = (installationPrice) !== "Grátis" ? 'color: #000 ;' : 'color: #2189FF'; 
+        const textColor = (installationPrice) !== "Grátis" ? 'color: #000000 ;' : 'color: #2189FF'; 
         
         return `
           <tr style="height: 23px;">
