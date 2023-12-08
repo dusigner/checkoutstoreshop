@@ -1186,7 +1186,8 @@ export class CheckoutCustom {
 
     $('.payment-group-item').each(function () {
       $(this).wrap(
-        `<div class='v-custom-payment-item-wrap ${$(this).hasClass('active') ? 'active' : ''
+        `<div class='v-custom-payment-item-wrap ${
+          $(this).hasClass('active') ? 'active' : ''
         }'></div>`
       )
     })
