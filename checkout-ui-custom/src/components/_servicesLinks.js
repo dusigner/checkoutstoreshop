@@ -52,11 +52,11 @@ const CHECK_SERVICES = {
 
       const { rateAndBenefitsIdentifiers } = ratesAndBenefitsData
 
-      const isInstantVoucherApplied = rateAndBenefitsIdentifiers.some(item => (
+      const isAddonApplied = rateAndBenefitsIdentifiers.some(item => (
         item.id === identifier && item.name.toLowerCase().includes('addon')
       ))
 
-      return isInstantVoucherApplied
+      return isAddonApplied
     })
   }
 }
