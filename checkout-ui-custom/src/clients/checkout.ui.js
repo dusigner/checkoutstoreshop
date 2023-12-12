@@ -297,16 +297,15 @@ export class CheckoutCustom {
         const logisticsInfoData =
           orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel ===
             'delivery' &&
-          orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+            orderForm.shippingData.logisticsInfo[i].selectedSla !== null
             ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
             : orderForm.shippingData.logisticsInfo[i].selectedSla === null
-            ? ''
-            : `Retirada em: <span>${
-                orderForm.shippingData.logisticsInfo[i].slas.find(
-                  pickup =>
-                    pickup.name ===
-                    orderForm.shippingData.logisticsInfo[i].selectedSla
-                ).pickupStoreInfo.friendlyName
+              ? ''
+              : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(
+                pickup =>
+                  pickup.name ===
+                  orderForm.shippingData.logisticsInfo[i].selectedSla
+              ).pickupStoreInfo.friendlyName
               }</span><br /> Retirada após confirmação via e-mail`
 
         const refId = orderForm.items[i].refId || ''
@@ -318,9 +317,8 @@ export class CheckoutCustom {
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
 
         const moreInfoHtml = `
-            <div class="more-info ${
-              isInstallService || isSamsungCare ? 'isServices' : ''
-            }">
+            <div class="more-info ${isInstallService || isSamsungCare ? 'isServices' : ''
+          }">
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
               <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
@@ -454,16 +452,16 @@ export class CheckoutCustom {
         accumulator +
         (item.priceTags.length
           ? item.priceTags.filter(_pricetag => {
-              return _pricetag.ratesAndBenefitsIdentifier
-                ? _pricetag.ratesAndBenefitsIdentifier.matchedParameters[
-                    'couponCode@Marketing'
-                  ] === _coupon
-                : 0
-            }).length
+            return _pricetag.ratesAndBenefitsIdentifier
+              ? _pricetag.ratesAndBenefitsIdentifier.matchedParameters[
+              'couponCode@Marketing'
+              ] === _coupon
+              : 0
+          }).length
           : 0)
       )
     },
-    0)
+      0)
 
     if (!_coupon || couponItemsCount > 0) {
       $('.coupon-applied-message').remove()
@@ -700,15 +698,13 @@ export class CheckoutCustom {
     const tooltip = `
       <div class="vcustom-customTax-resume">
        ${customtax
-         .map(
-           i =>
-             `<p class="vcustom-customTax-resume__i"><span class="n">${
-               i.name
-             }</span><span class="v">${
-               orderForm.storePreferencesData.currencySymbol
-             } ${(i.value / 100).toFixed(2)}</span></p>`
-         )
-         .join('')}
+        .map(
+          i =>
+            `<p class="vcustom-customTax-resume__i"><span class="n">${i.name
+            }</span><span class="v">${orderForm.storePreferencesData.currencySymbol
+            } ${(i.value / 100).toFixed(2)}</span></p>`
+        )
+        .join('')}
       </div>
     `
 
@@ -744,9 +740,8 @@ export class CheckoutCustom {
 
       const _summaryOrder = `
         <div class="summaryOrder">
-          <h6>Resumo do pedido (${itemsQuantity} ${
-        quantitySelectedItems.length <= 1 ? 'item' : 'itens'
-      })</h6>
+          <h6>Resumo do pedido (${itemsQuantity} ${quantitySelectedItems.length <= 1 ? 'item' : 'itens'
+        })</h6>
           <ul>
             ${listItems}
           </ul>
@@ -804,8 +799,7 @@ export class CheckoutCustom {
           .prepend(
             `
           <div class="v-custom-quantity-price vqc-ldelem">
-            <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${
-              free ? 'Grátis' : totalValue
+            <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${free ? 'Grátis' : totalValue
             }</p>
           </div>
           `
@@ -817,91 +811,91 @@ export class CheckoutCustom {
     this.subTotalSummary(orderForm)
   }
   subTotalSummary(orderForm) {
-  try {
-    const _this = this
+    try {
+      const _this = this
 
-    if (!_this.quantityPriceCart) return
+      if (!_this.quantityPriceCart) return
 
-    const _containerTotalizers = $('.summary-totalizers .totalizers-list')
-    const _subTotalElement = $(
-      `.summary-totalizers .totalizers-list .Items`
-    ).find('.monetary')
-    const _discountElement = $(
-      `.summary-totalizers .totalizers-list .Discounts`
-    ).find('.monetary')
+      const _containerTotalizers = $('.summary-totalizers .totalizers-list')
+      const _subTotalElement = $(
+        `.summary-totalizers .totalizers-list .Items`
+      ).find('.monetary')
+      const _discountElement = $(
+        `.summary-totalizers .totalizers-list .Discounts`
+      ).find('.monetary')
 
-    const _elementListPrice = $('td.product-price').find('.new-product-price')
+      const _elementListPrice = $('td.product-price').find('.new-product-price')
 
-    let valoresSubTotalArray = []
+      let valoresSubTotalArray = []
 
-    _elementListPrice.each(function () {
-      let valor = $(this).val()
-      if (valor != '') valoresSubTotalArray.push(parseInt(valor))
-    })
+      _elementListPrice.each(function () {
+        let valor = $(this).val()
+        if (valor != '') valoresSubTotalArray.push(parseInt(valor))
+      })
 
-    _this.subTotalValueFinal = valoresSubTotalArray.reduce(
-      (accumulator, value) => accumulator + value,
-      0
-    )
-    _this.discountPrices =
-      orderForm.totalizers[0].value - _this.subTotalValueFinal
-    let discountFinalFormatted = formatNegativeValue(
-      formatCurrencyBRL(_this.discountPrices)
-    )
-    _subTotalElement.val(_this.subTotalValueFinal)
-    _subTotalElement.text(formatCurrencyBRL(_this.subTotalValueFinal))
+      _this.subTotalValueFinal = valoresSubTotalArray.reduce(
+        (accumulator, value) => accumulator + value,
+        0
+      )
+      _this.discountPrices =
+        orderForm.totalizers[0].value - _this.subTotalValueFinal
+      let discountFinalFormatted = formatNegativeValue(
+        formatCurrencyBRL(_this.discountPrices)
+      )
+      _subTotalElement.val(_this.subTotalValueFinal)
+      _subTotalElement.text(formatCurrencyBRL(_this.subTotalValueFinal))
 
-    if (
-      valoresSubTotalArray.length > 0 &&
-      _subTotalElement.val() === `${this.subTotalValueFinal}`
-    ) {
-      _containerTotalizers.css('display', 'flex')
-    } else {
-      _containerTotalizers.css('display', 'none')
-    }
+      if (
+        valoresSubTotalArray.length > 0 &&
+        _subTotalElement.val() === `${this.subTotalValueFinal}`
+      ) {
+        _containerTotalizers.css('display', 'flex')
+      } else {
+        _containerTotalizers.css('display', 'none')
+      }
 
-    if (orderForm.value === _this.subTotalValueFinal) {
-      $(`.discount-subtotal-container`).remove()
-      $(`.new-discount-value-container`).remove()
-      $(`.new-discount-total-container`).remove()
-    } else {
-      if (_this.discountPrices) {
-        let hasDiscount = orderForm.totalizers?.filter(
-          val => val.id === 'Discounts'
-        )
-        let discountTotal = _this.discountPrices + hasDiscount[0]?.value
-        _discountElement.text(
-          formatNegativeValue(formatCurrencyBRL(discountTotal))
-        )
-        if (hasDiscount.length > 0) {
-          if (
-            _containerTotalizers.find('.discount-subtotal-container').length ===
-            0
-          ) {
-            $(`.summary-totalizers .totalizers-list`)
-              .find('.Items')
-              .after(
-                `<tr class="discount-subtotal-container" style="height: 23px; order: 2;">
+      if (orderForm.value === _this.subTotalValueFinal) {
+        $(`.discount-subtotal-container`).remove()
+        $(`.new-discount-value-container`).remove()
+        $(`.new-discount-total-container`).remove()
+      } else {
+        if (_this.discountPrices) {
+          let hasDiscount = orderForm.totalizers?.filter(
+            val => val.id === 'Discounts'
+          )
+          let discountTotal = _this.discountPrices + hasDiscount[0]?.value
+          _discountElement.text(
+            formatNegativeValue(formatCurrencyBRL(discountTotal))
+          )
+          if (hasDiscount.length > 0) {
+            if (
+              _containerTotalizers.find('.discount-subtotal-container').length ===
+              0
+            ) {
+              $(`.summary-totalizers .totalizers-list`)
+                .find('.Items')
+                .after(
+                  `<tr class="discount-subtotal-container" style="height: 23px; order: 2;">
                 <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
                 <td>
                   <span class="value-discount-subtotal">${discountFinalFormatted}</span>
                 </td>
               </tr>`
-              )
-          }
-          $(`.new-discount-value-container`).remove()
-          $(`.new-discount-total-container`).remove()
-        } else {
-          if (
-            _containerTotalizers.find('.new-discount-value-container')
-              .length === 0 &&
-            _containerTotalizers.find('.new-discount-total-container')
-              .length === 0
-          ) {
-            $(`.summary-totalizers .totalizers-list`)
-              .find('.Items')
-              .after(
-                `<tr class="new-discount-value-container" style="height: 23px; order: 2;">
+                )
+            }
+            $(`.new-discount-value-container`).remove()
+            $(`.new-discount-total-container`).remove()
+          } else {
+            if (
+              _containerTotalizers.find('.new-discount-value-container')
+                .length === 0 &&
+              _containerTotalizers.find('.new-discount-total-container')
+                .length === 0
+            ) {
+              $(`.summary-totalizers .totalizers-list`)
+                .find('.Items')
+                .after(
+                  `<tr class="new-discount-value-container" style="height: 23px; order: 2;">
                 <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
                 <td>
                   <span class="new-value-discount-total">${discountFinalFormatted}</span>
@@ -913,15 +907,15 @@ export class CheckoutCustom {
                   <span class="new-discount-total">${discountFinalFormatted}</span>
                 </td>
               </tr>`
-              )
+                )
+            }
+            $(`.discount-subtotal-container`).remove()
           }
-          $(`.discount-subtotal-container`).remove()
         }
       }
+    } catch (e) {
+      console.error("subTotalSummary", e)
     }
-  } catch (e) {
-    console.error("subTotalSummary", e)
-  }
   }
 
   async enchancementSummaryCart(orderForm, path) {
@@ -955,8 +949,8 @@ export class CheckoutCustom {
             <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
               <p class="ref-id">Total</p>
               <p class="estimate-shipping">${formatCurrencyBRL(
-                paymentAmountTotal - discount
-              )}</p>
+            paymentAmountTotal - discount
+          )}</p>
             </div>
           </div>
         `
@@ -992,8 +986,7 @@ export class CheckoutCustom {
         if (_this.lastOrderFormTotalPrice !== orderForm.value) {
           _this.lastOrderFormTotalPrice = orderForm.value
           _this.termPrice = await fetch(
-            `${rootPath()}/api/checkout/pub/orderForm/${
-              orderForm.orderFormId
+            `${rootPath()}/api/checkout/pub/orderForm/${orderForm.orderFormId
             }/installments?paymentSystem=2`
           )
             .then(response => response.json())
@@ -1018,42 +1011,39 @@ export class CheckoutCustom {
           val => val.id === 'Discounts'
         )
         const discountValue =
-          Math.abs(discounts && discounts.length ? discounts[0].value : 0) +
-          Math.abs(_this.discountPrices || 0)
+          Math.abs(discounts && discounts.length > 0 ? discounts[0]?.value : 0) +
+          Math.abs(_this.discountPrices ? _this.discountPrices : 0)
 
-        const _component = `
-              <div class="cart-total" style="margin-bottom: 20px; color: #000">
-                <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
-                  <p class="ref-id">Total</p>
-                  <p class="estimate-shipping">${formatCurrencyBRL(
-                    inCashPrice
-                  )}</p>
-                </div>
-                ${
-                  !!_this.subTotalValueFinal && !!discountValue
-                    ? `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
-                    <span style="text-decoration: line-through">${formatCurrencyBRL(
-                      _this.subTotalValueFinal
-                    )}</span> <b style="color:#2189FF">Economia de ${formatCurrencyBRL(
-                        Math.abs(_this.discountPrices) +
-                          Math.abs(discounts[0].value)
-                      )} </b>
-                  </div>`
-                    : ''
-                }
-                <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                    <p>Ou parcelado em até 12x
-                        <span 
-                          class="custom-tooltip">
-                        i
-                        </span>
-                    </p>
-                    <p class="discount-total" style="font-weight: 700;">
-                      ${formatCurrencyBRL(_this.termPrice)}
-                    </p>
-                </div>
+        const _component =
+          `
+            <div class="cart-total" style="margin-bottom: 20px; color: #000">
+              <div class="best-price" style="font-size: 26px; display: flex; justify-content: space-between; font-weight: 700">
+                <p class="ref-id">Total</p>
+                <p class="estimate-shipping">
+                  ${formatCurrencyBRL(inCashPrice)}
+                </p>
               </div>
-            `
+          ${!!_this.subTotalValueFinal && !!discountValue ?
+            `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
+                <span style="text-decoration: line-through">
+                  ${formatCurrencyBRL(_this.subTotalValueFinal)}
+                </span> 
+                <b style="color:#2189FF">Economia de 
+                  ${formatCurrencyBRL(discountValue)}
+                </b>
+              </div>`
+            : ''
+          }
+              <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
+                <p>Ou parcelado em até 12x
+                  <span class="custom-tooltip">i</span>
+                </p>
+                <p class="discount-total" style="font-weight: 700;">
+                  ${formatCurrencyBRL(_this.termPrice)}
+                </p>
+              </div>
+            </div>
+          `
 
         if (_trElem.find('.cart-total').length === 0) {
           _trElem.prepend(_component)
@@ -1181,7 +1171,7 @@ export class CheckoutCustom {
     if (
       !this.accordionPayments ||
       $('.payment-group-list-btn').find('.v-custom-payment-item-wrap').length >
-        0
+      0
     ) {
       return false
     }
@@ -1190,8 +1180,7 @@ export class CheckoutCustom {
 
     $('.payment-group-item').each(function () {
       $(this).wrap(
-        `<div class='v-custom-payment-item-wrap ${
-          $(this).hasClass('active') ? 'active' : ''
+        `<div class='v-custom-payment-item-wrap ${$(this).hasClass('active') ? 'active' : ''
         }'></div>`
       )
     })
@@ -1290,26 +1279,6 @@ export class CheckoutCustom {
     })
   }
 
-  scrollToPaymentCard(orderForm) {
-    const paymentLength = orderForm.paymentData.payments.length
-    const paymentSystem = orderForm.paymentData.payments[0].paymentSystem
-
-    if (paymentLength == 1 && paymentSystem == 2) {
-      const paymentCardsGroup = document.querySelector(
-        '.payment-group-item-cards'
-      )
-
-      if (paymentCardsGroup) {
-        const offsetTop = paymentCardsGroup.offsetTop
-
-        window.scrollTo({
-          top: offsetTop,
-          behavior: 'smooth',
-        })
-      }
-    }
-  }
-
   defaultPaymentMethod() {
     try {
       // Default Payment Method: PIX
@@ -1366,7 +1335,7 @@ export class CheckoutCustom {
                 if (itemsToRemove.length > 0) {
                   return window.vtexjs.checkout
                     .removeItems(itemsToRemove)
-                    .then(() => {})
+                    .then(() => { })
                 }
               }, 2000)
             }
@@ -1465,7 +1434,7 @@ export class CheckoutCustom {
               if (itemsToRemove.length > 0) {
                 return window.vtexjs.checkout
                   .removeItems(itemsToRemove)
-                  .then(() => {})
+                  .then(() => { })
               }
             }
           }, i * interval)
@@ -1480,11 +1449,9 @@ export class CheckoutCustom {
     if ($('.link-logout-container').is(':visible') && notMyvtex) {
       $('#is-not-me').removeAttr('href')
       $('body').on('click', '#is-not-me', function () {
-        const returnUrl = `${
-          window.vtex.endpointAPI.split('/api')[0]
-        }/checkout/changeToAnonymousUser/${
-          window.vtexjs.checkout.orderForm.orderFormId
-        }`
+        const returnUrl = `${window.vtex.endpointAPI.split('/api')[0]
+          }/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId
+          }`
 
         window.location.assign(
           `${window.vtex.endpointAPI}/pub/logout?scope=${window.vtex.accountName}&returnUrl=${returnUrl}`
@@ -1652,6 +1619,10 @@ export class CheckoutCustom {
       this.paymentBuilder(this.orderForm)
       this.CSP.init(this.orderForm)
       this.SummaryGiftCard.init(this.orderForm)
+      if (window.location.hash === '#/payment') {
+        this.verifyCSP(this.orderForm)
+      }
+      
     }
 
     this.fixLabels()
@@ -1774,6 +1745,9 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
+          if (_this.orderForm) {
+            _this.verifyCSP(_this.orderForm)
+          }
         }
 
         _this.shipping.toggleGoToPaymentDisabled()
@@ -1855,7 +1829,6 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
-          _this.scrollToPaymentCard(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
