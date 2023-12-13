@@ -6,7 +6,7 @@ export default class TradeIn {
     const { items } = orderForm
 
     const customDataDomain =
-      orderForm.customData?.customApps.filter(i => i.id === 'domain') || []
+      orderForm.customData?.customApps.filter(i => i.id === 'domain-assurant') || []
 
     const transport =
       customDataDomain.length > 0
@@ -114,7 +114,7 @@ export default class TradeIn {
 
     try {
       await $.ajax({
-        url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/domain`,
+        url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/domain-assurant`,
         type: 'PUT',
         crossDomain: true,
         accept: 'application/vnd.vtex.ds.v10+json',
@@ -139,11 +139,11 @@ export default class TradeIn {
 
       const deleteRequests = [
         $.ajax({
-          url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_option_selected`,
+          url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain-assurant/trade_in_option_selected`,
           type: 'POST',
         }),
         $.ajax({
-          url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain/trade_in_total_value`,
+          url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain-assurant/trade_in_total_value`,
           type: 'POST',
         }),
       ]
