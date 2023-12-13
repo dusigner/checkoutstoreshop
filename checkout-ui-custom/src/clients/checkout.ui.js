@@ -441,7 +441,7 @@ export class CheckoutCustom {
 
     const _message = _customer
       ? 'Cupom inválido para essa compra.'
-      : 'Para usar o cupom, você precisa estar logado.'
+      : 'Para validar o cupom, continue para a próxima etapa'
 
     const _trElem = $(`.summary-template-holder`)
     const couponItemsCount = orderForm.items.reduce(function (
