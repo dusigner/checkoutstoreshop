@@ -395,12 +395,14 @@ export class CheckoutCustom {
           item.sellingPrice > 1
             ? formatCurrencyBRL(item.sellingPrice)
             : 'Grátis'
-
+        
+        const textColor = (installationPrice) !== "Grátis" ? 'color: #000 ;' : 'color: #2189FF'; 
+        
         return `
           <tr style="height: 23px;">
             <td>Serviço de instalação</td>
             <td>
-              <span style="font-weight: 700">
+              <span style="font-weight: 700 ; ${textColor}"> 
                 ${installationPrice}
               </span>
             </td>
@@ -410,7 +412,7 @@ export class CheckoutCustom {
 
       const element = `
         <tr class="installation-summary">
-          <td style="padding: 0 !important">
+          <td style="padding: 0 !important; font-weight: bold">
             <table width="100%">
               ${installationSummaryRows.join('')}
             </table>
@@ -441,7 +443,7 @@ export class CheckoutCustom {
 
     const _message = _customer
       ? 'Cupom inválido para essa compra.'
-      : 'Para usar o cupom, você precisa estar logado.'
+      : 'Para validar o cupom, continue para a próxima etapa'
 
     const _trElem = $(`.summary-template-holder`)
     const couponItemsCount = orderForm.items.reduce(function (
@@ -779,7 +781,7 @@ export class CheckoutCustom {
         const listPriceFormated = formatCurrencyBRL(listPriceTotalValue)
 
         free ? _trElem.addClass('gratuito') : null
-
+        
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
         _trElem.find('.new-product-price').text(listPriceFormated)
@@ -797,18 +799,22 @@ export class CheckoutCustom {
           .find('td.product-price')
           .addClass('v-custom-quantity-price-active')
           .prepend(
+           
             `
           <div class="v-custom-quantity-price vqc-ldelem">
-            <p class="v-custom-quantity-price__best" style="font-size: 18px; color: #000; margin-bottom: 4px">${free ? 'Grátis' : totalValue
+
+            <p class="v-custom-quantity-price__best" style="font-size: 18px; margin-bottom: 4px; 
+            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${
+              free ? 'Grátis' : totalValue
             }</p>
           </div>
-          `
+          `          
           )
-      })
+      }) 
     } catch (e) {
-      console.error('enchancementTotalPrice error:', e)
+      console.error('enchancementTotalPrice error:', e) 
     }
-    this.subTotalSummary(orderForm)
+    this.subTotalSummary(orderForm) 
   }
   subTotalSummary(orderForm) {
     try {
@@ -960,7 +966,7 @@ export class CheckoutCustom {
           } else {
             _trElem.find('.cart-total').remove()
             _trElem.prepend(_component)
-          }
+          } 
         }
 
         return
@@ -1180,7 +1186,8 @@ export class CheckoutCustom {
 
     $('.payment-group-item').each(function () {
       $(this).wrap(
-        `<div class='v-custom-payment-item-wrap ${$(this).hasClass('active') ? 'active' : ''
+        `<div class='v-custom-payment-item-wrap ${
+          $(this).hasClass('active') ? 'active' : ''
         }'></div>`
       )
     })
