@@ -37,6 +37,27 @@ const CHECK_SERVICES = {
 
       return isInstantVoucherApplied
     })
+  },
+  ['addon']: function (refId, orderForm) {
+    const currentItem = orderForm.items.find(item => item.refId === refId)
+    const { priceTags } = currentItem
+
+    return priceTags.some(priceTag => {
+      const { identifier } = priceTag
+      const { ratesAndBenefitsData } = orderForm
+
+      if (!ratesAndBenefitsData) {
+        return false
+      }
+
+      const { rateAndBenefitsIdentifiers } = ratesAndBenefitsData
+
+      const isAddonApplied = rateAndBenefitsIdentifiers.some(item => (
+        item.id === identifier && item.name.toLowerCase().includes('addon')
+      ))
+
+      return isAddonApplied
+    })
   }
 }
 
@@ -67,11 +88,20 @@ export class ServicesLinks {
   }
 
   _priorizeInstantVoucherLink() {
-    const instantVoucherLinks = this.serviceLinks.filter(service => service.serviceId === 'instantVoucher')
-    const otherServices = this.serviceLinks.filter(service => service.serviceId !== 'instantVoucher')
-
-    this.serviceLinks = [...instantVoucherLinks, ...otherServices]
-  }
+    const serviceIds = ['instantVoucher', 'addon'];
+    const prioritizedLinks = [];
+    const otherServices = [];
+   
+    this.serviceLinks.forEach(service => {
+      if (serviceIds.includes(service.serviceId)) {
+        prioritizedLinks.push(service);
+      } else {
+        otherServices.push(service);
+      }
+    });
+   
+    this.serviceLinks = [...prioritizedLinks, ...otherServices];
+   }
 
   init(orderForm) {
     try {
@@ -95,9 +125,11 @@ export class ServicesLinks {
         }
 
         const isInstantVoucher = serviceId === 'instantVoucher'
+        const isAddon = serviceId === 'addon'
         const productUrl = `${currentItem.detailUrl}?skuId=${skuId}&scroll=${serviceId}`
         const instantVoucherUrl = `${currentItem.detailUrl.split('/p')[0]}/instant-voucher?skuId=${skuId}`
-        const linkUrl = isInstantVoucher ? instantVoucherUrl : productUrl
+        const addonUrl = `${currentItem.detailUrl.split('/p')[0]}/always-add-on?skuId=${skuId}`
+        const linkUrl = isInstantVoucher ? instantVoucherUrl : isAddon ? addonUrl : productUrl;
         const hasServiceInCart = checkServicesFunction(refId, orderForm)
 
         this._renderLink({
