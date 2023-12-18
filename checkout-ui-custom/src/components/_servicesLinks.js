@@ -39,24 +39,12 @@ const CHECK_SERVICES = {
     })
   },
   ['addon']: function (refId, orderForm) {
-    const currentItem = orderForm.items.find(item => item.refId === refId)
-    const { priceTags } = currentItem
+    return orderForm.items.some(item => {
+      const { attachments } = item
 
-    return priceTags.some(priceTag => {
-      const { identifier } = priceTag
-      const { ratesAndBenefitsData } = orderForm
-
-      if (!ratesAndBenefitsData) {
-        return false
-      }
-
-      const { rateAndBenefitsIdentifiers } = ratesAndBenefitsData
-
-      const isAddonApplied = rateAndBenefitsIdentifiers.some(item => (
-        item.id === identifier && item.name.toLowerCase().includes('addon')
-      ))
-
-      return isAddonApplied
+      return attachments.some(attachment => {
+        return attachment.content.refId === refId
+      })
     })
   }
 }
