@@ -110,7 +110,7 @@ function createLayoutMessageObs(saguid) {
 
 function createLayoutRewardsTotalDiscount({ discount }) {
   const _component = `
-  <tr class="rewards-total-discount" style="grid-area: rewards;">
+  <tr class="rewards-total-discount">
     <td class="info">Rewards</td>
     <td class="space"></td>
     <td class="monetary" style="color: #000">- ${discount.toLocaleString(
