@@ -224,19 +224,7 @@ export class Rewards {
 
   getPointsSearch() {
     const { orderForm } = window.vtexjs.checkout
-
-    let TotalShipping = 0
-
-    if (
-      orderForm.totalizers.find(item => {
-        return item.id === 'Shipping'
-      })
-    ) {
-      TotalShipping = orderForm.totalizers.find(item => {
-        return item.id === 'Shipping'
-      }).value
-    }
-
+    
     if (orderForm.orderFormId && this.userSaGuid && this.userAcceptedRewards) {
       const data = {
         ...PAYLOAD_REWARDS_DEFAULT,
@@ -255,10 +243,7 @@ export class Rewards {
           this.totalPointsUser = res.PointBalance
           this.totalCurrencyUser = res.ExchangedAmount
           this.pricePerPoint = res.ExchangedAmount / res.PointBalance
-          this.chosenDiscount = Math.min(
-            Math.max(res.ExchangedAmount, 0),
-            (orderForm.value - TotalShipping) / 100 / 2
-          )
+          this.chosenDiscount = Math.max(res.ExchangedAmount, 0)
           this.createGroupCalcRewards()
           if (this.totalPointsUser > 0) {
             $('#show-rewards-parent').css('display', 'block')
@@ -271,14 +256,33 @@ export class Rewards {
     }
   }
 
+  getDiscountValue() {
+    const itemsTotal = vtexjs.checkout.orderForm.items.reduce((acc, item) => {
+      return acc + item.listPrice
+    }, 0)
+    const discounts = vtexjs.checkout.orderForm.items.reduce((acc, item) => {
+      const priceTagsFilterd = item.priceTags.filter(priceTag => {
+        return !priceTag.ratesAndBenefitsIdentifier.matchedParameters.paymentMethodId
+      })
+
+      const itemDiscounts = priceTagsFilterd.reduce((acc, priceTag) => acc + priceTag.value , 0)
+      return acc + Math.abs(itemDiscounts)
+    }, 0)
+    const maxDiscount = 0.5 * itemsTotal - (discounts ? Math.abs(discounts) : 0)
+    const availableDiscountValue = Math.max(0, maxDiscount);
+
+    return Math.min(this.chosenDiscount, availableDiscountValue / 100);
+  }
+
   setRewardsDiscount() {
     const element = document.querySelector(
       '.gift-card-provider-group-ssg_rewards .input-prepend input'
     )
 
     const evt = new KeyboardEvent('keydown', { key: 'a' })
+    const discountValue = this.getDiscountValue();
 
-    element.value = this.chosenDiscount.toLocaleString('pt-BR', {
+    element.value = discountValue.toLocaleString('pt-BR', {
       style: 'currency',
       currency: 'BRL',
     })
