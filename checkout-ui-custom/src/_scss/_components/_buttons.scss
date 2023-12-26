@@ -115,3 +115,18 @@
 	background-color: #fff;
 	color: #000;
 }
+
+[data-i18n="global.keepCredit"] {
+	font-size: 0px !important;
+	&::after {
+		content: 'Não utilizar crédito';
+		display: inline-block;
+		font-size: 15px;
+	}
+}
+
+.payment-discoints-table.table.table-condensed {
+	.action {
+		width: auto !important
+	}
+}
