@@ -214,42 +214,6 @@ export class CheckoutCustom {
     }
   }
 
-  ApplyCoupon(orderForm) {
-    const isThereCoupon =
-      orderForm.marketingData === null
-        ? false
-        : !!orderForm.marketingData.coupon
-
-    try {
-      if (isThereCoupon) {
-        const _trElem = $(`.summary-template-holder`)
-        const removeCouponElement = $(`.coupon-fields .info .delete a`)
-
-        if (
-          _trElem.find('.totalizers-list').find('.coupon-applied').length > 0
-        ) {
-          return
-        }
-
-        _trElem.find('.totalizers-list .Items').after(
-          `<tr class="coupon-applied" style="height: 23px;">
-            <td style="margin-left: 10px;">Cupom</td>
-            <td>
-              <p class="using-coupon-text" style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;">
-                ${orderForm.marketingData.coupon}
-              </p>
-            </td>
-          </tr>`
-        )
-        _trElem
-          .find('.totalizers-list .using-coupon-text')
-          .append(removeCouponElement[1])
-      }
-    } catch (e) {
-      console.error('ApplyCoupon error:', e)
-    }
-  }
-
   buildVertical() {
     $('body').addClass('body-cart-vertical')
     $('.cart-template .cart-links-bottom:eq(0)').appendTo(
@@ -1083,7 +1047,6 @@ export class CheckoutCustom {
   async update(orderForm) {
     const _this = this
 
-    this.ApplyCoupon(orderForm)
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
