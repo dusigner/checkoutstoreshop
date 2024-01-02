@@ -1388,35 +1388,52 @@
     background-size: contain;
     background-repeat: no-repeat;
     padding-left: 40px !important;
-
+	span {
+		display: none;
+	}
     &:before {
       content: 'Crédito disponível:';
       font-weight: bold;
     }
+	&:after {
+		content: 'Bônus Pré-registro+';
+		font-weight: 100;
+	}
   }
 
-  .action {
-    a {
-      color: #000;
-      font-weight: bold;
+	.action {
+		width: auto !important;
+		a {
+			color: #000;
+			font-weight: bold;
 
-      &[data-i18n="global.addCredit"] {
-        font-size: 0!important;
-        align-items: center;
-        justify-content: center;
-        background: #000 !important;
+			&[data-i18n="global.addCredit"] {
+				font-size: 0!important;
+				background: #000 !important;
+				color:#fff !important;
+				padding: 0 12px !important;
+				&::after {
+					content:'Utilizar crédito';
+					display: inline-block;
+					font-size: 14px;
+					line-height: 28px;
+					font-weight: 100;
+				}
+			}
 
-        &::before {
-          content:'Utilizar crédito';
-          color: #fff;
-          font-size: 14px;
-          font-weight: bold;
-          position: relative;
-            top: 3px;
-        }
-      }
-    }
-  }
+			&[data-i18n="global.keepCredit"] {
+				font-size: 0px !important;
+				padding: 0 12px !important;
+				&::after {
+					content: "Não utilizar crédito";
+					display: inline-block;
+					font-size: 14px;
+					line-height: 28px;
+					font-weight: 100;
+				}
+			}
+		}
+	}
 
   .number {
     min-width: 100px;
