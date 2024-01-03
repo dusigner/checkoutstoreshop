@@ -42,7 +42,6 @@ export default class Discounts {
   }
 
   _discountTemplate({ identifier, title, value, isCoupon } = {}) {
-    const removeCouponElement = $(`.coupon-fields .info .delete a`)
     const coupon = vtexjs.checkout.orderForm.marketingData.coupon;
 
     return `
@@ -53,7 +52,6 @@ export default class Discounts {
             ${formatNegativeValue(
               formatCurrencyBRL(value)
             )}
-            ${isCoupon ? removeCouponElement[1].outerHTML : ''}
           </span>
         </td>
       </tr>
@@ -190,6 +188,13 @@ export default class Discounts {
       })
 
       $tr.before(`${$trDiscountsWithTitle.join()}`)
+
+      const _trElem = $('.discount .using-coupon-text')
+      if($(`.totalizers-list .using-coupon-text a`).length) return 
+      
+      const removeCouponElement = $(`.coupon-fields .info .delete a`).clone(true)
+      _trElem
+      .append(removeCouponElement[0])
     })
 
     if (!otherDiscounts.length) {
