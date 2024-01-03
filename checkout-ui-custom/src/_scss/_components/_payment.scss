@@ -1388,17 +1388,11 @@
     background-size: contain;
     background-repeat: no-repeat;
     padding-left: 40px !important;
-	span {
-		display: none;
-	}
-    &:before {
+	&:before {
       content: 'Crédito disponível:';
       font-weight: bold;
     }
-	&:after {
-		content: 'Bônus Pré-registro+';
-		font-weight: 100;
-	}
+	
   }
 
 	.action {
