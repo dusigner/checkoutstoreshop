@@ -149,7 +149,9 @@ export default class Discounts {
     $totalizers.each(function(_, element) {
       const $totalizer = $(element)
       const $tr = $totalizer.find('.Discounts')
-      const $trDiscountsWithTitle = discountsWithTitle.reduce((acc, next) => {
+     
+      const discountsOptions = JSON.parse(JSON.stringify(discountsWithTitle))
+      const $trDiscountsWithTitle = discountsOptions.reduce((acc, next) => {
         const exists = acc.find(item => item.title.toLowerCase().trim() === next.title.toLowerCase().trim());
         if (!exists) {
           return [...acc, next]
