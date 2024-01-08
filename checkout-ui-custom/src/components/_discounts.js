@@ -41,14 +41,18 @@ export default class Discounts {
     }
   }
 
-  _discountTemplate({ identifier, title, value } = {}) {
+  _discountTemplate({ identifier, title, value, isCoupon } = {}) {
+    const coupon = vtexjs.checkout.orderForm.marketingData.coupon;
+
     return `
-      <tr id="discount-${identifier}" class="discount cupon" style="height: 23px;">
-        <td style="margin-left: 10px;">${title}</td>
+      <tr id="discount-${identifier}" class="discount cupon" style="height: 23px;" >
+        <td style="margin-left: 10px;">${isCoupon ? `Desconto Cupom <span style="font-weight: 700">${coupon} </span>` : title}</td>
         <td>
-          <span>${formatNegativeValue(
-            formatCurrencyBRL(value)
-          )}</span>
+          <span ${isCoupon ? 'class="using-coupon-text" style=style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;"' : ''}>
+            ${formatNegativeValue(
+              formatCurrencyBRL(value)
+            )}
+          </span>
         </td>
       </tr>
     `
@@ -65,7 +69,8 @@ export default class Discounts {
       const { rateAndBenefitsIdentifiers } = ratesAndBenefitsData
   
       const discounts = rateAndBenefitsIdentifiers.reduce((acc, rateAndBenefitsIdentifier) => {
-        const { id, name, additionalInfo } = rateAndBenefitsIdentifier
+        const { id, name, additionalInfo, matchedParameters: {["couponCode@Marketing"] : couponCode} } = rateAndBenefitsIdentifier
+
         const discountValue = this._getDiscountValue(items, {
           rateAndBenefitsIdentifierId: id
         })
@@ -79,7 +84,8 @@ export default class Discounts {
             identifier: id,
             name,
             title,
-            value: discountValue
+            value: discountValue,
+            isCoupon: !!couponCode
           }
 
           acc.push(discount)
@@ -160,15 +166,37 @@ export default class Discounts {
         exists.value += next.value
 
         return acc
-      },[]).map((item) => {
+      },[]).sort((a, b) => {
+        // Regra 1: Se o title tiver "Oferta Especial {{nome do canal}}", mostra esse item em primeiro lugar
+        if (a.title.includes('Oferta Especial') && !b.title.includes('Oferta Especial')) return -1;
+        if (!a.title.includes('Oferta Especial') && b.title.includes('Oferta Especial')) return 1;
+
+        // Regra 2: Se o title tiver "Desconto à Vista", mostra em ultimo lugar
+        if (a.title === 'Desconto à Vista' && b.title !== 'Desconto à Vista') return 1;
+        if (a.title !== 'Desconto à Vista' && b.title === 'Desconto à Vista') return -1;
+
+        // Regra 3: Ordena pelos valores, do maior para o menor (considerando o valor absoluto)
+        const absoluteA = Math.abs(a.value);
+        const absoluteB = Math.abs(b.value);
+        
+        return absoluteB - absoluteA;
+      }).map((item) => {
         return _this._discountTemplate({ 
           identifier: item.identifier,
           title: item.title,
-          value: item.value
+          value: item.value,
+          isCoupon: item.isCoupon
         })
       })
 
       $tr.before(`${$trDiscountsWithTitle.join()}`)
+
+      const _trElem = $('.discount .using-coupon-text')
+      if($(`.totalizers-list .using-coupon-text a`).length) return 
+      
+      const removeCouponElement = $(`.coupon-fields .info .delete a`).clone(true)
+      _trElem
+      .append(removeCouponElement[0])
     })
 
     if (!otherDiscounts.length) {

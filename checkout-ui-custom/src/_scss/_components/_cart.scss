@@ -1228,7 +1228,13 @@ h1#cart-title {
     }
 
     .using-coupon-text {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      
       #cart-coupon-remove {
+        height: 15px;
+        display: inline-block;
         font-size: 0;
 
         &:before {
