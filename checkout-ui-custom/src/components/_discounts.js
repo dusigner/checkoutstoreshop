@@ -41,21 +41,19 @@ export default class Discounts {
     }
   }
 
-  _discountTemplate({ identifier, title, value, isCoupon } = {}) {
-    const coupon = vtexjs.checkout.orderForm.marketingData.coupon;
-
-    return `
-      <tr id="discount-${isCoupon && !value ? 'invalid' : identifier}" class="discount cupon" style="height: 23px;" >
-        <td style="margin-left: 10px;">${isCoupon ? `Desconto Cupom <span style="font-weight: 700">${coupon} </span>` : title}</td>
-        <td>
-          <span ${isCoupon ? 'class="using-coupon-text" style=style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;"' : ''}>
-            ${value ? formatNegativeValue(
-              formatCurrencyBRL(value)
-            ) : ''}
-          </span>
-        </td>
-      </tr>
-    `
+  _discountTemplate({ identifier, title, value, isCoupon, coupon } = {}) {
+      return `
+        <tr id="discount-${isCoupon && !value ? 'invalid' : identifier}" class="discount cupon" style="height: 23px;" >
+          <td style="margin-left: 10px;">${isCoupon ? `Desconto Cupom <span style="font-weight: 700">${coupon} </span>` : title}</td>
+          <td>
+            <span ${isCoupon ? 'class="using-coupon-text" style=style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;"' : ''}>
+              ${value ? formatNegativeValue(
+                formatCurrencyBRL(value)
+              ) : ''}
+            </span>
+          </td>
+        </tr>
+      `
   }
 
   _setRatesAndBenefitsDiscounts(orderForm) {
@@ -173,7 +171,6 @@ export default class Discounts {
         if(!couponExists) {
           $trDiscountsWithTitle.push({
             title: orderForm.marketingData.coupon,
-            name: '',
             value: null,
             isCoupon: true
           })
@@ -199,7 +196,8 @@ export default class Discounts {
           identifier: item.identifier,
           title: item.title,
           value: item.value,
-          isCoupon: item.isCoupon
+          isCoupon: item.isCoupon,
+          coupon: orderForm.marketingData && orderForm.marketingData.coupon
         })
       })
 
