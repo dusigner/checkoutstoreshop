@@ -409,7 +409,7 @@ export class CheckoutCustom {
       ? 'Cupom inválido para essa compra.'
       : 'Para validar o cupom, continue para a próxima etapa'
 
-    const _trElem = $(`.summary-template-holder`)
+    const _trElem = $(`.totalizers-list`)
     const couponItemsCount = orderForm.items.reduce(function (
       accumulator,
       item
@@ -436,7 +436,7 @@ export class CheckoutCustom {
     }
 
     if (couponItemsCount === 0 && $('.coupon-applied-message').length === 0) {
-      _trElem.find('.totalizers-list .coupon-applied').after(
+      _trElem.find('#discount-invalid').after(
         `<tr class="coupon-applied-message" style="height: 23px;">
             <td>
               <span style="color: #D62E2E; font-size: 12px; margin-left: 10px;">${_message}</span>
