@@ -395,9 +395,9 @@ export class CheckoutCustom {
           item.sellingPrice > 1
             ? formatCurrencyBRL(item.sellingPrice)
             : 'Grátis'
-        
-        const textColor = (installationPrice) !== "Grátis" ? 'color: #000 ;' : 'color: #2189FF'; 
-        
+
+        const textColor = (installationPrice) !== "Grátis" ? 'color: #000 ;' : 'color: #2189FF';
+
         return `
           <tr style="height: 23px;">
             <td>Serviço de instalação</td>
@@ -781,7 +781,7 @@ export class CheckoutCustom {
         const listPriceFormated = formatCurrencyBRL(listPriceTotalValue)
 
         free ? _trElem.addClass('gratuito') : null
-        
+
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
         _trElem.find('.new-product-price').text(listPriceFormated)
@@ -799,22 +799,21 @@ export class CheckoutCustom {
           .find('td.product-price')
           .addClass('v-custom-quantity-price-active')
           .prepend(
-           
+
             `
           <div class="v-custom-quantity-price vqc-ldelem">
 
             <p class="v-custom-quantity-price__best" style="font-size: 18px; margin-bottom: 4px; 
-            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${
-              free ? 'Grátis' : totalValue
+            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
             }</p>
           </div>
-          `          
+          `
           )
-      }) 
+      })
     } catch (e) {
-      console.error('enchancementTotalPrice error:', e) 
+      console.error('enchancementTotalPrice error:', e)
     }
-    this.subTotalSummary(orderForm) 
+    this.subTotalSummary(orderForm)
   }
   subTotalSummary(orderForm) {
     try {
@@ -924,6 +923,29 @@ export class CheckoutCustom {
     }
   }
 
+  showMessageSamsungWallet(orderForm) {
+    try {
+      if (orderForm.items === 0) return
+
+      const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-samsungpay')
+      const _descriptionContainerSamsungpayElement = _containerTotalizers.find('.payment-samsungpay-description')
+      const _descriptionTextSamsungpayElement = _containerTotalizers.find('.payment-samsungpay-description-text')
+      const _descriptionTextSamsungWalletElement = _containerTotalizers.find('.payment-samsung-wallet-description-text')
+      console.log(" _descriptionContainerSamsungpayElement",  _descriptionContainerSamsungpayElement)
+      console.log("_descriptionTextSamsungpayElement",  _descriptionTextSamsungpayElement)
+      console.log("_descriptionTextSamsungWalletElement", _descriptionTextSamsungWalletElement.length)
+      const descriptionSamsungWalletText = `
+          <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description1">Para finalizar a compra, você precisa ter um cartão de banco registrado no Samsung Wallet. Pagamento a vista ${formatCurrencyBRL(orderForm.value)}</p>
+          <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description2">Em seguida, informe a sua Samsung Account e confirme o pagamento com sua digital ou senha em seu smartphone.</p>
+        `;
+        _descriptionTextSamsungpayElement.css('display', 'none')
+        _descriptionContainerSamsungpayElement.html(descriptionSamsungWalletText);
+
+    } catch (e) {
+      console.error("showMessageSamsungWallet", e)
+    }
+  }
+
   async enchancementSummaryCart(orderForm, path) {
     try {
       if (orderForm.value == 0) {
@@ -966,7 +988,7 @@ export class CheckoutCustom {
           } else {
             _trElem.find('.cart-total').remove()
             _trElem.prepend(_component)
-          } 
+          }
         }
 
         return
@@ -1090,6 +1112,11 @@ export class CheckoutCustom {
     this.enchancementProductCart(orderForm)
     this.shippingColor(orderForm)
 
+    if (window.location.hash === '#/payment') {
+      console.log("teste entrou aqui no hash payment")
+      this.showMessageSamsungWallet(orderForm)
+    }
+
     addEventListener('hashchange', async event => {
       const showHeader = ['#/payment', '#/shipping', '#/profile']
       const { hash } = event.target.location
@@ -1186,8 +1213,7 @@ export class CheckoutCustom {
 
     $('.payment-group-item').each(function () {
       $(this).wrap(
-        `<div class='v-custom-payment-item-wrap ${
-          $(this).hasClass('active') ? 'active' : ''
+        `<div class='v-custom-payment-item-wrap ${$(this).hasClass('active') ? 'active' : ''
         }'></div>`
       )
     })
@@ -1629,7 +1655,7 @@ export class CheckoutCustom {
       if (window.location.hash === '#/payment') {
         this.verifyCSP(this.orderForm)
       }
-      
+
     }
 
     this.fixLabels()
