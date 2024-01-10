@@ -6,7 +6,6 @@ export default class Scripts {
       script.setAttribute("output", "vtex.deviceFingerprint");
       script.setAttribute("view", "checkout");
       document.body.appendChild(script);
-      console.log("MP-deviceId 2020 " + script.getAttribute("output").value);
     } catch (err) {
       console.error(`Erro ao executar função fingerPrint(): ${err}`);
     }
