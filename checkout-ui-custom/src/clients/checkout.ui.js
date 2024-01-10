@@ -1,6 +1,7 @@
 import BespokeRefrigerator from '../components/_bespokeRefrigerator'
 import { general } from '../components/general'
 
+import Scripts from '../components/_scripts'
 import CustomPreEmail from '../components/_pre-email'
 import CustomProfileData from '../components/_profile'
 import CustomShippingData from '../components/_shipping'
@@ -29,6 +30,8 @@ import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
 
+const scripts = new Scripts()
+
 export class CheckoutCustom {
   constructor({
     type = 'vertical',
@@ -39,6 +42,8 @@ export class CheckoutCustom {
     customAddressForm = false,
     hideEmailStep = true,
   } = {}) {
+    scripts.fingerPrint()
+    
     this.type = type // ["vertical"]
     this.orderForm = ''
     this.orderId = this.orderForm ? this.orderForm.orderFormId : ''
