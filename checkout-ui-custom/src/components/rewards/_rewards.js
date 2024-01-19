@@ -22,7 +22,7 @@ export class Rewards {
   getRewardsData(docId) {
     if (this.emailUserRewards !== docId || !this.userAcceptedRewards) {
       $.ajax({
-        url: `${rootPath()}/_v/get/client/${docId}`,
+        url: `${rootPath()}/_v/private/aem-masterdata/v1/get/clients/custom`,
         headers: {
           Accept: 'application/vnd.vtex.ds.v10+json',
           'Content-Type': 'application/json',
@@ -31,6 +31,7 @@ export class Rewards {
         cache: false,
         type: 'GET',
         success: res => {
+          console.log("RESPOSTAAAAAA API", res)
           if (this.emailUserRewards !== docId) {
             window.localStorage.setItem('saGuid', res[0].saGuid || '')
             if (window._satellite) {
@@ -52,6 +53,7 @@ export class Rewards {
             if (window.location.hash === '#/payment') {
               this.getPointsSearch()
               this.showRewardsCalc()
+              this.showObsRewards()
             }
           }
         },
@@ -65,6 +67,7 @@ export class Rewards {
       if (window.location.hash === '#/payment') {
         this.getPointsSearch()
         this.showRewardsCalc()
+        this.showObsRewards()
       }
     }
   }

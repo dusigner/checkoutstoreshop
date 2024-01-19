@@ -83,6 +83,7 @@ function createLayoutElementTotalPoints({ totalPointsCurrentOrder }) {
 }
 
 function createLayoutMessageObs(saguid) {
+  console.log("saguid", saguid)
   let _component = ''
   if (saguid) {
     _component = `
