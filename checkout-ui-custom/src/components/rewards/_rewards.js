@@ -31,7 +31,6 @@ export class Rewards {
         cache: false,
         type: 'GET',
         success: res => {
-          console.log("RESPOSTAAAAAA API", res)
           if (this.emailUserRewards !== docId) {
             window.localStorage.setItem('saGuid', res[0].saGuid || '')
             if (window._satellite) {
