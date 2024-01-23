@@ -1167,6 +1167,25 @@ export class CheckoutCustom {
     })
   }
 
+  itauCardMessage(orderForm) {
+       if (orderForm && $('.itauCardMessage').length === 0) {
+      if (orderForm.paymentData) {
+        let itauCardMessageHtml = `<div class="itauCardMessage">
+          <h2 class="itauCardMessage__title">Importante</h2>
+          <p class="itauCardMessage__visaFlag">Bandeira Visa: até <b>24x</b> sem juros</p>
+          <p class="itauCardMessage__mastercardFlag">Bandeira Mastercard: até <b>21x</b> sem juros</p>
+          <span class="itauCardMessage__text">Caso selecione um parcelamento acima de 21x, seu pedido será cancelado.</span
+        </div>`
+        
+        let itauCardSelectElement = $(".steps-view .pg-samsung-itaucard")
+
+        if(itauCardSelectElement) {
+          itauCardSelectElement.before(itauCardMessageHtml)
+        }
+      }
+    }
+  }
+
   activateCustomForm() {
     const _this = this
 
@@ -1596,6 +1615,7 @@ export class CheckoutCustom {
       this.SummaryGiftCard.init(this.orderForm)
       if (window.location.hash === '#/payment') {
         this.verifyCSP(this.orderForm)
+        this.itauCardMessage(this.orderForm)
       }
       
     }
@@ -1743,21 +1763,25 @@ export class CheckoutCustom {
           _this.paymentBuilder(_this.orderForm)
           _this.customAddressFormInit(_this.orderForm)
           _this.removeCILoader()
-
+          
           _this.onDomMutation({
             targetNode: cartItems,
             callback: () => _this.removeCILoader(),
           })
-
+          
           _this.shipping.validadePostalCode(_this.orderForm)
-
+          
           if (window.location.hash === '#/profile') {
             _this.profile.addTerms(_this.orderForm)
           }
-
+          
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.customizeLogOut()
+          }
+          
+          if (window.location.hash === '#/payment') {
+            _this.itauCardMessage(_this.orderForm)
           }
         }
       })
