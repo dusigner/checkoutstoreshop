@@ -1,5 +1,7 @@
 import { formatNumberBRL } from '../_utils'
 
+const isFidelidadeAccount = (window.vtex && (window.vtex.accountName == 'samsungbrtestsfidelidade' || window.vtex.accountName == 'samsungbrshopfidelidade'));
+
 function createLayoutGroupCalcRewards({ totalPointsUser }) {
   return `
   <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">
@@ -75,16 +77,15 @@ function createLayoutElementTotalPoints({ totalPointsCurrentOrder }) {
         </tr>
       </tbody>
       `
-
-  return {
-    _component,
-    _componentVtexId,
-  }
+    return isFidelidadeAccount ? {} : { _component, _componentVtexId };
 }
 
 function createLayoutMessageObs(saguid) {
+
+  
   let _component = ''
-  if (saguid) {
+
+  if (saguid && !isFidelidadeAccount) {
     _component = `
       <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
         <p>
@@ -92,7 +93,9 @@ function createLayoutMessageObs(saguid) {
         </p>
       </div>
     `
-  } else {
+  } 
+  
+  if (!saguid) {
     _component = `
     <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
       <p>

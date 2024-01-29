@@ -44,7 +44,8 @@ export default class Discounts {
   _discountTemplate({ identifier, title, value, isCoupon, coupon } = {}) {
       return `
         <tr id="discount-${isCoupon && !value ? 'invalid' : identifier}" class="discount cupon" style="height: 23px;" >
-          <td style="margin-left: 10px;">${isCoupon ? `Desconto Cupom <span style="font-weight: 700">${coupon} </span>` : title}</td>
+          <td style="margin-left: 10px;">
+            <div class="custom-cupon">${isCoupon ? `<span>Desconto Cupom</span> <span style="font-weight: 700">${coupon} </span>` : title}</div></td>
           <td>
             <span ${isCoupon ? 'class="using-coupon-text" style=style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;"' : ''}>
               ${value ? formatNegativeValue(
