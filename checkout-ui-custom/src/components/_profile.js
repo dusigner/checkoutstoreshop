@@ -661,8 +661,6 @@ export default class CustomProfileData {
     const $birthDateFieldValue = $('#dateBirthField span.name')
 
     if ($birthDateFieldValue.is(':empty')) {
-      // const { email } = orderForm.clientProfileData
-
       getClientProfileData().done(function (data) {
         if (!data) return
 
