@@ -87,6 +87,13 @@
       background-repeat: no-repeat !important;
       background-size: 24px !important;
       background-position: 7% 50% !important;
+      .payment-group-item-text{
+        font-size: 0;
+        &::after {
+          content: "Parcele via Boleto em até 12x";
+          font-size: 12px;
+        }
+      }
     }
 
     #payment-group-customPrivate_501PaymentGroup {
@@ -1855,6 +1862,56 @@ margin-bottom: 0px !important;
 			content: "Frete";
 			font-size: 14px;
 		}
+	}
+}
+
+.itauCardMessage {
+	background-color: #F7F7F7;
+    border-radius: 10px;
+    padding: 10px;
+	display: flex;
+	flex-direction: column;
+
+	&__title {
+		font-size: 16px;
+		color: #000000;
+		margin: 0;
+	}
+
+	&__visaFlag,
+	&__mastercardFlag {
+		display: -webkit-inline-box;
+		color: #000000;
+		font-size: 12px;
+
+		&::before {
+			content: "";
+			margin-right: 5px;
+			width: 32px;
+			height: 20px;
+			display: block;
+			background-position: inherit;
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+	}
+
+	&__visaFlag {
+		&::before {
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='32' height='20' viewBox='0 0 40 25'%3E%3Cdefs%3E%3CclipPath id='clip-path'%3E%3Crect id='Rectangle_128' data-name='Rectangle 128' width='36' height='12' fill='%23fff'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg id='Group_222' data-name='Group 222' transform='translate(-665.5 0.5)'%3E%3Cg id='Group_221' data-name='Group 221' transform='translate(666)'%3E%3Crect id='Rectangle_127' data-name='Rectangle 127' width='39' height='24' rx='2.5' fill='%23fff' stroke='%23d6d6d6' stroke-width='1'/%3E%3Cg id='Group_220' data-name='Group 220' transform='translate(1.5 6.5)' clip-path='url(%23clip-path)'%3E%3Cpath id='Path_261' data-name='Path 261' d='M17.607,18.8H14.67L16.5,7.208h2.937Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_262' data-name='Path 262' d='M12.2,7.208,9.4,15.18l-.332-1.718L8.078,8.253A1.272,1.272,0,0,0,6.684,7.208H2.054L2,7.4A10.876,10.876,0,0,1,5.072,8.728L7.626,18.8h3.06L15.358,7.208Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_263' data-name='Path 263' d='M35.3,18.8H38L35.648,7.208H33.285a1.354,1.354,0,0,0-1.355.865L27.551,18.8h3.06l.613-1.721h3.733Zm-3.232-4.1,1.542-4.338L34.48,14.7Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_264' data-name='Path 264' d='M27.781,9.995l.42-2.49A8.291,8.291,0,0,0,25.56,7c-1.458,0-4.919.654-4.919,3.839,0,3,4.062,3.033,4.062,4.6s-3.643,1.293-4.847.3l-.438,2.6A8.061,8.061,0,0,0,22.735,19c2,0,5.028-1.067,5.028-3.969,0-3.014-4.1-3.3-4.1-4.6S26.523,9.282,27.781,9.995Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_265' data-name='Path 265' d='M9.065,13.466,8.078,8.253A1.272,1.272,0,0,0,6.684,7.208H2.054L2,7.4A11.281,11.281,0,0,1,6.361,9.652,9.059,9.059,0,0,1,9.065,13.466Z' transform='translate(-2 -7)' fill='%23f7a823'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");	
+		}
+	}
+
+	&__mastercardFlag {
+		&::before {
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='32' height='20' viewBox='0 0 40 25'%3E%3Cdefs%3E%3CclipPath id='clip-path'%3E%3Crect id='Rectangle_136' data-name='Rectangle 136' width='36' height='23.294' fill='%23fff'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg id='Group_230' data-name='Group 230' transform='translate(0 0.5)'%3E%3Crect id='Rectangle_135' data-name='Rectangle 135' width='39' height='24' rx='2.5' transform='translate(0.5)' fill='%23fff' stroke='%23d6d6d6' stroke-width='1'/%3E%3Cg id='Group_229' data-name='Group 229' transform='translate(2 0.5)' clip-path='url(%23clip-path)'%3E%3Cpath id='Path_274' data-name='Path 274' d='M24.868,3.492H15.134V21.8h9.734Z' transform='translate(-2 -1)' fill='%23ff5f00'/%3E%3Cpath id='Path_275' data-name='Path 275' d='M15.751,12.647a11.885,11.885,0,0,1,4.234-9.156A10.748,10.748,0,0,0,13.125,1,11.388,11.388,0,0,0,2,12.647,11.388,11.388,0,0,0,13.125,24.294a10.748,10.748,0,0,0,6.86-2.491A11.834,11.834,0,0,1,15.751,12.647Z' transform='translate(-2 -1)' fill='%23eb001b'/%3E%3Cpath id='Path_276' data-name='Path 276' d='M38,12.647A11.388,11.388,0,0,1,26.876,24.294a10.748,10.748,0,0,1-6.86-2.491,11.785,11.785,0,0,0,4.233-9.156,11.885,11.885,0,0,0-4.233-9.156A10.748,10.748,0,0,1,26.876,1,11.408,11.408,0,0,1,38,12.647Z' transform='translate(-2 -1)' fill='%23f79e1b'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");	
+		}
+	}
+
+	&__text {
+		font-size: 12px;
+		display: block;
+		margin-left: 32px;
 	}
 }
 

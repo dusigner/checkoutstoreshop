@@ -1,6 +1,7 @@
 import BespokeRefrigerator from '../components/_bespokeRefrigerator'
 import { general } from '../components/general'
 
+import Scripts from '../components/_scripts'
 import CustomPreEmail from '../components/_pre-email'
 import CustomProfileData from '../components/_profile'
 import CustomShippingData from '../components/_shipping'
@@ -29,6 +30,8 @@ import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
 
+const scripts = new Scripts()
+
 export class CheckoutCustom {
   constructor({
     type = 'vertical',
@@ -39,6 +42,8 @@ export class CheckoutCustom {
     customAddressForm = false,
     hideEmailStep = true,
   } = {}) {
+    scripts.fingerPrint()
+    
     this.type = type // ["vertical"]
     this.orderForm = ''
     this.orderId = this.orderForm ? this.orderForm.orderFormId : ''
@@ -211,42 +216,6 @@ export class CheckoutCustom {
       }
     } catch (e) {
       console.error('couponInfo error:', e)
-    }
-  }
-
-  ApplyCoupon(orderForm) {
-    const isThereCoupon =
-      orderForm.marketingData === null
-        ? false
-        : !!orderForm.marketingData.coupon
-
-    try {
-      if (isThereCoupon) {
-        const _trElem = $(`.summary-template-holder`)
-        const removeCouponElement = $(`.coupon-fields .info .delete a`)
-
-        if (
-          _trElem.find('.totalizers-list').find('.coupon-applied').length > 0
-        ) {
-          return
-        }
-
-        _trElem.find('.totalizers-list .Items').after(
-          `<tr class="coupon-applied" style="height: 23px;">
-            <td style="margin-left: 10px;">Cupom</td>
-            <td>
-              <p class="using-coupon-text" style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;">
-                ${orderForm.marketingData.coupon}
-              </p>
-            </td>
-          </tr>`
-        )
-        _trElem
-          .find('.totalizers-list .using-coupon-text')
-          .append(removeCouponElement[1])
-      }
-    } catch (e) {
-      console.error('ApplyCoupon error:', e)
     }
   }
 
@@ -445,7 +414,7 @@ export class CheckoutCustom {
       ? 'Cupom inválido para essa compra.'
       : 'Para validar o cupom, continue para a próxima etapa'
 
-    const _trElem = $(`.summary-template-holder`)
+    const _trElem = $(`.totalizers-list`)
     const couponItemsCount = orderForm.items.reduce(function (
       accumulator,
       item
@@ -472,7 +441,7 @@ export class CheckoutCustom {
     }
 
     if (couponItemsCount === 0 && $('.coupon-applied-message').length === 0) {
-      _trElem.find('.totalizers-list .coupon-applied').after(
+      _trElem.find('#discount-invalid').after(
         `<tr class="coupon-applied-message" style="height: 23px;">
             <td>
               <span style="color: #D62E2E; font-size: 12px; margin-left: 10px;">${_message}</span>
@@ -1105,7 +1074,6 @@ export class CheckoutCustom {
   async update(orderForm) {
     const _this = this
 
-    this.ApplyCoupon(orderForm)
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
@@ -1223,6 +1191,25 @@ export class CheckoutCustom {
         $(this).closest('.v-custom-payment-item-wrap')
       )
     })
+  }
+
+  itauCardMessage(orderForm) {
+       if (orderForm && $('.itauCardMessage').length === 0) {
+      if (orderForm.paymentData) {
+        let itauCardMessageHtml = `<div class="itauCardMessage">
+          <h2 class="itauCardMessage__title">Importante</h2>
+          <p class="itauCardMessage__visaFlag">Bandeira Visa: até <b>24x</b> sem juros</p>
+          <p class="itauCardMessage__mastercardFlag">Bandeira Mastercard: até <b>21x</b> sem juros</p>
+          <span class="itauCardMessage__text">Caso selecione um parcelamento acima de 21x, seu pedido será cancelado.</span
+        </div>`
+        
+        let itauCardSelectElement = $(".steps-view .pg-samsung-itaucard")
+
+        if(itauCardSelectElement) {
+          itauCardSelectElement.before(itauCardMessageHtml)
+        }
+      }
+    }
   }
 
   activateCustomForm() {
@@ -1654,6 +1641,7 @@ export class CheckoutCustom {
       this.SummaryGiftCard.init(this.orderForm)
       if (window.location.hash === '#/payment') {
         this.verifyCSP(this.orderForm)
+        this.itauCardMessage(this.orderForm)
       }
 
     }
@@ -1801,21 +1789,25 @@ export class CheckoutCustom {
           _this.paymentBuilder(_this.orderForm)
           _this.customAddressFormInit(_this.orderForm)
           _this.removeCILoader()
-
+          
           _this.onDomMutation({
             targetNode: cartItems,
             callback: () => _this.removeCILoader(),
           })
-
+          
           _this.shipping.validadePostalCode(_this.orderForm)
-
+          
           if (window.location.hash === '#/profile') {
             _this.profile.addTerms(_this.orderForm)
           }
-
+          
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.customizeLogOut()
+          }
+          
+          if (window.location.hash === '#/payment') {
+            _this.itauCardMessage(_this.orderForm)
           }
         }
       })

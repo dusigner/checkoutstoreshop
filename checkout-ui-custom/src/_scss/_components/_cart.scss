@@ -1218,6 +1218,9 @@ h1#cart-title {
         border-bottom: 1px solid #cbcbcb;
         margin-bottom: 16px;
         flex-direction: column;
+        .custom-cupon {
+          font-size: 12px;
+        }
       }
     }
 
@@ -1228,8 +1231,15 @@ h1#cart-title {
     }
 
     .using-coupon-text {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      
       #cart-coupon-remove {
+        height: 15px;
+        display: inline-block;
         font-size: 0;
+        margin-right: -18px;
 
         &:before {
           content: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTVweCIgaGVpZ2h0PSIxNXB4IiB2aWV3Qm94PSIwIDAgMTUgMTUiIHZlcnNpb249IjEuMSI+CjxnIGlkPSJzdXJmYWNlMSI+CjxwYXRoIHN0eWxlPSIgc3Ryb2tlOm5vbmU7ZmlsbC1ydWxlOm5vbnplcm87ZmlsbDpyZ2IoMCUsMCUsMCUpO2ZpbGwtb3BhY2l0eToxOyIgZD0iTSA3LjUgMC4zOTA2MjUgQyAxMS40MjE4NzUgMC4zOTA2MjUgMTQuNjA5Mzc1IDMuNTgyMDMxIDE0LjYwOTM3NSA3LjUgQyAxNC42MDkzNzUgMTEuNDIxODc1IDExLjQyMTg3NSAxNC42MDkzNzUgNy41IDE0LjYwOTM3NSBDIDUuNjAxNTYyIDE0LjYwOTM3NSAzLjgxNjQwNiAxMy44NzEwOTQgMi40NzI2NTYgMTIuNTI3MzQ0IEMgMS4xMjg5MDYgMTEuMTgzNTk0IDAuMzkwNjI1IDkuMzk4NDM4IDAuMzkwNjI1IDcuNSBDIDAuMzkwNjI1IDMuNTc4MTI1IDMuNTc4MTI1IDAuMzkwNjI1IDcuNSAwLjM5MDYyNSBaIE0gOS44NzUgNC4xMjg5MDYgTCA3LjM5MDYyNSA2LjYxNzE4OCBMIDQuOTAyMzQ0IDQuMTI4OTA2IEwgNC4xMjg5MDYgNC45MDIzNDQgTCA2LjYxNzE4OCA3LjM5MDYyNSBMIDQuMTI4OTA2IDkuODc1IEwgNC45MDIzNDQgMTAuNjQ4NDM4IEwgNy4zOTA2MjUgOC4xNjQwNjIgTCA5Ljg3NSAxMC42NDg0MzggTCAxMC42NDg0MzggOS44NzUgTCA4LjE2NDA2MiA3LjM5MDYyNSBMIDEwLjY0ODQzOCA0LjkwMjM0NCBaIE0gOS44NzUgNC4xMjg5MDYgIi8+CjwvZz4KPC9zdmc+Cg==');

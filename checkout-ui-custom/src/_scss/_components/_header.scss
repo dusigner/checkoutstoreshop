@@ -22,6 +22,10 @@ body {
     }
   }
 
+  .vtex-front-messages-placeholder {
+    z-index: 99999;
+  }
+
   .main-header {
     text-align: center;
     position: fixed;
