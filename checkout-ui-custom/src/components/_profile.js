@@ -136,21 +136,6 @@ export default class CustomProfileData {
     }
   }
 
-  // getClientProfileData() {
-  //   const _this = this
-
-  //   return $.ajax({
-  //     url: `${_this.rootPath()}/_v/private/aem-masterdata/v1/get/clients/custom`,
-  //     headers: {
-  //       Accept: 'application/vnd.vtex.ds.v10+json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     cache: false,
-  //     crossDomain: true,
-  //     type: 'GET',
-  //   })
-  // }
-
   convertDateToLocaleDateString(birthDate) {
     return new Date(birthDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
   }
