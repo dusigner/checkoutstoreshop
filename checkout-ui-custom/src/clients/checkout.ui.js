@@ -895,21 +895,30 @@ export class CheckoutCustom {
   showMessageSamsungWallet(orderForm) {
     try {
       if (orderForm.items === 0) return
-
       const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-samsungpay')
-      const _descriptionContainerSamsungpayElement = _containerTotalizers.find('.payment-samsungpay-description')
-      const _descriptionTextSamsungpayElement = _containerTotalizers.find('.payment-samsungpay-description-text')
-      const _descriptionTextSamsungWalletElement = _containerTotalizers.find('.payment-samsung-wallet-description-text')
-      console.log(" _descriptionContainerSamsungpayElement",  _descriptionContainerSamsungpayElement)
-      console.log("_descriptionTextSamsungpayElement",  _descriptionTextSamsungpayElement)
-      console.log("_descriptionTextSamsungWalletElement", _descriptionTextSamsungWalletElement.length)
-      const descriptionSamsungWalletText = `
-          <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description1">Para finalizar a compra, você precisa ter um cartão de banco registrado no Samsung Wallet. Pagamento a vista ${formatCurrencyBRL(orderForm.value)}</p>
-          <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description2">Em seguida, informe a sua Samsung Account e confirme o pagamento com sua digital ou senha em seu smartphone.</p>
+      const _containerSamsungWalletElement = _containerTotalizers.find('.box-payment-samsung-wallet')
+      if (_containerSamsungWalletElement.length === 0) {
+        const descriptionSamsungWalletText = `
+          <div class="box-payment-samsung-wallet">
+            <p class="payment-samsung-wallet-value-title">Valor total</p>
+            <div class="payment-container-samsung-wallet-value">
+              <p class="payment-samsung-wallet-value-text">Pagamento à vista - ${formatCurrencyBRL(orderForm.value)}<p>
+            </div>
+            <div class="payment-samsung-wallet-container-logo-name">
+              <img class="payment-samsung-wallet-logo" src="https://samsungbrshop.vteximg.com.br/arquivos/icone-wallet-transparente.svg"/>
+              <h4 class="payment-samsung-wallet-title-logo">Samsung Wallet</h4>
+            </div>
+            <div class="payment-container-samsung-wallet-description">
+              <p class="payment-samsung-wallet-description-subtitle" data-i18n="paymentData.paymentGroup.samsungpay.description1">Pague com Samsung Wallet, direto do seu celular.</p>
+              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description1">Ao finalizar a compra, acesse o app Samsung Wallet e confirme o pagamento com a sua biometria ou senha.</p>
+              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description2">É necessário ter um cartão de débito ou crédito registrado no seu app Samsung Wallet.</p>
+              <p class="payment-samsungpay-help-text">Confira os aparelhos compatíveis: <a href="www.samsung.com.br/services/wallet/">www.samsung.com.br/services/wallet/</a></p>
+            </div>
+          </div>
         `;
-        _descriptionTextSamsungpayElement.css('display', 'none')
-        _descriptionContainerSamsungpayElement.html(descriptionSamsungWalletText);
-
+        _containerTotalizers.empty()
+        _containerTotalizers.html(descriptionSamsungWalletText);
+      }
     } catch (e) {
       console.error("showMessageSamsungWallet", e)
     }
@@ -1081,7 +1090,6 @@ export class CheckoutCustom {
     this.shippingColor(orderForm)
 
     if (window.location.hash === '#/payment') {
-      console.log("teste entrou aqui no hash payment")
       this.showMessageSamsungWallet(orderForm)
     }
 
