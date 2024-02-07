@@ -850,8 +850,8 @@ export class CheckoutCustom {
               $(`.summary-totalizers .totalizers-list`)
                 .find('.Items')
                 .after(
-                  `<tr class="discount-subtotal-container" style="height: 23px; order: 2;">
-                <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
+                  `<tr class="discount-subtotal-container" style="order: 2;">
+                <td style="font-size: 12px; margin-left: 10px;">Oferta Especial Samsung.com</td>
                 <td>
                   <span class="value-discount-subtotal">${discountFinalFormatted}</span>
                 </td>
@@ -1003,7 +1003,7 @@ export class CheckoutCustom {
                 <span style="text-decoration: line-through">
                   ${formatCurrencyBRL(_this.subTotalValueFinal)}
                 </span> 
-                <b style="color:#2189FF">Economia de 
+                <b style="color:#2189FF; text-align: right">Economia de 
                   ${formatCurrencyBRL(discountValue)}
                 </b>
               </div>`
