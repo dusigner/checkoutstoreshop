@@ -1814,15 +1814,17 @@ export class CheckoutCustom {
           _this.customAddressForm.loadScript()
         }
 
-        if (window.location.hash == '#/shipping' || window.location.hash === '#/cart' || window.location.hash === '#/payment') {
+        if (window.location.hash == '#/shipping') {
           _this.shipping.removeIfHasntPrice()
         }
 
         if (window.location.hash === '#/cart') {
           _this.Rewards?.cancelRewardsDiscount()
+          _this.shipping.removeIfHasntPrice()
         }
 
         if (window.location.hash === '#/payment') {
+          _this.shipping.removeIfHasntPrice()
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
