@@ -436,13 +436,19 @@ export default class CustomShippingData {
     const hasInvalidPrice = vtexjs.checkout.orderForm.items.some(item => item.price === 0);
     const salesChannelValidate = vtexjs.checkout.orderForm.salesChannel;
     const hasMarketingTagEndless = vtexjs.checkout.orderForm.marketingData?.marketingTags?.find(item => item === "endlessaisle")
-    const salesChannelDelete = ["1","5","11","12","60"].includes(salesChannelValidate)
+    const salesChannelShop = ["1","5","11","12","60"].includes(salesChannelValidate)
+    const salesChannelFidelidade = ["1","5","11","70","72","78"].includes(salesChannelValidate)
 
     if (salesChannelValidate === "56" && hasInvalidPrice) {
       vtexjs.checkout.removeAllItems();
     }
     if(window.vtex.accountName === "samsungbrshop" && !hasMarketingTagEndless){
-      if (!salesChannelDelete) {
+      if (!salesChannelShop) {
+        vtexjs.checkout.removeAllItems();
+      }
+    }
+    if(window.vtex.accountName === "samsungbrshopfidelidade"){
+      if (!salesChannelFidelidade) {
         vtexjs.checkout.removeAllItems();
       }
     }
