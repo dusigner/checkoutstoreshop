@@ -465,8 +465,7 @@ export default class CustomProfileData {
       'input',
       'input#client-first-name, input#client-last-name, input#ship-receiverName',
       function () {
-        const regexp = /[^A-Za-zÀ-ú\s]+$/
-
+        const regexp = /[^A-Za-zÀ-ú\s]+/
         if ($(this).val().match(regexp)) {
           $(this).val($(this).val().replace(regexp, ''))
         }
