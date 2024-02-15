@@ -897,7 +897,7 @@ export class CheckoutCustom {
       if (orderForm.items === 0) return
       const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-samsungpay')
       const _containerSamsungWalletElement = _containerTotalizers.find('.box-payment-samsung-wallet')
-      if (_containerSamsungWalletElement.length === 0) {
+      // if (_containerSamsungWalletElement.length === 0) {
         const descriptionSamsungWalletText = `
           <div class="box-payment-samsung-wallet">
             <p class="payment-samsung-wallet-value-title">Valor total</p>
@@ -916,9 +916,11 @@ export class CheckoutCustom {
             </div>
           </div>
         `;
-        _containerTotalizers.empty()
+        if (_containerSamsungWalletElement.length === 0) {
+          _containerTotalizers.empty()
+        }
         _containerTotalizers.html(descriptionSamsungWalletText);
-      }
+      // }
     } catch (e) {
       console.error("showMessageSamsungWallet", e)
     }
