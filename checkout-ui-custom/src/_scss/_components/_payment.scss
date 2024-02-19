@@ -177,6 +177,18 @@
         span {
           background-position-y: calc(100% - 10px);
         }
+		.payment-group-item-text {
+			font-size: 0;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:v='https://vecta.io/nano' width='108' height='108' fill='none'%3E%3Cg clip-path='url(%23A)'%3E%3Cpath d='M107.022 37.894c1.257 9.585.941 16.106.941 16.106s.307 6.521-.941 16.106c-1.332 10.032-4.881 19.115-11.151 25.766-6.651 6.269-15.743 9.818-25.766 11.15-9.585 1.257-16.106.941-16.106.941s-6.521.307-16.106-.941c-10.032-1.332-19.115-4.881-25.766-11.15C5.859 89.221 2.31 80.129.978 70.106-.28 60.521.037 54 .037 54s-.307-6.521.941-16.106c1.332-10.033 4.881-19.115 11.15-25.766C18.779 5.859 27.862 2.31 37.894.978 47.479-.279 54 .037 54 .037s6.521-.307 16.106.941c10.032 1.332 19.115 4.881 25.766 11.15 6.27 6.651 9.819 15.743 11.151 25.766z' fill='%231d49c2'/%3E%3Cpath d='M30.004 28.504h47.992c4.974 0 9.008 4.034 9.008 8.989v33.022c0 4.956-4.034 8.989-9.008 8.989H30.004c-4.974 0-9.008-4.034-9.008-8.989V37.494c0-4.956 4.033-8.989 9.008-8.989z' fill='%23fff'/%3E%3Cpath d='M31.495 32.994h45.02a6.01 6.01 0 0 1 5.999 5.999v30.013a6.01 6.01 0 0 1-5.999 5.999h-45.02a6.01 6.01 0 0 1-5.999-5.999V38.993a6.01 6.01 0 0 1 5.999-5.999z' fill='%2381a4ff'/%3E%3Cpath d='M25.496 41.248h57.018v8.253H25.496v-8.253z' fill='%231d49c2'/%3E%3Cpath d='M24.741 68.774h10.032c4.974 0 7.909-2.701 10.759-8.561 2.832-5.859 6.688-15.426 11.551-28.719h26.93v45.02H24.741v-7.732-.009z' fill='%23fff'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='A'%3E%3Cpath fill='%23fff' d='M0 0h108v108H0z'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+			display: flex;
+			background-position: inherit;
+			background-repeat: no-repeat;
+			background-position: left;
+			&::after {
+				content: "Samsung Wallet (Pay)";
+				font-size: 12px;
+			}
+		}
       }
 
       
@@ -620,6 +632,74 @@
 				&.box-payment-option {
 					h3 {display:none;}
 				}
+			&.box-payment-samsungpay {
+				.box-payment-samsung-wallet {
+					margin-top: -20px;
+				}
+				.payment-samsung-wallet-value-title {
+					font-size: 12px;
+					font-weight: 700;
+					font-family: SamsungOne;
+					color: #000;
+				}
+				.payment-container-samsung-wallet-value {
+					border: 1px solid #D6D6D6;
+					border-radius: 3px;
+					padding: 16px 16px 5px;
+					margin-bottom: 26px;
+				}
+				.payment-samsung-wallet-value-text {
+					font-size: 14px;
+					font-weight: 400;
+					color: #767676;
+					font-family: SamsungOne;
+					margin: 0px;
+				}
+				.payment-samsung-wallet-container-logo-name {
+					display: flex;
+					flex-direction: row;
+					margin-bottom: 26px;
+				}
+				.payment-samsung-wallet-logo {
+					width: 36px;
+					height: 36px;
+					margin-right: 8px;
+				}
+				.payment-samsung-wallet-title-logo {
+					font-size: 22px;
+					font-weight: bold;
+					font-family: 'SamsungSharpSans';
+					color: #000;
+				}
+				.payment-samsung-wallet-description-subtitle {
+					font-size: 16px;
+					font-weight: 700;
+					color: #707070;
+					font-family: SamsungOne;
+					margin-bottom: 26px;
+				}
+				.payment-samsung-wallet-description-text {
+					font-size: 16px;
+					font-weight: 400;
+					color: #000;
+					font-family: SamsungOne;
+					margin-bottom: 26px;
+					line-height: 22px;
+				}
+				.payment-samsungpay-help-text,
+				.payment-samsungpay-help-text a {
+					font-size: 14px;
+					font-weight: 400;
+					color: #969EA4;
+					font-family: SamsungOne;
+					line-height: 22px;
+				}
+				@media(max-width: $mobileWidth) {
+					.box-payment-samsung-wallet {
+						margin-top: 0px;
+					}
+				}
+			}
     	}
 
 
