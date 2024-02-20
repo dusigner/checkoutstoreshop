@@ -705,7 +705,7 @@ export class CheckoutCustom {
 
       items.forEach(item => {
         listItems += `
-            <li>${item.name || item.skuName}</li>
+            <li>${item.quantity}x ${item.name || item.skuName}</li>
           `
       })
 
