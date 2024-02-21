@@ -41,17 +41,20 @@ export default class Discounts {
     }
   }
 
-  _discountTemplate({ identifier, title, value } = {}) {
-    return `
-      <tr id="discount-${identifier}" class="discount cupon" style="height: 23px;">
-        <td style="margin-left: 10px;">${title}</td>
-        <td>
-          <span>${formatNegativeValue(
-            formatCurrencyBRL(value)
-          )}</span>
-        </td>
-      </tr>
-    `
+  _discountTemplate({ identifier, title, value, isCoupon, coupon } = {}) {
+      return `
+        <tr id="discount-${isCoupon && !value ? 'invalid' : identifier}" class="discount cupon">
+          <td style="margin-left: 10px;">
+            <div class="custom-cupon">${isCoupon ? `<span>Desconto Cupom</span> <span style="font-weight: 700">${coupon} </span>` : title}</div></td>
+          <td>
+            <span ${isCoupon ? 'class="using-coupon-text" style=style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;"' : ''}>
+              ${value ? formatNegativeValue(
+                formatCurrencyBRL(value)
+              ) : ''}
+            </span>
+          </td>
+        </tr>
+      `
   }
 
   _setRatesAndBenefitsDiscounts(orderForm) {
@@ -65,7 +68,8 @@ export default class Discounts {
       const { rateAndBenefitsIdentifiers } = ratesAndBenefitsData
   
       const discounts = rateAndBenefitsIdentifiers.reduce((acc, rateAndBenefitsIdentifier) => {
-        const { id, name, additionalInfo } = rateAndBenefitsIdentifier
+        const { id, name, additionalInfo, matchedParameters: {["couponCode@Marketing"] : couponCode} } = rateAndBenefitsIdentifier
+
         const discountValue = this._getDiscountValue(items, {
           rateAndBenefitsIdentifierId: id
         })
@@ -79,7 +83,8 @@ export default class Discounts {
             identifier: id,
             name,
             title,
-            value: discountValue
+            value: discountValue,
+            isCoupon: !!couponCode
           }
 
           acc.push(discount)
@@ -132,7 +137,7 @@ export default class Discounts {
     }
   }
 
-  _renderUI() {
+  _renderUI(orderForm) {
     if (!this.discounts.length) {
       return
     }
@@ -149,7 +154,9 @@ export default class Discounts {
     $totalizers.each(function(_, element) {
       const $totalizer = $(element)
       const $tr = $totalizer.find('.Discounts')
-      const $trDiscountsWithTitle = discountsWithTitle.reduce((acc, next) => {
+     
+      const discountsOptions = JSON.parse(JSON.stringify(discountsWithTitle))
+      let $trDiscountsWithTitle = discountsOptions.reduce((acc, next) => {
         const exists = acc.find(item => item.title.toLowerCase().trim() === next.title.toLowerCase().trim());
         if (!exists) {
           return [...acc, next]
@@ -158,15 +165,51 @@ export default class Discounts {
         exists.value += next.value
 
         return acc
-      },[]).map((item) => {
+      },[])
+      
+      if(orderForm.marketingData && orderForm.marketingData.coupon) {
+        const couponExists = $trDiscountsWithTitle.find(item => !!item.isCoupon)
+        if(!couponExists) {
+          $trDiscountsWithTitle.push({
+            title: orderForm.marketingData.coupon,
+            value: null,
+            isCoupon: true
+          })
+        }
+      }
+
+      $trDiscountsWithTitle = $trDiscountsWithTitle.sort((a, b) => {
+        // Regra 1: Se o title tiver "Oferta Especial {{nome do canal}}", mostra esse item em primeiro lugar
+        if (a.title.includes('Oferta Especial') && !b.title.includes('Oferta Especial')) return -1;
+        if (!a.title.includes('Oferta Especial') && b.title.includes('Oferta Especial')) return 1;
+
+        // Regra 2: Se o title tiver "Desconto à Vista", mostra em ultimo lugar
+        if (a.title === 'Desconto à Vista' && b.title !== 'Desconto à Vista') return 1;
+        if (a.title !== 'Desconto à Vista' && b.title === 'Desconto à Vista') return -1;
+
+        // Regra 3: Ordena pelos valores, do maior para o menor (considerando o valor absoluto)
+        const absoluteA = Math.abs(a.value);
+        const absoluteB = Math.abs(b.value);
+        
+        return absoluteB - absoluteA;
+      }).map((item) => {
         return _this._discountTemplate({ 
           identifier: item.identifier,
           title: item.title,
-          value: item.value
+          value: item.value,
+          isCoupon: item.isCoupon,
+          coupon: orderForm.marketingData && orderForm.marketingData.coupon
         })
       })
 
       $tr.before(`${$trDiscountsWithTitle.join()}`)
+
+      const _trElem = $('.discount .using-coupon-text')
+      if($(`.totalizers-list .using-coupon-text a`).length) return 
+      
+      const removeCouponElement = $(`.coupon-fields .info .delete a`).clone(true)
+      _trElem
+      .append(removeCouponElement[0])
     })
 
     if (!otherDiscounts.length) {
@@ -206,7 +249,7 @@ export default class Discounts {
     try {
       this._setRatesAndBenefitsDiscounts(orderForm)
       this._setCustomDataDiscounts(orderForm)
-      this._renderUI()
+      this._renderUI(orderForm)
     } catch (err) { 
       console.error(`Ocorreu um erro ao iniciar componente de exibição de descontos: ${err}`)
     }

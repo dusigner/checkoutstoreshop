@@ -39,7 +39,7 @@ export default class SendAttachment {
   // ====================================================== //
   processTransportInfo(customData, items, obsToOpenTextField) {
     const transportCustomData = customData?.customApps?.find(
-      item => item.id === 'domain'
+      item => item.id === 'domain-assurant'
     )
     const transport = transportCustomData?.fields?.trade_in_option_selected
       ? JSON.parse(transportCustomData.fields.trade_in_option_selected)

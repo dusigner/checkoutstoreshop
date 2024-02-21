@@ -1,6 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
+import { getClientProfileData } from '../components/_utils'
 export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -135,21 +136,6 @@ export default class CustomProfileData {
     }
   }
 
-  getClientProfileData(email) {
-    const _this = this
-
-    return $.ajax({
-      url: `${_this.rootPath()}/_v/get/client/${email}`,
-      headers: {
-        Accept: 'application/vnd.vtex.ds.v10+json',
-        'Content-Type': 'application/json',
-      },
-      cache: false,
-      crossDomain: true,
-      type: 'GET',
-    })
-  }
-
   convertDateToLocaleDateString(birthDate) {
     return new Date(birthDate).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
   }
@@ -186,7 +172,7 @@ export default class CustomProfileData {
         jsonData = response;
       })
 
-      this.getClientProfileData(email).done(function (data) {
+      getClientProfileData().done(function (data) {
         try {
           const profileDataToPersist = {
             birthDate: data[0].birthDate,
@@ -465,8 +451,7 @@ export default class CustomProfileData {
       'input',
       'input#client-first-name, input#client-last-name, input#ship-receiverName',
       function () {
-        const regexp = /[^A-Za-zÀ-ú\s]+$/
-
+        const regexp = /[^A-Za-zÀ-ú\s]+/
         if ($(this).val().match(regexp)) {
           $(this).val($(this).val().replace(regexp, ''))
         }
@@ -675,9 +660,7 @@ export default class CustomProfileData {
     const $birthDateFieldValue = $('#dateBirthField span.name')
 
     if ($birthDateFieldValue.is(':empty')) {
-      const { email } = orderForm.clientProfileData
-
-      _this.getClientProfileData(email).done(function (data) {
+      getClientProfileData().done(function (data) {
         if (!data) return
 
         const dataBirthDate = data[0].birthDate

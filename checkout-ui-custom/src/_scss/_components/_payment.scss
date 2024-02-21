@@ -87,6 +87,13 @@
       background-repeat: no-repeat !important;
       background-size: 24px !important;
       background-position: 7% 50% !important;
+      .payment-group-item-text{
+        font-size: 0;
+        &::after {
+          content: "Parcele via Boleto em até 12x";
+          font-size: 12px;
+        }
+      }
     }
 
     #payment-group-customPrivate_501PaymentGroup {
@@ -170,6 +177,18 @@
         span {
           background-position-y: calc(100% - 10px);
         }
+		.payment-group-item-text {
+			font-size: 0;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:v='https://vecta.io/nano' width='108' height='108' fill='none'%3E%3Cg clip-path='url(%23A)'%3E%3Cpath d='M107.022 37.894c1.257 9.585.941 16.106.941 16.106s.307 6.521-.941 16.106c-1.332 10.032-4.881 19.115-11.151 25.766-6.651 6.269-15.743 9.818-25.766 11.15-9.585 1.257-16.106.941-16.106.941s-6.521.307-16.106-.941c-10.032-1.332-19.115-4.881-25.766-11.15C5.859 89.221 2.31 80.129.978 70.106-.28 60.521.037 54 .037 54s-.307-6.521.941-16.106c1.332-10.033 4.881-19.115 11.15-25.766C18.779 5.859 27.862 2.31 37.894.978 47.479-.279 54 .037 54 .037s6.521-.307 16.106.941c10.032 1.332 19.115 4.881 25.766 11.15 6.27 6.651 9.819 15.743 11.151 25.766z' fill='%231d49c2'/%3E%3Cpath d='M30.004 28.504h47.992c4.974 0 9.008 4.034 9.008 8.989v33.022c0 4.956-4.034 8.989-9.008 8.989H30.004c-4.974 0-9.008-4.034-9.008-8.989V37.494c0-4.956 4.033-8.989 9.008-8.989z' fill='%23fff'/%3E%3Cpath d='M31.495 32.994h45.02a6.01 6.01 0 0 1 5.999 5.999v30.013a6.01 6.01 0 0 1-5.999 5.999h-45.02a6.01 6.01 0 0 1-5.999-5.999V38.993a6.01 6.01 0 0 1 5.999-5.999z' fill='%2381a4ff'/%3E%3Cpath d='M25.496 41.248h57.018v8.253H25.496v-8.253z' fill='%231d49c2'/%3E%3Cpath d='M24.741 68.774h10.032c4.974 0 7.909-2.701 10.759-8.561 2.832-5.859 6.688-15.426 11.551-28.719h26.93v45.02H24.741v-7.732-.009z' fill='%23fff'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='A'%3E%3Cpath fill='%23fff' d='M0 0h108v108H0z'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+			display: flex;
+			background-position: inherit;
+			background-repeat: no-repeat;
+			background-position: left;
+			&::after {
+				content: "Samsung Wallet (Pay)";
+				font-size: 12px;
+			}
+		}
       }
 
       
@@ -613,6 +632,74 @@
 				&.box-payment-option {
 					h3 {display:none;}
 				}
+			&.box-payment-samsungpay {
+				.box-payment-samsung-wallet {
+					margin-top: -20px;
+				}
+				.payment-samsung-wallet-value-title {
+					font-size: 12px;
+					font-weight: 700;
+					font-family: SamsungOne;
+					color: #000;
+				}
+				.payment-container-samsung-wallet-value {
+					border: 1px solid #D6D6D6;
+					border-radius: 3px;
+					padding: 16px 16px 5px;
+					margin-bottom: 26px;
+				}
+				.payment-samsung-wallet-value-text {
+					font-size: 14px;
+					font-weight: 400;
+					color: #767676;
+					font-family: SamsungOne;
+					margin: 0px;
+				}
+				.payment-samsung-wallet-container-logo-name {
+					display: flex;
+					flex-direction: row;
+					margin-bottom: 26px;
+				}
+				.payment-samsung-wallet-logo {
+					width: 36px;
+					height: 36px;
+					margin-right: 8px;
+				}
+				.payment-samsung-wallet-title-logo {
+					font-size: 22px;
+					font-weight: bold;
+					font-family: 'SamsungSharpSans';
+					color: #000;
+				}
+				.payment-samsung-wallet-description-subtitle {
+					font-size: 16px;
+					font-weight: 700;
+					color: #707070;
+					font-family: SamsungOne;
+					margin-bottom: 26px;
+				}
+				.payment-samsung-wallet-description-text {
+					font-size: 16px;
+					font-weight: 400;
+					color: #000;
+					font-family: SamsungOne;
+					margin-bottom: 26px;
+					line-height: 22px;
+				}
+				.payment-samsungpay-help-text,
+				.payment-samsungpay-help-text a {
+					font-size: 14px;
+					font-weight: 400;
+					color: #969EA4;
+					font-family: SamsungOne;
+					line-height: 22px;
+				}
+				@media(max-width: $mobileWidth) {
+					.box-payment-samsung-wallet {
+						margin-top: 0px;
+					}
+				}
+			}
     	}
 
 
@@ -1388,35 +1475,46 @@
     background-size: contain;
     background-repeat: no-repeat;
     padding-left: 40px !important;
-
-    &:before {
+	&:before {
       content: 'Crédito disponível:';
       font-weight: bold;
     }
+	
   }
 
-  .action {
-    a {
-      color: #000;
-      font-weight: bold;
+	.action {
+		width: auto !important;
+		a {
+			color: #000;
+			font-weight: bold;
 
-      &[data-i18n="global.addCredit"] {
-        font-size: 0!important;
-        align-items: center;
-        justify-content: center;
-        background: #000 !important;
+			&[data-i18n="global.addCredit"] {
+				font-size: 0!important;
+				background: #000 !important;
+				color:#fff !important;
+				padding: 0 12px !important;
+				&::after {
+					content:'Utilizar crédito';
+					display: inline-block;
+					font-size: 14px;
+					line-height: 28px;
+					font-weight: 100;
+				}
+			}
 
-        &::before {
-          content:'Utilizar crédito';
-          color: #fff;
-          font-size: 14px;
-          font-weight: bold;
-          position: relative;
-            top: 3px;
-        }
-      }
-    }
-  }
+			&[data-i18n="global.keepCredit"] {
+				font-size: 0px !important;
+				padding: 0 12px !important;
+				&::after {
+					content: "Não utilizar crédito";
+					display: inline-block;
+					font-size: 14px;
+					line-height: 28px;
+					font-weight: 100;
+				}
+			}
+		}
+	}
 
   .number {
     min-width: 100px;
@@ -1806,6 +1904,56 @@ margin-bottom: 0px !important;
 			content: "Frete";
 			font-size: 14px;
 		}
+	}
+}
+
+.itauCardMessage {
+	background-color: #F7F7F7;
+    border-radius: 10px;
+    padding: 10px;
+	display: flex;
+	flex-direction: column;
+
+	&__title {
+		font-size: 16px;
+		color: #000000;
+		margin: 0;
+	}
+
+	&__visaFlag,
+	&__mastercardFlag {
+		display: -webkit-inline-box;
+		color: #000000;
+		font-size: 12px;
+
+		&::before {
+			content: "";
+			margin-right: 5px;
+			width: 32px;
+			height: 20px;
+			display: block;
+			background-position: inherit;
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+	}
+
+	&__visaFlag {
+		&::before {
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='32' height='20' viewBox='0 0 40 25'%3E%3Cdefs%3E%3CclipPath id='clip-path'%3E%3Crect id='Rectangle_128' data-name='Rectangle 128' width='36' height='12' fill='%23fff'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg id='Group_222' data-name='Group 222' transform='translate(-665.5 0.5)'%3E%3Cg id='Group_221' data-name='Group 221' transform='translate(666)'%3E%3Crect id='Rectangle_127' data-name='Rectangle 127' width='39' height='24' rx='2.5' fill='%23fff' stroke='%23d6d6d6' stroke-width='1'/%3E%3Cg id='Group_220' data-name='Group 220' transform='translate(1.5 6.5)' clip-path='url(%23clip-path)'%3E%3Cpath id='Path_261' data-name='Path 261' d='M17.607,18.8H14.67L16.5,7.208h2.937Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_262' data-name='Path 262' d='M12.2,7.208,9.4,15.18l-.332-1.718L8.078,8.253A1.272,1.272,0,0,0,6.684,7.208H2.054L2,7.4A10.876,10.876,0,0,1,5.072,8.728L7.626,18.8h3.06L15.358,7.208Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_263' data-name='Path 263' d='M35.3,18.8H38L35.648,7.208H33.285a1.354,1.354,0,0,0-1.355.865L27.551,18.8h3.06l.613-1.721h3.733Zm-3.232-4.1,1.542-4.338L34.48,14.7Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_264' data-name='Path 264' d='M27.781,9.995l.42-2.49A8.291,8.291,0,0,0,25.56,7c-1.458,0-4.919.654-4.919,3.839,0,3,4.062,3.033,4.062,4.6s-3.643,1.293-4.847.3l-.438,2.6A8.061,8.061,0,0,0,22.735,19c2,0,5.028-1.067,5.028-3.969,0-3.014-4.1-3.3-4.1-4.6S26.523,9.282,27.781,9.995Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_265' data-name='Path 265' d='M9.065,13.466,8.078,8.253A1.272,1.272,0,0,0,6.684,7.208H2.054L2,7.4A11.281,11.281,0,0,1,6.361,9.652,9.059,9.059,0,0,1,9.065,13.466Z' transform='translate(-2 -7)' fill='%23f7a823'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");	
+		}
+	}
+
+	&__mastercardFlag {
+		&::before {
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='32' height='20' viewBox='0 0 40 25'%3E%3Cdefs%3E%3CclipPath id='clip-path'%3E%3Crect id='Rectangle_136' data-name='Rectangle 136' width='36' height='23.294' fill='%23fff'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg id='Group_230' data-name='Group 230' transform='translate(0 0.5)'%3E%3Crect id='Rectangle_135' data-name='Rectangle 135' width='39' height='24' rx='2.5' transform='translate(0.5)' fill='%23fff' stroke='%23d6d6d6' stroke-width='1'/%3E%3Cg id='Group_229' data-name='Group 229' transform='translate(2 0.5)' clip-path='url(%23clip-path)'%3E%3Cpath id='Path_274' data-name='Path 274' d='M24.868,3.492H15.134V21.8h9.734Z' transform='translate(-2 -1)' fill='%23ff5f00'/%3E%3Cpath id='Path_275' data-name='Path 275' d='M15.751,12.647a11.885,11.885,0,0,1,4.234-9.156A10.748,10.748,0,0,0,13.125,1,11.388,11.388,0,0,0,2,12.647,11.388,11.388,0,0,0,13.125,24.294a10.748,10.748,0,0,0,6.86-2.491A11.834,11.834,0,0,1,15.751,12.647Z' transform='translate(-2 -1)' fill='%23eb001b'/%3E%3Cpath id='Path_276' data-name='Path 276' d='M38,12.647A11.388,11.388,0,0,1,26.876,24.294a10.748,10.748,0,0,1-6.86-2.491,11.785,11.785,0,0,0,4.233-9.156,11.885,11.885,0,0,0-4.233-9.156A10.748,10.748,0,0,1,26.876,1,11.408,11.408,0,0,1,38,12.647Z' transform='translate(-2 -1)' fill='%23f79e1b'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");	
+		}
+	}
+
+	&__text {
+		font-size: 12px;
+		display: block;
+		margin-left: 32px;
 	}
 }
 

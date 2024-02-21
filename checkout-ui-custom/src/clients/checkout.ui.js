@@ -1,6 +1,7 @@
 import BespokeRefrigerator from '../components/_bespokeRefrigerator'
 import { general } from '../components/general'
 
+import Scripts from '../components/_scripts'
 import CustomPreEmail from '../components/_pre-email'
 import CustomProfileData from '../components/_profile'
 import CustomShippingData from '../components/_shipping'
@@ -29,6 +30,8 @@ import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
 
+const scripts = new Scripts()
+
 export class CheckoutCustom {
   constructor({
     type = 'vertical',
@@ -39,6 +42,8 @@ export class CheckoutCustom {
     customAddressForm = false,
     hideEmailStep = true,
   } = {}) {
+    scripts.fingerPrint()
+    
     this.type = type // ["vertical"]
     this.orderForm = ''
     this.orderId = this.orderForm ? this.orderForm.orderFormId : ''
@@ -214,42 +219,6 @@ export class CheckoutCustom {
     }
   }
 
-  ApplyCoupon(orderForm) {
-    const isThereCoupon =
-      orderForm.marketingData === null
-        ? false
-        : !!orderForm.marketingData.coupon
-
-    try {
-      if (isThereCoupon) {
-        const _trElem = $(`.summary-template-holder`)
-        const removeCouponElement = $(`.coupon-fields .info .delete a`)
-
-        if (
-          _trElem.find('.totalizers-list').find('.coupon-applied').length > 0
-        ) {
-          return
-        }
-
-        _trElem.find('.totalizers-list .Items').after(
-          `<tr class="coupon-applied" style="height: 23px;">
-            <td style="margin-left: 10px;">Cupom</td>
-            <td>
-              <p class="using-coupon-text" style="font-weight: 700;line-height: 1;display: flex;align-items: center;gap: 5px;">
-                ${orderForm.marketingData.coupon}
-              </p>
-            </td>
-          </tr>`
-        )
-        _trElem
-          .find('.totalizers-list .using-coupon-text')
-          .append(removeCouponElement[1])
-      }
-    } catch (e) {
-      console.error('ApplyCoupon error:', e)
-    }
-  }
-
   buildVertical() {
     $('body').addClass('body-cart-vertical')
     $('.cart-template .cart-links-bottom:eq(0)').appendTo(
@@ -395,9 +364,9 @@ export class CheckoutCustom {
           item.sellingPrice > 1
             ? formatCurrencyBRL(item.sellingPrice)
             : 'Grátis'
-        
-        const textColor = (installationPrice) !== "Grátis" ? 'color: #000 ;' : 'color: #2189FF'; 
-        
+
+        const textColor = (installationPrice) !== "Grátis" ? 'color: #000 ;' : 'color: #2189FF';
+
         return `
           <tr style="height: 23px;">
             <td>Serviço de instalação</td>
@@ -445,7 +414,7 @@ export class CheckoutCustom {
       ? 'Cupom inválido para essa compra.'
       : 'Para validar o cupom, continue para a próxima etapa'
 
-    const _trElem = $(`.summary-template-holder`)
+    const _trElem = $(`.totalizers-list`)
     const couponItemsCount = orderForm.items.reduce(function (
       accumulator,
       item
@@ -472,7 +441,7 @@ export class CheckoutCustom {
     }
 
     if (couponItemsCount === 0 && $('.coupon-applied-message').length === 0) {
-      _trElem.find('.totalizers-list .coupon-applied').after(
+      _trElem.find('#discount-invalid').after(
         `<tr class="coupon-applied-message" style="height: 23px;">
             <td>
               <span style="color: #D62E2E; font-size: 12px; margin-left: 10px;">${_message}</span>
@@ -736,7 +705,7 @@ export class CheckoutCustom {
 
       items.forEach(item => {
         listItems += `
-            <li>${item.name || item.skuName}</li>
+            <li>${item.quantity}x ${item.name || item.skuName}</li>
           `
       })
 
@@ -781,7 +750,7 @@ export class CheckoutCustom {
         const listPriceFormated = formatCurrencyBRL(listPriceTotalValue)
 
         free ? _trElem.addClass('gratuito') : null
-        
+
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
         _trElem.find('.new-product-price').text(listPriceFormated)
@@ -799,22 +768,21 @@ export class CheckoutCustom {
           .find('td.product-price')
           .addClass('v-custom-quantity-price-active')
           .prepend(
-           
+
             `
           <div class="v-custom-quantity-price vqc-ldelem">
 
             <p class="v-custom-quantity-price__best" style="font-size: 18px; margin-bottom: 4px; 
-            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${
-              free ? 'Grátis' : totalValue
+            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
             }</p>
           </div>
-          `          
+          `
           )
-      }) 
+      })
     } catch (e) {
-      console.error('enchancementTotalPrice error:', e) 
+      console.error('enchancementTotalPrice error:', e)
     }
-    this.subTotalSummary(orderForm) 
+    this.subTotalSummary(orderForm)
   }
   subTotalSummary(orderForm) {
     try {
@@ -881,8 +849,8 @@ export class CheckoutCustom {
               $(`.summary-totalizers .totalizers-list`)
                 .find('.Items')
                 .after(
-                  `<tr class="discount-subtotal-container" style="height: 23px; order: 2;">
-                <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
+                  `<tr class="discount-subtotal-container" style="order: 2;">
+                <td style="font-size: 12px; margin-left: 10px;">Oferta Especial Samsung.com</td>
                 <td>
                   <span class="value-discount-subtotal">${discountFinalFormatted}</span>
                 </td>
@@ -921,6 +889,38 @@ export class CheckoutCustom {
       }
     } catch (e) {
       console.error("subTotalSummary", e)
+    }
+  }
+
+  showMessageSamsungWallet(orderForm) {
+    try {
+      if (orderForm.items === 0) return
+      const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-samsungpay')
+      const _containerSamsungWalletElement = _containerTotalizers.find('.box-payment-samsung-wallet')
+        const descriptionSamsungWalletText = `
+          <div class="box-payment-samsung-wallet">
+            <p class="payment-samsung-wallet-value-title">Valor total</p>
+            <div class="payment-container-samsung-wallet-value">
+              <p class="payment-samsung-wallet-value-text">Pagamento à vista - ${formatCurrencyBRL(orderForm.value)}<p>
+            </div>
+            <div class="payment-samsung-wallet-container-logo-name">
+              <img class="payment-samsung-wallet-logo" src="https://samsungbrshop.vteximg.com.br/arquivos/icone-wallet-transparente.svg"/>
+              <h4 class="payment-samsung-wallet-title-logo">Samsung Wallet</h4>
+            </div>
+            <div class="payment-container-samsung-wallet-description">
+              <p class="payment-samsung-wallet-description-subtitle">Pague com Samsung Wallet, direto do seu celular.</p>
+              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description1">Ao finalizar a compra, acesse o app Samsung Wallet e confirme o pagamento com a sua biometria ou senha.</p>
+              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description2">É necessário ter um cartão de débito ou crédito registrado no seu app Samsung Wallet.</p>
+              <p class="payment-samsungpay-help-text">Confira os aparelhos compatíveis: <a href="www.samsung.com.br/services/wallet/">www.samsung.com.br/services/wallet/</a></p>
+            </div>
+          </div>
+        `;
+        if (_containerSamsungWalletElement.length === 0) {
+          _containerTotalizers.empty()
+        }
+        _containerTotalizers.html(descriptionSamsungWalletText);
+    } catch (e) {
+      console.error("showMessageSamsungWallet", e)
     }
   }
 
@@ -966,7 +966,7 @@ export class CheckoutCustom {
           } else {
             _trElem.find('.cart-total').remove()
             _trElem.prepend(_component)
-          } 
+          }
         }
 
         return
@@ -1034,7 +1034,7 @@ export class CheckoutCustom {
                 <span style="text-decoration: line-through">
                   ${formatCurrencyBRL(_this.subTotalValueFinal)}
                 </span> 
-                <b style="color:#2189FF">Economia de 
+                <b style="color:#2189FF; text-align: right">Economia de 
                   ${formatCurrencyBRL(discountValue)}
                 </b>
               </div>`
@@ -1083,12 +1083,15 @@ export class CheckoutCustom {
   async update(orderForm) {
     const _this = this
 
-    this.ApplyCoupon(orderForm)
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
     this.shippingColor(orderForm)
+
+    if (window.location.hash === '#/payment') {
+      this.showMessageSamsungWallet(orderForm)
+    }
 
     addEventListener('hashchange', async event => {
       const showHeader = ['#/payment', '#/shipping', '#/profile']
@@ -1186,8 +1189,7 @@ export class CheckoutCustom {
 
     $('.payment-group-item').each(function () {
       $(this).wrap(
-        `<div class='v-custom-payment-item-wrap ${
-          $(this).hasClass('active') ? 'active' : ''
+        `<div class='v-custom-payment-item-wrap ${$(this).hasClass('active') ? 'active' : ''
         }'></div>`
       )
     })
@@ -1197,6 +1199,25 @@ export class CheckoutCustom {
         $(this).closest('.v-custom-payment-item-wrap')
       )
     })
+  }
+
+  itauCardMessage(orderForm) {
+       if (orderForm && $('.itauCardMessage').length === 0) {
+      if (orderForm.paymentData) {
+        let itauCardMessageHtml = `<div class="itauCardMessage">
+          <h2 class="itauCardMessage__title">Importante</h2>
+          <p class="itauCardMessage__visaFlag">Bandeira Visa: até <b>24x</b> sem juros</p>
+          <p class="itauCardMessage__mastercardFlag">Bandeira Mastercard: até <b>21x</b> sem juros</p>
+          <span class="itauCardMessage__text">Caso selecione um parcelamento acima de 21x, seu pedido será cancelado.</span
+        </div>`
+        
+        let itauCardSelectElement = $(".steps-view .pg-samsung-itaucard")
+
+        if(itauCardSelectElement) {
+          itauCardSelectElement.before(itauCardMessageHtml)
+        }
+      }
+    }
   }
 
   activateCustomForm() {
@@ -1628,8 +1649,9 @@ export class CheckoutCustom {
       this.SummaryGiftCard.init(this.orderForm)
       if (window.location.hash === '#/payment') {
         this.verifyCSP(this.orderForm)
+        this.itauCardMessage(this.orderForm)
       }
-      
+
     }
 
     this.fixLabels()
@@ -1775,21 +1797,25 @@ export class CheckoutCustom {
           _this.paymentBuilder(_this.orderForm)
           _this.customAddressFormInit(_this.orderForm)
           _this.removeCILoader()
-
+          
           _this.onDomMutation({
             targetNode: cartItems,
             callback: () => _this.removeCILoader(),
           })
-
+          
           _this.shipping.validadePostalCode(_this.orderForm)
-
+          
           if (window.location.hash === '#/profile') {
             _this.profile.addTerms(_this.orderForm)
           }
-
+          
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.customizeLogOut()
+          }
+          
+          if (window.location.hash === '#/payment') {
+            _this.itauCardMessage(_this.orderForm)
           }
         }
       })
@@ -1832,6 +1858,7 @@ export class CheckoutCustom {
         }
 
         if (window.location.hash === '#/payment') {
+          _this.shipping.removeIfHasntPrice()
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
