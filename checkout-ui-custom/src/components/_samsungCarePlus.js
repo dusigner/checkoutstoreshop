@@ -6,29 +6,6 @@
 
 const SAMSUNG_CARE_CATEGORY = '/2005/'
 
-const CONDITIONS = [
-  {
-      id: "2174",
-      combinesWith: ["1403", "1405"],
-  },
-  {
-      id: "1403",
-      combinesWith: ["1404", "1405", "1406", "2174"],
-  },
-  {
-      id: "1404",
-      combinesWith: ["1403"],
-  },
-  {
-      id: "1405",
-      combinesWith: ["1403", "2174"],
-  },
-  {
-      id: "1406",
-      combinesWith: ["1403"],
-  }
-];
-
 export default class SamsungCarePlus {
   constructor() {
     this.samsungCareItems = []
@@ -494,8 +471,6 @@ export default class SamsungCarePlus {
       this.removeDuplicated(items)
       this.updateQuantity(items)
       this.removeUnmatched(items)
-
-      console.log('this.samsungCareItems: ', this.samsungCareItems);
     } catch (err) {
       console.error(`Não foi possível sincronizar Samsung Care items: ${err}`)
     }
