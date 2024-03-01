@@ -693,11 +693,12 @@ export class CheckoutCustom {
   summaryCustom() {
     try {
       const { items } = window.vtexjs.checkout.orderForm
-      const itemsQuantity = items.length
 
-      const quantitySelectedItems = items.map(item => {
+      const quantitySelectedItemsArray = items.map(item => {
         return item.quantity
       })
+
+      const quantitySelectedItems = quantitySelectedItemsArray.reduce((accumulator,value) => accumulator + value,0)
 
       const _accordionElem = $($('.summary-template-holder')[1])
 
@@ -711,7 +712,7 @@ export class CheckoutCustom {
 
       const _summaryOrder = `
         <div class="summaryOrder">
-          <h6>Resumo do pedido (${itemsQuantity} ${quantitySelectedItems.length <= 1 ? 'item' : 'itens'
+          <h6>Resumo do pedido (${quantitySelectedItems} ${quantitySelectedItems <= 1 ? 'item' : 'itens'
         })</h6>
           <ul>
             ${listItems}
