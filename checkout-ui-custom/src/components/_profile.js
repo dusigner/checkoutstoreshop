@@ -119,19 +119,6 @@ export default class CustomProfileData {
 
       await insertClientPartial(sendOptinToMasterdata ? newDataWithOptin : newData)
 
-      // await $.ajax({
-      //   url: `${_this.rootPath()}/_v/insert/client/partial`,
-      //   type: 'POST',
-      //   crossDomain: true,
-      //   accept: 'application/vnd.vtex.ds.v10+json',
-      //   contentType: 'application/json; charset=utf-8',
-      //   data: JSON.stringify(
-         
-      //   ),
-      //   success(data) {
-      //     window.localStorage.setItem('doc', data.DocumentId)
-      //   },
-      // })
     } catch (e) {
       console.error(e)
       throw new Error()

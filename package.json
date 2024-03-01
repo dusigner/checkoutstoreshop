@@ -6,7 +6,7 @@
     "lint": "eslint --ext js,jsx,ts,tsx .",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
     "cy-r": "cd cy-runner && node cy-runner",
-    "install": "cd checkout-ui-custom && yarn install cd ../",
+    "install:checkout": "cd checkout-ui-custom && yarn install cd ../",
     "start:checkout": "cd checkout-ui-custom && yarn watch",
     "build:checkout": "cd checkout-ui-custom && yarn build && cd ../"
   },
