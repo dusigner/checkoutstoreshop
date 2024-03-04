@@ -437,7 +437,7 @@ export default class CustomShippingData {
     const salesChannelValidate = vtexjs.checkout.orderForm.salesChannel;
     const hasMarketingTagEndless = vtexjs.checkout.orderForm.marketingData?.marketingTags?.find(item => item === "endlessaisle")
     const salesChannelShop = ["1","5","11","12","60"].includes(salesChannelValidate)
-    const salesChannelFidelidade = ["1","5","11","70","72","78"].includes(salesChannelValidate)
+    const salesChannelFidelidade = ["1","5","11","70","72","78","48","50","2","44","54","3","18","27","30","31","43","59","61","69"].includes(salesChannelValidate)
 
     if (salesChannelValidate === "56" && hasInvalidPrice) {
       vtexjs.checkout.removeAllItems();
