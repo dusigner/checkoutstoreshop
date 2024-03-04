@@ -32,12 +32,13 @@ export default class Messages {
           const { title, message1, message2 } = paymentErrorMessages[code]
           const messages = window.vtex.i18n["pt-BR"]
 
-          console.log("Mensagens", { title, message1, message2 })
-          messages.modal.paymentUnauthorizedReviewData = title
-          messages.modal.paymentUnauthorizedMessage1 = message1
-          messages.modal.paymentUnauthorizedMessage2 = message2
-
-          window.vtex.i18n.setLocale('pt-BR')
+          if(title && (message1 || message2)){
+            messages.modal.paymentUnauthorizedReviewData = title
+            messages.modal.paymentUnauthorizedMessage1 = message1
+            messages.modal.paymentUnauthorizedMessage2 = message2
+  
+            window.vtex.i18n.setLocale('pt-BR')
+          }
         }
       }
     })
