@@ -364,9 +364,9 @@ export class CheckoutCustom {
           item.sellingPrice > 1
             ? formatCurrencyBRL(item.sellingPrice)
             : 'Grátis'
-        
-        const textColor = (installationPrice) !== "Grátis" ? 'color: #000 ;' : 'color: #2189FF'; 
-        
+
+        const textColor = (installationPrice) !== "Grátis" ? 'color: #000 ;' : 'color: #2189FF';
+
         return `
           <tr style="height: 23px;">
             <td>Serviço de instalação</td>
@@ -693,11 +693,12 @@ export class CheckoutCustom {
   summaryCustom() {
     try {
       const { items } = window.vtexjs.checkout.orderForm
-      const itemsQuantity = items.length
 
-      const quantitySelectedItems = items.map(item => {
+      const quantitySelectedItemsArray = items.map(item => {
         return item.quantity
       })
+
+      const quantitySelectedItems = quantitySelectedItemsArray.reduce((accumulator,value) => accumulator + value,0)
 
       const _accordionElem = $($('.summary-template-holder')[1])
 
@@ -705,13 +706,13 @@ export class CheckoutCustom {
 
       items.forEach(item => {
         listItems += `
-            <li>${item.name || item.skuName}</li>
+            <li>${item.quantity}x ${item.name || item.skuName}</li>
           `
       })
 
       const _summaryOrder = `
         <div class="summaryOrder">
-          <h6>Resumo do pedido (${itemsQuantity} ${quantitySelectedItems.length <= 1 ? 'item' : 'itens'
+          <h6>Resumo do pedido (${quantitySelectedItems} ${quantitySelectedItems <= 1 ? 'item' : 'itens'
         })</h6>
           <ul>
             ${listItems}
@@ -750,7 +751,7 @@ export class CheckoutCustom {
         const listPriceFormated = formatCurrencyBRL(listPriceTotalValue)
 
         free ? _trElem.addClass('gratuito') : null
-        
+
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
         _trElem.find('.new-product-price').text(listPriceFormated)
@@ -768,22 +769,21 @@ export class CheckoutCustom {
           .find('td.product-price')
           .addClass('v-custom-quantity-price-active')
           .prepend(
-           
+
             `
           <div class="v-custom-quantity-price vqc-ldelem">
 
             <p class="v-custom-quantity-price__best" style="font-size: 18px; margin-bottom: 4px; 
-            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${
-              free ? 'Grátis' : totalValue
+            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
             }</p>
           </div>
-          `          
+          `
           )
-      }) 
+      })
     } catch (e) {
-      console.error('enchancementTotalPrice error:', e) 
+      console.error('enchancementTotalPrice error:', e)
     }
-    this.subTotalSummary(orderForm) 
+    this.subTotalSummary(orderForm)
   }
   subTotalSummary(orderForm) {
     try {
@@ -893,6 +893,38 @@ export class CheckoutCustom {
     }
   }
 
+  showMessageSamsungWallet(orderForm) {
+    try {
+      if (orderForm.items === 0) return
+      const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-samsungpay')
+      const _containerSamsungWalletElement = _containerTotalizers.find('.box-payment-samsung-wallet')
+        const descriptionSamsungWalletText = `
+          <div class="box-payment-samsung-wallet">
+            <p class="payment-samsung-wallet-value-title">Valor total</p>
+            <div class="payment-container-samsung-wallet-value">
+              <p class="payment-samsung-wallet-value-text">Pagamento à vista - ${formatCurrencyBRL(orderForm.value)}<p>
+            </div>
+            <div class="payment-samsung-wallet-container-logo-name">
+              <img class="payment-samsung-wallet-logo" src="https://samsungbrshop.vteximg.com.br/arquivos/icone-wallet-transparente.svg"/>
+              <h4 class="payment-samsung-wallet-title-logo">Samsung Wallet</h4>
+            </div>
+            <div class="payment-container-samsung-wallet-description">
+              <p class="payment-samsung-wallet-description-subtitle">Pague com Samsung Wallet, direto do seu celular.</p>
+              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description1">Ao finalizar a compra, acesse o app Samsung Wallet e confirme o pagamento com a sua biometria ou senha.</p>
+              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description2">É necessário ter um cartão de débito ou crédito registrado no seu app Samsung Wallet.</p>
+              <p class="payment-samsungpay-help-text">Confira os aparelhos compatíveis: <a href="https://www.samsung.com.br/services/wallet/" rel="noreferrer noopener" target="_blank">www.samsung.com.br/services/wallet/</a></p>
+            </div>
+          </div>
+        `;
+        if (_containerSamsungWalletElement.length === 0) {
+          _containerTotalizers.empty()
+        }
+        _containerTotalizers.html(descriptionSamsungWalletText);
+    } catch (e) {
+      console.error("showMessageSamsungWallet", e)
+    }
+  }
+
   async enchancementSummaryCart(orderForm, path) {
     try {
       if (orderForm.value == 0) {
@@ -935,7 +967,7 @@ export class CheckoutCustom {
           } else {
             _trElem.find('.cart-total').remove()
             _trElem.prepend(_component)
-          } 
+          }
         }
 
         return
@@ -1058,6 +1090,10 @@ export class CheckoutCustom {
     this.enchancementProductCart(orderForm)
     this.shippingColor(orderForm)
 
+    if (window.location.hash === '#/payment') {
+      this.showMessageSamsungWallet(orderForm)
+    }
+
     addEventListener('hashchange', async event => {
       const showHeader = ['#/payment', '#/shipping', '#/profile']
       const { hash } = event.target.location
@@ -1154,8 +1190,7 @@ export class CheckoutCustom {
 
     $('.payment-group-item').each(function () {
       $(this).wrap(
-        `<div class='v-custom-payment-item-wrap ${
-          $(this).hasClass('active') ? 'active' : ''
+        `<div class='v-custom-payment-item-wrap ${$(this).hasClass('active') ? 'active' : ''
         }'></div>`
       )
     })
@@ -1617,7 +1652,7 @@ export class CheckoutCustom {
         this.verifyCSP(this.orderForm)
         this.itauCardMessage(this.orderForm)
       }
-      
+
     }
 
     this.fixLabels()
