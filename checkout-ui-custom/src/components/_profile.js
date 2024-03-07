@@ -52,6 +52,22 @@ export default class CustomProfileData {
       .catch(error => error); 
   }
 
+  async getSessionCookie() {
+    const _this = this;
+    try {
+      const cookieSessao = await fetch(`${_this.rootPath()}/api/sessions?items=*`)
+        .then(response => response.json())
+        .then(result => {
+          return result;
+        });
+  
+      return cookieSessao; 
+    } catch (error) {
+      console.error("Erro:", error);
+      throw error;
+    }
+  }
+
   async insertPartialNewProfileData() {
     const _this = this
     const email = window.vtexjs?.checkout?.orderForm?.clientProfileData?.email || document.getElementById('client-email')?.value
@@ -161,24 +177,34 @@ export default class CustomProfileData {
 
   async persistClientProfileData() {
     const _this = this
-
+    const cookieSession = await _this.getSessionCookie()
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
 
-      let jsonData;
-      await fetch(`${_this.rootPath()}/_v1/private/whatsapp/getUserByEmail/${email}`)
-      .then(response => response.json())
-      .then(response => {
-        jsonData = response;
-      })
 
-      getClientProfileData().done(function (data) {
+      const whatsAppResponse = await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
+        method: 'POST',
+        headers: {
+          'vtexAuth': cookieSession.namespaces.cookie.VtexIdclientAutCookie.value,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: '2a7e3',
+            params:{
+                account: 'samsungbrtests'
+            }
+        })
+      })
+    
+      const whatsAppConsent = await whatsAppResponse.json()
+      this.getClientProfileData(email).done(function (data) {
         try {
           const profileDataToPersist = {
             birthDate: data[0].birthDate,
             acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
             isNewsletterOptIn: data[0].isNewsletterOptIn,
-            isWhatsAppOptIn: jsonData.data.consent
+            isWhatsAppOptIn: vtexjs.checkout.orderForm.clientProfileData !== null ? whatsAppConsent : true
           }
 
           _this.fillClientProfileData(profileDataToPersist)
@@ -565,6 +591,42 @@ export default class CustomProfileData {
       _this.checkTerms()
     })
 
+    
+
+    function updateWhatsappConsent(isChecked) {
+      const orderformId = vtexjs.checkout.orderForm.orderFormId;
+      const url = `/api/checkout/pub/orderForm/${orderformId}/customData/conversation_app`;
+    
+      const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      };
+    
+      const body = {
+        whatsapp_consent: isChecked,
+      };
+    
+      const requestOptions = {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body),
+      };
+    
+      fetch(url, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+
+        })
+        .catch(error => {
+          console.error('Erro na chamada fetch:', error);
+        });
+    }
+    
+    $(document).on('click', '#go-to-shipping', function () {
+        const isChecked = $('#inputWhats').prop('checked');
+        updateWhatsappConsent(isChecked);
+    });
+
     $('body').on('change', '#inputWhatsapp', function () {
       const isChecked = $(this).is(':checked')
       const $whatsAppInput = $('#client-whatasapp')
@@ -604,7 +666,9 @@ export default class CustomProfileData {
       'click',
       '#edit-profile-data, #cart-to-orderform, #btn-client-pre-email, .checkout-steps_item_identification',
       function () {
-        _this.persistClientProfileData()
+        if(vtexjs.checkout.orderForm.clientProfileData !== null) {
+          _this.persistClientProfileData()
+        }
       }
     )
 
