@@ -596,6 +596,26 @@ class AdobeLaunchPixel {
       })
     }
 
+    const buttonAddCoupon = document.querySelectorAll('#cart-coupon-add')
+
+    if (buttonAddCoupon !== null) {
+      buttonAddCoupon.forEach(elementAdd => {
+        _this.setElementOmni(elementAdd, 'data-omni-contentclick', {
+          '': 'cart:apply coupon',
+        })
+      })
+    }
+
+    const buttonRemoveCoupon = document.querySelectorAll('#cart-coupon-remove')
+    
+    if (buttonRemoveCoupon !== null) {
+      buttonRemoveCoupon.forEach(elementRemove => {
+        _this.setElementOmni(elementRemove, 'data-omni-contentclick', {
+          '': 'cart:remove coupon',
+        })
+      })
+    }
+
     if (node.className.indexOf('hproduct') > -1) {
       if (node.querySelector('.url') !== undefined) {
         _this.setElementOmni(node, 'data-placeholder', null, {
