@@ -905,13 +905,13 @@ export class CheckoutCustom {
               <p class="payment-samsung-wallet-value-text">Pagamento à vista - ${formatCurrencyBRL(orderForm.value)}<p>
             </div>
             <div class="payment-samsung-wallet-container-logo-name">
-              <img class="payment-samsung-wallet-logo" src="https://samsungbrshop.vteximg.com.br/arquivos/icone-wallet-transparente.svg"/>
-              <h4 class="payment-samsung-wallet-title-logo">Samsung Wallet</h4>
+              <img class="payment-samsung-wallet-logo" src="https://samsungbrshop.vteximg.com.br/arquivos/icon-samsungpay-payment.png"/>
+              <h4 class="payment-samsung-wallet-title-logo">Samsung Pay</h4>
             </div>
             <div class="payment-container-samsung-wallet-description">
-              <p class="payment-samsung-wallet-description-subtitle">Pague com Samsung Wallet, direto do seu celular.</p>
-              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description1">Ao finalizar a compra, acesse o app Samsung Wallet e confirme o pagamento com a sua biometria ou senha.</p>
-              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description2">É necessário ter um cartão de débito ou crédito registrado no seu app Samsung Wallet.</p>
+              <p class="payment-samsung-wallet-description-subtitle">Pague com Samsung Pay, direto do seu celular.</p>
+              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description1">Ao finalizar a compra, acesse o app Samsung Pay e confirme o pagamento com a sua biometria ou senha.</p>
+              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description2">É necessário ter um cartão de débito ou crédito registrado no seu app Samsung Pay.</p>
               <p class="payment-samsungpay-help-text">Confira os aparelhos compatíveis: <a href="https://www.samsung.com.br/services/wallet/" rel="noreferrer noopener" target="_blank">www.samsung.com.br/services/wallet/</a></p>
             </div>
           </div>
