@@ -27,31 +27,6 @@ export default class CustomProfileData {
     return age >= 18 && age <= 120
   }
 
-  async handleUserWhatsapp (){
-    const _this = this
-    const email = window.vtexjs?.checkout?.orderForm?.clientProfileData?.email || document.getElementById('client-email')?.value
-    const whatsNumber = $('#client-phone').val()
-
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    var raw = JSON.stringify({
-      "email": email,
-      "phoneNumber": "55"+whatsNumber.replace(/\D/g, "")
-    });
-    
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw
-    };
-
-    await fetch(`${_this.rootPath()}/_v1/private/whatsapp/handleChangeUser`, requestOptions)
-      .then(response => response.json())
-      .then(result => result)
-      .catch(error => error); 
-  }
-
   async getSessionCookie() {
     const _this = this;
     try {
@@ -70,23 +45,6 @@ export default class CustomProfileData {
 
   async insertPartialNewProfileData() {
     const _this = this
-    const email = window.vtexjs?.checkout?.orderForm?.clientProfileData?.email || document.getElementById('client-email')?.value
-
-    let user;
-    await fetch(`${_this.rootPath()}/_v1/private/whatsapp/getUserByEmail/${email}`)
-      .then(response => response.json())
-      .then(response => {
-        user = response;
-    })
-    
-    if('data' in user == false && $('#inputWhats:checked').length > 0) {
-
-      this.handleUserWhatsapp()
-    } 
-
-    if($('#inputWhats:checked').length > 0 !== user.data.consent) {
-      this.handleUserWhatsapp()
-    }
 
     try {
       const rewardsOptinIsVisible = $('#RewardsBlock').is(':visible')
@@ -180,12 +138,10 @@ export default class CustomProfileData {
     const cookieSession = await _this.getSessionCookie()
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
-
-
       const whatsAppResponse = await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
         method: 'POST',
         headers: {
-          'vtexAuth': cookieSession.namespaces.cookie.VtexIdclientAutCookie.value,
+          'vtexAuth': cookieSession.namespaces.cookie.VtexIdclientAutCookie_samsungbrtests.value,
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
@@ -196,7 +152,6 @@ export default class CustomProfileData {
             }
         })
       })
-    
       const whatsAppConsent = await whatsAppResponse.json()
       this.getClientProfileData(email).done(function (data) {
         try {
@@ -204,7 +159,7 @@ export default class CustomProfileData {
             birthDate: data[0].birthDate,
             acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
             isNewsletterOptIn: data[0].isNewsletterOptIn,
-            isWhatsAppOptIn: vtexjs.checkout.orderForm.clientProfileData !== null ? whatsAppConsent : true
+            isWhatsAppOptIn: vtexjs.checkout.orderForm.clientProfileData !== null ? whatsAppConsent.success : true
           }
 
           _this.fillClientProfileData(profileDataToPersist)
