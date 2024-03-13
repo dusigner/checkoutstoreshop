@@ -910,8 +910,8 @@ export class CheckoutCustom {
             </div>
             <div class="payment-container-samsung-wallet-description">
               <p class="payment-samsung-wallet-description-subtitle">Pague com Samsung Pay, direto do seu celular.</p>
-              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description1">Ao finalizar a compra, acesse o app Samsung Wallet e confirme o pagamento com a sua biometria ou senha com Samsung Pay.</p>
-              <p class="payment-samsung-wallet-description-text" data-i18n="paymentData.paymentGroup.samsungpay.description2">É necessário ter um cartão de débito ou crédito registrado no seu app Samsung Wallet.</p>
+              <p class="payment-samsung-wallet-description-text">Ao finalizar a compra, acesse o app Samsung Wallet e confirme o pagamento com a sua biometria ou senha com Samsung Pay.</p>
+              <p class="payment-samsung-wallet-description-text">É necessário ter um cartão de débito ou crédito registrado no seu app Samsung Wallet.</p>
               <p class="payment-samsungpay-help-text">Confira os aparelhos compatíveis: <a href="https://www.samsung.com.br/services/wallet/" rel="noreferrer noopener" target="_blank">www.samsung.com.br/services/wallet/</a></p>
             </div>
           </div>
