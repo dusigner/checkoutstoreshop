@@ -27,9 +27,10 @@ export default class Messages {
       if (settings.url.includes('/api/checkout/pub/gatewayCallback/')) {
         const { status, responseText } = xhr
         const response = JSON.parse(responseText)
+
         if(status === 500){
           const { error: { code } } = response;
-          const { title, message1, message2 } = paymentErrorMessages[code]
+          const { title, message1, message2 } = (paymentErrorMessages[code] || paymentErrorMessages.default)
           const messages = window.vtex.i18n["pt-BR"]
 
           if(title && (message1 || message2)){
