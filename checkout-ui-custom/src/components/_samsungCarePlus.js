@@ -5,6 +5,7 @@
 /* eslint eqeqeq: 0 */
 
 const SAMSUNG_CARE_CATEGORY = '/2005/'
+
 export default class SamsungCarePlus {
   constructor() {
     this.samsungCareItems = []
@@ -115,9 +116,10 @@ export default class SamsungCarePlus {
         const attachedItem = this.findAttachedProduct(samsungCareItem, items)
         const isFree = this.isFree(samsungCareItem)
         const isDuplicated = accumulator.some(item => (
-          JSON.stringify(item.samsungCareItem.attachments) === JSON.stringify(samsungCareItem.attachments)
+          JSON.stringify(item.samsungCareItem.attachments) === JSON.stringify(samsungCareItem.attachments) &&
+          item.samsungCareItem.id === samsungCareItem.id
         ))
-        
+
         accumulator.push({ samsungCareItem, attachedItem, isFree, isDuplicated })
   
         return accumulator
@@ -360,8 +362,6 @@ export default class SamsungCarePlus {
 
       })
 
-
-  
       $confirmModal.find('.ssc-cancel-action').on('click', function() {
         $('.modalssc, .layerpopup').remove()
       })
