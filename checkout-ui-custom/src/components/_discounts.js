@@ -138,13 +138,12 @@ export default class Discounts {
   }
 
   _renderUI(orderForm) {
-    if (!this.discounts.length) {
-      return
+    if (!this.discounts.length && !orderForm.marketingData.coupon) {
+       return
     }
 
     const $totalizers = $('.totalizers-list')
     $totalizers.find('.discount').remove()
-
     const discountsWithTitle = this.discounts.filter(item => item.title)
     const otherDiscounts = this.discounts.filter(item => !item.title)
 
@@ -153,8 +152,8 @@ export default class Discounts {
     // Descontos com títulos cadastrados
     $totalizers.each(function(_, element) {
       const $totalizer = $(element)
-      const $tr = $totalizer.find('.Discounts')
-     
+      const $trSearch = $totalizer.find('.Discounts')
+      const $trDiscountFinal = $trSearch.length > 0 ? $trSearch : $totalizer.find('.Items')
       const discountsOptions = JSON.parse(JSON.stringify(discountsWithTitle))
       let $trDiscountsWithTitle = discountsOptions.reduce((acc, next) => {
         const exists = acc.find(item => item.title.toLowerCase().trim() === next.title.toLowerCase().trim());
@@ -202,7 +201,7 @@ export default class Discounts {
         })
       })
 
-      $tr.before(`${$trDiscountsWithTitle.join()}`)
+      $trDiscountFinal.before(`${$trDiscountsWithTitle.join()}`)
 
       const _trElem = $('.discount .using-coupon-text')
       if($(`.totalizers-list .using-coupon-text a`).length) return 
@@ -233,7 +232,8 @@ export default class Discounts {
     // Descontos sem títulos cadastrados
     $totalizers.each(function(_, element) {
       const $totalizer = $(element)
-      const $tr = $totalizer.find('.Discounts')
+      const $trSearch = $totalizer.find('.Discounts')
+      const $trDiscountFinal = $trSearch.length > 0 ? $trSearch : $totalizer.find('.Items')
 
       const $trOtherDiscounts = _this._discountTemplate({ 
         identifier: 'other-discounts',
@@ -241,7 +241,7 @@ export default class Discounts {
         value: otherDiscountsTotals
       })
 
-      $tr.before(`${$trOtherDiscounts}`)
+      $trDiscountFinal.before(`${$trOtherDiscounts}`)
     })
   }
 
