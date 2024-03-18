@@ -107,8 +107,9 @@ export class ServicesLinks {
         const currentItem = orderForm.items.find(item => item.id === skuId)
         const checkServicesFunction = CHECK_SERVICES[serviceId]
         const skipInstantVoucherLink = (serviceId === 'instantVoucher') && ['5', '11', '12'].includes(orderForm.salesChannel)
+        const isVoucherDisable = sessionStorage.getItem('isVoucherDisable') === 'true';
 
-        if (!currentItem || !checkServicesFunction || skipInstantVoucherLink) {
+        if (!currentItem || !checkServicesFunction || skipInstantVoucherLink || isVoucherDisable) {
           return
         }
 
