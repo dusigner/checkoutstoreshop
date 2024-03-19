@@ -198,6 +198,7 @@ export class CheckoutCustom {
     const couponFields = _trElem.find('.coupon-fieldset');
     const messagesElem = $('.vtex-front-messages-placeholder-opened');
     const inputCoupon = $('.coupon-value.input-small');
+    const discountInvalid = $('#discount-invalid');
 
     couponFields.find('.div-coupon-info').remove();
 
@@ -212,11 +213,15 @@ export class CheckoutCustom {
             if (matchedBenefit) {
                 // Cupom válido
                 inputCoupon.each(function() {$(this).prop('disabled', true);});
-                couponInfoElement.find('p').text('Cupom válido: ' + marketingData.coupon).css('color', '#006BEA');
+                couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
             } else {
                 // Cupom inválido para compra
                 messagesElem.css('display', 'none');
-                couponInfoElement.find('p').text('Cupom inválido para compra: ' + marketingData.coupon).css('color', 'red');
+                couponFields.find('.info').css('display', 'none');
+                inputCoupon.each(function() {$(this).css('border-bottom', 'solid 1px red');});
+                discountInvalid.remove();
+                // vtexjs.checkout.removeDiscountCoupon()
+                couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
             }
         } else {
             if (messages && messages.length > 0) {
@@ -231,7 +236,12 @@ export class CheckoutCustom {
                   }
                     // Cupom expirado
                     messagesElem.css('display', 'none');
-                    couponInfoElement.find('p').text(errorMessage.text).css('color', 'red');
+                    const couponCodeMatch = errorMessage.text.match(/Cupom (\w+) expirado/);
+                    const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
+                    couponInfoElement.find('p').text(`Cupom ${couponCode} expirado`).css('color', 'red');
+                    inputCoupon.each(function() {
+                      $(this).css('border-bottom', 'solid 1px red').val(couponCode);
+                    });
                     couponFields.append(couponInfoElement); 
                     return;
                 }
@@ -243,7 +253,7 @@ export class CheckoutCustom {
     } catch (e) {
         console.error('couponInfo error:', e);
     }
-}
+  }
 
   buildVertical() {
     $('body').addClass('body-cart-vertical')
