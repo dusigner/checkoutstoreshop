@@ -1057,7 +1057,6 @@ h1#cart-title {
           display: flex !important;
         }
         display: flex;
-        width: 100%;
         position: relative;
         align-items: center;
 
@@ -1072,24 +1071,31 @@ h1#cart-title {
           span {
             text-transform: uppercase
           }
-          .delete a {
-            position: relative;
-            text-decoration: none;
-            font-size: 0;
-            &::before {
-              content: "x";
-              position: absolute;
-              border-radius: 50%;
-              background-color: #006bea;
-              color: #fff;
-              line-height: 10px;
-              font-size: 12px;
-              cursor: pointer;
-              padding: 2px 4px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-weight: 500;
+          .delete {
+            margin-left: 5px;
+            a {
+              position: relative;
+              text-decoration: none;
+              font-size: 0;
+              width: 14px;
+              height: 14px;
+              display: block;
+              
+              &::before {
+                content: "x";
+                position: absolute;
+                border-radius: 50%;
+                background-color: #006bea;
+                color: #fff;
+                line-height: 10px;
+                font-size: 12px;
+                cursor: pointer;
+                padding: 2px 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 500;
+              }
             }
           }
         }
@@ -1108,9 +1114,12 @@ h1#cart-title {
             border: #000;
           }
           #cart-coupon {
-            border-bottom: solid 2px #006BEA;
-            text-transform: uppercase;
+            border-bottom: solid 1px #006BEA;
           }
+        }
+
+        #cart-coupon {
+          text-transform: uppercase;
         }
 
         #cart-coupon-add {
