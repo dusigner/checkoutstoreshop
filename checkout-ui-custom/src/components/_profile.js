@@ -136,19 +136,20 @@ export default class CustomProfileData {
   async persistClientProfileData() {
     const _this = this
     const cookieSession = await _this.getSessionCookie()
+    const account = cookieSession.namespaces.account.accountName.value
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
       const whatsAppResponse = await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
         method: 'POST',
         headers: {
-          'vtexAuth': cookieSession.namespaces.cookie.VtexIdclientAutCookie_samsungbrtests.value,
+          'vtexAuth': cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value,
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             action: '2a7e3',
             params:{
-                account: 'samsungbrtests'
+                account: account
             }
         })
       })
