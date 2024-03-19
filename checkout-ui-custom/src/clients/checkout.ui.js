@@ -441,16 +441,6 @@ export class CheckoutCustom {
 
     const _coupon = _thereIsCoupon && orderForm.marketingData.coupon
 
-    const _customer =
-      orderForm.clientProfileData === null
-        ? false
-        : orderForm.clientProfileData.email !== null
-
-    const _message = _customer
-      ? 'Cupom inválido para essa compra.'
-      : 'Para validar o cupom, continue para a próxima etapa'
-
-    const _trElem = $(`.totalizers-list`)
     const couponItemsCount = orderForm.items.reduce(function (
       accumulator,
       item
@@ -474,16 +464,6 @@ export class CheckoutCustom {
       $('.coupon-applied-message').remove()
 
       return false
-    }
-
-    if (couponItemsCount === 0 && $('.coupon-applied-message').length === 0) {
-      _trElem.find('#discount-invalid').after(
-        `<tr class="coupon-applied-message" style="height: 23px;">
-            <td>
-              <span style="color: #D62E2E; font-size: 12px; margin-left: 10px;">${_message}</span>
-            </td>
-        </tr>`
-      )
     }
   }
 
