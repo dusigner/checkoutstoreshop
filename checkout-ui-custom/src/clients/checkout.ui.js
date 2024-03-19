@@ -235,10 +235,10 @@ export class CheckoutCustom {
                     return
                   }
                     // Cupom expirado
-                    messagesElem.css('display', 'none');
-                    const couponCodeMatch = errorMessage.text.match(/Cupom (\w+) expirado/);
+                    messagesElem.css('display', 'none');                   
+                    const couponCodeMatch = errorMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
                     const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
-                    couponInfoElement.find('p').text(`Cupom ${couponCode} expirado`).css('color', 'red');
+                    couponInfoElement.find('p').text(errorMessage.text).css('color', 'red');
                     inputCoupon.each(function() {
                       $(this).css('border-bottom', 'solid 1px red').val(couponCode);
                     });
