@@ -439,11 +439,28 @@ export default class CustomShippingData {
     const salesChannelShop = ["1","5","11","12","60"].includes(salesChannelValidate)
     const salesChannelFidelidade = ["1","5","11","70","72","78","48","50","2","44","54","3","18","27","30","31","43","59","61","69"].includes(salesChannelValidate)
 
+
     if (salesChannelValidate === "56" && hasInvalidPrice) {
       vtexjs.checkout.removeAllItems();
     }
     if(window.vtex.accountName === "samsungbrshop" && !hasMarketingTagEndless){
       if (!salesChannelShop) {
+        const orderFormIdClient = vtexjs.checkout.orderForm.orderFormId
+        let urlClientFlow = document.referrer
+        const referrerUrl = sessionStorage.getItem('UrlReferrer')
+
+        if(referrerUrl){
+          urlClientFlow = document.referrer
+        }
+
+        const bodyLogsFlowOrder = {
+          urlClientFlow,
+          orderFormIdClient,
+          salesChannelClient: salesChannelValidate,
+        }
+
+        console.log("body Logs Flow Order", bodyLogsFlowOrder)
+
         vtexjs.checkout.removeAllItems();
       }
     }
