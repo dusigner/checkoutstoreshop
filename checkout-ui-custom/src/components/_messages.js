@@ -2,7 +2,7 @@
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
 
-import paymentErrorMessages from "./utils/paymentErrorMessages"
+import getPaymentErrorMessage from "./utils/paymentErrorMessages"
 
 export default class Messages {
   /**
@@ -29,8 +29,9 @@ export default class Messages {
         const response = JSON.parse(responseText)
 
         if(status === 500){
-          const { error: { code } } = response;
-          const { title, message1, message2 } = (paymentErrorMessages[code] || paymentErrorMessages.default)
+          const { error: { message } } = response;
+          
+          const { title, message1, message2 } = getPaymentErrorMessage(message)
           const messages = window.vtex.i18n["pt-BR"]
 
           if(title && (message1 || message2)){

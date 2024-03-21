@@ -1,10 +1,10 @@
-export default PaymentErrorMessages = {
+const PaymentErrorMessages = {
   cc_rejected_bad_filled_card_number: {
     title: "Prezado Consumidor,",
     message1: "Seu pagamento foi recusado devido ao preenchimento incorreto dos dados do seu cartão.",
     message2: "Por favor, preencha novamente para refazer a compra."
   },
-  cc_rejected_bad_filled_security_number: {
+  cc_rejected_bad_filled_security_code: {
     title: "Prezado Consumidor,",
     message1: "Seu pagamento foi recusado devido ao preenchimento incorreto do código de segurança do seu cartão (CVV)",
     message2: "Por favor, verifique as informações corretas e preencha novamente para refazer a compra."
@@ -49,4 +49,11 @@ export default PaymentErrorMessages = {
     message1: "Seu pagamento não foi autorizado.",
     message2: "Por favor, utilize outro meio de pagamento."
   }
+}
+
+export default function getPaymentErrorMessage(message){
+  const errorsCode = Object.keys(PaymentErrorMessages);
+  const code = errorsCode.find(key => message.includes(key));
+
+  return PaymentErrorMessages[code || 'default'];
 }
