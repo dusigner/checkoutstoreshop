@@ -29,6 +29,11 @@
 			display: flex;
 			justify-content: space-between;
 			flex-wrap: wrap;
+			margin-inline: auto;
+
+			@media screen and (max-width: 768px) {
+				width: 100%;
+			}
 
 			.checkout-footer-payment-flag {
 				@media screen and (max-width: 1024px) {
