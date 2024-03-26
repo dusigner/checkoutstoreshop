@@ -432,8 +432,10 @@ export default class CustomShippingData {
     )
   }
 
-  removeIfHasntPrice() {
+  async removeIfHasntPrice() {
+    const _this = this
     const hasInvalidPrice = vtexjs.checkout.orderForm.items.some(item => item.price === 0);
+    const itemsOrderForm = vtexjs.checkout.orderForm.items
     const salesChannelValidate = vtexjs.checkout.orderForm.salesChannel;
     const hasMarketingTagEndless = vtexjs.checkout.orderForm.marketingData?.marketingTags?.find(item => item === "endlessaisle")
     const salesChannelShop = ["1","5","11","12","60"].includes(salesChannelValidate)
@@ -444,24 +446,34 @@ export default class CustomShippingData {
       vtexjs.checkout.removeAllItems();
     }
     if(window.vtex.accountName === "samsungbrshop" && !hasMarketingTagEndless){
-      if (!salesChannelShop) {
+      if (!salesChannelShop && itemsOrderForm.length > 0) {
         const orderFormIdClient = vtexjs.checkout.orderForm.orderFormId
         let urlClientFlow = document.referrer
         const referrerUrl = sessionStorage.getItem('UrlReferrer')
 
         if(referrerUrl){
           urlClientFlow = document.referrer
+          sessionStorage.removeItem('UrlReferrer')
         }
-
-        const bodyLogsFlowOrder = {
-          urlClientFlow,
-          orderFormIdClient,
-          salesChannelClient: salesChannelValidate,
-        }
-
-        console.log("body Logs Flow Order", bodyLogsFlowOrder)
 
         vtexjs.checkout.removeAllItems();
+
+        await fetch(`${_this.rootPath()}/_v/post/logsCheckoutItemsRemove`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            urlClientFlow,
+            orderFormIdClient,
+            salesChannelClient: salesChannelValidate,
+          })
+        })
+        .then(() => {
+          return response
+        })
+        .catch(console.error)
       }
     }
     if(window.vtex.accountName === "samsungbrshopfidelidade"){
