@@ -470,10 +470,6 @@ export default class CustomShippingData {
             salesChannelClient: salesChannelValidate,
           })
         })
-        .then(() => {
-          return response
-        })
-        .catch(console.error)
       }
     }
     if(window.vtex.accountName === "samsungbrshopfidelidade"){
