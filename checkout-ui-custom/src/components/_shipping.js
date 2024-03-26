@@ -452,13 +452,13 @@ export default class CustomShippingData {
         const referrerUrl = sessionStorage.getItem('UrlReferrer')
 
         if(referrerUrl){
-          urlClientFlow = document.referrer
+          urlClientFlow = referrerUrl
           sessionStorage.removeItem('UrlReferrer')
         }
 
         vtexjs.checkout.removeAllItems();
 
-        await fetch(`${_this.rootPath()}/_v/post/logsCheckoutItemsRemove`, {
+        const responseLogs = await fetch(`${_this.rootPath()}/_v/post/logsCheckoutItemsRemove`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -470,6 +470,8 @@ export default class CustomShippingData {
             salesChannelClient: salesChannelValidate,
           })
         })
+
+        await responseLogs.json()
       }
     }
     if(window.vtex.accountName === "samsungbrshopfidelidade"){
