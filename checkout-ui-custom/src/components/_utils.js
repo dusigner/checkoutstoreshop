@@ -48,3 +48,19 @@ export function getClientProfileData() {
     type: 'GET',
   })
 }
+
+export async function insertClientPartial(body) {
+  return await $.ajax({
+    url: `${rootPath()}/_v/private/aem-masterdata/v1/insert/clients/custom`,
+    type: 'POST',
+    crossDomain: true,
+    accept: 'application/vnd.vtex.ds.v10+json',
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify(
+      body,
+    ),
+    success(data) {
+      window.localStorage.setItem('doc', data.DocumentId)
+    },
+  })
+}

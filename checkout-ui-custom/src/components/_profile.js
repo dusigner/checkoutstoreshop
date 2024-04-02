@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
-import { getClientProfileData } from '../components/_utils'
+import { getClientProfileData, insertClientPartial } from '../components/_utils'
 export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -133,19 +133,8 @@ export default class CustomProfileData {
         isRewardsAccepted: true,
       }
 
-      await $.ajax({
-        url: `${_this.rootPath()}/_v/insert/client/partial`,
-        type: 'POST',
-        crossDomain: true,
-        accept: 'application/vnd.vtex.ds.v10+json',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(
-          sendOptinToMasterdata ? newDataWithOptin : newData
-        ),
-        success(data) {
-          window.localStorage.setItem('doc', data.DocumentId)
-        },
-      })
+      await insertClientPartial(sendOptinToMasterdata ? newDataWithOptin : newData)
+
     } catch (e) {
       console.error(e)
       throw new Error()
