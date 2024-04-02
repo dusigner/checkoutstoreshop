@@ -165,7 +165,7 @@ export default class TradeIn {
   async validateTradeinCustomData() {
     const customDataDomain =
       window.vtexjs?.checkout?.orderForm?.customData?.customApps.filter(
-        i => i.id === 'domain'
+        i => i.id === 'domain-assurant'
       ) || []
 
     const transport =
@@ -187,8 +187,9 @@ export default class TradeIn {
       })
 
       arrayProductsTrocafone.forEach(item => {
+        const params = `idCategory=${item.idCategory}&idBrand=${item.idBrand}&idModel=${item.idModel}&nocache=${Date.now()}`
         const request = fetch(
-          `${this.rootPath()}/p4v1/tradeinCheckImei/${item.imei}/${
+          `${this.rootPath()}/tradein/trocafone/getProduct?${params}&isBoosted=${
             item.boosted
           }`
         )
@@ -217,11 +218,13 @@ export default class TradeIn {
 
               if (!!product && !!product.gradings) {
                 const grading = product.gradings.find(
-                  g => g.code === item.grading
+                  g => g.sku === item.grading.sku
                 )
 
                 if (!!grading && !!grading.price) {
                   item.price = grading.price
+                  item.grading = grading
+                  item.valueWithBoost = item.boosted ? grading.price : item.valueWithBoost
                   total += item.price
                   return
                 }
