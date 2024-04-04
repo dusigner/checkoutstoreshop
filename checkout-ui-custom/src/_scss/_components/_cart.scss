@@ -965,6 +965,8 @@ h1#cart-title {
       p {
         margin: 0;
         color: $muted2;
+        display: flex;
+        flex-direction: column-reverse;
 
         label {
           cursor: initial;
@@ -1014,6 +1016,18 @@ h1#cart-title {
         }
       }
 
+      .div-coupon-info {
+        margin-bottom: 20px;
+        text-align: left;
+        max-width: 235px;
+
+        @media (max-width: $mobileWidth) {
+          max-width: 100%;
+          margin-bottom: 70px;
+          margin-top: -70px;
+        }
+      }
+
       >div {
         display: flex;
         justify-content: space-between;
@@ -1039,17 +1053,44 @@ h1#cart-title {
 
     p.coupon-fields {
       span {
+        &:first-child {
+          display: flex !important;
+        }
         display: flex;
-        width: 100%;
         position: relative;
         align-items: center;
 
         &.info {
-          display: none;
-        }
-
-        &.div-coupon-info {
-          display: none;
+          width: 222px;
+          font-size: 12px;
+          color: #006bea;
+          font-weight: bold;
+          @media (max-width: $mobileWidth) {
+            width: 100%;
+          }
+          span {
+            text-transform: uppercase
+          }
+          .delete {
+            margin-left: 5px;
+            a {
+              position: relative;
+              text-decoration: none;
+              font-size: 0;
+              width: 14px;
+              height: 14px;
+              display: block;
+              
+              &::before {
+                content: "";
+                background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2aWV3Qm94PSIwIDAgMTUgMTUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgaWQ9InN1cmZhY2UxIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjk5OTk5OTk5OTk5OTk5OTksIDAsIDAsIDAuOTk5OTk5OTk5OTk5OTk5OSwgLTEuMTEwMjIzMDI0NjI1MTU2NWUtMTYsIC0xLjExMDIyMzAyNDYyNTE1NjVlLTE2KSI+CiAgICA8cGF0aCBzdHlsZT0ic3Ryb2tlOiBub25lOyBmaWxsLXJ1bGU6IG5vbnplcm87IGZpbGwtb3BhY2l0eTogMTsgZmlsbDogcmdiKDAsIDEwNywgMjM0KTsiIGQ9Ik0gNy41IDAuMzkwNjI1IEMgMTEuNDIxODc1IDAuMzkwNjI1IDE0LjYwOTM3NSAzLjU4MjAzMSAxNC42MDkzNzUgNy41IEMgMTQuNjA5Mzc1IDExLjQyMTg3NSAxMS40MjE4NzUgMTQuNjA5Mzc1IDcuNSAxNC42MDkzNzUgQyA1LjYwMTU2MiAxNC42MDkzNzUgMy44MTY0MDYgMTMuODcxMDk0IDIuNDcyNjU2IDEyLjUyNzM0NCBDIDEuMTI4OTA2IDExLjE4MzU5NCAwLjM5MDYyNSA5LjM5ODQzOCAwLjM5MDYyNSA3LjUgQyAwLjM5MDYyNSAzLjU3ODEyNSAzLjU3ODEyNSAwLjM5MDYyNSA3LjUgMC4zOTA2MjUgWiBNIDkuODc1IDQuMTI4OTA2IEwgNy4zOTA2MjUgNi42MTcxODggTCA0LjkwMjM0NCA0LjEyODkwNiBMIDQuMTI4OTA2IDQuOTAyMzQ0IEwgNi42MTcxODggNy4zOTA2MjUgTCA0LjEyODkwNiA5Ljg3NSBMIDQuOTAyMzQ0IDEwLjY0ODQzOCBMIDcuMzkwNjI1IDguMTY0MDYyIEwgOS44NzUgMTAuNjQ4NDM4IEwgMTAuNjQ4NDM4IDkuODc1IEwgOC4xNjQwNjIgNy4zOTA2MjUgTCAxMC42NDg0MzggNC45MDIzNDQgWiBNIDkuODc1IDQuMTI4OTA2ICIvPgogIDwvZz4KPC9zdmc+);
+                cursor: pointer;
+                display: block;
+                width: 14px;
+                height: 14px;
+            }
+            }
+          }
         }
 
         input {
@@ -1057,25 +1098,33 @@ h1#cart-title {
           width: 100%;
           margin-right: 10px;
         }
+
+        &.has-value {
+          #cart-coupon-add {
+            cursor: pointer;
+            background-color: #000;
+            color: #fff;
+            border: #000;
+          }
+          #cart-coupon {
+            border-bottom: solid 1px #006BEA;
+          }
+        }
+
+        #cart-coupon {
+          text-transform: uppercase;
+        }
+
+        #cart-coupon-add {
+          cursor: default;
+          background-color: #ddd;
+          color: #acaaad;
+          border: #ddd;
+        }
       }
 
       span:first-child {
         position: relative;
-
-        &::before {
-          content: 'Cupom de desconto';
-          position: absolute;
-          font-size: 18px;
-          color: #858585;
-          top: 14px;
-          left: 0;
-          cursor: pointer;
-
-          @media (max-width: $mobileWidth) {
-            font-size: 14px;
-            top: 12px;
-          }
-        }
 
         &.has-value::before {
           display: none;
@@ -1236,8 +1285,8 @@ h1#cart-title {
       gap: 2px;
       
       #cart-coupon-remove {
+        display: none;
         height: 15px;
-        display: inline-block;
         font-size: 0;
         margin-right: -18px;
 

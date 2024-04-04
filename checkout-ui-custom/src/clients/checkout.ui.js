@@ -190,32 +190,68 @@ export class CheckoutCustom {
     }
   }
 
-  couponInfo(orderForm) {
-    const isThereCoupon =
-      orderForm.marketingData === null
-        ? false
-        : !!orderForm.marketingData.coupon
+  couponInfo(response) {
+
+    const { marketingData, messages, ratesAndBenefitsData } = response;
+
+    const _trElem = $('.summary-template-holder');
+    const couponFields = _trElem.find('.coupon-fieldset');
+    const messagesElem = $('.vtex-front-messages-placeholder-opened');
+    const inputCoupon = $('.coupon-value.input-small');
+    const discountInvalid = $('#discount-invalid');
+
+    couponFields.find('.div-coupon-info').remove();
 
     try {
-      if (!isThereCoupon) {
-        const _trElem = $(`.summary-template-holder`)
+        const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
 
-        if (
-          _trElem.find('.coupon-fields').find('.div-coupon-info').length > 0
-        ) {
-          return
+        if (marketingData && marketingData.coupon) {
+            const matchedBenefit = ratesAndBenefitsData.rateAndBenefitsIdentifiers.find(benefit => {
+                return benefit.matchedParameters && benefit.matchedParameters["couponCode@Marketing"] === marketingData.coupon;
+            });
+
+            if (matchedBenefit) {
+                // Cupom válido
+                inputCoupon.each(function() {$(this).prop('disabled', true);});
+                couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
+            } else {
+                // Cupom inválido para compra
+                messagesElem.css('display', 'none');
+                couponFields.find('.info').css('display', 'none');
+                inputCoupon.each(function() {$(this).css('border-bottom', 'solid 1px red');});
+                discountInvalid.remove();
+                // vtexjs.checkout.removeDiscountCoupon()
+                couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
+            }
+        } else {
+            if (messages && messages.length > 0) {
+                const errorMessage = messages.find(message => message.status === 'warning');
+                if (errorMessage) {
+                  if(errorMessage.text === 'O valor dos itens foi alterado') {
+                    // Nenhum cupom aplicado - Remove Cupom
+                    messagesElem.css('display', 'none');
+                    couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
+                    couponFields.append(couponInfoElement);
+                    return
+                  }
+                    // Cupom expirado
+                    messagesElem.css('display', 'none');                   
+                    const couponCodeMatch = errorMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
+                    const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
+                    couponInfoElement.find('p').text(errorMessage.text).css('color', 'red');
+                    inputCoupon.each(function() {
+                      $(this).css('border-bottom', 'solid 1px red').val(couponCode);
+                    });
+                    couponFields.append(couponInfoElement); 
+                    return;
+                }
+            }
+            // Nenhum cupom aplicado
+            couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
         }
-
-        _trElem.find('.coupon-fields').append(
-          `<div class="div-coupon-info" style="margin-bottom: 20px; text-align: left">
-            <p style="font-size: 12px; color: #555555;">
-              Digite o cupom de desconto
-            </p>
-          </div>`
-        )
-      }
+        couponFields.append(couponInfoElement);
     } catch (e) {
-      console.error('couponInfo error:', e)
+        console.error('couponInfo error:', e);
     }
   }
 
@@ -405,16 +441,6 @@ export class CheckoutCustom {
 
     const _coupon = _thereIsCoupon && orderForm.marketingData.coupon
 
-    const _customer =
-      orderForm.clientProfileData === null
-        ? false
-        : orderForm.clientProfileData.email !== null
-
-    const _message = _customer
-      ? 'Cupom inválido para essa compra.'
-      : 'Para validar o cupom, continue para a próxima etapa'
-
-    const _trElem = $(`.totalizers-list`)
     const couponItemsCount = orderForm.items.reduce(function (
       accumulator,
       item
@@ -438,16 +464,6 @@ export class CheckoutCustom {
       $('.coupon-applied-message').remove()
 
       return false
-    }
-
-    if (couponItemsCount === 0 && $('.coupon-applied-message').length === 0) {
-      _trElem.find('#discount-invalid').after(
-        `<tr class="coupon-applied-message" style="height: 23px;">
-            <td>
-              <span style="color: #D62E2E; font-size: 12px; margin-left: 10px;">${_message}</span>
-            </td>
-        </tr>`
-      )
     }
   }
 
@@ -1711,6 +1727,12 @@ export class CheckoutCustom {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.shipping.addInvalidSelectedDateMessage()
           }
+        }
+
+        if (settings.url.includes('/coupons')) {
+          const { responseText } = xhr
+          const response = JSON.parse(responseText)
+          _this.couponInfo(response)
         }
 
         _this.init()
