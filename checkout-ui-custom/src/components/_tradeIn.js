@@ -83,7 +83,7 @@ export default class TradeIn {
       const _component = `
         <tbody id="total-details-tradein">
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
-            <td style="font-size: 14px; color: #000000; font-weight: 400; max-width: 245px;">Bônus Troca Smart Samsung - Dinheiro creditado em conta após a entrega do aparelho usado e a avaliação da Assurant</td>
+            <td style="font-size: 14px; color: #000000; font-weight: 400; max-width: 245px;">Troca Smart Samsung - Dinheiro creditado em conta após a entrega do aparelho usado e a avaliação da Assurant</td>
             <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(
               totalTradeIn,
               false
