@@ -538,34 +538,38 @@ export default class CustomProfileData {
 
     
 
-    function updateWhatsappConsent(isChecked) {
-      const orderformId = vtexjs.checkout.orderForm.orderFormId;
-      const url = `/api/checkout/pub/orderForm/${orderformId}/customData/conversation_app`;
-    
-      const headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      };
-    
-      const body = {
-        whatsapp_consent: isChecked,
-      };
-    
-      const requestOptions = {
-        method: 'PUT',
-        headers: headers,
-        body: JSON.stringify(body),
-      };
-    
-      fetch(url, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-
-        })
-        .catch(error => {
-          console.error('Erro na chamada fetch:', error);
+    async function updateWhatsappConsent(isChecked) {
+      try {
+        const cookieSession = await _this.getSessionCookie();
+        const account = cookieSession.namespaces.account.accountName.value;
+        let authToken;
+        if ('VtexIdclientAutCookie_' in cookieSession.namespaces.cookie) {
+          authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value
+        } else {
+          authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie"].value;
+        }
+        const { orderFormId } = window.vtexjs.checkout.orderForm;
+        await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
+            method: 'POST',
+            headers: {
+                'vtexAuth': authToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: '4d9e1',
+                account: account,
+                params: {
+                    orderFormId: orderFormId,
+                    consent: isChecked.toString()
+                }
+            })
         });
+      } catch (err) {
+          console.error(`Erro ao fazer consentimento de usuário: ${err}`);
+      }
     }
+  
     
     $(document).on('click', '#go-to-shipping', function () {
         const isChecked = $('#inputWhats').prop('checked');
