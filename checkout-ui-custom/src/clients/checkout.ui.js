@@ -29,6 +29,7 @@ import { fnsCustomAddressForm } from '../components/_customAddressForm'
 import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
+import { OptInDimensions } from '../components/_optinDimensions'
 
 const scripts = new Scripts()
 
@@ -78,6 +79,7 @@ export class CheckoutCustom {
     this.servicesLinks = new ServicesLinks()
     // this.topBanners = new TopBanners()
     this.SummaryGiftCard = new SummaryGiftCard()
+    this.optInDimensions = new OptInDimensions()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1267,7 +1269,7 @@ export class CheckoutCustom {
         objeto =>
           objeto.name === orderForm.shippingData.logisticsInfo[0].selectedSla
       )
-      let statePickUp = filterSlas[0].pickupStoreInfo.address.state
+      let statePickUp = filterSlas[0].pickupStoreInfo.address?.state
       // Validar se o selectedDeliveryChannel do orderForm é do tipo "pick-up-point";
       if (
         orderForm.shippingData.logisticsInfo[0].selectedDeliveryChannel ===
@@ -1802,7 +1804,7 @@ export class CheckoutCustom {
           }
         }
 
-        _this.shipping.toggleGoToPaymentDisabled()
+        setTimeout(_this.shipping.toggleGoToPaymentDisabled, 300)
 
         if (window.location.hash === '#/email') {
           _this.preEmail.createElementSamsungAccountLogin()
@@ -1834,6 +1836,7 @@ export class CheckoutCustom {
           
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
+            _this.optInDimensions.render(_this.orderForm)
             _this.customizeLogOut()
           }
           
@@ -1899,6 +1902,7 @@ export class CheckoutCustom {
         }
         if (window.location.hash === '#/shipping') {
           _this.shipping.checkReceiverName(orderForm)
+          _this.optInDimensions.render(orderForm)
         }
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
@@ -1923,6 +1927,7 @@ export class CheckoutCustom {
         switch (orderFormSection) {
           case 'shippingData':
             _this.shipping.autoTriggerSlasResult()
+            _this.optInDimensions.render(vtexjs.checkout.orderForm)
             break
 
           default:

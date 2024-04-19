@@ -64,3 +64,40 @@ export async function insertClientPartial(body) {
     },
   })
 }
+
+export async function getProductVariations(productId) {
+  return $.get(`${rootPath()}/api/catalog_system/pub/products/search`, {
+    fq: "productId:" + productId
+  })
+}
+
+export function getCustomDataUrl({ app }) {
+  const orderFormId = vtexjs?.checkout?.orderFormId
+  if (orderFormId && app) {
+    return `${rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/${app}`
+  }
+};
+
+export function getCustomDataFields({ app }) {
+  return vtexjs?.checkout?.orderForm?.customData?.customApps?.reduce((acc, customApp) => {
+    if (customApp.id === app) {
+      Object.entries(customApp.fields || {}).map(([key, value]) => {
+        acc[key] = JSON.parse(value)
+      })
+    }
+    return acc
+  }, {}) ?? {}
+};
+
+export async function setCustomData({ app, fields }) {
+  Object.entries(fields || {}).map(([key, value]) => {
+    fields[key] = JSON.stringify(value)
+  })
+  
+  return $.ajax({
+    type: 'PUT',
+    url: getCustomDataUrl({ app }),
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify(fields),
+  })
+};
