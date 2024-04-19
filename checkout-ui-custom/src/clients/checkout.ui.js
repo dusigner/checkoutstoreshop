@@ -1711,6 +1711,7 @@ export class CheckoutCustom {
         _this.samsungCarePlus.sync(orderForm)
         _this.CheckoutLimit.sync(orderForm)
         _this.installationService.sync(orderForm)
+        _this.optInDimensions.sync(orderForm)
       })
 
       function trackLogin(accessKeyURL) {
@@ -1836,7 +1837,7 @@ export class CheckoutCustom {
           
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
-            _this.optInDimensions.render(_this.orderForm)
+            _this.optInDimensions.render()
             _this.customizeLogOut()
           }
           
@@ -1902,7 +1903,7 @@ export class CheckoutCustom {
         }
         if (window.location.hash === '#/shipping') {
           _this.shipping.checkReceiverName(orderForm)
-          _this.optInDimensions.render(orderForm)
+          _this.optInDimensions.render()
         }
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
@@ -1927,7 +1928,7 @@ export class CheckoutCustom {
         switch (orderFormSection) {
           case 'shippingData':
             _this.shipping.autoTriggerSlasResult()
-            _this.optInDimensions.render(vtexjs.checkout.orderForm)
+            _this.optInDimensions.render()
             break
 
           default:
