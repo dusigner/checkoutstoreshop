@@ -81,8 +81,6 @@ export class OptInDimensions {
         this.items = []
       }
 
-      console.log('this.items: ', this.items);
-
       if (!this.items.length) {
         this.removeOptinElement()
         this.handleRemoveCustomData()
