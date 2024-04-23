@@ -33,6 +33,7 @@ export class OptInDimensions {
 
   optinElement() {
     const { product_dimensions } = getCustomDataFields({ app: this.app });
+    console.log('product_dimensions: ', product_dimensions);
 
     return `<div class="optin-dimensions">
       <label class="checkbox-inline">
@@ -45,12 +46,22 @@ export class OptInDimensions {
     </div>`
   }
 
+  forceAcceptance() {
+    const { product_dimensions } = getCustomDataFields({ app: this.app });
+
+    if (window.location.hash === "#/payment" && this.items.length && !product_dimensions) {
+      window.location.hash = "#/shipping"
+    }
+  }
+
   render() {
     try {
       if ($('#optin-dimensions').length) return
 
       if (this.items.length) {
-        const $target = $('.vtex-omnishipping-1-x-address > div p.input').last()
+        const $target = $(
+          '.vtex-omnishipping-1-x-address > div p.input, .vtex-omnishipping-1-x-addressList'
+        ).last()
 
         const $field = this.optinElement()
         $target.after($field)
@@ -85,6 +96,8 @@ export class OptInDimensions {
         this.removeOptinElement()
         this.handleRemoveCustomData()
       }
+
+      this.forceAcceptance()
     } catch (error) {
       console.error(`Erro ao foi iniciar OptInDimensions: ${error}`);
     }
