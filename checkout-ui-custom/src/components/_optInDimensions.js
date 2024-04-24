@@ -5,10 +5,16 @@ export class OptInDimensions {
     this.items = []
     this.categories = ['Geladeiras']
     this.app = 'consent_app'
+    this.elements = {}
   }
 
-  static handleAccept() {
+  static runtime = {
+    accepted: false,
+  }
+
+  static handleSetCustomData() {
     const checked = $('#optin-dimensions').prop('checked')
+    OptInDimensions.runtime.accepted = checked
 
     setCustomData({
       app: 'consent_app',
@@ -16,6 +22,17 @@ export class OptInDimensions {
         product_dimensions: checked ?? false
       }
     }).catch(error => console.error(error))
+  }
+
+  static toggleRequiredMessage() {
+    const allRequiredFieldsFilled =
+      $('#shipping-data p.input.required:visible input').filter(function () {
+        return $.trim($(this).val()).length === 0
+      }).length === 0
+
+    $('.optin-dimensions .help.error').css({
+      visibility: allRequiredFieldsFilled && 'visible'
+    })
   }
 
   handleRemoveCustomData() {
@@ -33,20 +50,22 @@ export class OptInDimensions {
 
   optinElement() {
     const { product_dimensions } = getCustomDataFields({ app: this.app });
-    console.log('product_dimensions: ', product_dimensions);
 
     return `<div class="optin-dimensions">
       <label class="checkbox-inline">
-        <input type="checkbox" id="optin-dimensions" ${product_dimensions && "checked"} />
+        <input type="checkbox" id="optin-dimensions" ${product_dimensions && "checked" || ""} />
         <span class="custom-checkbox-icon"></span>
         <span class="optin-text">
-          Estou ciente das dimensões do produto a ser comprado 
+          Estou ciente das dimensões do produto a ser comprado*
         </span>
       </label>
+      <span class="help error" style="visibility:hidden">Campo obrigatório.</span>
     </div>`
   }
 
   forceAcceptance() {
+    if (OptInDimensions.runtime.accepted) return
+    
     const { product_dimensions } = getCustomDataFields({ app: this.app });
 
     if (window.location.hash === "#/payment" && this.items.length && !product_dimensions) {
@@ -54,17 +73,33 @@ export class OptInDimensions {
     }
   }
 
+  init() {
+    this.elements.targets = {
+      $addressList: $('.address-list').last(),
+      $addressForm: $('.vtex-omnishipping-1-x-address').last()
+    }
+  }
+
   render() {
     try {
-      if ($('#optin-dimensions').length) return
+      this.init()
+
+      if ($('.optin-dimensions').length) return
 
       if (this.items.length) {
-        const $target = $(
-          '.vtex-omnishipping-1-x-address > div p.input, .vtex-omnishipping-1-x-addressList'
-        ).last()
+        const { $addressForm, $addressList } = this.elements.targets
+
+        const $targets = [
+          $addressForm.find('> div p.input:visible').last(),
+          $addressList.find('p.address-create'),
+        ]
 
         const $field = this.optinElement()
-        $target.after($field)
+
+        $targets.forEach($target => {
+          $target.after($field)
+          if (!$target.is(':visible')) $target.remove()
+        })
       }
     } catch (error) {
       console.error(`Erro ao adicionar opt-in dimensions: ${error}`);
@@ -86,7 +121,7 @@ export class OptInDimensions {
           const product = await getProductVariations(item.productId)
           return product['Opt-In Dimensions']
         })
-  
+
         this.items = optInItems
       } else {
         this.items = []

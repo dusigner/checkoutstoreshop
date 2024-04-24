@@ -248,11 +248,6 @@
       }
     }
 
-    .optin-dimensions {
-      margin-top: 32px;
-      margin-bottom: 0;
-    }
-
     input[type='text'],
     input[type='tel'],
     input[type='email'],
@@ -260,6 +255,15 @@
       &:not(.pac-target-input) {
         @extend %input-style;
       }
+    }
+  }
+
+  .optin-dimensions {
+    margin-top: 32px;
+    margin-bottom: 0;
+
+    .help.error {
+      text-indent: 30px;
     }
   }
 

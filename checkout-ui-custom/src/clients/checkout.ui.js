@@ -1904,7 +1904,6 @@ export class CheckoutCustom {
         }
         if (window.location.hash === '#/shipping') {
           _this.shipping.checkReceiverName(orderForm)
-          _this.optInDimensions.render()
         }
         if (!window.google && _this.customAddressForm) {
           _this.customAddressForm.loadScript()
@@ -1920,6 +1919,7 @@ export class CheckoutCustom {
       $(window).on('componentValidated.vtex', function () {
         try {
           _this.discounts.init(vtexjs.checkout.orderForm)
+          _this.optInDimensions.render()
         } catch (err) {
           console.error(`${err}`)
         }
@@ -1929,7 +1929,7 @@ export class CheckoutCustom {
         switch (orderFormSection) {
           case 'shippingData':
             _this.shipping.autoTriggerSlasResult()
-            _this.optInDimensions.render()
+            // _this.optInDimensions.render()
             break
 
           default:

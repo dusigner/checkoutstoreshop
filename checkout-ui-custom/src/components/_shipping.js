@@ -292,6 +292,7 @@ export default class CustomShippingData {
     // When it has opt-in dimension
     if ($optinDimensionsInput.length) {
       disabled = disabled && $optinDimensionsInput.prop('checked')
+      OptInDimensions.toggleRequiredMessage()
     } 
     ////
 
@@ -423,7 +424,7 @@ export default class CustomShippingData {
       }
     })
 
-    $(document).on('click', '#btn-go-to-payment', OptInDimensions.handleAccept)
+    $(document).on('click', '#btn-go-to-payment', OptInDimensions.handleSetCustomData)
 
     $('body').on(
       'input',
