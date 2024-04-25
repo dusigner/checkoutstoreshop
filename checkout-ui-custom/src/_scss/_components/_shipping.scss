@@ -258,6 +258,15 @@
     }
   }
 
+  .optin-dimensions {
+    margin-top: 32px;
+    margin-bottom: 0;
+
+    .help.error {
+      text-indent: 30px;
+    }
+  }
+
   #btn-go-to-payment {
     margin-left: 0;
     font-size: 0;

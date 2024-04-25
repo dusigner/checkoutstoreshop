@@ -1,3 +1,5 @@
+import { OptInDimensions } from "./_optinDimensions"
+
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
@@ -273,8 +275,12 @@ export default class CustomShippingData {
   }
 
   toggleGoToPaymentDisabled() {
+    // When it has opt-in dimension
+    const $optinDimensionsInput = $('input#optin-dimensions');
+    ////
+
     //used for pickup point
-    const $pickupReceiverInput = $("#pickup-receiver:visible")
+    const $pickupReceiverInput = $("#pickup-receiver:visible");
     ////
 
     let disabled =
@@ -283,6 +289,12 @@ export default class CustomShippingData {
         return $.trim($(this).val()).length === 0
       }).length === 0
 
+    // When it has opt-in dimension
+    if ($optinDimensionsInput.length) {
+      disabled = disabled && $optinDimensionsInput.prop('checked')
+      OptInDimensions.toggleRequiredMessage()
+    } 
+    ////
 
     //used for pickup point
     if ($pickupReceiverInput.length) {
@@ -398,7 +410,7 @@ export default class CustomShippingData {
 
     $(document).on(
       'input',
-      '#shipping-data p.input.required input, #pickup-receiver:visible',
+      '#shipping-data p.input.required input, #pickup-receiver:visible, input#optin-dimensions',
       function () {
         _this.toggleGoToPaymentDisabled()
       }
@@ -411,6 +423,8 @@ export default class CustomShippingData {
         console.error(`Erro ao verificar campo destinatário: ${err}`)
       }
     })
+
+    $(document).on('click', '#btn-go-to-payment', OptInDimensions.handleSetCustomData)
 
     $('body').on(
       'input',
