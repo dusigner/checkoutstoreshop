@@ -539,20 +539,13 @@ export default class CustomProfileData {
     
 
     async function updateWhatsappConsent(isChecked) {
+      const cookieSession = await _this.getSessionCookie();
+      const account = cookieSession.namespaces.account.accountName.value;
       try {
-        const cookieSession = await _this.getSessionCookie();
-        const account = cookieSession.namespaces.account.accountName.value;
-        let authToken;
-        if ('VtexIdclientAutCookie_' in cookieSession.namespaces.cookie) {
-          authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value
-        } else {
-          authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie"].value;
-        }
-        const { orderFormId } = window.vtexjs.checkout.orderForm;
         await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
             method: 'POST',
             headers: {
-                'vtexAuth': authToken,
+                'vtexAuth': cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
