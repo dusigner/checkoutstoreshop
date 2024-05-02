@@ -125,13 +125,19 @@ export default class CustomProfileData {
   async persistClientProfileData() {
     const _this = this
     const cookieSession = await _this.getSessionCookie()
-    const account = cookieSession.namespaces.account.accountName.value
+    const account = __RUNTIME__.account;
+    let authToken;
+    if ('VtexIdclientAutCookie_' in cookieSession.namespaces.cookie) {
+      authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value
+    } else {
+      authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie"].value;
+    }
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
       const whatsAppResponse = await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
         method: 'POST',
         headers: {
-          'vtexAuth': cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value,
+          'vtexAuth': authToken,
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
@@ -539,16 +545,17 @@ export default class CustomProfileData {
     
 
     async function updateWhatsappConsent(isChecked) {
+      const cookieSession = await _this.getSessionCookie();
+      const account = __RUNTIME__.account;
+      const { orderFormId } = window.vtexjs.checkout.orderForm;
+      let authToken;
+      if ('VtexIdclientAutCookie_' in cookieSession.namespaces.cookie) {
+        authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value
+      } else {
+        authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie"].value;
+      }
+
       try {
-        const cookieSession = await _this.getSessionCookie();
-        const account = cookieSession.namespaces.account.accountName.value;
-        let authToken;
-        if ('VtexIdclientAutCookie_' in cookieSession.namespaces.cookie) {
-          authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value
-        } else {
-          authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie"].value;
-        }
-        const { orderFormId } = window.vtexjs.checkout.orderForm;
         await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
             method: 'POST',
             headers: {
@@ -565,6 +572,7 @@ export default class CustomProfileData {
                 }
             })
         });
+        
       } catch (err) {
           console.error(`Erro ao fazer consentimento de usuário: ${err}`);
       }
