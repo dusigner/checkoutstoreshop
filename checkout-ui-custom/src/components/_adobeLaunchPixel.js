@@ -40,8 +40,6 @@ class AdobeLaunchPixel {
   init() {
     const _this = this
 
-    _this.loadCache()
-
     const dataLayerScript = document.createElement('script')
 
     dataLayerScript.type = 'text/javascript'
@@ -49,7 +47,6 @@ class AdobeLaunchPixel {
     document.head.appendChild(dataLayerScript)
 
     _this.getPageType()
-    _this._populateProductLayer()
 
     const adobeDtmScript = document.createElement('script')
 
@@ -90,25 +87,7 @@ class AdobeLaunchPixel {
           }
         }
       }, 100)
-
-      // var realPushState = history.pushState;
-      // history.pushState = function () {
-      // 	var currentContainer = document.querySelector('.render-container').className;
-      // 	var currentTitle = document.querySelector('head title');
-      // 	var checkPageChange = setInterval(function () {
-      // 		var newClassName = document.querySelector('.render-container').className;
-      // 		var newTitle = document.querySelector('head title');
-      // 		if (currentTitle === null || newTitle === null)
-      // 			return;
-
-      // 		if (currentContainer !== newClassName || currentTitle.text !== newTitle.text) {
-      // 			_this._populateDataLayer();
-      // 			clearInterval(checkPageChange);
-      // 		}
-      // 	}, 500);
-
-      // 	return realPushState.apply(history, arguments);
-      // };
+      
       _this._populateDataLayer()
 
       _this._trackLogin()
@@ -133,67 +112,63 @@ class AdobeLaunchPixel {
     }
 
     if (_this.observer === null) {
-      if (_this.pagesWithMutation.indexOf(_this.pageType) === -1) {
-        _this._populateProductLayer()
-      } else {
-        _this.observer = new MutationObserver(function (mutations) {
-          mutations.forEach(function (mutation) {
-            if (
-              document.querySelector('.payment-unauthorized-modal') !== null &&
-              document.querySelector('.payment-unauthorized-modal').style
-                .display === 'block'
-            ) {
-              _this.pageType = 'order_failure'
+      _this.observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          if (
+            document.querySelector('.payment-unauthorized-modal') !== null &&
+            document.querySelector('.payment-unauthorized-modal').style
+              .display === 'block'
+          ) {
+            _this.pageType = 'order_failure'
+
+            return
+          }
+
+          if (mutation.target.className === 'render-provider') {
+            const newPageType = _this.getPageType()
+
+            if (newPageType !== _this.pageType) {
+              _this.pageType = false
+              _this.setup()
 
               return
             }
+          }
 
-            if (mutation.target.className === 'render-provider') {
-              const newPageType = _this.getPageType()
+          const addedNodesCount = mutation.addedNodes.length
 
-              if (newPageType !== _this.pageType) {
-                _this.pageType = false
-                _this.setup()
+          if (addedNodesCount > 0) {
+            for (let i = 0; i < addedNodesCount; i++) {
+              const node = mutation.addedNodes[i]
 
-                return
+              if (!(node instanceof HTMLElement)) return
+              _this.inspectElement(node)
+            }
+          }
+
+          if (_this.pageType === 'checkout') {
+            $('.item-link-remove.data-omni-remove').on('click', function (
+              event
+            ) {
+              const { target } = event
+              const dataOmni = target.getAttribute('data-omni-variant')
+
+              if (dataOmni) {
+                _this._removeFromDigitalData(dataOmni)
+              } else {
+                _this._removeFromDigitalData(
+                  target.parentElement.getAttribute('data-omni-variant')
+                )
               }
-            }
-
-            const addedNodesCount = mutation.addedNodes.length
-
-            if (addedNodesCount > 0) {
-              for (let i = 0; i < addedNodesCount; i++) {
-                const node = mutation.addedNodes[i]
-
-                if (!(node instanceof HTMLElement)) return
-                _this.inspectElement(node)
-              }
-            }
-
-            if (_this.pageType === 'checkout') {
-              $('.item-link-remove.data-omni-remove').on('click', function (
-                event
-              ) {
-                const { target } = event
-                const dataOmni = target.getAttribute('data-omni-variant')
-
-                if (dataOmni) {
-                  _this._removeFromDigitalData(dataOmni)
-                } else {
-                  _this._removeFromDigitalData(
-                    target.parentElement.getAttribute('data-omni-variant')
-                  )
-                }
-              })
-            }
-          })
+            })
+          }
         })
+      })
 
-        _this.observer.observe(document.querySelector('html'), {
-          childList: true,
-          subtree: true,
-        })
-      }
+      _this.observer.observe(document.querySelector('html'), {
+        childList: true,
+        subtree: true,
+      })
     }
   }
 
@@ -318,13 +293,6 @@ class AdobeLaunchPixel {
         elem.setAttribute('data-omni-variant', modelCode)
         elem.setAttribute('data-omni-base', `;${modelName}`)
         if (callback) callback()
-      } else {
-        await _this._fetchData(
-          elem,
-          fetchDataBy.type,
-          fetchDataBy.value,
-          callback
-        )
       }
     }
 
@@ -398,55 +366,6 @@ class AdobeLaunchPixel {
     }
   }
 
-  /* Just the API call used for other pourpuses */
-  async _fetchData(node, fetchDataBy, value, callback = null) {
-    const _this = this
-
-    if (node === null) return
-    if (
-      node.hasAttribute('data-loaded') ||
-      (node.hasAttribute('data-omni-variant') &&
-        node.hasAttribute('data-omni-base'))
-    ) {
-      return
-    }
-
-    node.setAttribute('data-loaded', true)
-
-    const targetUrl =
-      'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=78ca5fdbcadb437083408712375af24c'
-
-    const data = {}
-
-    data.type = fetchDataBy
-    data.searchValue = value
-    data.country = _this._fetchSiteCode()
-    let displayName = ''
-    let prodUrl = ''
-
-    if (fetchDataBy === 'name') {
-      displayName = value
-    }
-
-    if (fetchDataBy === 'url') {
-      prodUrl = value
-    }
-
-    if (
-      (data.type !== '' || data.searchValue !== '') &&
-      _this.codesCache !== -1
-    ) {
-      const xhttp = new XMLHttpRequest()
-
-      xhttp.addEventListener('load', function () {
-        _this._callbackFetch(this, node, callback, displayName, prodUrl)
-      })
-      xhttp.open('POST', targetUrl, true)
-      xhttp.setRequestHeader('Content-Type', 'application/json')
-      // xhttp.send(JSON.stringify(data));
-    }
-  }
-
   /* The call back of the fetch and also call the custom callback passed as parameter */
   _callbackFetch(ajax, node, callback = null) {
     if (ajax.readyState === 4 && ajax.status === 200) {
@@ -473,15 +392,11 @@ class AdobeLaunchPixel {
     if (_this.pageType === 'checkout') {
       _this.cart(classes, node)
     }
-
-    _this._populateProductLayer()
   }
 
   /* Cart Page */
   cart(classes, node) {
     const _this = this
-
-    _this._populateProductLayer()
 
     if (node.className.indexOf('product-item') > -1) {
       if (window.location.hash === '#/cart') {
@@ -607,7 +522,7 @@ class AdobeLaunchPixel {
     }
 
     const buttonRemoveCoupon = document.querySelectorAll('#cart-coupon-remove')
-    
+
     if (buttonRemoveCoupon !== null) {
       buttonRemoveCoupon.forEach(elementRemove => {
         _this.setElementOmni(elementRemove, 'data-omni-contentclick', {
@@ -782,141 +697,6 @@ class AdobeLaunchPixel {
           ? ''
           : (window.digitalData.page.pathIndicator[`depth_${depthIndex}`] =
             pathnameArr[p])
-    }
-  }
-
-  /* Gahters all the products informations inside the page to populate the product property */
-  _populateProductLayer() {
-    const _this = this
-    const pagesWithProductLayer = ['checkout']
-    if (pagesWithProductLayer.indexOf(_this.pageType) === -1) {
-      window.digitalData.product.modelVariant = ''
-      window.digitalData.product.model_name = ''
-      window.digitalData.product.displayName = ''
-      window.digitalData.product.productDivision = ''
-      window.digitalData.product.productFamily = ''
-      window.digitalData.product.pimSubType = ''
-      window.digitalData.product.listPrice = ''
-
-      return
-    }
-
-    if (!_this._checkProperties(window.digitalData.product)) return
-    let searchType = 'ean'
-
-    if (_this.pageType === 'checkout' || _this.pageType === 'cart') {
-      if (
-        typeof window.vtexjs !== 'undefined' &&
-        typeof _this.codesCache !== 'undefined' &&
-        window.vtexjs.checkout.orderForm !== undefined &&
-        window.vtexjs.checkout.orderForm.items.length > 0
-      ) {
-        const { items } = window.vtexjs.checkout.orderForm
-
-        if (typeof _this.codesCache === 'string') {
-          _this.codesCache = JSON.parse(_this.codesCache)
-        }
-
-        const digitsDecimalPoint =
-          window.vtexjs.checkout.orderForm.storePreferencesData
-            .currencyFormatInfo.currencyDecimalDigits
-
-        try {
-          for (let i = 0; i < items.length; i++) {
-            const item = items[i]
-            if (_this.codesCache !== -1) {
-              const index = _this.codesCache.findIndex(function (obj) {
-                return item.refId === obj.modelCode
-              })
-
-              if (_this.codesCache[index]) {
-                if (digitsDecimalPoint > 0) {
-                  _this.codesCache[index].price = (
-                    item.sellingPrice /
-                    10 ** digitsDecimalPoint
-                  ).toFixed(digitsDecimalPoint)
-                } else {
-                  _this.codesCache[index].price = item.sellingPrice
-                }
-              }
-            }
-          }
-        } catch (e) {
-          console.error(`_populateProductLayer: ${e}`)
-        }
-
-        const data = {}
-        if (_this.codesCache !== -1) {
-          _this.codesCache.lastUpdate = new Date()
-          data[this._fetchSiteCode()] = _this.codesCache
-          localStorage.setItem(_this.cacheKey, JSON.stringify(data))
-        }
-      }
-
-      const productItems = document.querySelectorAll('tr.product-item')
-
-      productItems.forEach(function (productItem) {
-        if (productItem !== null) {
-          if (
-            productItem.getAttribute('data-loading') !== null &&
-            productItem.querySelector('.total-selling-price') !== null
-          ) {
-            return
-          }
-
-          const productPriceNode = productItem.querySelector(
-            '.total-selling-price'
-          )
-
-          if (productPriceNode === null) return
-
-          let productPrice = productPriceNode.innerText
-
-          productPrice = productPrice.replace(/[^\d]/g, '').trim()
-
-          productItem.setAttribute('data-loading', true)
-          searchType = 'sku'
-          const productSKU = productItem.dataset.sku
-          const cachedData = _this._findCachedInfo(
-            searchType,
-            productSKU,
-            false
-          )
-
-          let apiData = {}
-
-          if (cachedData) {
-            apiData = cachedData
-            apiData.listPrice = productPrice
-          } else if (_this.codesCache === -1) {
-            const xhttp = new XMLHttpRequest()
-            const targetUrl =
-              'https://ssg-checkout.linkapi.com.br/v1/product?apiKey=78ca5fdbcadb437083408712375af24c'
-
-            const data = {}
-
-            data.type = searchType
-            data.searchValue = productSKU
-            data.country = _this._fetchSiteCode()
-            if (data.type === '' || data.searchValue === '') return
-            if (productSKU === null) return
-
-            xhttp.open('POST', targetUrl, true)
-            xhttp.onreadystatechange = function () {
-              if (this.readyState === 4 && this.status === 200) {
-                apiData = JSON.parse(this.response)
-                apiData.listPrice = productPrice
-                  .replace(/\./g, '')
-                  .replace(',', '')
-                  .trim()
-              }
-            }
-
-            xhttp.setRequestHeader('Content-Type', 'application/json')
-            // xhttp.send(JSON.stringify(data));
-          }
-        }
-      })
     }
   }
 
@@ -1119,81 +899,6 @@ class AdobeLaunchPixel {
     return l.pathname
   }
 
-  loadCache() {
-    const _this = this
-
-    const apiKey = '78ca5fdbcadb437083408712375af24c'
-
-    const country = _this._fetchSiteCode()
-
-    let cache = null
-
-    try {
-      if (localStorage) {
-        cache = localStorage.getItem(_this.cacheKey)
-        if (typeof cache === 'string') {
-          cache = JSON.parse(cache)
-        }
-      }
-    } catch (err) {
-      console.error(
-        '[SAMSUNG AA DTM] Error during the read of the localStorage data',
-        err
-      )
-      cache = null
-    } finally {
-      const HALF_HOUR = (60 * 60 * 1000) / 2
-
-      if (
-        cache === null ||
-        typeof cache !== 'object' ||
-        !(country in cache) ||
-        !('lastUpdate' in cache) ||
-        new Date() - new Date(cache.lastUpdate) >= HALF_HOUR
-      ) {
-        let body = {}
-        const skuIds = window.vtexjs.checkout.orderForm.items.map(item => {
-          return Number(item.id)
-        })
-
-        if (skuIds.length > 0) {
-          body = {
-            skuIds,
-          }
-        } else {
-          body = {}
-        }
-
-        const xhttp = new XMLHttpRequest()
-        const targetUrl = `https://ssg-checkout.linkapi.com.br/v1/products?apiKey=${apiKey}`
-
-        xhttp.open('POST', targetUrl, true)
-        _this.codesCache = -1
-        xhttp.onreadystatechange = function () {
-          if (this.readyState === 4 && this.status === 200) {
-            const newCache = {}
-
-            newCache[country] = this.response
-            newCache.lastUpdate = new Date()
-            if (localStorage) {
-              localStorage.setItem(_this.cacheKey, JSON.stringify(newCache))
-            }
-            _this.codesCache = this.response
-          } else {
-            _this.codesCache = []
-          }
-        }
-
-        xhttp.setRequestHeader('Content-Type', 'application/json')
-        xhttp.send(JSON.stringify(body))
-      }
-
-      if (cache !== null && cache !== undefined) {
-        _this.codesCache = cache[country]
-      }
-    }
-  }
-
   _pageTrack() {
     try {
       if (
@@ -1240,7 +945,7 @@ class AdobeLaunchPixel {
           if (customerLogged !== null) {
             window.digitalData.user.loginStatus = true
           } else {
-            if(saGuid){
+            if (saGuid) {
               localStorage.setItem('saGuid', '')
             }
             window.digitalData.user.loginStatus = false

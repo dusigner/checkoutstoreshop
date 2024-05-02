@@ -29,6 +29,7 @@ import { fnsCustomAddressForm } from '../components/_customAddressForm'
 import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
+import { OptInDimensions } from '../components/_optinDimensions'
 
 const scripts = new Scripts()
 
@@ -78,6 +79,7 @@ export class CheckoutCustom {
     this.servicesLinks = new ServicesLinks()
     // this.topBanners = new TopBanners()
     this.SummaryGiftCard = new SummaryGiftCard()
+    this.optInDimensions = new OptInDimensions()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -192,13 +194,12 @@ export class CheckoutCustom {
 
   couponInfo(response) {
 
-    const { marketingData, messages, ratesAndBenefitsData } = response;
+    const { marketingData, messages } = response;
 
     const _trElem = $('.summary-template-holder');
     const couponFields = _trElem.find('.coupon-fieldset');
     const messagesElem = $('.vtex-front-messages-placeholder-opened');
     const inputCoupon = $('.coupon-value.input-small');
-    const discountInvalid = $('#discount-invalid');
 
     couponFields.find('.div-coupon-info').remove();
 
@@ -206,23 +207,9 @@ export class CheckoutCustom {
         const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
 
         if (marketingData && marketingData.coupon) {
-            const matchedBenefit = ratesAndBenefitsData.rateAndBenefitsIdentifiers.find(benefit => {
-                return benefit.matchedParameters && benefit.matchedParameters["couponCode@Marketing"] === marketingData.coupon;
-            });
-
-            if (matchedBenefit) {
-                // Cupom válido
-                inputCoupon.each(function() {$(this).prop('disabled', true);});
-                couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
-            } else {
-                // Cupom inválido para compra
-                messagesElem.css('display', 'none');
-                couponFields.find('.info').css('display', 'none');
-                inputCoupon.each(function() {$(this).css('border-bottom', 'solid 1px red');});
-                discountInvalid.remove();
-                // vtexjs.checkout.removeDiscountCoupon()
-                couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
-            }
+          // Cupom válido
+          inputCoupon.each(function () { $(this).prop('disabled', true); });
+          couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
         } else {
             if (messages && messages.length > 0) {
                 const errorMessage = messages.find(message => message.status === 'warning');
@@ -1267,7 +1254,7 @@ export class CheckoutCustom {
         objeto =>
           objeto.name === orderForm.shippingData.logisticsInfo[0].selectedSla
       )
-      let statePickUp = filterSlas[0].pickupStoreInfo.address.state
+      let statePickUp = filterSlas[0].pickupStoreInfo.address?.state
       // Validar se o selectedDeliveryChannel do orderForm é do tipo "pick-up-point";
       if (
         orderForm.shippingData.logisticsInfo[0].selectedDeliveryChannel ===
@@ -1709,6 +1696,7 @@ export class CheckoutCustom {
         _this.samsungCarePlus.sync(orderForm)
         _this.CheckoutLimit.sync(orderForm)
         _this.installationService.sync(orderForm)
+        _this.optInDimensions.sync(orderForm)
       })
 
       function trackLogin(accessKeyURL) {
@@ -1726,6 +1714,7 @@ export class CheckoutCustom {
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.shipping.addInvalidSelectedDateMessage()
+            _this.optInDimensions.render()
           }
         }
 
@@ -1802,7 +1791,7 @@ export class CheckoutCustom {
           }
         }
 
-        _this.shipping.toggleGoToPaymentDisabled()
+        setTimeout(_this.shipping.toggleGoToPaymentDisabled, 300)
 
         if (window.location.hash === '#/email') {
           _this.preEmail.createElementSamsungAccountLogin()
@@ -1834,6 +1823,7 @@ export class CheckoutCustom {
           
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
+            _this.optInDimensions.render()
             _this.customizeLogOut()
           }
           
@@ -1914,6 +1904,7 @@ export class CheckoutCustom {
       $(window).on('componentValidated.vtex', function () {
         try {
           _this.discounts.init(vtexjs.checkout.orderForm)
+          _this.optInDimensions.render()
         } catch (err) {
           console.error(`${err}`)
         }
@@ -1923,6 +1914,7 @@ export class CheckoutCustom {
         switch (orderFormSection) {
           case 'shippingData':
             _this.shipping.autoTriggerSlasResult()
+            // _this.optInDimensions.render()
             break
 
           default:
