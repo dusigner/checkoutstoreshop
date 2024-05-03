@@ -126,25 +126,18 @@ export default class CustomProfileData {
     const _this = this
     const cookieSession = await _this.getSessionCookie()
     const account = __RUNTIME__.account;
-    let authToken;
-    if ('VtexIdclientAutCookie_' in cookieSession.namespaces.cookie) {
-      authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value
-    } else {
-      authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie"].value;
-    }
+    const vtexAuth = cookieSession.namespaces.cookie[`VtexIdclientAutCookie_${account}`]?.value || cookieSession.namespaces.cookie[`VtexIdclientAutCookie`]?.value
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
       const whatsAppResponse = await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
         method: 'POST',
         headers: {
-          'vtexAuth': authToken,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          vtexAuth
         },
         body: JSON.stringify({
             action: '2a7e3',
             params:{
-                account: account
+              account
             }
         })
       })
@@ -155,7 +148,7 @@ export default class CustomProfileData {
             birthDate: data[0].birthDate,
             acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
             isNewsletterOptIn: data[0].isNewsletterOptIn,
-            isWhatsAppOptIn: vtexjs.checkout.orderForm.clientProfileData !== null ? whatsAppConsent.success : true
+            isWhatsAppOptIn: vtexjs.checkout.orderForm.clientProfileData !== null ? whatsAppConsent.verification : true
           }
 
           _this.fillClientProfileData(profileDataToPersist)
@@ -547,31 +540,27 @@ export default class CustomProfileData {
     async function updateWhatsappConsent(isChecked) {
       const cookieSession = await _this.getSessionCookie();
       const account = __RUNTIME__.account;
-      const { orderFormId } = window.vtexjs.checkout.orderForm;
-      let authToken;
-      if ('VtexIdclientAutCookie_' in cookieSession.namespaces.cookie) {
-        authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie_" + account].value
-      } else {
-        authToken = cookieSession.namespaces.cookie["VtexIdclientAutCookie"].value;
-      }
 
+      const vtexAuth = cookieSession.namespaces.cookie[`VtexIdclientAutCookie_${account}`]?.value || cookieSession.namespaces.cookie[`VtexIdclientAutCookie`]?.value
+      const whatsappNumber = $('#client-phone').val()
+      const phoneNumber = '55'+ whatsappNumber.replace(/\D/g, "");
+      const consent = isChecked
       try {
         await fetch(`${_this.rootPath()}/_v/private/conversation/v1/frontend`, {
-            method: 'POST',
-            headers: {
-                'vtexAuth': authToken,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: '4d9e1',
-                account: account,
-                params: {
-                    orderFormId: orderFormId,
-                    consent: isChecked.toString()
-                }
-            })
-        });
+          method: 'POST',
+          headers: {
+            vtexAuth
+          },
+          body: JSON.stringify({
+              action: '10a1',
+              account,
+              params:{
+                  account,
+                  phoneNumber,
+                  consent
+              }
+          })
+        })
         
       } catch (err) {
           console.error(`Erro ao fazer consentimento de usuário: ${err}`);
