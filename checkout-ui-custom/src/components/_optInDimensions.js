@@ -106,7 +106,7 @@ export class OptInDimensions {
     }
   }
 
-  sync(orderForm) {
+  async sync(orderForm) {
     if (!orderForm?.items?.length) return
 
     try {
@@ -117,9 +117,13 @@ export class OptInDimensions {
       }) || []
 
       if (items.length) {
-        const optInItems = items.filter(async (item) => {
-          const product = await getProductVariations(item.productId)
-          return product['Opt-In Dimensions']
+        const promises = []
+        items.forEach(item => {
+          promises.push(getProductVariations(item.productId))
+        })
+
+        const optInItems = await Promise.all(promises).then((responses) => {
+          return responses.flat().filter(product =>  product['Opt-In Dimensions'])
         })
 
         this.items = optInItems
