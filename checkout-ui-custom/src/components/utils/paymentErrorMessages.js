@@ -44,6 +44,11 @@ const PaymentErrorMessages = {
     message1: "Seu pagamento não foi autorizado.",
     message2: "Por favor, utilize outro meio de pagamento."
   },
+  pending_review_manual:{
+    title:"Prezado Consumidor,",
+    message1:"Seu pedido foi recusado pois seu banco está solicitando confirmação de pagamento.",
+    message2:"Por favor, refazer a compra e acessar o app do seu banco ou ligar para o telefone que está no cartão. Se preferir também pode pagar com outro meio de pagamento."
+  },
   default: {
     title: "Prezado Consumidor,",
     message1: "Seu pagamento não foi autorizado.",
@@ -55,5 +60,5 @@ export default function getPaymentErrorMessage(message){
   const errorsCode = Object.keys(PaymentErrorMessages);
   const code = errorsCode.find(key => message.includes(key));
 
-  return PaymentErrorMessages[code || 'default'];
+  return PaymentErrorMessages[code || 'default']; 
 }
