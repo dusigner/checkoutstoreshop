@@ -150,12 +150,6 @@ export default class TradeIn {
 
       // chamadas em paralelo reduzindo bons segundos das requisições
       await Promise.all(deleteRequests)
-        .then(() => {
-          console.log('Dados personalizados excluídos com sucesso.')
-
-          const t1 = performance.now()
-          console.log('Este código levou ', t1 - t0, ' milissegundos.')
-        })
         .catch(error => {
           console.error('Erro ao excluir dados personalizados:', error)
         })

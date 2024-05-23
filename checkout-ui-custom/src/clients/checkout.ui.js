@@ -307,6 +307,7 @@ export class CheckoutCustom {
 
         const shippingText =
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
+        
 
         const moreInfoHtml = `
             <div class="more-info ${isInstallService || isSamsungCare ? 'isServices' : ''
@@ -929,6 +930,7 @@ export class CheckoutCustom {
   }
 
   async enchancementSummaryCart(orderForm, path) {
+
     try {
       if (orderForm.value == 0) {
         return
@@ -1096,17 +1098,6 @@ export class CheckoutCustom {
     if (window.location.hash === '#/payment') {
       this.showMessageSamsungWallet(orderForm)
     }
-
-    addEventListener('hashchange', async event => {
-      const showHeader = ['#/payment', '#/shipping', '#/profile']
-      const { hash } = event.target.location
-
-      if (showHeader.includes(hash)) {
-        customHeader()
-      }
-
-      this.enchancementSummaryCart(orderForm, window.location.hash)
-    })
 
     if (!$('body').hasClass('modalActive')) {
       this.enchancementSummaryCart(orderForm, window.location.hash)
@@ -1665,8 +1656,18 @@ export class CheckoutCustom {
   start() {
     const _this = this
     try {
-      console.log('Checkout is already started!!')
-
+      
+      addEventListener('hashchange', async (event) => {
+        const showHeader = ['#/payment', '#/shipping', '#/profile']
+        const { hash } = event.target.location
+    
+        if (showHeader.includes(hash)) {
+          customHeader()
+        }
+    
+        this.enchancementSummaryCart(orderForm, window.location.hash)
+      })
+      
       _this.init()
       $(function () {
         _this.messages.init()
