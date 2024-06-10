@@ -1,48 +1,30 @@
 // IMPORTED FROM STORE THEME
 
 @font-face {
-  font-family: SamsungOne;
-  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.eot);
-  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.eot#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.woff2)
-      format('woff2'),
-    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.woff)
-      format('woff'),
-    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-400.ttf)
-      format('truetype');
-  font-weight: 400;
+  font-family: 'SamsungOne';
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
+  src: url(https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/fonts/SamsungOne-400.woff2);
 }
 
 @font-face {
-  font-family: SamsungOne;
-  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.eot);
-  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.eot#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.woff2)
-      format('woff2'),
-    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.woff)
-      format('woff'),
-    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungOne-700.ttf)
-      format('truetype');
-  font-weight: 700;
+  font-family: 'SamsungOne';
+  font-weight: bold;
   font-style: normal;
   font-display: swap;
+  src: url(https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/fonts/SamsungOne-700.woff2);
 }
 
 @font-face {
   font-family: 'SamsungSharpSans';
-  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.eot);
-  src: url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.eot?#iefix)
-      format('embedded-opentype'),
-    url(https://cdn.samsung.com/etc/designs/smg/global/fonts/SamsungSharpSansBd.woff)
-      format('woff');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
+  src: url(https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/fonts/SamsungSharpSansBd.woff2);
 }
+
+
 
 $base: #ffffff; // body bg...
 $baseInverted: #21364f; // general
