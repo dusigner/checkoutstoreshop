@@ -2,7 +2,7 @@ import { deleteCustomData, getCustomDataFields, getProductVariations, setCustomD
 
 export class OptInDimensions {
   constructor() {
-    this.items = []
+    this.items = null
     this.categories = ['Geladeiras']
     this.app = 'consent_app'
     this.elements = {}
@@ -49,6 +49,7 @@ export class OptInDimensions {
   }
 
   optinElement() {
+    const infosOptinCategory = this.items
     const { product_dimensions } = getCustomDataFields({ app: this.app });
 
     return `<div class="optin-dimensions">
@@ -56,19 +57,35 @@ export class OptInDimensions {
         <input type="checkbox" id="optin-dimensions" ${product_dimensions && "checked" || ""} />
         <span class="custom-checkbox-icon"></span>
         <span class="optin-text">
-          Estou ciente das dimensões do produto a ser comprado*
+          ${infosOptinCategory?.messageCategoryCheckout}
         </span>
       </label>
       <span class="help error" style="visibility:hidden">Campo obrigatório.</span>
     </div>`
   }
 
+  rootPath() {
+    return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+  }
+
+  async getAlertMessageProducts() {
+    try {
+      return fetch(`${this.rootPath()}/_v/private/get/alertMessageProducts`)
+        .then((resp) => resp.json())
+        .then((data) => data);
+    } catch (e) {
+      console.error('Alert message searching MD error', e);
+      return [];
+    }
+  };
+
+
   forceAcceptance() {
     if (OptInDimensions.runtime.accepted) return
-    
+
     const { product_dimensions } = getCustomDataFields({ app: this.app });
 
-    if (window.location.hash === "#/payment" && this.items.length && !product_dimensions) {
+    if (window.location.hash === "#/payment" && this.items && !product_dimensions) {
       window.location.hash = "#/shipping"
     }
   }
@@ -86,7 +103,7 @@ export class OptInDimensions {
 
       if ($('.optin-dimensions').length) return
 
-      if (this.items.length) {
+      if (this.items) {
         const { $addressForm, $addressList } = this.elements.targets
 
         const $targets = [
@@ -110,28 +127,28 @@ export class OptInDimensions {
     if (!orderForm?.items?.length) return
 
     try {
-      const items = orderForm?.items?.filter((item) => {
-        return Object.values(item.productCategories).some(category => {
-          return this.categories.includes(category)
-        })
-      }) || []
+      if (orderForm?.items?.length > 0) {
+        const listCategoriesStorage = JSON.parse(localStorage.getItem('ListCategoriesMessage'))
+        const arrayItemsCategories = []
+        let alertMessageInfos = listCategoriesStorage
+        if (listCategoriesStorage?.length === 0 || !listCategoriesStorage) {
+          alertMessageInfos = await this.getAlertMessageProducts()
+          localStorage.setItem('ListCategoriesMessage', JSON.stringify(alertMessageInfos))
+        }
 
-      if (items.length) {
-        const promises = []
-        items.forEach(item => {
-          promises.push(getProductVariations(item.productId))
-        })
-
-        const optInItems = await Promise.all(promises).then((responses) => {
-          return responses.flat().filter(product =>  product['Opt-In Dimensions'])
-        })
-
-        this.items = optInItems
+        if (alertMessageInfos) {
+          orderForm?.items?.map(item => arrayItemsCategories.push(Object.values(item.productCategories)))
+          const listArrayCategories = arrayItemsCategories.reduce((list, sub) => list.concat(sub), [])
+          const optinItems = alertMessageInfos?.find(infos => {
+            return listArrayCategories.some(category => category?.toLowerCase() === infos?.nameCategory?.toLowerCase() && infos?.activeCategory && infos?.messageCategoryCheckout)
+          })
+          this.items = optinItems
+        }
       } else {
-        this.items = []
+        this.items = null
       }
 
-      if (!this.items.length) {
+      if (!this.items) {
         this.removeOptinElement()
         this.handleRemoveCustomData()
       }

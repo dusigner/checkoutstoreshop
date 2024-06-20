@@ -1665,7 +1665,7 @@ export class CheckoutCustom {
           customHeader()
         }
     
-        this.enchancementSummaryCart(orderForm, window.location.hash)
+        this.enchancementSummaryCart(_this.orderForm, window.location.hash)
       })
       
       _this.init()
