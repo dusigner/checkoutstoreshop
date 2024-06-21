@@ -36,12 +36,30 @@ export function rootPath() {
   return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
 }
 
-export function getClientProfileData() {
+export async function getSessionCookie() {
+  try {
+    const cookieSessao = await fetch(`${rootPath()}/api/sessions?items=*`)
+      .then(response => response.json())
+      .then(result => {
+        return result;
+      });
+
+    return cookieSessao; 
+  } catch (error) {
+    console.error("Erro:", error);
+    throw error;
+  }
+}
+
+export async function getClientProfileData() {
+  const cookie = await getSessionCookie();
+  const vtexSession = cookie?.namespaces?.cookie?.VtexIdclientAutCookie?.value
   return $.ajax({
     url: `${rootPath()}/_v/private/aem-masterdata/v1/get/clients/custom`,
     headers: {
       Accept: 'application/vnd.vtex.ds.v10+json',
       'Content-Type': 'application/json',
+      "vtex-session": vtexSession
     },
     cache: false,
     crossDomain: true,
@@ -50,12 +68,17 @@ export function getClientProfileData() {
 }
 
 export async function insertClientPartial(body) {
+  const cookie = await getSessionCookie();
+  const vtexSession = cookie?.namespaces?.cookie?.VtexIdclientAutCookie?.value
   return await $.ajax({
     url: `${rootPath()}/_v/private/aem-masterdata/v1/insert/clients/custom`,
     type: 'POST',
     crossDomain: true,
     accept: 'application/vnd.vtex.ds.v10+json',
     contentType: 'application/json; charset=utf-8',
+    headers: {
+          "vtex-session": vtexSession
+    },
     data: JSON.stringify(
       body,
     ),
