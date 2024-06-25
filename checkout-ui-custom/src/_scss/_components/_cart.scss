@@ -62,16 +62,6 @@ h1#cart-title {
   margin-bottom: 20px;
 }
 
-[data-sku='3353'] .item-link-remove,
-[data-sku='3354'] .item-link-remove,
-[data-sku='3653'] .item-link-remove,
-[data-sku='3654'] .item-link-remove,
-[data-sku='3655'] .item-link-remove,
-[data-sku='25811'] .item-link-remove,
-[data-sku='25810'] .item-link-remove {
-  display: none;
-}
-
 .fakeRemove {
   cursor: pointer;
   display: block;
