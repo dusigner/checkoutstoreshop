@@ -211,7 +211,7 @@ export default class SamsungCarePlus {
     }
   }
 
-  removeTogether(samsungCareItem, attachedProduct) {
+  removeTogether(samsungCareItem) {
     try {
       const { items } = vtexjs.checkout.orderForm
 
@@ -225,16 +225,6 @@ export default class SamsungCarePlus {
           quantity: 0
         }
       ]
-
-      // push all attached items
-      items.forEach(item => {
-        if (item.id === attachedProduct.id) {
-          itemsToRemove.push({
-            index: items.indexOf(item),
-            quantity: 0
-          })
-        }
-      })
     
       window.cart.loadingItem(true)
 
@@ -258,11 +248,11 @@ export default class SamsungCarePlus {
   
       const $confirmModal = $(`<div class="layerpopup">
         <div class="modalssc">
-          <p><b>Atenção</b>: ao excluir <b>${samsungCareItem.name}</b>, será removido também 
-            do seu carrinho o item <b>${attachedProduct.name}</b></p>
+        <h3>Deseja remover o seguro gratuito?</h3>
+          <p>Ao remover <b>${samsungCareItem.name}</b>, você perderá a proteção completa em seu novo dispositivo ${attachedProduct.name}.</p>
           <div>
             <a class="ssc-cancel-action">Voltar ao carrinho</a>
-            <a class="ssc-remove-together">Excluir</a>
+            <a class="ssc-remove-together">Remover seguro</a>
           </div>
       </div>
       </div>`)
@@ -270,7 +260,7 @@ export default class SamsungCarePlus {
       $confirmModal.prependTo($('body'))
   
       $confirmModal.find('.ssc-remove-together').on('click', function() {
-        _this.removeTogether(samsungCareItem, attachedProduct)
+        _this.removeTogether(samsungCareItem)
       })
   
       $confirmModal.find('.ssc-remove-together, .ssc-cancel-action').on('click', function() {

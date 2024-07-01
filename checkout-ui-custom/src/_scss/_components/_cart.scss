@@ -89,7 +89,14 @@ h1#cart-title {
   border-radius: 20px;
   display: inline-block;
   vertical-align: middle;
-  max-width: 400px;
+  max-width: 350px;
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #000;
+    font-family: SamsungOne;
+    margin-bottom: 20px;
+  }
 }
 
 .layerpopup::before {
@@ -254,14 +261,6 @@ h1#cart-title {
       .best-price {
         .new-product-price.line-through {
           text-decoration: line-through;
-        }
-      }
-
-      &.gratuito {
-        .best-price {
-          .new-product-price {
-            display: none;
-          }
         }
       }
 

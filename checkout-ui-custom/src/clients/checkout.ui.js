@@ -751,6 +751,7 @@ export class CheckoutCustom {
           orderForm.items[i].listPrice * orderForm.items[i].quantity
         const sellingPrice = orderForm.items[i].sellingPrice
         const free = sellingPrice == 1 || sellingPrice == 0
+        const samsungCareFree = orderForm.items[i].productCategoryIds === '/2005/'
 
         const listPriceFormated = formatCurrencyBRL(listPriceTotalValue)
 
@@ -778,7 +779,7 @@ export class CheckoutCustom {
           <div class="v-custom-quantity-price vqc-ldelem">
 
             <p class="v-custom-quantity-price__best" style="font-size: 18px; margin-bottom: 4px; 
-            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
+            font-weight:bold; ${free && !samsungCareFree ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
             }</p>
           </div>
           `
