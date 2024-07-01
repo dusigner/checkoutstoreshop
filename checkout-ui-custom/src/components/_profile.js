@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
-import { getClientProfileData, insertClientPartial } from '../components/_utils'
+import { getSessionCookie, getClientProfileData, insertClientPartial } from '../components/_utils'
 export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -25,22 +25,6 @@ export default class CustomProfileData {
     const age = getAge < 0 ? 0 : getAge
 
     return age >= 18 && age <= 120
-  }
-
-  async getSessionCookie() {
-    const _this = this;
-    try {
-      const cookieSessao = await fetch(`${_this.rootPath()}/api/sessions?items=*`)
-        .then(response => response.json())
-        .then(result => {
-          return result;
-        });
-  
-      return cookieSessao; 
-    } catch (error) {
-      console.error("Erro:", error);
-      throw error;
-    }
   }
 
   async insertPartialNewProfileData() {
@@ -81,6 +65,7 @@ export default class CustomProfileData {
         acceptTermsAndPrivacyPolicy: $('#inputTermAndPolicies').is(':checked'),
         isNewsletterOptIn: $('#opt-in-newsletter').is(':checked'),
         isWhatsAppOptIn: $('#inputWhatsapp').is(':checked'),
+        isWhatsAppPromotionOptIn: $('#isWhatsAppPromotionOptIn').is(':checked'),
         whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
           ? $('.whatsapp_phone').val()
           : '',
@@ -107,7 +92,8 @@ export default class CustomProfileData {
     birthDate,
     isNewsletterOptIn,
     acceptTermsAndPrivacyPolicy,
-    isWhatsAppOptIn
+    isWhatsAppOptIn,
+    isWhatsAppPromotionOptIn
   }) {
     try {
       const clientDateBirth = this.convertDateToLocaleDateString(birthDate)
@@ -116,6 +102,7 @@ export default class CustomProfileData {
       $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
       $('#inputTermAndPolicies').prop('checked', acceptTermsAndPrivacyPolicy)
       $('#inputWhats').prop('checked', isWhatsAppOptIn)
+      $('#isWhatsAppPromotionOptIn').prop('checked', isWhatsAppPromotionOptIn)
       this.toggleGoToShippingDisabled()
     } catch (err) {
       console.error(`Erro ao preencher dados de perfil de usuário: ${err}`)
@@ -124,7 +111,7 @@ export default class CustomProfileData {
 
   async persistClientProfileData() {
     const _this = this
-    const cookieSession = await _this.getSessionCookie()
+    const cookieSession = await getSessionCookie()
     const account = __RUNTIME__.account;
     const vtexAuth = cookieSession.namespaces.cookie[`VtexIdclientAutCookie_${account}`]?.value || cookieSession.namespaces.cookie[`VtexIdclientAutCookie`]?.value
     try {
@@ -142,15 +129,15 @@ export default class CustomProfileData {
         })
       })
       const whatsAppConsent = await whatsAppResponse.json()
-      this.getClientProfileData(email).done(function (data) {
+      getClientProfileData(email).then(function (data) {
         try {
           const profileDataToPersist = {
             birthDate: data[0].birthDate,
             acceptTermsAndPrivacyPolicy: data[0].acceptTermsAndPrivacyPolicy,
             isNewsletterOptIn: data[0].isNewsletterOptIn,
-            isWhatsAppOptIn: vtexjs.checkout.orderForm.clientProfileData !== null ? whatsAppConsent.verification : true
+            isWhatsAppOptIn: vtexjs.checkout.orderForm.clientProfileData !== null ? whatsAppConsent.verification : true,
+            isWhatsAppPromotionOptIn: data[0].isWhatsAppPromotionOptIn,
           }
-
           _this.fillClientProfileData(profileDataToPersist)
           setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
         } catch (err) {
@@ -311,6 +298,13 @@ export default class CustomProfileData {
         <span class="custom-checkbox-icon"></span>
         <span>
           Desejo receber notificações do status do pedido por WhatsApp 
+        </span>
+      </label>
+      <label style="margin-top: 16px">
+        <input type="checkbox" id="isWhatsAppPromotionOptIn" checked />
+        <span class="custom-checkbox-icon"></span>
+        <span>
+          Desejo receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp. 
         </span>
       </label>
     </div>`
@@ -538,7 +532,7 @@ export default class CustomProfileData {
     
 
     async function updateWhatsappConsent(isChecked) {
-      const cookieSession = await _this.getSessionCookie();
+      const cookieSession = await getSessionCookie();
       const account = __RUNTIME__.account;
 
       const vtexAuth = cookieSession.namespaces.cookie[`VtexIdclientAutCookie_${account}`]?.value || cookieSession.namespaces.cookie[`VtexIdclientAutCookie`]?.value
@@ -612,9 +606,9 @@ export default class CustomProfileData {
       'click',
       '#edit-profile-data, #cart-to-orderform, #btn-client-pre-email, .checkout-steps_item_identification',
       function () {
-        if(vtexjs.checkout.orderForm.clientProfileData !== null) {
-          _this.persistClientProfileData()
-        }
+          if(vtexjs.checkout.orderForm.clientProfileData !== null) {
+            _this.persistClientProfileData()
+          }
       }
     )
 
@@ -670,7 +664,7 @@ export default class CustomProfileData {
     const $birthDateFieldValue = $('#dateBirthField span.name')
 
     if ($birthDateFieldValue.is(':empty')) {
-      getClientProfileData().done(function (data) {
+      getClientProfileData().then(function (data) {
         if (!data) return
 
         const dataBirthDate = data[0].birthDate
