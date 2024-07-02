@@ -751,13 +751,14 @@ export class CheckoutCustom {
           orderForm.items[i].listPrice * orderForm.items[i].quantity
         const sellingPrice = orderForm.items[i].sellingPrice
         const free = sellingPrice == 1 || sellingPrice == 0
-        const samsungCareFree = Object.values(orderForm.items[i].productCategories)
+        const samsungCare = Object.values(orderForm.items[i].productCategories)
           .map(el => el.toLowerCase())
           .filter(el => el.match('samsung care'))
 
         const listPriceFormated = formatCurrencyBRL(listPriceTotalValue)
 
         free ? _trElem.addClass('gratuito') : null
+        samsungCare?.length ? _trElem.find('td.shipping-date').remove() : null
 
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
@@ -781,7 +782,7 @@ export class CheckoutCustom {
           <div class="v-custom-quantity-price vqc-ldelem">
 
             <p class="v-custom-quantity-price__best" style="font-size: 18px; margin-bottom: 4px; 
-            font-weight:bold; ${free && !samsungCareFree ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
+            font-weight:bold; ${free && !samsungCare?.length ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
             }</p>
           </div>
           `
