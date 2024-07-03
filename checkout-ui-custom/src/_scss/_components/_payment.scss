@@ -361,9 +361,12 @@
 				}
 				td.code,
 				td.number {
-						margin-right:20px;
+            margin-right:20px;
 						flex-grow: 1;
 						padding:0;
+            @media (max-width: 768px) {
+              margin-right: 0px;
+            }
 				}
 				#remove-gift-card {
 					text-decoration:underline;
@@ -1455,19 +1458,49 @@
   display: none !important;
 }
 
-.payment-discoints-table {
-  .code {
-    color: #000;
-    font-weight: 400;
-    background-image: url(https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/46d62ae8-f815-4b3d-a68c-cc78c5093764___b0a3636….svg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding-left: 40px !important;
-	&:before {
-      content: 'Crédito disponível:';
-      font-weight: bold;
+#cumulative-discount-warn {
+    margin-top: 32px;
+    color: #363636;
+    font-size: 16px;
+
+    @media (max-width: 768px) {
+      font-size: 13px;
     }
-	
+}
+
+.payment-discoints-table {
+  display: flex;
+  justify-content: start;
+  .code {
+    &:before{
+      content: "";
+      display: block;
+      width: 24px;
+      height: 17px;
+      margin: 0;
+      margin-right: 10px;
+      padding-bottom: 12px;
+      background-image: url(https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/46d62ae8-f815-4b3d-a68c-cc78c5093764___b0a3636….svg);
+      background-size: contain;
+      background-repeat: no-repeat;
+
+      @media (max-width: 768px) {
+        display: block;
+        margin: 0 auto;
+      }
+    }
+    span{
+      text-align: center;
+      &:before {
+        content: 'Crédito disponível:';
+        display: inline-block;
+        font-weight: bold;
+      }
+    }
+
+    @media (min-width: 768px) {
+      display: flex;
+    }
   }
 
 	.action {
@@ -1502,6 +1535,10 @@
 				}
 			}
 		}
+
+    @media (max-width: 768px) {
+      margin-top: 9px;  
+    }
 	}
 
   .number {
@@ -1514,6 +1551,10 @@
 
     span:not(.muted){
       display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      min-width: unset;
     }
   }
 }
@@ -1531,6 +1572,10 @@ margin-bottom: 0px !important;
     tr{
       &:nth-child(2){
         flex-wrap: nowrap !important;
+      }
+
+      @media (max-width: 768px) {
+        flex-direction: column;
       }
     }
   }
