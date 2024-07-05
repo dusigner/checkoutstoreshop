@@ -249,7 +249,7 @@ export default class SamsungCarePlus {
       const $confirmModal = $(`<div class="layerpopup">
         <div class="modalssc">
         <h3>Deseja remover o seguro gratuito?</h3>
-          <p>Ao remover <b>${samsungCareItem.name}</b>, você perderá a proteção gratuita em seu novo dispositivo ${attachedProduct.name}.</p>
+          <p>Ao remover o <b>${samsungCareItem.name}</b>, você perderá a proteção gratuita em seu novo dispositivo ${attachedProduct.name}.</p>
           <div>
             <a class="ssc-cancel-action">Voltar ao carrinho</a>
             <a class="ssc-remove-together">Remover seguro</a>
