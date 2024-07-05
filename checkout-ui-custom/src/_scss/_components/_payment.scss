@@ -2075,8 +2075,10 @@ margin-bottom: 0px !important;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        margin-top: 12px;
-        margin-bottom: 12px;
+        @media (max-width: 768px) {
+          margin-top: 12px;
+          margin-bottom: 12px;
+        }
         width: max-content;
       }
     }
@@ -2097,8 +2099,10 @@ margin-bottom: 0px !important;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        margin-top: 12px;
-        margin-bottom: 12px;
+        @media (max-width: 768px) {
+          margin-top: 12px;
+          margin-bottom: 12px;
+        }
         width: max-content;
       }
     }
