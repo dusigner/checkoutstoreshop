@@ -44,7 +44,7 @@ export class CheckoutCustom {
     hideEmailStep = true,
   } = {}) {
     scripts.fingerPrint()
-    
+
     this.type = type // ["vertical"]
     this.orderForm = ''
     this.orderId = this.orderForm ? this.orderForm.orderFormId : ''
@@ -208,7 +208,7 @@ export class CheckoutCustom {
     });
 
     try {
-        const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
+      const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
 
         if (marketingData && marketingData.coupon) {
           if(couponExists) {
@@ -249,7 +249,7 @@ export class CheckoutCustom {
         }
         couponFields.append(couponInfoElement);
     } catch (e) {
-        console.error('couponInfo error:', e);
+      console.error('couponInfo error:', e);
     }
   }
 
@@ -318,7 +318,7 @@ export class CheckoutCustom {
 
         const shippingText =
           isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
-        
+
 
         const moreInfoHtml = `
             <div class="more-info ${isInstallService || isSamsungCare ? 'isServices' : ''
@@ -713,7 +713,7 @@ export class CheckoutCustom {
         return item.quantity
       })
 
-      const quantitySelectedItems = quantitySelectedItemsArray.reduce((accumulator,value) => accumulator + value,0)
+      const quantitySelectedItems = quantitySelectedItemsArray.reduce((accumulator, value) => accumulator + value, 0)
 
       const _accordionElem = $($('.summary-template-holder')[1])
 
@@ -762,10 +762,14 @@ export class CheckoutCustom {
           orderForm.items[i].listPrice * orderForm.items[i].quantity
         const sellingPrice = orderForm.items[i].sellingPrice
         const free = sellingPrice == 1 || sellingPrice == 0
+        const samsungCare = Object.values(orderForm.items[i].productCategories)
+          .map(el => el.toLowerCase())
+          .filter(el => el.match('samsung care'))
 
         const listPriceFormated = formatCurrencyBRL(listPriceTotalValue)
 
         free ? _trElem.addClass('gratuito') : null
+        samsungCare?.length ? _trElem.find('td.shipping-date').remove() : null
 
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
@@ -789,7 +793,7 @@ export class CheckoutCustom {
           <div class="v-custom-quantity-price vqc-ldelem">
 
             <p class="v-custom-quantity-price__best" style="font-size: 18px; margin-bottom: 4px; 
-            font-weight:bold; ${free ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
+            font-weight:bold; ${free && !samsungCare?.length ? 'color: #2189FF;' : ''}" >${free ? 'Grátis' : totalValue
             }</p>
           </div>
           `
@@ -913,7 +917,7 @@ export class CheckoutCustom {
       if (orderForm.items === 0) return
       const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-samsungpay')
       const _containerSamsungWalletElement = _containerTotalizers.find('.box-payment-samsung-wallet')
-        const descriptionSamsungWalletText = `
+      const descriptionSamsungWalletText = `
           <div class="box-payment-samsung-wallet">
             <p class="payment-samsung-wallet-value-title">Valor total</p>
             <div class="payment-container-samsung-wallet-value">
@@ -931,10 +935,10 @@ export class CheckoutCustom {
             </div>
           </div>
         `;
-        if (_containerSamsungWalletElement.length === 0) {
-          _containerTotalizers.empty()
-        }
-        _containerTotalizers.html(descriptionSamsungWalletText);
+      if (_containerSamsungWalletElement.length === 0) {
+        _containerTotalizers.empty()
+      }
+      _containerTotalizers.html(descriptionSamsungWalletText);
     } catch (e) {
       console.error("showMessageSamsungWallet", e)
     }
@@ -1208,7 +1212,7 @@ export class CheckoutCustom {
   }
 
   itauCardMessage(orderForm) {
-       if (orderForm && $('.itauCardMessage').length === 0) {
+    if (orderForm && $('.itauCardMessage').length === 0) {
       if (orderForm.paymentData) {
         let itauCardMessageHtml = `<div class="itauCardMessage">
           <h2 class="itauCardMessage__title">Importante</h2>
@@ -1216,10 +1220,10 @@ export class CheckoutCustom {
           <p class="itauCardMessage__mastercardFlag">Bandeira Mastercard: até <b>21x</b> sem juros</p>
           <span class="itauCardMessage__text">Caso selecione um parcelamento acima de 21x, seu pedido será cancelado.</span
         </div>`
-        
+
         let itauCardSelectElement = $(".steps-view .pg-samsung-itaucard")
 
-        if(itauCardSelectElement) {
+        if (itauCardSelectElement) {
           itauCardSelectElement.before(itauCardMessageHtml)
         }
       }
@@ -1568,18 +1572,18 @@ export class CheckoutCustom {
   start() {
     const _this = this
     try {
-      
+
       addEventListener('hashchange', async (event) => {
         const showHeader = ['#/payment', '#/shipping', '#/profile']
         const { hash } = event.target.location
-    
+
         if (showHeader.includes(hash)) {
           customHeader()
         }
-    
+
         this.enchancementSummaryCart(_this.orderForm, window.location.hash)
       })
-      
+
       _this.init()
       $(function () {
         _this.messages.init()
@@ -1722,24 +1726,24 @@ export class CheckoutCustom {
           _this.paymentBuilder(_this.orderForm)
           _this.customAddressFormInit(_this.orderForm)
           _this.removeCILoader()
-          
+
           _this.onDomMutation({
             targetNode: cartItems,
             callback: () => _this.removeCILoader(),
           })
-          
+
           _this.shipping.validadePostalCode(_this.orderForm)
-          
+
           if (window.location.hash === '#/profile') {
             _this.profile.addTerms(_this.orderForm)
           }
-          
+
           if (window.location.hash === '#/shipping') {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.optInDimensions.render()
             _this.customizeLogOut()
           }
-          
+
           if (window.location.hash === '#/payment') {
             _this.itauCardMessage(_this.orderForm)
           }

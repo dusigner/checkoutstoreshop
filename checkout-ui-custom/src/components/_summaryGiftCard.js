@@ -87,6 +87,21 @@ export default class SummaryGiftCard {
     },50)
   }
 
+  addMessage() {
+    if ($('#cumulative-discount-warn').length) {
+      return null;
+    }
+
+    const el = `
+      <p id="cumulative-discount-warn">
+        O desconto de pagamento à vista não é cumulativo com vale-presente, voucher e pontos Samsung Rewards.
+      </p>
+    `
+
+    $('.payment-body').after(el)
+  }
+
+
   checkGiftBlock(){
     const checkElement = setInterval(()=>{
       if(document.querySelector('.payment-discounts-alert-wrap')){
@@ -104,5 +119,6 @@ export default class SummaryGiftCard {
     this.giftCard(orderForm)
     this.removeGlobalName()
     this.checkGiftBlock()
+    this.addMessage();
   }
 }
