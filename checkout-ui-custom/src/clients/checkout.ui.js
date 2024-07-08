@@ -210,10 +210,10 @@ export class CheckoutCustom {
     try {
       const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
 
-      if (marketingData && marketingData.coupon) {
-        if(couponExists) {
-          inputCoupon.each(function () { $(this).prop('disabled', true); });
-          couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
+        if (marketingData && marketingData.coupon) {
+          if(couponExists) {
+            inputCoupon.each(function () { $(this).prop('disabled', true); });
+            couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
             return
           }
 
@@ -221,33 +221,33 @@ export class CheckoutCustom {
           vtexjs.checkout.removeDiscountCoupon();
           window.location.reload();
 
-      } else {
-        if (messages && messages.length > 0) {
-          const errorMessage = messages.find(message => message.status === 'warning');
-          if (errorMessage) {
-            if (errorMessage.text === 'O valor dos itens foi alterado') {
-              // Nenhum cupom aplicado - Remove Cupom
-              messagesElem.css('display', 'none');
-              couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
-              couponFields.append(couponInfoElement);
-              return
+        } else {
+            if (messages && messages.length > 0) {
+                const errorMessage = messages.find(message => message.status === 'warning');
+                if (errorMessage) {
+                  if(errorMessage.text === 'O valor dos itens foi alterado') {
+                    // Nenhum cupom aplicado - Remove Cupom
+                    messagesElem.css('display', 'none');
+                    couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
+                    couponFields.append(couponInfoElement);
+                    return
+                  }
+                    // Cupom expirado
+                    messagesElem.css('display', 'none');                   
+                    const couponCodeMatch = errorMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
+                    const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
+                    couponInfoElement.find('p').text(errorMessage.text).css('color', 'red');
+                    inputCoupon.each(function() {
+                      $(this).css('border-bottom', 'solid 1px red').val(couponCode);
+                    });
+                    couponFields.append(couponInfoElement); 
+                    return;
+                }
             }
-            // Cupom expirado
-            messagesElem.css('display', 'none');
-            const couponCodeMatch = errorMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
-            const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
-            couponInfoElement.find('p').text(errorMessage.text).css('color', 'red');
-            inputCoupon.each(function () {
-              $(this).css('border-bottom', 'solid 1px red').val(couponCode);
-            });
-            couponFields.append(couponInfoElement);
-            return;
-          }
+            // Nenhum cupom aplicado
+            couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
         }
-        // Nenhum cupom aplicado
-        couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
-      }
-      couponFields.append(couponInfoElement);
+        couponFields.append(couponInfoElement);
     } catch (e) {
       console.error('couponInfo error:', e);
     }
