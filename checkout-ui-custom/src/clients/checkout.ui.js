@@ -194,7 +194,7 @@ export class CheckoutCustom {
 
   couponInfo(response) {
 
-    const { marketingData, messages } = response;
+    const { marketingData, messages, ratesAndBenefitsData } = response;
 
     const _trElem = $('.summary-template-holder');
     const couponFields = _trElem.find('.coupon-fieldset');
@@ -203,13 +203,24 @@ export class CheckoutCustom {
 
     couponFields.find('.div-coupon-info').remove();
 
+    const couponExists = ratesAndBenefitsData.rateAndBenefitsIdentifiers.some(item => {
+      return item.matchedParameters && item.matchedParameters['couponCode@Marketing'] === marketingData.coupon;
+    });
+
     try {
       const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
 
       if (marketingData && marketingData.coupon) {
-        // Cupom válido
-        inputCoupon.each(function () { $(this).prop('disabled', true); });
-        couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
+        if(couponExists) {
+          inputCoupon.each(function () { $(this).prop('disabled', true); });
+          couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
+            return
+          }
+
+          couponInfoElement.find('p').text('Cupom inválido para essa compra').css('color', 'red');
+          vtexjs.checkout.removeDiscountCoupon();
+          window.location.reload();
+
       } else {
         if (messages && messages.length > 0) {
           const errorMessage = messages.find(message => message.status === 'warning');
