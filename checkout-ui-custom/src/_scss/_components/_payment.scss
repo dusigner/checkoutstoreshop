@@ -361,9 +361,12 @@
 				}
 				td.code,
 				td.number {
-						margin-right:20px;
+            margin-right:20px;
 						flex-grow: 1;
 						padding:0;
+            @media (max-width: 768px) {
+              margin-right: 0px;
+            }
 				}
 				#remove-gift-card {
 					text-decoration:underline;
@@ -1420,13 +1423,22 @@
   pointer-events: none;
   text-decoration: none;
 	color: #000;
-	font-size: 16px;
 	height: 60px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	background: #F3F9FE 0% 0% no-repeat padding-box;
 	border-radius: 3px;border: none;
+  font-size: 0px;
+    
+  &:before {
+    content: "Você possui créditos para usar na compra! Deseja exibí-los?";
+    font-size: 16px;
+    color: #000;
+    height: 60px;
+    display: flex;
+    align-items: center;
+  }
 
 	&:after {
 		content: 'Clique aqui';
@@ -1440,6 +1452,7 @@
 		width: 136px;
 		border-radius: 30px;
     min-width: 110px;
+    font-size: 16px;
 	}
 }
 
@@ -1455,19 +1468,49 @@
   display: none !important;
 }
 
-.payment-discoints-table {
-  .code {
-    color: #000;
-    font-weight: 400;
-    background-image: url(https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/46d62ae8-f815-4b3d-a68c-cc78c5093764___b0a3636….svg);
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding-left: 40px !important;
-	&:before {
-      content: 'Crédito disponível:';
-      font-weight: bold;
+#cumulative-discount-warn {
+    margin-top: 32px;
+    color: #363636;
+    font-size: 16px;
+
+    @media (max-width: 768px) {
+      font-size: 13px;
     }
-	
+}
+
+.payment-discoints-table {
+  display: flex;
+  justify-content: start;
+  .code {
+    &:before{
+      content: "";
+      display: block;
+      width: 24px;
+      height: 17px;
+      margin: 0;
+      margin-right: 10px;
+      padding-bottom: 12px;
+      background-image: url(https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/46d62ae8-f815-4b3d-a68c-cc78c5093764___b0a3636….svg);
+      background-size: contain;
+      background-repeat: no-repeat;
+
+      @media (max-width: 768px) {
+        display: block;
+        margin: 0 auto;
+      }
+    }
+    span{
+      text-align: center;
+      &:before {
+        content: 'Crédito disponível:';
+        display: inline-block;
+        font-weight: bold;
+      }
+    }
+
+    @media (min-width: 768px) {
+      display: flex;
+    }
   }
 
 	.action {
@@ -1502,6 +1545,10 @@
 				}
 			}
 		}
+
+    @media (max-width: 768px) {
+      margin-top: 9px;  
+    }
 	}
 
   .number {
@@ -1514,6 +1561,10 @@
 
     span:not(.muted){
       display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      min-width: unset;
     }
   }
 }
@@ -1531,6 +1582,10 @@ margin-bottom: 0px !important;
     tr{
       &:nth-child(2){
         flex-wrap: nowrap !important;
+      }
+
+      @media (max-width: 768px) {
+        flex-direction: column;
       }
     }
   }
@@ -1951,4 +2006,111 @@ margin-bottom: 0px !important;
 
 .payment-unauthorized-security {
   margin-bottom: 0px;
+}
+
+
+.gift-card-group {
+  label.gift-card-input-group {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    &::before {
+      content: "";
+      width: 24px;
+      height: 17px;
+      display: inline-block;
+      margin-right: 10px;
+      background-image: url(https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/46d62ae8-f815-4b3d-a68c-cc78c5093764___b0a3636….svg);
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .gift-card-friendly-name {
+      font-weight: 400;
+      width: 100%;
+      text-align: left;
+      &:before {
+        content: "Crédito disponível: ";
+        display: inline-block;
+        font-weight: bold;
+      }
+      @media (max-width: 768px) {
+        text-align: center;
+        margin-top: 11px;
+      }
+    }
+
+    .gift-card-balance {
+      font-size: 15px;
+      font-weight: 700;
+      color: #006BEA;
+      min-width: fit-content;
+      margin-right: 32px;
+      @media (max-width: 768px) {
+        margin-right: 0;
+      }
+    }
+
+    .icon-circle-blank {
+      font-size: 0px;
+      position: static;
+      &::before {
+        content: "Utilizar crédito";
+        font-family: 'SamsungOne';
+        border: 1px solid;
+        padding: 8px;
+        background-color: #000;
+        color: #FFF;
+        font-size: 12px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        @media (max-width: 768px) {
+          margin-top: 12px;
+          margin-bottom: 12px;
+        }
+        width: max-content;
+      }
+    }
+
+    .icon-ok-circle {
+      font-size: 0px;
+      position: static;
+      &::before {
+        content: "Não utilizar crédito";
+        font-family: 'SamsungOne';
+        border: 1px solid;
+        padding: 8px;
+        background-color: #fff;
+        color: #000;
+        font-size: 12px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        @media (max-width: 768px) {
+          margin-top: 12px;
+          margin-bottom: 12px;
+        }
+        width: max-content;
+      }
+    }
+
+    .gift-card-separator,
+    span:last-of-type {
+      display: none;
+    }
+
+  }
 }
