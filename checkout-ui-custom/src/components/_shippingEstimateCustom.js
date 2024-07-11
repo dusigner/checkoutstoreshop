@@ -99,7 +99,7 @@ export default class ShippingEstimateCustom {
       return this.lang.tomorrowLabel || 'Amanhã'
     }
 
-    const dateOptions = { weekday: 'short', day: '2-digit', month: 'short' }
+    const dateOptions = { year: 'numeric', day: '2-digit', month: '2-digit' }
     const formattedShippingEstimate = shippingEstimate.toLocaleDateString(lang, dateOptions).replace(/\.|,|de /g, '')
 
     return this._capitalizeText(formattedShippingEstimate)
