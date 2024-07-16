@@ -204,7 +204,7 @@ export class CheckoutCustom {
     couponFields.find('.div-coupon-info').remove();
 
     const couponExists = ratesAndBenefitsData.rateAndBenefitsIdentifiers.some(item => {
-      return item.matchedParameters && item.matchedParameters['couponCode@Marketing'] === marketingData.coupon;
+      return item.matchedParameters && item.matchedParameters['couponCode@Marketing'] === marketingData?.coupon;
     });
 
     try {
