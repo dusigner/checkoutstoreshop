@@ -152,7 +152,7 @@ export default class CustomProfileData {
   }
 
   updateBirthDateOnSummary() {
-    const birthDateInputVal = $('#client-birth-date').val()
+    const birthDateInputVal = $('#client-birth-date').val().split('-').reverse().join('/')
 
     if (birthDateInputVal) {
       $('#dateBirthField span.name').text(birthDateInputVal)
