@@ -173,15 +173,16 @@ export default class CustomProfileData {
   }
 
   validateAge(dataUser) {
-    $('#error-client-date-birth, #error-client-date-birth-required').hide()
-    let isValid
+    $('#error-client-date-birth, #error-client-date-birth-required, #error-client-invalid-date-birth').hide()
+    let isValid = false
+    let isValidDate = true
     const timezoneOffset = new Date().getTimezoneOffset()
 
     const formattedDate = dataUser.split('/')
+    formattedDate.reverse()
+    const dataRecebida = new Date(formattedDate.join('-'))
 
-    if (!!formattedDate[0] && !!formattedDate[1] && !!formattedDate[2]) {
-      formattedDate.reverse()
-      const dataRecebida = new Date(formattedDate.join('-'))
+    if (!!formattedDate[0] && !!formattedDate[1] && !!formattedDate[2] && dataRecebida.toDateString() !== 'Invalid Date') {
 
       dataRecebida.setUTCHours(0, timezoneOffset, 0, 0)
       isValid = !!this.calculateAge(
@@ -189,8 +190,9 @@ export default class CustomProfileData {
         dataRecebida.getMonth() + 1,
         dataRecebida.getDate()
       )
+
     } else {
-      isValid = false
+      isValidDate = false
     }
 
     const inputDateVal = dataUser.trim()
@@ -202,8 +204,11 @@ export default class CustomProfileData {
       $('#client-birth-date').removeClass('error success')
     } else if (inputDateVal.length >= 10 && isValid) {
       $('#client-birth-date').addClass('success').removeClass('error')
-    } else {
+    } else if (!isValid && isValidDate) {
       $('#error-client-date-birth').show()
+      $('#client-birth-date').addClass('error').removeClass('success')
+    } else {
+      $('#error-client-invalid-date-birth').show()
       $('#client-birth-date').addClass('error').removeClass('success')
     }
   }
@@ -255,6 +260,9 @@ export default class CustomProfileData {
       <span id="error-client-date-birth-required" class="help error" style="display:none">Campo obrigatório.</span>
       <span id="error-client-date-birth" class="help error" style="display:none;">
         Menores de 18 anos não estão autorizados a efetuar o cadastro em nosso site. Em caso de dúvidas, acesse shop.samsung.com/br/faq.
+      </span>
+      <span id="error-client-invalid-date-birth" class="help error" style="display:none;">
+        Data inválida, por favor verifique a data inserida
       </span>
     </p>`
 
@@ -445,6 +453,7 @@ export default class CustomProfileData {
     $('body').on('blur', '#client-birth-date', function (e) {
       if (e.target.value.length < 10) {
         $('#error-client-date-birth').hide()
+        $('#error-client-invalid-date-birth').hide()
         $('#error-client-date-birth-required').show()
         $('#client-birth-date').addClass('error').removeClass('success')
       }
