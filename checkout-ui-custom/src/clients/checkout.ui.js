@@ -217,7 +217,7 @@ export class CheckoutCustom {
             return
           }
 
-          couponInfoElement.find('p').text('Cupom inválido para essa compra').css('color', 'red');
+          couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
           vtexjs.checkout.removeDiscountCoupon();
           window.location.reload();
 
@@ -236,7 +236,8 @@ export class CheckoutCustom {
                     messagesElem.css('display', 'none');                   
                     const couponCodeMatch = errorMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
                     const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
-                    couponInfoElement.find('p').text(errorMessage.text).css('color', 'red');
+                    const messageErrorValidate = window.vtex.accountName === "samsungbrshop" ? errorMessage.text : "Cupom inválido para compra"
+                    couponInfoElement.find('p').text(messageErrorValidate).css('color', 'red');
                     inputCoupon.each(function() {
                       $(this).css('border-bottom', 'solid 1px red').val(couponCode);
                     });
