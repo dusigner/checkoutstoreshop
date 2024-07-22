@@ -51,11 +51,7 @@ export default class CustomProfileData {
         })
       }
 
-      const formattedDate = $('#client-birth-date')
-        .val()
-        .split('/')
-        .reverse()
-        .join('-')
+      const formattedDate = $('#client-birth-date').val()
 
       const finalDate = new Date(formattedDate)
 
@@ -96,7 +92,7 @@ export default class CustomProfileData {
     isWhatsAppPromotionOptIn
   }) {
     try {
-      const clientDateBirth = this.convertDateToLocaleDateString(birthDate)
+      const clientDateBirth = birthDate?.split('T')?.[0]
 
       $('#client-birth-date').addClass('success').val(clientDateBirth)
       $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
@@ -156,7 +152,7 @@ export default class CustomProfileData {
   }
 
   updateBirthDateOnSummary() {
-    const birthDateInputVal = $('#client-birth-date').val()
+    const birthDateInputVal = $('#client-birth-date').val().split('-').reverse().join('/')
 
     if (birthDateInputVal) {
       $('#dateBirthField span.name').text(birthDateInputVal)
@@ -178,11 +174,10 @@ export default class CustomProfileData {
     let isValidDate = true
     const timezoneOffset = new Date().getTimezoneOffset()
 
-    const formattedDate = dataUser.split('/')
-    formattedDate.reverse()
-    const dataRecebida = new Date(formattedDate.join('-'))
+    const formattedDate = dataUser.split('-')
 
-    if (!!formattedDate[0] && !!formattedDate[1] && !!formattedDate[2] && dataRecebida.toDateString() !== 'Invalid Date') {
+    if (!!formattedDate[0] && !!formattedDate[1] && !!formattedDate[2]) {
+      const dataRecebida = new Date(formattedDate.join('-'))
 
       dataRecebida.setUTCHours(0, timezoneOffset, 0, 0)
       isValid = !!this.calculateAge(
@@ -230,33 +225,12 @@ export default class CustomProfileData {
     return r
   }
 
-  dateMask(v, keyCode) {
-    let r = v.trim()
-
-    const keys = {
-      backspace: 8,
-      delete: 48,
-    }
-
-    if (keyCode && (keyCode === keys.backspace || keyCode === keys.delete)) {
-      return r
-    }
-
-    if (v.match(/^\d{2}$/) !== null) {
-      r += '/'
-    } else if (v.match(/^\d{2}\/\d{2}$/) !== null) {
-      r += '/'
-    }
-
-    return r
-  }
-
   addDateBirthField() {
     if ($('p.client-date-birth').length) return
 
     const $dateBirthField = `<p class="client-date-birth input text required">
       <label for="client-date-birth">Data de Nascimento</label>
-      <input type="text" maxlength="10" placeholder="DD/MM/AAAA" id="client-birth-date" class="input-small">
+      <input type="date" id="client-birth-date" max="${new Date().toISOString().split("T")[0]}" class="input-small">
       <span id="error-client-date-birth-required" class="help error" style="display:none">Campo obrigatório.</span>
       <span id="error-client-date-birth" class="help error" style="display:none;">
         Menores de 18 anos não estão autorizados a efetuar o cadastro em nosso site. Em caso de dúvidas, acesse shop.samsung.com/br/faq.
@@ -440,13 +414,7 @@ export default class CustomProfileData {
       }, 1)
     })
 
-    $('body').on('keyup keydown', '#client-birth-date', function (e) {
-      const v = _this.dateMask(e.target.value, e.keyCode)
-
-      if (v !== e.target.value) {
-        e.target.value = v
-      }
-
+    $('body').on('change', '#client-birth-date', function (e) {
       _this.validateAge(e.target.value)
     })
 
