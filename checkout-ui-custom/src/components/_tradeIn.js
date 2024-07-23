@@ -30,6 +30,35 @@ export default class TradeIn {
   removeTradeInDetails() {
     $('#total-details-tradein').remove()
     $('#text-details-tradein').remove()
+
+    this.openWarningTradein()
+  }
+
+  openWarningTradein() {
+    try {
+      const _checkoutElem = $('body')
+      const _component = `
+        <div id="warning-modal-tradein">
+          <div class="container-warning-modal-tradein">
+            <p class="text-warning-modal-tradein">
+              <b>Atenção:</b> Os dados da sua Troca Smart Samsung não foram salvos. Por favor refaça o processo para confirmar.
+            </p>
+            <a href="/" class="action-warning-modal-tradein">Refazer</a>
+          </div>
+        </div>
+      `
+
+      if (_checkoutElem.find('#warning-modal-tradein').length > 0) {
+        return
+      }
+
+      _checkoutElem.append(_component)
+      setTimeout(() => {
+        $('#warning-modal-tradein .container-warning-modal-tradein').addClass("active")
+      }, 200);
+    } catch (e) {
+      console.error('openWarningTradein error:', e)
+    }
   }
 
   rootPath() {
@@ -72,7 +101,10 @@ export default class TradeIn {
       items.some(orderItem => orderItem.productId === item.mainProductId)
     )
 
-    if (newTransport.length < transport.length) {
+    if (!newTransport.length) {
+      this.removeTradeInDetails()
+      this.removeCustomDataTradeIn()
+    } else if (newTransport.length < transport.length) {
       this.putCustomData(newTransport, totalTradeIn)
     }
   }
@@ -104,13 +136,11 @@ export default class TradeIn {
   }
 
   async putCustomData(transport, total) {
-    const { orderFormId } = window.vtexjs.checkout.orderForm
+    const { orderFormId, items } = window.vtexjs.checkout.orderForm
     const newData = {
       trade_in_option_selected: JSON.stringify(transport),
       trade_in_total_value: total,
     }
-
-    $('#total-tradein-value').text(`${formatCurrencyBRL(total, false)}*`)
 
     try {
       await $.ajax({
@@ -121,6 +151,8 @@ export default class TradeIn {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(newData),
       })
+
+      this.checkTradeIn(items, transport)
     } catch (error) {
       console.error('Error in putCustomData:', error)
     }
@@ -131,36 +163,44 @@ export default class TradeIn {
 
     const { orderFormId } = window.vtexjs.checkout.orderForm
     const openTextField = localStorage.getItem('tradeInCustom')
+    const transport = localStorage.getItem('transport')
 
     if (openTextField !== null && openTextField !== 'null') {
       localStorage.removeItem('tradeInCustom')
-      localStorage.removeItem('transport')
       window.vtexjs.checkout.sendAttachment('openTextField', { value: null })
+    }
 
+    if (transport !== null) {
+      localStorage.removeItem('transport')
+  
       const deleteRequests = [
         $.ajax({
-          url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain-assurant/trade_in_option_selected`,
-          type: 'POST',
+          url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_option_selected`,
+          type: 'DELETE',
         }),
         $.ajax({
-          url: `${this.rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/domain-assurant/trade_in_total_value`,
-          type: 'POST',
+          url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_total_value`,
+          type: 'DELETE',
         }),
       ]
-
+  
       // chamadas em paralelo reduzindo bons segundos das requisições
       await Promise.all(deleteRequests)
         .catch(error => {
           console.error('Erro ao excluir dados personalizados:', error)
         })
     }
+
   }
 
   async validateTradeinCustomData() {
-    const customDataDomain =
-      window.vtexjs?.checkout?.orderForm?.customData?.customApps.filter(
-        i => i.id === 'domain-assurant'
-      ) || []
+    const orderForm = await window.vtexjs.checkout.getOrderForm().done(function (orderForm) {
+      return orderForm
+    })
+
+    const customDataDomain = orderForm?.customData?.customApps.filter(
+      i => i.id === 'domain-assurant'
+    ) || []
 
     const transport =
       customDataDomain.length > 0
@@ -188,10 +228,9 @@ export default class TradeIn {
           }`
         )
           .then(response => response.json())
-          .then(response => ({
-            ...response,
-            imei: item.imei,
-          }))
+          .then(response => response.products.find(
+            p => p.id === item.idProduct
+          ))
 
         arrayPromise.push(request)
       })
@@ -199,19 +238,14 @@ export default class TradeIn {
       Promise.all(arrayPromise).then(values => {
         transport.forEach(mainProduct => {
           mainProduct.evaluatedProducts.forEach(item => {
-            const resultTrocafone = values.find(v => v.imei === item.imei)
+            const resultTrocafone = values.find(v => v.id === item.idProduct)
 
             if (
               !!resultTrocafone &&
-              !!resultTrocafone.products &&
-              resultTrocafone.products.length > 0
+              !!resultTrocafone.id
             ) {
-              const product = resultTrocafone.products.find(
-                p => p.id === item.idProduct
-              )
-
-              if (!!product && !!product.gradings) {
-                const grading = product.gradings.find(
+              if (!!resultTrocafone.gradings) {
+                const grading = resultTrocafone.gradings.find(
                   g => g.sku === item.grading.sku
                 )
 
