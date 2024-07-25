@@ -218,8 +218,9 @@ export class CheckoutCustom {
           }
 
           couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
-          vtexjs.checkout.removeDiscountCoupon();
-          window.location.reload();
+          vtexjs.checkout.removeDiscountCoupon().then((res, code) => {
+            if (code === 'success') {window.location.reload()}
+          });
 
         } else {
             if (messages && messages.length > 0) {
