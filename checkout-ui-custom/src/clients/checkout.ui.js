@@ -1347,7 +1347,7 @@ export class CheckoutCustom {
       const giftCardsVtex = orderForm?.paymentData?.giftCards?.filter(
         g => g.provider === optionVtexGiftcard
       )
-      if (giftCardsVtex.length === 0) {
+      if (giftCardsVtex?.length === 0) {
         setTimeout(() => {
 
           $('body').on(
@@ -1370,7 +1370,6 @@ export class CheckoutCustom {
         }, 1000)
       }
     } catch (err) {
-      this.hasSelectedDefaultPaymentMethod = false
       console.error(`Erro ao definir o tipo de voucher padrão selecionado: ${err}`)
     }
   }
