@@ -1347,9 +1347,8 @@ export class CheckoutCustom {
       const giftCardsVtex = orderForm?.paymentData?.giftCards?.filter(
         g => g.provider === optionVtexGiftcard
       )
-      if (giftCardsVtex?.length === 0) {
+      if (giftCardsVtex.length === 0) {
         setTimeout(() => {
-
           $('body').on(
             'click',
             '#show-gift-card-group',
