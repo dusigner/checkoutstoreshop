@@ -210,46 +210,46 @@ export class CheckoutCustom {
     try {
       const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
 
-        if (marketingData && marketingData.coupon) {
-          if(couponExists) {
-            inputCoupon.each(function () { $(this).prop('disabled', true); });
-            couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
-            return
-          }
-
-          couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
-          vtexjs.checkout.removeDiscountCoupon().then((res, code) => {
-            if (code === 'success') {window.location.reload()}
-          });
-
-        } else {
-            if (messages && messages.length > 0) {
-                const errorMessage = messages.find(message => message.status === 'warning');
-                if (errorMessage) {
-                  if(errorMessage.text === 'O valor dos itens foi alterado') {
-                    // Nenhum cupom aplicado - Remove Cupom
-                    messagesElem.css('display', 'none');
-                    couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
-                    couponFields.append(couponInfoElement);
-                    return
-                  }
-                    // Cupom expirado
-                    messagesElem.css('display', 'none');                   
-                    const couponCodeMatch = errorMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
-                    const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
-                    const messageErrorValidate = window.vtex.accountName === "samsungbrshop" ? errorMessage.text : "Cupom inválido para compra"
-                    couponInfoElement.find('p').text(messageErrorValidate).css('color', 'red');
-                    inputCoupon.each(function() {
-                      $(this).css('border-bottom', 'solid 1px red').val(couponCode);
-                    });
-                    couponFields.append(couponInfoElement); 
-                    return;
-                }
-            }
-            // Nenhum cupom aplicado
-            couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
+      if (marketingData && marketingData.coupon) {
+        if (couponExists) {
+          inputCoupon.each(function () { $(this).prop('disabled', true); });
+          couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
+          return
         }
-        couponFields.append(couponInfoElement);
+
+        couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
+        vtexjs.checkout.removeDiscountCoupon().then((res, code) => {
+          if (code === 'success') { window.location.reload() }
+        });
+
+      } else {
+        if (messages && messages.length > 0) {
+          const errorMessage = messages.find(message => message.status === 'warning');
+          if (errorMessage) {
+            if (errorMessage.text === 'O valor dos itens foi alterado') {
+              // Nenhum cupom aplicado - Remove Cupom
+              messagesElem.css('display', 'none');
+              couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
+              couponFields.append(couponInfoElement);
+              return
+            }
+            // Cupom expirado
+            messagesElem.css('display', 'none');
+            const couponCodeMatch = errorMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
+            const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
+            const messageErrorValidate = window.vtex.accountName === "samsungbrshop" ? errorMessage.text : "Cupom inválido para compra"
+            couponInfoElement.find('p').text(messageErrorValidate).css('color', 'red');
+            inputCoupon.each(function () {
+              $(this).css('border-bottom', 'solid 1px red').val(couponCode);
+            });
+            couponFields.append(couponInfoElement);
+            return;
+          }
+        }
+        // Nenhum cupom aplicado
+        couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
+      }
+      couponFields.append(couponInfoElement);
     } catch (e) {
       console.error('couponInfo error:', e);
     }
@@ -1340,6 +1340,39 @@ export class CheckoutCustom {
     }
   }
 
+  defaultGiftCard(orderForm) {
+    // Default Voucher Select: VtexGiftCard
+    let optionVtexGiftcard = 'VtexGiftCard'
+    try {
+      const giftCardsVtex = orderForm?.paymentData?.giftCards?.filter(
+        g => g.provider === optionVtexGiftcard
+      )
+      if (giftCardsVtex.length === 0) {
+        setTimeout(() => {
+          $('body').on(
+            'click',
+            '#show-gift-card-group',
+            function () {
+              setTimeout(() => {
+                $("#gift-card-provider-selector option").filter(function () {
+                  return this.text == optionVtexGiftcard;
+                }).attr('selected', true);
+              }, 1000)
+            }
+          )
+        }, 1000)
+      } else {
+        setTimeout(() => {
+          $("#gift-card-provider-selector option").filter(function () {
+            return this.text == optionVtexGiftcard;
+          }).attr('selected', true);
+        }, 1000)
+      }
+    } catch (err) {
+      console.error(`Erro ao definir o tipo de voucher padrão selecionado: ${err}`)
+    }
+  }
+
   removeInstallationProduct() {
     const _this = this
 
@@ -1706,6 +1739,7 @@ export class CheckoutCustom {
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
           if (_this.orderForm) {
+            _this.defaultGiftCard(_this.orderForm)
             _this.verifyCSP(_this.orderForm)
           }
         }
@@ -1790,6 +1824,7 @@ export class CheckoutCustom {
         }
 
         if (window.location.hash === '#/payment') {
+          _this.defaultGiftCard(orderForm)
           _this.shipping.removeIfHasntPrice()
           _this.profile.addFieldsProfileToSummary(orderForm)
           _this.Rewards.cancelRewardsDiscount(true)
