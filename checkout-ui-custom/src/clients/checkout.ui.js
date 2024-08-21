@@ -224,9 +224,17 @@ export class CheckoutCustom {
 
       } else {
         if (messages && messages.length > 0) {
-          const errorMessage = messages.find(message => message.status === 'warning');
-          if (errorMessage) {
-            if (errorMessage.text === 'O valor dos itens foi alterado') {
+          const warningMessage = messages.find(message => message.status === 'warning');
+          const errorMessage = messages.find(message => message.status === 'error');
+          
+          if(["giftCardCommunicationError", "invalidGiftCard"].includes(errorMessage?.code)) {
+            messagesElem.css('display', 'block');
+            return
+          }
+
+          if (warningMessage) {
+
+            if (warningMessage.text === 'O valor dos itens foi alterado') {
               // Nenhum cupom aplicado - Remove Cupom
               messagesElem.css('display', 'none');
               couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
@@ -235,9 +243,9 @@ export class CheckoutCustom {
             }
             // Cupom expirado
             messagesElem.css('display', 'none');
-            const couponCodeMatch = errorMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
+            const couponCodeMatch = warningMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
             const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
-            const messageErrorValidate = window.vtex.accountName === "samsungbrshop" ? errorMessage.text : "Cupom inválido para compra"
+            const messageErrorValidate = window.vtex.accountName === "samsungbrshop" ? warningMessage.text : "Cupom inválido para compra"
             couponInfoElement.find('p').text(messageErrorValidate).css('color', 'red');
             inputCoupon.each(function () {
               $(this).css('border-bottom', 'solid 1px red').val(couponCode);
@@ -1340,12 +1348,17 @@ export class CheckoutCustom {
     }
   }
 
-  defaultGiftCard(orderForm) {
+  defaultGiftCard(orderForm, defaultId = 'VtexGiftCard') {
     // Default Voucher Select: VtexGiftCard
-    let optionVtexGiftcard = 'VtexGiftCard'
+    const giftCardsProviders = window?.checkoutConfig?.giftCardsProviders()
+
+    if (giftCardsProviders) {
+      giftCardsProviders.sort((a) => a.id === defaultId ? -1 : 1)
+    }
+
     try {
       const giftCardsVtex = orderForm?.paymentData?.giftCards?.filter(
-        g => g.provider === optionVtexGiftcard
+        g => g.provider === defaultId
       )
       if (giftCardsVtex.length === 0) {
         setTimeout(() => {
@@ -1355,8 +1368,8 @@ export class CheckoutCustom {
             function () {
               setTimeout(() => {
                 $("#gift-card-provider-selector option").filter(function () {
-                  return this.text == optionVtexGiftcard;
-                }).attr('selected', true);
+                  return this.text == defaultId;
+                })[0].selected = true;
               }, 1000)
             }
           )
@@ -1364,8 +1377,8 @@ export class CheckoutCustom {
       } else {
         setTimeout(() => {
           $("#gift-card-provider-selector option").filter(function () {
-            return this.text == optionVtexGiftcard;
-          }).attr('selected', true);
+            return this.text == defaultId;
+          })[0].selected = true;
         }, 1000)
       }
     } catch (err) {
