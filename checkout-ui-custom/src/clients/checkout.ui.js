@@ -1348,12 +1348,17 @@ export class CheckoutCustom {
     }
   }
 
-  defaultGiftCard(orderForm) {
+  defaultGiftCard(orderForm, defaultId = 'VtexGiftCard') {
     // Default Voucher Select: VtexGiftCard
-    let optionVtexGiftcard = 'VtexGiftCard'
+    const giftCardsProviders = window?.checkoutConfig?.giftCardsProviders()
+
+    if (giftCardsProviders) {
+      giftCardsProviders.sort((a) => a.id === defaultId ? -1 : 1)
+    }
+
     try {
       const giftCardsVtex = orderForm?.paymentData?.giftCards?.filter(
-        g => g.provider === optionVtexGiftcard
+        g => g.provider === defaultId
       )
       if (giftCardsVtex.length === 0) {
         setTimeout(() => {
@@ -1363,7 +1368,7 @@ export class CheckoutCustom {
             function () {
               setTimeout(() => {
                 $("#gift-card-provider-selector option").filter(function () {
-                  return this.text == optionVtexGiftcard;
+                  return this.text == defaultId;
                 })[0].selected = true;
               }, 1000)
             }
@@ -1372,7 +1377,7 @@ export class CheckoutCustom {
       } else {
         setTimeout(() => {
           $("#gift-card-provider-selector option").filter(function () {
-            return this.text == optionVtexGiftcard;
+            return this.text == defaultId;
           })[0].selected = true;
         }, 1000)
       }
