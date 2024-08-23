@@ -429,6 +429,8 @@ export class Rewards {
       return ''
     })
 
+    const rewardsAccepted = $('#inputRewards').is(':checked')
+
     const data = {
       Id: orderForm.orderFormId,
       Timestamp: new Date().toISOString().split('Z')[0],
@@ -436,6 +438,8 @@ export class Rewards {
       SAGuid: this.userSaGuid || 'GUEST',
       CountryDescription: 'BR',
       ProductItems,
+      orderFormId: orderForm.orderFormId,
+      rewardsAccepted: this.userRewardsAccepted || rewardsAccepted
     }
 
     $.ajax({
@@ -450,7 +454,7 @@ export class Rewards {
         if (!saGuid) return
 
         this.totalPointsCurrentOrder = res.TotalPointAmount
-        this.putRewardsOnCustomData(orderForm.orderFormId, res.TotalPointAmount)
+        // this.putRewardsOnCustomData(orderForm.orderFormId, res.TotalPointAmount)
         this.createElementTotalPoints(res.TotalPointAmount)
       },
       error: err => {
