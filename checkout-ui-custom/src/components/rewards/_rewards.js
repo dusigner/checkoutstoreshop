@@ -71,25 +71,6 @@ export class Rewards {
     }
   }
 
-  putRewardsOnCustomData(orderFormId, points) {
-    const rewardsAccepted = $('#inputRewards').is(':checked')
-
-    const newData = {
-      total_points_earned: points,
-      terms_accepted: rewardsAccepted || this.userAcceptedRewards,
-      saguid: this.userSaGuid || localStorage.getItem('saGuid') || '0',
-    }
-
-    $.ajax({
-      url: `${rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/rewards`,
-      type: 'PUT',
-      crossDomain: true,
-      accept: 'application/vnd.vtex.ds.v10+json',
-      contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify(newData),
-    })
-  }
-
   createElementTotalPoints(points) {
     try {
       const _checkoutElem = $(`.summary-totalizers .table`)
@@ -454,7 +435,6 @@ export class Rewards {
         if (!saGuid) return
 
         this.totalPointsCurrentOrder = res.TotalPointAmount
-        // this.putRewardsOnCustomData(orderForm.orderFormId, res.TotalPointAmount)
         this.createElementTotalPoints(res.TotalPointAmount)
       },
       error: err => {
