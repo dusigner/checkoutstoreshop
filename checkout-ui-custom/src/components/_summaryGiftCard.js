@@ -130,7 +130,6 @@ export default class SummaryGiftCard {
 
 
             const giftCard = document.querySelector('input#payment-discounts-code').value
-            console.log('giftCard: ', giftCard);
 
             const url = `/api/checkout/pub/orderForm/${orderForm.orderFormId}/attachments/paymentData`;
 
@@ -159,6 +158,7 @@ export default class SummaryGiftCard {
               vtexjs.checkout.getOrderForm()
             }).catch(error => {
               e.target.disabled = false
+              vtexjs.checkout.getOrderForm()
               console.error('Error:', error)
             });
           })
