@@ -56,7 +56,7 @@ export class ServicesLinks {
 
   _renderLink({ serviceId, skuId, linkText, linkUrl, showLink } = {}) {
     const $item = $(`tr.product-item[data-sku="${skuId}"]`)
-    const alreadyRendered = $item.find('td.service-links-wrapper').length
+    const alreadyRendered = $item.find(`#${serviceId}-${skuId}`).length
 
     if (alreadyRendered) {
       return
@@ -107,9 +107,8 @@ export class ServicesLinks {
         const currentItem = orderForm.items.find(item => item.id === skuId)
         const checkServicesFunction = CHECK_SERVICES[serviceId]
         const skipInstantVoucherLink = (serviceId === 'instantVoucher') && ['5', '11', '12'].includes(orderForm.salesChannel)
-        const isVoucherDisable = sessionStorage.getItem('isVoucherDisable') === 'true';
 
-        if (!currentItem || !checkServicesFunction || skipInstantVoucherLink || isVoucherDisable) {
+        if (!currentItem || !checkServicesFunction || skipInstantVoucherLink) {
           return
         }
 
