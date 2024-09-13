@@ -1908,6 +1908,10 @@ export class CheckoutCustom {
           }
         }
 
+        $(document).on('click', '#back-to-address-list', function() {
+          _this.shipping.alertNumberOrReciver();
+        });
+
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
         })
