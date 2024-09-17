@@ -2,7 +2,7 @@
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
 
-import { formatCurrencyBRL } from "./_utils"
+import { formatCurrencyBRL, rootPath } from "./_utils"
 
 export default class SummaryGiftCard {
 
@@ -131,7 +131,7 @@ export default class SummaryGiftCard {
 
             const giftCard = document.querySelector('input#payment-discounts-code').value
 
-            const url = `/api/checkout/pub/orderForm/${orderForm.orderFormId}/attachments/paymentData`;
+            const url = `${rootPath()}/api/checkout/pub/orderForm/${orderForm.orderFormId}/attachments/paymentData`;
 
             const headers = {
               'Accept': 'application/json',
