@@ -330,6 +330,34 @@ export default class CustomShippingData {
     }
   }
 
+  
+  alertNumberOrReciver() {
+    try {
+      const $postalCodeForm = $('.vtex-omnishipping-1-x-addressFormPart1')
+      const $alertaExistente = $postalCodeForm.find('.alerta-number-reciver')
+      const $newAlert = $(
+        '<span class="alerta-number-reciver" style="color: red;">Número e destinatário são obrigatórios*</span>'
+      )
+
+      const adressNumber = $('#ship-number').val()
+      const receiverName = $('#ship-receiverName').val()
+
+      if (adressNumber && receiverName) {
+        if ($alertaExistente.length) {
+          $alertaExistente.remove()
+        }
+      } else {
+        if (!$alertaExistente.length) {
+          $postalCodeForm.append($newAlert)
+        }
+      }
+    } catch (error) {
+      console.error(
+        `Ocorreu um erro ao adicionar mensagem de alerta: ${error}`
+      )
+    }
+  }
+
   autoTriggerSlasResult() {
     try {
       const $postalCodeInput = $('.full-cart.active #ship-postalCode:visible')
