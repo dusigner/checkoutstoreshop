@@ -1358,7 +1358,7 @@ export class CheckoutCustom {
 
     try {
       const giftCardsVtex = orderForm?.paymentData?.giftCards?.filter(
-        g => g.provider === defaultId
+        g => g.provider === defaultId && g.redemptionCode
       )
       if (giftCardsVtex.length === 0) {
         setTimeout(() => {
