@@ -14,7 +14,7 @@ export default class CustomShippingData {
       const $postalCodeForm = $('.vtex-omnishipping-1-x-addressFormPart1')
       const $postalCodeField = $postalCodeForm.find('p.ship-postalCode')
       const $invalidPostalCodeMessage = $(
-        '<div class="invalid-postal-code-msg"> <span class="invalid-postal-code-msg__label">CEP Inválido</span> <p class="invalid-postal-code-msg__message"> Infelizmente não oferecemos entrega para a sua região. Em caso de dúvidas, por favor <a class="invalid-postal-code-msg__link" href="https://static.zdassets.com/web_widget/latest/liveChat.html?v=10#key=ajudasamsungcajamar.zendesk.com" target="_blank">clique aqui</a>.</p> </div>'
+        '<div class="invalid-postal-code-msg"> <span class="invalid-postal-code-msg__label">CEP Inválido</span> <p class="invalid-postal-code-msg__message"> Infelizmente não oferecemos entrega para a sua região. Em caso de dúvidas, por favor <a class="invalid-postal-code-msg__link" href="https://www.samsung.com/br/support/contacts/#start-chat" target="_blank">clique aqui</a>.</p> </div>'
       )
 
       if (
