@@ -341,8 +341,6 @@ export class Rewards {
 
     if (orderForm.totalizers.length === 0) return
 
-    let rewardsDiscountApplied = 0
-
     if (orderForm.paymentData.giftCards) {
       const giftRewards = orderForm.paymentData.giftCards.filter(
         g => g.provider === 'SSG_REWARDS'
@@ -366,60 +364,10 @@ export class Rewards {
       $('.switch-rewards input').prop('disabled', false)
     }
 
-    const TotalItems =
-      orderForm.totalizers.find(item => {
-        return item.id === 'Items'
-      }).value / 100
-
-    let TotalDisc = 0
-
-    if (
-      orderForm.totalizers.find(item => {
-        return item.id === 'Discounts'
-      })
-    ) {
-      TotalDisc =
-        orderForm.totalizers.find(item => {
-          return item.id === 'Discounts'
-        }).value / 100
-    }
-
-    const ProductItems = []
-
-    orderForm.items.map(item => {
-      const MultProporcional =
-        ((item.sellingPrice / 100) * item.quantity) / (TotalItems + TotalDisc)
-
-      let TotalRewardsDiscountCurrentItem = 0
-
-      if (rewardsDiscountApplied > 0) {
-        TotalRewardsDiscountCurrentItem =
-          MultProporcional * rewardsDiscountApplied
-      }
-
-      ProductItems.push({
-        ObjectType: 'ESTORE_BR',
-        ObjectId: item.refId,
-        Amount: (
-          Math.round(item.sellingPrice * item.quantity) / 100 -
-          TotalRewardsDiscountCurrentItem
-        ).toString(),
-        Quantity: item.quantity.toString(),
-      })
-
-      return ''
-    })
-
     const rewardsAccepted = $('#inputRewards').is(':checked')
 
     const data = {
-      Id: orderForm.orderFormId,
-      Timestamp: new Date().toISOString().split('Z')[0],
-      ContactIdOrigin: 'ESTORE',
       SAGuid: this.userSaGuid || 'GUEST',
-      CountryDescription: 'BR',
-      ProductItems,
-      orderFormId: orderForm.orderFormId,
       rewardsAccepted: this.userRewardsAccepted || rewardsAccepted
     }
 
