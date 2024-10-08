@@ -15,16 +15,12 @@ export default class SessionClient extends ExternalClient {
     super(`http://vtexid.vtex.com.br`, ctx, {
       ...options,
       headers: {
-        ...(options && options.headers),
+        ...options?.headers,
         VtexIdclientAutCookie: ctx.authToken,
         'x-vtex-use-https': 'true',
         'Content-Type': 'application/json',
       },
     })
-  }
-
-  public async getSession(sessionId: string): Promise<any> {
-    return this.http.get(`/api/sessions/${sessionId}?items=*`)
   }
 
   public async decode({ storeUserAuthToken }: PayloadDecodeProps) {

@@ -10,7 +10,7 @@ export async function showAutomationPayment() {
   let isAutomationUser = null
 
   try {
-    const { data } = await axios.post(`/_v/private/verifyAutomationLogin`, {
+    const { data } = await axios.post(`/_v/private/verifyAutomationLogin?email=${vtexjs.checkout.orderForm.clientProfileData.email}`, {
       headers: { accept: 'application/json' },
     })
 
