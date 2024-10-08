@@ -3,9 +3,8 @@ import { statusCode } from '../utils/statusCode'
 
 export async function verifyAutomationLogin(ctx: Context) {
   const appConfig = await getAppSettings(ctx.vtex)
-  const { user } = ctx.state.body
 
-  if (!appConfig?.automationEmails?.includes(user)) {
+  if (!appConfig?.automationEmails?.includes(ctx.state.userData.email)) {
     ctx.status = 400
     ctx.response.body = {
       isValid: false,

@@ -1,10 +1,15 @@
-import type { ServiceContext } from '@vtex/api'
+import type { RecorderState, ServiceContext } from '@vtex/api'
 import type { Clients } from '../clients'
 
 declare global {
   type Context = ServiceContext<Clients, State>
 
-  interface State {
-    body: any
+  interface State extends RecorderState {
+    userData: User
+  }
+
+  interface User {
+    email: string
+    id: string
   }
 }

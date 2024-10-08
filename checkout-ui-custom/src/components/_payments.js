@@ -3,6 +3,10 @@ import axios from 'axios'
 export async function showAutomationPayment() {
   const paymentElement = $('#payment-group-bankInvoicePaymentGroup')
 
+  if(!paymentElement.length) {
+    return
+  }
+
   let isAutomationUser = null
 
   try {

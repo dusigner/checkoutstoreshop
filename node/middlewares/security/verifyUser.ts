@@ -1,8 +1,8 @@
 import { AuthenticationError } from '@vtex/api'
 
 interface AuthChangeProps {
-  storeUserAuthToken: string | undefined
-  authUser: string | undefined
+  storeUserAuthToken?: string
+  authUser?: string
 }
 
 function authChange({ storeUserAuthToken, authUser }: AuthChangeProps) {
@@ -12,14 +12,8 @@ function authChange({ storeUserAuthToken, authUser }: AuthChangeProps) {
     }
   }
 
-  if (authUser) {
-    return {
-      changeAuth: authUser,
-    }
-  }
-
   return {
-    changeAuth: undefined,
+    changeAuth: authUser,
   }
 }
 
@@ -42,9 +36,9 @@ export async function verifyUser(ctx: Context, next: () => Promise<void>) {
     })
 
     if (data !== null) {
-      ctx.state.body = {
-        user: data.user,
-        userId: data.userId,
+      ctx.state.userData = {
+        email: data.user,
+        id: data.userId,
       }
 
       return next()
