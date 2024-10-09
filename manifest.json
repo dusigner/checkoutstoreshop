@@ -20,6 +20,17 @@
     "vtex.checkout-ui-settings-server": "0.x",
     "vtex.email-checkout-conflict": "0.x"
   },
+  "settingsSchema": {
+    "automationEmails": {
+      "title": "E-mails de automação",
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
   "policies": [
     {
       "name": "vtex.checkout-ui-settings-server:save-build"
@@ -55,6 +66,13 @@
       "attrs": {
         "host": "{{account}}.vtexcommercestable.com.br",
         "path": "/api/dataentities/checkoutcustom/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "vtexid.vtex.com.br",
+        "path": "/api/vtexid/pub/authenticated/*"
       }
     }
   ],

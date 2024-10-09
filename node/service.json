@@ -8,6 +8,10 @@
     "apiGetCountryRules": {
       "path": "/rules/:countryCode",
       "public": true
+    },
+    "verifyAutomationLogin": {
+      "path": "/_v/private/verifyAutomationLogin",
+      "public": true
     }
   }
 }
