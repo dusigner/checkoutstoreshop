@@ -30,7 +30,6 @@ import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
 import { OptInDimensions } from '../components/_optinDimensions'
-import { showAutomationPayment } from '../components/_payments'
 
 const scripts = new Scripts()
 
@@ -81,7 +80,6 @@ export class CheckoutCustom {
     // this.topBanners = new TopBanners()
     this.SummaryGiftCard = new SummaryGiftCard()
     this.optInDimensions = new OptInDimensions()
-    this.showAutomationPayment = showAutomationPayment
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1757,7 +1755,6 @@ export class CheckoutCustom {
             _this.defaultGiftCard(_this.orderForm)
             _this.verifyCSP(_this.orderForm)
           }
-          _this.showAutomationPayment()
         }
 
         setTimeout(_this.shipping.toggleGoToPaymentDisabled, 300)
@@ -1846,7 +1843,6 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
-          _this.showAutomationPayment()
         }
 
         if (window.location.hash === '#/profile') {

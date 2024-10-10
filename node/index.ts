@@ -1,4 +1,4 @@
-import type { Cached, ClientsConfig } from '@vtex/api'
+import type { Cached, ServiceContext, ClientsConfig } from '@vtex/api'
 import { Service, LRUCache } from '@vtex/api'
 
 import { Clients } from './clients'
@@ -11,6 +11,16 @@ const defaultClientOptions = {
 }
 
 const memoryCache = new LRUCache<string, Cached>({ max: 1000 })
+
+declare global {
+  // We declare a global Context type just to avoid re-writing ServiceContext<Clients, State> in every handler and resolver
+  type Context = ServiceContext<Clients>
+
+  // The shape of our State object found in `ctx.state`. This is used as state bag to communicate between middlewares.
+  interface State {
+    code: number
+  }
+}
 
 const clients: ClientsConfig<Clients> = {
   implementation: Clients,
