@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { rootPath } from './_utils'
 
 export async function showAutomationPayment() {
   const paymentElement = $('#payment-group-bankInvoicePaymentGroup')
@@ -10,7 +11,7 @@ export async function showAutomationPayment() {
   let isAutomationUser = null
 
   try {
-    const { data } = await axios.post(`/_v/private/verifyAutomationLogin?email=${vtexjs.checkout.orderForm.clientProfileData.email}`, {
+    const { data } = await axios.post(`${rootPath()}/_v/private/verifyAutomationLogin?email=${vtexjs.checkout.orderForm.clientProfileData.email}`, {
       headers: { accept: 'application/json' },
     })
 
@@ -20,7 +21,7 @@ export async function showAutomationPayment() {
   }
 
   if (!isAutomationUser) {
-    paymentElement.remove()
+    paymentElement.attr('style', 'display: none !important;')
 
     return
   }
