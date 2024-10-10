@@ -366,8 +366,10 @@ export class Rewards {
 
     const rewardsAccepted = $('#inputRewards').is(':checked')
 
+    console.log(this.userSaGuid)
+
     const data = {
-      SAGuid: this.userSaGuid || 'GUEST',
+      SAGuid: this.userSaGuid || localStorage.getItem('saGuid') || 'GUEST',
       rewardsAccepted: this.userRewardsAccepted || rewardsAccepted
     }
 
