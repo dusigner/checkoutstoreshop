@@ -6,9 +6,7 @@ export async function verifyAutomationLogin(ctx: Context) {
 
   const appConfig = await getAppSettings(ctx.vtex)
 
-  if (
-    !appConfig?.automationEmails?.includes(email || ctx.state.userData?.email)
-  ) {
+  if (!appConfig?.automationEmails?.includes(email)) {
     ctx.status = 400
     ctx.response.body = {
       isValid: false,
