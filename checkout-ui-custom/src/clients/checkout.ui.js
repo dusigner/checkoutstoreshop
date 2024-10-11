@@ -783,8 +783,8 @@ export class CheckoutCustom {
 
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
-        _trElem.find('.new-product-price').text(listPriceFormated)
-        _trElem.find('.new-product-price').val(listPriceTotalValue)
+        _trElem.find('.new-product-price').text(free ? '' : listPriceFormated)
+        _trElem.find('.new-product-price').val(free ? '' : listPriceTotalValue)
 
         if (sellingPrice < listPriceTotalValue) {
           _trElem.find('.new-product-price').addClass('line-through')
