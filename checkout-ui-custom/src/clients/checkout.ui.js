@@ -1358,7 +1358,7 @@ export class CheckoutCustom {
 
     try {
       const giftCardsVtex = orderForm?.paymentData?.giftCards?.filter(
-        g => g.provider === defaultId
+        g => g.provider === defaultId && g.redemptionCode
       )
       if (giftCardsVtex.length === 0) {
         setTimeout(() => {
@@ -1907,6 +1907,10 @@ export class CheckoutCustom {
             localStorage.removeItem('srp-toggle__pickupClickedOnPdp')
           }
         }
+
+        $(document).on('click', '#back-to-address-list', function() {
+          _this.shipping.alertNumberOrReciver();
+        });
 
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()

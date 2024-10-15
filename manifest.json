@@ -1,7 +1,7 @@
 {
   "name": "store-checkout",
   "vendor": "samsungbr",
-  "version": "0.3.108",
+  "version": "0.3.118",
   "title": "Shop BR Checkout",
   "description": "Shop BR Checkout",
   "builders": {
@@ -19,6 +19,17 @@
     "vtex.store-resources": "0.x",
     "vtex.checkout-ui-settings-server": "0.x",
     "vtex.email-checkout-conflict": "0.x"
+  },
+  "settingsSchema": {
+    "automationEmails": {
+      "title": "E-mails de automação",
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "string",
+        "default": ""
+      }
+    }
   },
   "policies": [
     {
@@ -55,6 +66,13 @@
       "attrs": {
         "host": "{{account}}.vtexcommercestable.com.br",
         "path": "/api/dataentities/checkoutcustom/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "vtexid.vtex.com.br",
+        "path": "/api/vtexid/pub/authenticated/*"
       }
     }
   ],
