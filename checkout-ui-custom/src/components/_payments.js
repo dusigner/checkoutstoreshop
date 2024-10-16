@@ -17,7 +17,9 @@ export async function showAutomationPayment() {
 
     isAutomationUser = data.isValid
   } catch (error) {
-    console.error(`Error when getting session: ${error}`)
+    console.error(`verifyAutomationLogin: ${error}`)
+
+    return
   }
 
   if (!isAutomationUser) {
