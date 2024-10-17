@@ -1,0 +1,6 @@
+const statusCode = {
+  STORE_CHECKOUT_INVALID_AUTOMATION_LOGIN:
+    'STORE_CHECKOUT_INVALID_AUTOMATION_LOGIN',
+}
+
+export { statusCode }
