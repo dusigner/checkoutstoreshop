@@ -245,8 +245,18 @@ export class CheckoutCustom {
             messagesElem.css('display', 'none');
             const couponCodeMatch = warningMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
             const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
-            const messageErrorValidate = window.vtex.accountName === "samsungbrshop" ? warningMessage.text : "Cupom inválido para compra"
-            couponInfoElement.find('p').text(messageErrorValidate).css('color', 'red');
+            const isRewardsCoupon = couponCode?.toLowerCase().includes('rewards')
+
+            if(window.vtex.accountName != 'samsungbrshopfidelidade'){
+              if(isRewardsCoupon){
+                couponInfoElement.css('marginTop', '-105px').find('p').text('Esse cupom é para uso exclusivo do Portal Rewards! Acesse agora para finalizar sua compra').css('color', 'red');
+                $('.coupon-fields button').css('marginTop', '60px') 
+              }else{
+                const messageErrorValidate = window.vtex.accountName === "samsungbrshop" ? warningMessage.text : "Cupom inválido para compra"
+                couponInfoElement.find('p').text(messageErrorValidate).css('color', 'red');
+              }
+            }            
+            
             inputCoupon.each(function () {
               $(this).css('border-bottom', 'solid 1px red').val(couponCode);
             });
