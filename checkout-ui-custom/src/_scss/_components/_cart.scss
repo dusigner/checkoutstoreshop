@@ -942,6 +942,10 @@ h1#cart-title {
               button {
                 width: 100%;
                 margin-top: 25px;
+
+                &.isButtonReward{
+                  margin-top: 60px; 
+                }
               }
             }
 
@@ -1018,6 +1022,10 @@ h1#cart-title {
           max-width: 100%;
           margin-bottom: 70px;
           margin-top: -70px;
+
+          &.isReward{
+            margin-top: -105px!important;
+          }
         }
       }
 
