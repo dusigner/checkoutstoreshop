@@ -5,6 +5,7 @@ import * as path from 'path'
 import { method } from '@vtex/api'
 
 import { getCountryRules } from '../middlewares/getCountryRules'
+import { verifyAutomationLogin } from '../middlewares/verifyAutomationLogin'
 
 const SCHEMA_VERSION = 'v0.1.3'
 const DATA_ENTITY = 'checkoutcustom'
@@ -94,6 +95,9 @@ export const resolvers = {
   Routes: {
     apiGetCountryRules: method({
       GET: [getCountryRules],
+    }),
+    verifyAutomationLogin: method({
+      POST: [verifyAutomationLogin],
     }),
   },
   Mutation: {

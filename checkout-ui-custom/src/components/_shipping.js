@@ -14,7 +14,7 @@ export default class CustomShippingData {
       const $postalCodeForm = $('.vtex-omnishipping-1-x-addressFormPart1')
       const $postalCodeField = $postalCodeForm.find('p.ship-postalCode')
       const $invalidPostalCodeMessage = $(
-        '<div class="invalid-postal-code-msg"> <span class="invalid-postal-code-msg__label">CEP Inválido</span> <p class="invalid-postal-code-msg__message"> Infelizmente não oferecemos entrega para a sua região. Em caso de dúvidas, por favor <a class="invalid-postal-code-msg__link" href="https://static.zdassets.com/web_widget/latest/liveChat.html?v=10#key=ajudasamsungcajamar.zendesk.com" target="_blank">clique aqui</a>.</p> </div>'
+        '<div class="invalid-postal-code-msg"> <span class="invalid-postal-code-msg__label">CEP Inválido</span> <p class="invalid-postal-code-msg__message"> Infelizmente não oferecemos entrega para a sua região. Em caso de dúvidas, por favor <a class="invalid-postal-code-msg__link" href="https://www.samsung.com/br/support/contacts/#start-chat" target="_blank">clique aqui</a>.</p> </div>'
       )
 
       if (
@@ -327,6 +327,34 @@ export default class CustomShippingData {
       }
     } catch (err) {
       console.error(`Erro ao verificar campo destinatário: ${err}`)
+    }
+  }
+
+  
+  alertNumberOrReciver() {
+    try {
+      const $postalCodeForm = $('.vtex-omnishipping-1-x-addressFormPart1')
+      const $alertaExistente = $postalCodeForm.find('.alerta-number-reciver')
+      const $newAlert = $(
+        '<span class="alerta-number-reciver" style="color: red;">Número e destinatário são obrigatórios*</span>'
+      )
+
+      const adressNumber = $('#ship-number').val()
+      const receiverName = $('#ship-receiverName').val()
+
+      if (adressNumber && receiverName) {
+        if ($alertaExistente.length) {
+          $alertaExistente.remove()
+        }
+      } else {
+        if (!$alertaExistente.length) {
+          $postalCodeForm.append($newAlert)
+        }
+      }
+    } catch (error) {
+      console.error(
+        `Ocorreu um erro ao adicionar mensagem de alerta: ${error}`
+      )
     }
   }
 

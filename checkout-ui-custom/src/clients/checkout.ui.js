@@ -30,6 +30,7 @@ import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
 import { OptInDimensions } from '../components/_optinDimensions'
+import { showAutomationPayment } from '../components/_payments'
 
 const scripts = new Scripts()
 
@@ -80,6 +81,7 @@ export class CheckoutCustom {
     // this.topBanners = new TopBanners()
     this.SummaryGiftCard = new SummaryGiftCard()
     this.optInDimensions = new OptInDimensions()
+    this.showAutomationPayment = showAutomationPayment
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -783,8 +785,8 @@ export class CheckoutCustom {
 
         _trElem.attr('data-id-product', orderForm.items[i].productId)
 
-        _trElem.find('.new-product-price').text(listPriceFormated)
-        _trElem.find('.new-product-price').val(listPriceTotalValue)
+        _trElem.find('.new-product-price').text(free ? '' : listPriceFormated)
+        _trElem.find('.new-product-price').val(free ? '' : listPriceTotalValue)
 
         if (sellingPrice < listPriceTotalValue) {
           _trElem.find('.new-product-price').addClass('line-through')
@@ -1358,7 +1360,7 @@ export class CheckoutCustom {
 
     try {
       const giftCardsVtex = orderForm?.paymentData?.giftCards?.filter(
-        g => g.provider === defaultId
+        g => g.provider === defaultId && g.redemptionCode
       )
       if (giftCardsVtex.length === 0) {
         setTimeout(() => {
@@ -1755,6 +1757,7 @@ export class CheckoutCustom {
             _this.defaultGiftCard(_this.orderForm)
             _this.verifyCSP(_this.orderForm)
           }
+          _this.showAutomationPayment()
         }
 
         setTimeout(_this.shipping.toggleGoToPaymentDisabled, 300)
@@ -1843,6 +1846,7 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
+          _this.showAutomationPayment()
         }
 
         if (window.location.hash === '#/profile') {
@@ -1907,6 +1911,10 @@ export class CheckoutCustom {
             localStorage.removeItem('srp-toggle__pickupClickedOnPdp')
           }
         }
+
+        $(document).on('click', '#back-to-address-list', function() {
+          _this.shipping.alertNumberOrReciver();
+        });
 
         $('#cart-to-orderform').on('click', function () {
           _this.SendAttachment.sendOpenTextField()
