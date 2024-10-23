@@ -246,7 +246,6 @@ export class CheckoutCustom {
             const couponCodeMatch = warningMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
             const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
             const isRewardsCoupon = couponCode?.toLowerCase().includes('rewards')
-            const isMobile = window.innerWidth < 768 ? true : false
 
             if(window.vtex.accountName != 'samsungbrshopfidelidade'){
               if(isRewardsCoupon){
