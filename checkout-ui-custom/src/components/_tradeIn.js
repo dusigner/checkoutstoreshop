@@ -11,8 +11,8 @@ export default class TradeIn {
     const transport =
       customDataDomain.length > 0
         ? JSON.parse(
-            customDataDomain[0].fields.trade_in_option_selected || '[]'
-          )
+          customDataDomain[0].fields.trade_in_option_selected || '[]'
+        )
         : []
 
     if (items.length && transport.length) {
@@ -62,7 +62,7 @@ export default class TradeIn {
   }
 
   rootPath() {
-    return window.__RUNTIME__.rootPath || ''
+    return window.location.pathname.split("/")[1] === "br" ? "/br" : ""
   }
 
   checkTradeIn(items, transport) {
@@ -117,9 +117,9 @@ export default class TradeIn {
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
             <td style="font-size: 14px; color: #000000; font-weight: 400; max-width: 245px;">Troca Smart Samsung - Dinheiro creditado em conta após a entrega do aparelho usado e a avaliação da Assurant</td>
             <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(
-              totalTradeIn,
-              false
-            )}*
+        totalTradeIn,
+        false
+      )}*
             </td>
           </tr>
         </tbody>
@@ -172,7 +172,7 @@ export default class TradeIn {
 
     if (transport !== null) {
       localStorage.removeItem('transport')
-  
+
       const deleteRequests = [
         $.ajax({
           url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_option_selected`,
@@ -183,7 +183,7 @@ export default class TradeIn {
           type: 'DELETE',
         }),
       ]
-  
+
       // chamadas em paralelo reduzindo bons segundos das requisições
       await Promise.all(deleteRequests)
         .catch(error => {
@@ -205,8 +205,8 @@ export default class TradeIn {
     const transport =
       customDataDomain.length > 0
         ? JSON.parse(
-            customDataDomain[0].fields.trade_in_option_selected || '[]'
-          )
+          customDataDomain[0].fields.trade_in_option_selected || '[]'
+        )
         : []
 
     let total = 0
@@ -223,8 +223,7 @@ export default class TradeIn {
       arrayProductsTrocafone.forEach(item => {
         const params = `idCategory=${item.idCategory}&idBrand=${item.idBrand}&idModel=${item.idModel}&nocache=${Date.now()}`
         const request = fetch(
-          `${this.rootPath()}/tradein/trocafone/getProduct?${params}&isBoosted=${
-            item.boosted
+          `${this.rootPath()}/tradein/trocafone/getProduct?${params}&isBoosted=${item.boosted
           }`
         )
           .then(response => response.json())
