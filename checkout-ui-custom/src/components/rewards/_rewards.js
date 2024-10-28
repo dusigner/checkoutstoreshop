@@ -224,12 +224,11 @@ export class Rewards {
       const data = {
         ...PAYLOAD_REWARDS_DEFAULT,
         Id: orderForm.orderFormId,
-        SAGuid: this.userSaGuid,
         CountryDescription: 'BR',
       }
 
       $.ajax({
-        url: `${rootPath()}/rewards/points/search`,
+        url: `${rootPath()}/_v/private/rewards/points/search`,
         type: 'POST',
         data: JSON.stringify(data),
         dataType: 'json',
