@@ -1957,7 +1957,10 @@ export class CheckoutCustom {
           _this.addMercadoPagoScript()
         })
 
-        adobeLaunchInit()
+        if(window.vtex.accountName === "samsungbrshop" && !window.location.host.includes("storeplus")){
+          console.log("Adobe Launch Init")
+          adobeLaunchInit()
+        }
 
         _this.checkProfileFocus()
         _this.changeShippingTimeInfoInit()
