@@ -62,25 +62,17 @@ export default class CustomPreEmail {
     }
   }
 
-  openSamsungAccountModal() {
-    window.vtexid.start()
-
-    const checkCustomButtonInterval = setInterval(function () {
-      if ($('#vtexIdUI-').length) {
-        clearInterval(checkCustomButtonInterval)
-
-        $('#vtexIdContainer, #vtexIdUI-global-loader').hide()
-        $('#vtexIdUI-').trigger('click')
-      }
-    }, 100)
-  }
-
   bindEvents() {
     const _this = this
 
     $(document).on('click', '#btn-samsung-account', function () {
-      _this.openSamsungAccountModal()
-    })
+      const returnUrl = encodeURIComponent(window?.location?.pathname);
+      const currentUrl = window?.location?.href;
+      let newUrl;
+      const oAuthRedirect = `/login?oAuthRedirect=Samsung&returnUrl=${returnUrl}`
+      newUrl = currentUrl.replace(/\/checkout.*/, oAuthRedirect);
+      window.location.href = newUrl;
+  });
 
     $(document).on('click', '#toggleButtonLogin', function () {
       $('.samsung-toggle-button-container').hide()
