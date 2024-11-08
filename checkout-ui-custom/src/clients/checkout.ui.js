@@ -1085,7 +1085,7 @@ export class CheckoutCustom {
             : ''
           }
               <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                <p>Ou parcelado em até 12x
+                <p>Ou parcelado em até ${window.vtex.accountName === "samsungbrshop" ? '18x': '12x'}
                   <span class="custom-tooltip">i</span>
                 </p>
                 <p class="discount-total" style="font-weight: 700;">
