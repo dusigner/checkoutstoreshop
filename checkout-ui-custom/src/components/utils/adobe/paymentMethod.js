@@ -8,7 +8,7 @@ export function getPaymentMethod() {
 
   if (
     paymentMethodSelected &&
-    paymentMethodSelected.id === 'payment-group-bankInvoicePaymentGroup'
+    paymentMethodSelected.id === 'payment-group-instantPaymentPaymentGroup'
   ) {
     paymentMethod = 'pix'
   }
@@ -67,6 +67,20 @@ export function getPaymentMethod() {
     paymentMethodSelected.id === 'payment-group-SamsungPayPaymentGroup'
   ) {
     paymentMethod = 'Samsung pay'
+  }
+
+  if (
+    paymentMethodSelected &&
+    paymentMethodSelected.id === 'payment-group-MercadoPagoProPaymentGroup'
+  ) {
+    paymentMethod = 'mercado pago'
+  }
+
+  if (
+    paymentMethodSelected &&
+    paymentMethodSelected.id === 'payment-group-NubankPaymentGroup'
+  ) {
+    paymentMethod = 'NuPay'
   }
 
   return {
