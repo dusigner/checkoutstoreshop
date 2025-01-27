@@ -22,6 +22,7 @@ import {
   debounce,
   formatCurrencyBRL,
   formatNegativeValue,
+  getMaxInstallmentByPaymentSystem
 } from '../components/_utils'
 import { customHeader } from '../components/headerCustom/header'
 import { Rewards } from '../components/rewards/_rewards'
@@ -57,7 +58,7 @@ export class CheckoutCustom {
     this.customAddressForm = customAddressForm
     this.hideEmailStep = hideEmailStep
     this.lastOrderFormTotalPrice = 0
-    this.termPrice = 0
+    this.maxInstallment = undefined
     this.subTotalValueFinal = null
     this.discountPrices = null
 
@@ -226,8 +227,8 @@ export class CheckoutCustom {
         if (messages && messages.length > 0) {
           const warningMessage = messages.find(message => message.status === 'warning');
           const errorMessage = messages.find(message => message.status === 'error');
-          
-          if(["giftCardCommunicationError", "invalidGiftCard"].includes(errorMessage?.code)) {
+
+          if (["giftCardCommunicationError", "invalidGiftCard"].includes(errorMessage?.code)) {
             messagesElem.css('display', 'block');
             return
           }
@@ -248,15 +249,15 @@ export class CheckoutCustom {
             const isRewardsCoupon = couponCode?.toLowerCase().includes('rewards')
             const isReward = window.vtex.accountName == 'samsungbrshopfidelidade' || window.vtex.accountName == 'samsungbrtestsfidelidade'
 
-            if(!isReward && isRewardsCoupon){
-                couponInfoElement.find('p').text('Esse cupom é para uso exclusivo do Portal Rewards! Acesse agora para finalizar sua compra').css('color', 'red');
-                couponInfoElement.addClass('isReward')
-                $('.coupon-fields button').addClass('isButtonReward')
-            }else{
+            if (!isReward && isRewardsCoupon) {
+              couponInfoElement.find('p').text('Esse cupom é para uso exclusivo do Portal Rewards! Acesse agora para finalizar sua compra').css('color', 'red');
+              couponInfoElement.addClass('isReward')
+              $('.coupon-fields button').addClass('isButtonReward')
+            } else {
               const messageErrorValidate = warningMessage.text
               couponInfoElement.find('p').text(messageErrorValidate).css('color', 'red');
-            }            
-            
+            }
+
             inputCoupon.each(function () {
               $(this).css('border-bottom', 'solid 1px red').val(couponCode);
             });
@@ -1032,27 +1033,7 @@ export class CheckoutCustom {
         // ONLY WILL DO A NEW REQUEST CASE ORDERFORM TOTALPRICE BE CHANGED.
         if (_this.lastOrderFormTotalPrice !== orderForm.value) {
           _this.lastOrderFormTotalPrice = orderForm.value
-          _this.termPrice = await fetch(
-            `${rootPath()}/api/checkout/pub/orderForm/${orderForm.orderFormId
-            }/installments?paymentSystem=2`
-          )
-            .then(response => response.json())
-            .then(data => {
-              if (data && data.installments) {
-                const installmentOptions = data.installments
-
-                const maxInstallment = installmentOptions.find(
-                  install =>
-                    install.count ===
-                    Math.max(...installmentOptions.map(inst => inst.count))
-                )
-
-                return maxInstallment ? maxInstallment.total : ''
-              }
-            })
-            .catch(e => {
-              console.error('onTerm Price error', e)
-            })
+          _this.maxInstallment = await getMaxInstallmentByPaymentSystem('2')
         }
         const discounts = orderForm.totalizers.filter(
           val => val.id === 'Discounts'
@@ -1081,16 +1062,18 @@ export class CheckoutCustom {
               </div>`
             : ''
           }
-              <div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                <p>Ou parcelado em até ${window.vtex.accountName === "samsungbrshop" ? '18x': '12x'}
+          ${(_this.maxInstallment?.count > 1) ? (
+            `<div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
+                <p>Ou parcelado em até ${_this.maxInstallment?.count}x
                   <span class="custom-tooltip">i</span>
                 </p>
+
                 <p class="discount-total" style="font-weight: 700;">
-                  ${formatCurrencyBRL(_this.termPrice)}
+                  ${formatCurrencyBRL(_this.maxInstallment?.total)}
                 </p>
               </div>
-            </div>
-          `
+            </div>`
+          ) : '<div style="margin-top: 10px; height: 27px" />'}`
 
         if (_trElem.find('.cart-total').length === 0) {
           _trElem.prepend(_component)
@@ -1918,7 +1901,7 @@ export class CheckoutCustom {
           }
         }
 
-        $(document).on('click', '#back-to-address-list', function() {
+        $(document).on('click', '#back-to-address-list', function () {
           _this.shipping.alertNumberOrReciver();
         });
 
@@ -1954,7 +1937,7 @@ export class CheckoutCustom {
           _this.addMercadoPagoScript()
         })
 
-        if((window.vtex.accountName === "samsungbrshop" || window.vtex.accountName === "samsungbrtests") && !window.location.host.includes("storeplus")){
+        if ((window.vtex.accountName === "samsungbrshop" || window.vtex.accountName === "samsungbrtests") && !window.location.host.includes("storeplus")) {
           console.log("Adobe Launch Init")
           adobeLaunchInit()
         }

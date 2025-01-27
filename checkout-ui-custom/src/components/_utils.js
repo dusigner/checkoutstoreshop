@@ -134,3 +134,15 @@ export async function deleteCustomData({ app, fields }) {
     })
   })
 }
+
+export async function getMaxInstallmentByPaymentSystem(paymentSystemId = '2') {    
+  try {
+      const data = await paymentData.getInstallmentsByPaymentSystem(paymentSystemId)
+
+      return data.installments.reduce((acc, installment) => {
+          return installment.count < (acc.count ?? 0) ? acc : installment
+      }, {})
+  } catch (error) {
+      console.error(error)
+  }
+}
