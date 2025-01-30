@@ -43,7 +43,7 @@ export default class CustomPreEmail {
                 class="data-omni-signin"
                 data-omni="login_try:samsung account"
                 id="btn-samsung-account"
-                type="submit"
+                type="button"
               >
               Entrar
               </button>
