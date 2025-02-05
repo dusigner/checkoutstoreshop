@@ -178,14 +178,11 @@ export class Rewards {
         giftRewards[0].value > 0
       ) {
         $('.switch-rewards input')[0].checked = true
+        $('.text-switch-rewards').text('Utilizar os pontos nesta compra')
         $('#group-all-rewards').show()
+      } else {
+        $('.text-switch-rewards').text('Não utilizar os meus pontos nessa compra')
       }
-    }
-
-    if ($('.switch-rewards input')[0].checked) {
-      $('.text-switch-rewards').text('Utilizar os pontos nesta compra')
-    } else {
-      $('.text-switch-rewards').text('Não utilizar os meus pontos nessa compra')
     }
 
     $(document).on('change', '.switch-rewards input', () => {
@@ -311,7 +308,7 @@ export class Rewards {
     }
 
     const rewardsOrder =
-      window.vtexjs.checkout.orderForm.paymentData.giftCards[0].value
+      window.vtexjs.checkout.orderForm.paymentData?.giftCards?.[0].value
 
     const totalOrder = window.vtexjs.checkout.orderForm.value
 
@@ -350,7 +347,6 @@ export class Rewards {
         giftRewards[0].inUse &&
         giftRewards[0].value > 0
       ) {
-        rewardsDiscountApplied = giftRewards[0].value / 100
         this.createRewardsTotalDiscount(giftRewards[0].value / 100)
       } else {
         $('.rewards-total-discount').remove()
@@ -364,8 +360,6 @@ export class Rewards {
     }
 
     const rewardsAccepted = $('#inputRewards').is(':checked')
-
-    console.log(this.userSaGuid)
 
     const data = {
       SAGuid: this.userSaGuid || localStorage.getItem('saGuid') || 'GUEST',
