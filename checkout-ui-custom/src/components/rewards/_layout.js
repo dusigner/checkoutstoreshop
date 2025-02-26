@@ -95,7 +95,7 @@ function createLayoutMessageObs(saguid) {
     `
   } 
   
-  if (!saguid) {
+  if (!saguid && !isFidelidadeAccount) {
     _component = `
     <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
       <p>

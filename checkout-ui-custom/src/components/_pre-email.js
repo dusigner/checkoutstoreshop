@@ -8,6 +8,7 @@ export default class CustomPreEmail {
   }
 
   createElementSamsungAccountLogin() {
+    const account = __RUNTIME__.account
     $('#client-pre-email').attr('placeholder', 'Ex:.exemplo@mail.com')
 
     if (
@@ -22,8 +23,13 @@ export default class CustomPreEmail {
         <p class="samsung-visitante-title">Acessar como visitante</p>
 
         <button class="samsung-button-login data-omni-signin" data-omni="login_try:guest" id="toggleButtonLogin" type="button">Informe seu e-mail</button>
-
+        ${
+          account !== 'samsungbrshopfidelidade'
+            ? `
         <p class="samsung-message-rewards">Ao entrar como visitante não será possível pontuar no programa Samsung Rewards</p>
+         `
+            : ''
+        }
       </div>
     `)
 
@@ -35,9 +41,15 @@ export default class CustomPreEmail {
             />
             <div class="samsung-account-image">
             <div class="samsung-account-label" style="font-size:12px; font-family:'SamsungOne'; margin-top: 20px; justify-content: center; display: flex;">
+            ${
+              account !== 'samsungbrshopfidelidade'
+                ? `
             <p style="max-width: 326px">
               Suas compras podem valer pontos para utilização como desconto na loja Samsung. Participe agora para garantir sua pontuação.
             </p>
+            `
+                : ''
+            }
           </div>
               <button
                 class="data-omni-signin"

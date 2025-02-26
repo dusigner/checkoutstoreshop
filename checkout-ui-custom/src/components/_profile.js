@@ -358,13 +358,17 @@ export default class CustomProfileData {
 
   addTerms(orderForm) {
     const _this = this
+    const account = __RUNTIME__.account;
 
     if ($('#inputTermAndPolicies').length !== 0) return false
 
     _this.addNewsletterOptIn()
     _this.addWhatsappOptIn()
     _this.addTermsAndPolicies()
-    _this.addRewardsBlock()
+
+    if (account !== "samsungbrshopfidelidade"){
+      _this.addRewardsBlock()
+    }
 
     if (
       orderForm.loggedIn ||
