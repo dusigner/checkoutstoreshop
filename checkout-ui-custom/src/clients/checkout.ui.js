@@ -1585,7 +1585,7 @@ export class CheckoutCustom {
     }
 
     if (window.vtex) {
-      window.vtex.showInstallmentsPreviewValue = false
+      window.vtex.showInstallmentsPreviewValue = true
     }
 
     this.orderForm = window.vtexjs ? window.vtexjs.checkout.orderForm : false
