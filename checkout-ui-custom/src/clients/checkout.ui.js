@@ -1623,6 +1623,8 @@ export class CheckoutCustom {
         }
 
         this.enchancementSummaryCart(_this.orderForm, window.location.hash)
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       })
 
       _this.init()
