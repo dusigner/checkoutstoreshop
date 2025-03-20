@@ -10,7 +10,7 @@ export const _locale = {
     checkoutStepsLabelCart: 'Carrinho',
     checkoutStepsLabelIdentification: 'Dados Pessoais',
     checkoutStepsLabelShipping: 'Entrega',
-    checkoutStepsLabelPayment: 'Pagamentos',
+    checkoutStepsLabelPayment: 'Pagamento',
     checkoutStepsLabelConfirmation: 'Confirmação',
     city: 'Cidade',
     state: 'Estado',

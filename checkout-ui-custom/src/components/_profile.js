@@ -109,10 +109,11 @@ export default class CustomProfileData {
     const _this = this
     const cookieSession = await getSessionCookie()
     const account = __RUNTIME__.account;
-    const vtexAuth = cookieSession.namespaces.cookie[`VtexIdclientAutCookie_${account}`]?.value || cookieSession.namespaces.cookie[`VtexIdclientAutCookie`]?.value
+    const vtexAuth = cookieSession.namespaces.cookie[`VtexIdclientAutCookie_${account}`]?.value || cookieSession.namespaces.cookie[`VtexIdclientAutCookie`]?.value;
+    const url = account === 'samsungbrshopeppnubank' ? 'https://samsungbrshop.myvtex.com' : _this.rootPath()
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
-      const whatsAppResponse = await fetch(`https://samsungbrshop.myvtex.com/_v/private/conversation/v1/frontend`, {
+      const whatsAppResponse = await fetch(`${url}/_v/private/conversation/v1/frontend`, {
         method: 'POST',
         headers: {
           vtexAuth
@@ -520,8 +521,10 @@ export default class CustomProfileData {
       const whatsappNumber = $('#client-phone').val()
       const phoneNumber = '55'+ whatsappNumber.replace(/\D/g, "");
       const consent = isChecked
+      const url = account === 'samsungbrshopeppnubank' ? 'https://samsungbrshop.myvtex.com' : _this.rootPath()
+
       try {
-        await fetch(`https://samsungbrshop.myvtex.com/_v/private/conversation/v1/frontend`, {
+        await fetch(`${url}/_v/private/conversation/v1/frontend`, {
           method: 'POST',
           headers: {
             vtexAuth
