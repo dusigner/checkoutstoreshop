@@ -614,52 +614,57 @@ export default class CustomProfileData {
   }
 
   addFieldsProfileToSummary(orderForm) {
-    const _this = this
-
-    const { clientProfileData } = orderForm
-
-    if (!clientProfileData) return
-
-    const documentCpf = orderForm.clientProfileData.document
-
-    const $documentCpfField = `
-      <p id="documentCpfField" class="client-profile-summary cpf-field">
-        <span class="name-label" style="">CPF:</span>
-        <span class="name">${documentCpf}</span>
-        <br>
-      </p>
-      `
-
-    $('#documentCpfField').empty()
-    $('.client-profile-summary').first().after($documentCpfField)
-
-    const $dateBirthField = $(`
-      <p id='dateBirthField' class="client-profile-summary date-birth-field">
-        <span class="name-label" style="">Data de Nascimento:</span>
-        <span class="name"></span>
-        <br>
-      </p>
-    `)
-
-    if (!$('#dateBirthField').length) {
-      $('.client-profile-summary.cpf-field').first().after($dateBirthField)
+    const _this = this;
+    const { clientProfileData } = orderForm;
+  
+    if (!clientProfileData) return;
+  
+    const documentCpf = clientProfileData.document;
+  
+    // Adicionar CPF ao resumo do perfil
+    let $documentCpfField = $('#documentCpfField');
+  
+    if (!$documentCpfField.length) {
+      $documentCpfField = $(`
+        <p id="documentCpfField" class="client-profile-summary cpf-field">
+          <span class="name-label">CPF:</span>
+          <span class="name">${documentCpf}</span>
+          <br>
+        </p>
+      `);
+      $('.client-profile-summary').first().after($documentCpfField);
+    } else {
+      $documentCpfField.find('.name').text(documentCpf);
     }
-
-    const $birthDateFieldValue = $('#dateBirthField span.name')
-
-    if ($birthDateFieldValue.is(':empty')) {
-      getClientProfileData().then(function (data) {
-        if (!data) return
-
-        const dataBirthDate = data[0].birthDate
-
-        if (dataBirthDate) {
-          const clientDateBirth =
-            _this.convertDateToLocaleDateString(dataBirthDate)
-
-          $birthDateFieldValue.text(clientDateBirth)
-        }
-      })
+  
+    // Criar ou atualizar o campo de Data de Nascimento
+    let $dateBirthField = $('#dateBirthField');
+  
+    if (!$dateBirthField.length) {
+      $dateBirthField = $(`
+        <p id="dateBirthField" class="client-profile-summary date-birth-field">
+          <span class="name-label">Data de Nascimento:</span>
+          <span class="name"></span>
+          <br>
+        </p>
+      `);
+      $documentCpfField.after($dateBirthField);
     }
+  
+    const $birthDateFieldValue = $dateBirthField.find('.name');
+  
+    // Fazer a requisição para buscar a data de nascimento
+    getClientProfileData().then(function (data) {
+      if (!data || !data[0].birthDate) {
+        $birthDateFieldValue.text('Não informado');
+        return;
+      }
+  
+      const clientDateBirth = _this.convertDateToLocaleDateString(data[0].birthDate);
+      $birthDateFieldValue.text(clientDateBirth);
+    }).catch(() => {
+      $birthDateFieldValue.text('Erro ao carregar');
+    });
   }
+  
 }
