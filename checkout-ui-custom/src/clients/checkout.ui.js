@@ -1734,7 +1734,7 @@ export class CheckoutCustom {
           window.location.hash === '#/payment' ||
           window.location.hash === '#/cart'
         ) {
-          _this.TradeIn.validateTradeinCustomData()
+          _this.TradeIn.validateTradeinCustomData(_this.orderForm)
           _this.SendAttachment.sendOpenTextField()
           // _this.displayHideSuperChat(window.location.hash)
           _this.customizeLogOut()
@@ -1838,6 +1838,7 @@ export class CheckoutCustom {
           _this.Rewards.cancelRewardsDiscount(true)
           _this.Rewards.showPointsSimulation()
           _this.verifyCSP(orderForm)
+          _this.TradeIn.validateTradeinCustomData(orderForm)
         }
 
         if (window.location.hash === '#/profile') {
@@ -1927,7 +1928,7 @@ export class CheckoutCustom {
           window.location.hash === '#/payment' ||
           window.location.hash === '#/cart'
         ) {
-          _this.TradeIn.validateTradeinCustomData()
+          _this.TradeIn.validateTradeinCustomData(window.vtexjs.checkout.orderForm)
           _this.SendAttachment.sendOpenTextField()
           // _this.displayHideSuperChat(window.location.hash)
         }
@@ -1940,7 +1941,6 @@ export class CheckoutCustom {
         })
 
         if ((window.vtex.accountName === "samsungbrshop" || window.vtex.accountName === "samsungbrtests") && !window.location.host.includes("storeplus")) {
-          console.log("Adobe Launch Init")
           adobeLaunchInit()
         }
 

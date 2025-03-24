@@ -1,18 +1,24 @@
 /* eslint-disable vtex/prefer-early-return */
 import { formatCurrencyBRL } from './_utils'
+import SendAttachment from './_sendAttachment'
 
 export default class TradeIn {
+  constructor() {
+    this.SendAttachment = new SendAttachment()
+  }
   async init(orderForm) {
     const { items } = orderForm
 
     const customDataDomain =
-      orderForm.customData?.customApps.filter(i => i.id === 'domain-assurant') || []
+      orderForm.customData?.customApps.filter(
+        i => i.id === 'domain-assurant'
+      ) || []
 
     const transport =
       customDataDomain.length > 0
         ? JSON.parse(
-          customDataDomain[0].fields.trade_in_option_selected || '[]'
-        )
+            customDataDomain[0].fields.trade_in_option_selected || '[]'
+          )
         : []
 
     if (items.length && transport.length) {
@@ -22,16 +28,9 @@ export default class TradeIn {
       transport.length &&
       localStorage.getItem('transport')
     ) {
-      this.removeTradeInDetails()
+      // this.openWarningTradein()
       await this.removeCustomDataTradeIn()
     }
-  }
-
-  removeTradeInDetails() {
-    $('#total-details-tradein').remove()
-    $('#text-details-tradein').remove()
-
-    this.openWarningTradein()
   }
 
   openWarningTradein() {
@@ -54,15 +53,17 @@ export default class TradeIn {
 
       _checkoutElem.append(_component)
       setTimeout(() => {
-        $('#warning-modal-tradein .container-warning-modal-tradein').addClass("active")
-      }, 200);
+        $('#warning-modal-tradein .container-warning-modal-tradein').addClass(
+          'active'
+        )
+      }, 200)
     } catch (e) {
       console.error('openWarningTradein error:', e)
     }
   }
 
   rootPath() {
-    return window.location.pathname.split("/")[1] === "br" ? "/br" : ""
+    return window.location.pathname.split('/')[1] === 'br' ? '/br' : ''
   }
 
   checkTradeIn(items, transport) {
@@ -93,7 +94,7 @@ export default class TradeIn {
         `${formatCurrencyBRL(totalTradeIn, false)}*`
       )
     } else if (totalTradeIn === 0) {
-      this.removeTradeInDetails()
+      // this.openWarningTradein()
       this.removeCustomDataTradeIn()
     }
 
@@ -102,7 +103,7 @@ export default class TradeIn {
     )
 
     if (!newTransport.length) {
-      this.removeTradeInDetails()
+      // this.openWarningTradein()
       this.removeCustomDataTradeIn()
     } else if (newTransport.length < transport.length) {
       this.putCustomData(newTransport, totalTradeIn)
@@ -117,9 +118,9 @@ export default class TradeIn {
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
             <td style="font-size: 14px; color: #000000; font-weight: 400; max-width: 245px;">Troca Smart Samsung - Dinheiro creditado em conta após a entrega do aparelho usado e a avaliação da Assurant</td>
             <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(
-        totalTradeIn,
-        false
-      )}*
+              totalTradeIn,
+              false
+            )}*
             </td>
           </tr>
         </tbody>
@@ -162,51 +163,74 @@ export default class TradeIn {
     const t0 = performance.now()
 
     const { orderFormId } = window.vtexjs.checkout.orderForm
-    const openTextField = localStorage.getItem('tradeInCustom')
+
+    const tradeInCustom = localStorage.getItem('tradeInCustom')
     const transport = localStorage.getItem('transport')
 
-    if (openTextField !== null && openTextField !== 'null') {
-      localStorage.removeItem('tradeInCustom')
-      window.vtexjs.checkout.sendAttachment('openTextField', { value: null })
-    }
+    if(tradeInCustom) localStorage.removeItem('tradeInCustom')
+    if(transport) localStorage.removeItem('transport')
 
-    if (transport !== null) {
-      localStorage.removeItem('transport')
+    $('#total-details-tradein').remove()
+    $('#text-details-tradein').remove()
+    
+    const deleteRequests = [
+      $.ajax({
+        url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_option_selected`,
+        type: 'DELETE',
+      }),
+      $.ajax({
+        url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_total_value`,
+        type: 'DELETE',
+      }),
+    ]
 
-      const deleteRequests = [
-        $.ajax({
-          url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_option_selected`,
-          type: 'DELETE',
-        }),
-        $.ajax({
-          url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_total_value`,
-          type: 'DELETE',
-        }),
-      ]
-
-      // chamadas em paralelo reduzindo bons segundos das requisições
-      await Promise.all(deleteRequests)
-        .catch(error => {
-          console.error('Erro ao excluir dados personalizados:', error)
-        })
-    }
-
-  }
-
-  async validateTradeinCustomData() {
-    const orderForm = await window.vtexjs.checkout.getOrderForm().done(function (orderForm) {
-      return orderForm
+    // chamadas em paralelo reduzindo bons segundos das requisições
+    await Promise.all(deleteRequests).catch(error => {
+      console.error('Erro ao excluir dados personalizados:', error)
     })
 
-    const customDataDomain = orderForm?.customData?.customApps.filter(
-      i => i.id === 'domain-assurant'
-    ) || []
+    this.SendAttachment.sendOpenTextField()
+  }
+
+  openWarningTradeinUpdate() {
+    try {
+      const _checkoutElem = $('body')
+      const _component = `
+        <div id="warning-modal-tradein-update">
+          <div class="container-warning-modal-tradein-update">
+            <p class="text-warning-modal-tradein-update">
+              <b>Atenção:</b> O valor da sua Troca Smart foi atualizado. Confira o novo valor no resumo do pedido.
+            </p>
+          </div>
+        </div>
+      `
+
+      if (_checkoutElem.find('#warning-modal-tradein-update').length > 0) {
+        return
+      }
+
+      _checkoutElem.append(_component)
+      setTimeout(() => {
+        $('#warning-modal-tradein-update .container-warning-modal-tradein-update').addClass(
+          'inactive'
+        )
+      }, 10000)
+    } catch (e) {
+      console.error('openWarningTradein error:', e)
+    }
+  }
+
+  async validateTradeinCustomData(orderForm) {
+    const customDataDomain =
+      orderForm?.customData?.customApps.filter(
+        i => i.id === 'domain-assurant'
+      ) || []
 
     const transport =
       customDataDomain.length > 0
         ? JSON.parse(
-          customDataDomain[0].fields.trade_in_option_selected || '[]'
-        )
+            customDataDomain[0].fields.trade_in_option_selected || '[]'
+          )
         : []
 
     let total = 0
@@ -221,15 +245,18 @@ export default class TradeIn {
       })
 
       arrayProductsTrocafone.forEach(item => {
-        const params = `idCategory=${item.idCategory}&idBrand=${item.idBrand}&idModel=${item.idModel}&nocache=${Date.now()}`
+        const params = `idCategory=${item.idCategory}&idBrand=${
+          item.idBrand
+        }&idModel=${item.idModel}&nocache=${Date.now()}`
         const request = fetch(
-          `${this.rootPath()}/tradein/trocafone/getProduct?${params}&isBoosted=${item.boosted
+          `${this.rootPath()}/tradein/trocafone/getProduct?${params}&isBoosted=${
+            item.boosted
           }`
         )
           .then(response => response.json())
-          .then(response => response.products.find(
-            p => p.id === item.idProduct
-          ))
+          .then(response =>
+            response.products.find(p => p.id === item.idProduct)
+          )
 
         arrayPromise.push(request)
       })
@@ -239,10 +266,7 @@ export default class TradeIn {
           mainProduct.evaluatedProducts.forEach(item => {
             const resultTrocafone = values.find(v => v.id === item.idProduct)
 
-            if (
-              !!resultTrocafone &&
-              !!resultTrocafone.id
-            ) {
+            if (!!resultTrocafone && !!resultTrocafone.id) {
               if (!!resultTrocafone.gradings) {
                 const grading = resultTrocafone.gradings.find(
                   g => g.sku === item.grading.sku
@@ -251,7 +275,9 @@ export default class TradeIn {
                 if (!!grading && !!grading.price) {
                   item.price = grading.price
                   item.grading = grading
-                  item.valueWithBoost = item.boosted ? grading.price : item.valueWithBoost
+                  item.valueWithBoost = item.boosted
+                    ? grading.price
+                    : item.valueWithBoost
                   total += item.price
                   return
                 }
@@ -263,10 +289,12 @@ export default class TradeIn {
         })
 
         const transportString = JSON.stringify(transport)
+
         if (
           transportString !==
           customDataDomain[0].fields.trade_in_option_selected
         ) {
+          this.openWarningTradeinUpdate()
           this.putCustomData(transport, total)
         }
       })
