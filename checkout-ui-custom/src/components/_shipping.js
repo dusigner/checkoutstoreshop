@@ -306,30 +306,75 @@ export default class CustomShippingData {
   }
 
   checkReceiverName(orderForm) {
-    if (!orderForm) return
-
-    const profileData = orderForm.clientProfileData
-
-    if (!profileData) return
-
+    if (!orderForm) return;
+  
+    const profileData = orderForm.clientProfileData;
+    if (!profileData) return;
+  
     try {
-      const receiverName = `${profileData.firstName} ${profileData.lastName}`
-      const $receiverNameInput = $('#ship-receiverName')
-
-      if ($.trim($receiverNameInput.val()) === $.trim(receiverName)) {
-        $receiverNameInput
-          .prev('label[for="ship-receiverName"]')
-          .text('Destinatário é o mesmo da entrega')
-      } else {
-        $receiverNameInput
-          .prev('label[for="ship-receiverName"]')
-          .text('Destinatário')
+      const receiverName = `${profileData.firstName} ${profileData.lastName}`;
+      const $receiverNameInput = $('#ship-receiverName');
+  
+      // Adicionar o valor inicial se o campo estiver vazio
+      if (!$receiverNameInput.val().trim() && (!$receiverNameInput.attr('data-edited') || $receiverNameInput.attr('data-edited') === 'false')) {
+        $receiverNameInput.val(receiverName);
+      }
+  
+      if (!$receiverNameInput.attr('data-edited')) {
+        $receiverNameInput.attr('data-edited', 'false');
+      }
+  
+      $receiverNameInput.on('focus', function () {
+        if (!$(this).val().trim() && $(this).attr('data-edited') === 'false') {
+          $(this).val(receiverName).trigger('input');
+        }
+      });
+  
+      const updateLabel = () => {
+        const label = $receiverNameInput.prev('label[for="ship-receiverName"]');
+        if ($receiverNameInput.val().trim() === receiverName.trim()) {
+          label.text('Destinatário é o mesmo da entrega');
+        } else {
+          label.text('Destinatário');
+        }
+      };
+  
+      $receiverNameInput.on('input', function () {
+        if ($(this).val().trim()) {
+          $(this).attr('data-edited', 'true');
+        }
+        updateLabel();
+      });
+  
+      updateLabel();
+  
+      if (!$('#changeReceiverLink').length) {
+        const $link = $('<a>')
+          .attr('href', '#')
+          .attr('id', 'changeReceiverLink')
+          .text('Não é você? Alterar o Destinatário')
+          .css({
+            display: 'block',
+            marginTop: '5px',
+            color: '#007bff',
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            fontSize: '12px',
+          })
+          .on('click', function (e) {
+            e.preventDefault();
+            $receiverNameInput[0].focus();
+            $receiverNameInput.val('0').attr('data-edited', 'true');
+            $receiverNameInput.trigger('input');
+          });
+  
+        // Inserir o link após o input
+        $receiverNameInput.parent().append($link);
       }
     } catch (err) {
-      console.error(`Erro ao verificar campo destinatário: ${err}`)
+      console.error(`Erro ao verificar campo destinatário: ${err}`);
     }
   }
-
   
   alertNumberOrReciver() {
     try {
