@@ -1,5 +1,5 @@
 /* eslint-disable vtex/prefer-early-return */
-import { formatCurrencyBRL } from './_utils'
+import { formatCurrencyBRL, getCustomDataFields } from './_utils'
 import SendAttachment from './_sendAttachment'
 
 export default class TradeIn {
@@ -9,31 +9,51 @@ export default class TradeIn {
   async init(orderForm) {
     const { items } = orderForm
 
-    const customDataDomain =
-      orderForm.customData?.customApps.filter(
-        i => i.id === 'domain-assurant'
-      ) || []
+    const tradeInFromLocalStorage = JSON.parse(localStorage.getItem('transport'))
+    const tradeInFromCustomData = this.getTradeInFromCustomData()
 
-    const transport =
-      customDataDomain.length > 0
-        ? JSON.parse(
-            customDataDomain[0].fields.trade_in_option_selected || '[]'
-          )
-        : []
-
-    if (items.length && transport.length) {
-      this.checkTradeIn(items, transport)
+    if (items.length && tradeInFromCustomData) {
+      this.checkTradeIn(items, tradeInFromCustomData?.trade_in_option_selected ?? [])
     } else if (
       !items.length &&
-      transport.length &&
-      localStorage.getItem('transport')
+      tradeInFromCustomData &&
+      tradeInFromLocalStorage
     ) {
-      // this.openWarningTradein()
       await this.removeCustomDataTradeIn()
+    }  else if (
+      tradeInFromLocalStorage &&
+      !tradeInFromCustomData
+    ) {
+      const itemWithTradeIn = items?.find(
+        item => tradeInFromLocalStorage?.some(
+          transportItem => item.productId === transportItem.mainProductId
+        )
+      )
+  
+      if (itemWithTradeIn) {
+        const { id, detailUrl } = itemWithTradeIn
+        this.openWarningTradein({ detailUrl: `${detailUrl}?skuId=${id}` })
+      }
     }
   }
 
-  openWarningTradein() {
+  getTradeInFromCustomData() {
+    try {
+      const fields = getCustomDataFields({
+        app: 'domain-assurant'
+      })
+  
+      if (Object.keys(fields).length) {
+        return fields
+      }
+  
+      return null
+    } catch {
+      return null
+    }
+  }
+
+  openWarningTradein({ detailUrl = '/' } = {}) {
     try {
       const _checkoutElem = $('body')
       const _component = `
@@ -42,12 +62,12 @@ export default class TradeIn {
             <p class="text-warning-modal-tradein">
               <b>Atenção:</b> Os dados da sua Troca Smart Samsung não foram salvos. Por favor refaça o processo para confirmar.
             </p>
-            <a href="/" class="action-warning-modal-tradein">Refazer</a>
+            <a href="${this.rootPath()}${detailUrl}&scroll=tradeIn" class="action-warning-modal-tradein">Refazer</a>
           </div>
         </div>
       `
 
-      if (_checkoutElem.find('#warning-modal-tradein').length > 0) {
+      if ($('.container-warning-modal-tradein.active').length > 0) {
         return
       }
 
@@ -57,6 +77,10 @@ export default class TradeIn {
           'active'
         )
       }, 200)
+
+      setTimeout(() => {
+        $('#warning-modal-tradein .container-warning-modal-tradein').removeClass("active")
+      }, 1000 * 10); // 10 seconds
     } catch (e) {
       console.error('openWarningTradein error:', e)
     }
