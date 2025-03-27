@@ -275,10 +275,14 @@ svg.vtex-omnishipping-1-x-svg {
 
 			// To sort the PaymentGroup positions, just change the order
 			$PaymentGroups: (
-				'#payment-group-instantPaymentPaymentGroup',
-				// PIX
 				'#payment-group-creditCardPaymentGroup',
 				// Normal Credit Card
+				'#payment-group-instantPaymentPaymentGroup',
+				// PIX
+				'#payment-group-MercadoPagoProPaymentGroup',
+				// MERCADO PAGO
+				'#payment-group-NubankPaymentGroup',
+				// Nubank
 				'#payment-group-customPrivate_501PaymentGroup',
 				// SSG Itaucard
 				'#payment-group-bankInvoicePaymentGroup',
