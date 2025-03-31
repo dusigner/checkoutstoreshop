@@ -33,7 +33,7 @@ export const formatNumberBRL = _value =>
   new Intl.NumberFormat('pt-BR').format(_value)
 
 export function rootPath() {
-  return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
+  return window?.__RUNTIME__?.rootPath ? window?.__RUNTIME__?.rootPath : ''
 }
 
 export async function getSessionCookie() {
@@ -46,7 +46,7 @@ export async function getSessionCookie() {
 
     return cookieSessao; 
   } catch (error) {
-    console.error("Erro:", error);
+    console.error("Erro getSessionCookie:", error);
     throw error;
   }
 }

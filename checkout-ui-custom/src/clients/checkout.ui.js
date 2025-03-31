@@ -22,7 +22,8 @@ import {
   debounce,
   formatCurrencyBRL,
   formatNegativeValue,
-  getMaxInstallmentByPaymentSystem
+  getMaxInstallmentByPaymentSystem,
+  getSessionCookie
 } from '../components/_utils'
 import { customHeader } from '../components/headerCustom/header'
 import { Rewards } from '../components/rewards/_rewards'
@@ -1613,7 +1614,6 @@ export class CheckoutCustom {
   start() {
     const _this = this
     try {
-
       addEventListener('hashchange', async (event) => {
         const showHeader = ['#/payment', '#/shipping', '#/profile']
         const { hash } = event.target.location
@@ -1794,6 +1794,14 @@ export class CheckoutCustom {
         }
       })
 
+      if(!_this.sessionPolicy) {
+        getSessionCookie().then(session => {
+          const policy = session?.namespaces?.store?.channel?.value
+          console.log("policy ==>", policy)
+          _this.sessionPolicy = policy
+        })
+      }
+
       $(window).on('orderFormUpdated.vtex', async function (evt, orderForm) {
         _this.update(orderForm)
         _this.showEmptyCart(orderForm)
@@ -1807,13 +1815,12 @@ export class CheckoutCustom {
         // })
 
         // VERIFY IF SOME FIDELITY PARTNER DOESNT ACCEPT REWARDS, THEN DONT SHOW REWARDS INFOS
-        const doesntAcceptRewards =
-          window.sessionStorage.getItem('partnerRewards') === 'false'
+        const doesntAcceptRewards = _this.sessionPolicy && _this.sessionPolicy === '72' 
         if (!doesntAcceptRewards) {
           _this.Rewards = new Rewards()
         }
 
-        _this.Rewards.showObsRewards()
+        _this.Rewards?.showObsRewards()
 
         if (!window.vtexjs.checkout.orderForm.loggedIn) {
           _this.preEmail.createElementSamsungAccountLogin()
@@ -1835,8 +1842,8 @@ export class CheckoutCustom {
           _this.defaultGiftCard(orderForm)
           _this.shipping.removeIfHasntPrice()
           _this.profile.addFieldsProfileToSummary(orderForm)
-          _this.Rewards.cancelRewardsDiscount(true)
-          _this.Rewards.showPointsSimulation()
+          _this.Rewards?.cancelRewardsDiscount(true)
+          _this.Rewards?.showPointsSimulation()
           _this.verifyCSP(orderForm)
           _this.TradeIn.validateTradeinCustomData(orderForm)
         }
@@ -1848,7 +1855,7 @@ export class CheckoutCustom {
           _this.profile.addDateBirthField()
           _this.profile.addMsgPhone()
           _this.profile.addTerms(orderForm)
-          _this.Rewards.showPointsSimulation()
+          _this.Rewards?.showPointsSimulation()
         }
         if (window.location.hash === '#/shipping') {
           _this.shipping.checkReceiverName(orderForm)
