@@ -1971,6 +1971,17 @@ export class CheckoutCustom {
     }
   }
 
+  changeToAnonymousUserAndReload(orderFormId) {
+    fetch(
+      `${rootPath()}/checkout/changeToAnonymousUser/${orderFormId}`
+    ).then(() => {
+      console.log('changeToAnonymousUserAndReload: reloading...') // this log is necessary to help debugging in production
+      location.reload()
+    }).catch((error) => {
+      console.error(`Erro na função changeToAnonymousUser: ${error}`)
+    })
+  }
+
   /**
    * Essa função é responsável por limpar os dados pessoais (clientProfielData).
    * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar
@@ -1979,19 +1990,33 @@ export class CheckoutCustom {
   handleOrderFromEndless(hash, orderForm) {
     if (hash !== '#/cart') return
 
-    const isOrderFromEndless = orderForm.customData?.customApps?.some(
-      customApp => customApp.id === 'endlessaisle'
-    )
-    if (!isOrderFromEndless) return
+    const _this = this
 
-    if (!orderForm.clientProfileData) return
+    try {
+      const isEndlessOrderForm = orderForm.customData?.customApps?.some(
+        customApp => customApp.id === 'endlessaisle'
+      )
 
-    if (!orderForm.clientProfileData.email) return
+      const orderFormId = orderForm?.orderFormId
+      const orderFormUser = orderForm?.clientProfileData?.email
 
-    fetch(
-      `${rootPath()}/checkout/changeToAnonymousUser/${orderForm.orderFormId}`
-    ).then(() => {
-      location.reload()
-    })
+      if (isEndlessOrderForm && orderFormId && orderFormUser) {
+        fetch(`${rootPath()}/api/vtexid/pub/authenticated/user`, {
+          credentials: 'include'
+        }).then(response => response.json()).then(function (response) {
+          if (!response) {
+            return false
+          }
+
+          const authenticatedUser = response.user;
+
+          if (orderFormUser !== authenticatedUser) {
+            _this.changeToAnonymousUserAndReload(orderFormId)
+          }
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
