@@ -2036,28 +2036,17 @@ svg.vtex-omnishipping-1-x-svg {
 	}
 
 	.PaymentCardFlags {
-		position: absolute;
-		top: calc(30px + (#{$inputHeight} - 25px)/2);
-		right: 16px;
-		padding: 0;
+		p {
+      display: flex;
+      flex-wrap: wrap;
+    }
 
-		.card-flag-label input {
-			display: none;
-		}
-
-		.card-flag-label {
-			width: auto;
-		}
-
-		.card-flag {
-			opacity: 0.7;
-			display: none;
-		}
-
-		.card-flag.card-selected {
-			opacity: 1;
-			display: block;
-		}
+		.card-flag-label[title="Visa"] { order: 1; }
+    .card-flag-label[title="Mastercard"] { order: 2; }
+    .card-flag-label[title="American Express"] { order: 3; }
+    .card-flag-label[title="Elo"] { order: 4; }
+    .card-flag-label[title="Hipercard"] { order: 5; }
+    .card-flag-label[title="Diners"] { order: 6; }
 	}
 
 
