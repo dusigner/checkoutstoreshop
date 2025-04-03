@@ -1,4 +1,5 @@
 import { OptInDimensions } from "./_optinDimensions"
+import { getSessionCookie } from "../components/_utils"
 
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable vtex/prefer-early-return */
@@ -151,6 +152,57 @@ export default class CustomShippingData {
       console.error(`Ocorreu um erro ao consultar o estoque virtual: ${err}`)
     }
   }
+  
+  /**
+   * @async
+   * @param {Object} params 
+   * @param {string} params.zipCode 
+   * @param {"success" | "error"} params.status 
+   * @param {Object} [params.cepResponseBody] 
+   * @param {string} [params.errorMessage] 
+   * @returns {Promise<boolean>}
+   */
+  async reportCepAttempt({ zipCode, status, cepResponseBody, errorMessage }) {
+    const { 
+      id: vtexSessionId = "unknown",
+     } = await getSessionCookie() 
+
+
+
+    const body = {
+      page: "checkout",
+      vtexSessionId,
+      orderFormId: vtexjs?.checkout?.orderForm?.orderFormId ?? "unknown",
+      zipCode,
+      account: window?.vtex?.accountName ?? "unknown",
+      status,
+      cepResponseBody,
+      errorMessage,
+    }
+
+    try {
+      const endpoint = "/_v/private/app-pdp/v1/report-cep-attempts";
+      const url = new URL(endpoint, this.rootPath() || window.location.origin);
+
+      const { status } = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      })
+
+      if (status !== 200) {
+        console.error(`Unexpected status code ${status} when sending CEP attempt to the server`);
+					return false;
+      }
+
+      return true
+    } catch (error) {
+      console.error('Error when sending CEP attempt to the server:', error);
+      return false;
+    }
+  }
 
   validadePostalCode(orderForm) {
     if (!orderForm) return
@@ -188,10 +240,13 @@ export default class CustomShippingData {
           clearInterval(interval)
         }
       }, 50)
-
       if (orderFormAddress.city) {
         _this.setValidPostalCode()
         _this.removeInvalidPostalCodeMessage()
+        _this.reportCepAttempt({
+          zipCode: orderFormAddress.postalCode,
+          status: "success",
+        })
 
         return
       }
@@ -202,18 +257,40 @@ export default class CustomShippingData {
           }`
         ).done(function (data) {
           const address = data
-
           if (address.postalCode && !address.city) {
+            _this.reportCepAttempt({
+              zipCode: orderFormAddress.postalCode,
+              status: "error",
+              cepResponseBody: address,
+            })
             _this.setInvalidPostalCode()
             _this.addInvalidPostalCodeMessage()
+            
           } else {
+            _this.reportCepAttempt({
+              zipCode: orderFormAddress.postalCode,
+              status: "success",
+              cepResponseBody: address,
+            })
             _this.setValidPostalCode()
             _this.removeInvalidPostalCodeMessage()
+            
           }
+        })
+        .error(function(_, __, errorThrown) {
+            _this.reportCepAttempt({
+            zipCode: orderFormAddress.postalCode,
+            status: "error",
+            errorMessage: errorThrown instanceof Error ? errorThrown.message : "unknown error"
+          })
         })
       }
     } catch (err) {
-      console.error(`Ocorreu um erro ao validar CEP: ${err}`)
+      this.reportCepAttempt({
+        zipCode: orderForm.shippingData.address.postalCode,
+        status: "error",
+        errorMessage: err instanceof Error ? err.message : String(err),
+      })
     }
   }
 
