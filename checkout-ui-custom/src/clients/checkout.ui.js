@@ -1321,8 +1321,45 @@ export class CheckoutCustom {
     })
   }
 
+  orderPaymentMethodScroll(paymentMethod){
+    let headerHeight = $(".main-header").outerHeight() || 0;
+    $("html, body").animate({
+        scrollTop: paymentMethod.offset().top - (headerHeight + 50)
+    }, 500);
+  }
+
+  orderPaymentMethod(){
+    if (window.innerWidth > 769) return;
+
+    const _this = this
+    $(".payment-group-item").each(function (index) {
+        let paymentMethod = $(".payment-method").eq(index);
+        $(this).after(paymentMethod);
+        paymentMethod.addClass(`payment-method-order-${index + 1}`);
+    });
+
+    $(".payment-group-item").on("click", function () {
+        let index = $(".payment-group-item").index(this);
+        let paymentMethod = $(".payment-method").eq(index);
+
+        $(".payment-method").removeClass(function (index, className) {
+            return (className.match(/(^|\s)order-\d+/g) || []).join(' ');
+        });
+
+        paymentMethod.addClass(`payment-method-order-${index + 1}`);
+
+        if (!paymentMethod.is(":visible")) {
+            paymentMethod.slideDown();
+        }
+
+        _this.orderPaymentMethodScroll(paymentMethod);
+    });
+  }
+
+
   defaultPaymentMethod() {
     try {
+      const _this = this
       // Default Payment Method: PIX
       const $defaultPaymentMethod = $(
         '#payment-group-instantPaymentPaymentGroup'
@@ -1333,6 +1370,7 @@ export class CheckoutCustom {
         !$defaultPaymentMethod.is('.active')
       ) {
         $defaultPaymentMethod.trigger('click')
+        _this.orderPaymentMethodScroll($defaultPaymentMethod);
       }
 
       this.hasSelectedDefaultPaymentMethod = true
@@ -1746,6 +1784,7 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
+          _this.orderPaymentMethod()
           if (_this.orderForm) {
             _this.defaultGiftCard(_this.orderForm)
             _this.verifyCSP(_this.orderForm)
@@ -1957,6 +1996,7 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
+          _this.orderPaymentMethod()
         }
 
         // #shipping

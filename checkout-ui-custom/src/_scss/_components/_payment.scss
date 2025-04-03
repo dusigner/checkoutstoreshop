@@ -276,22 +276,32 @@ svg.vtex-omnishipping-1-x-svg {
 			// To sort the PaymentGroup positions, just change the order
 			$PaymentGroups: (
 				'#payment-group-creditCardPaymentGroup',
+        '.payment-method-order-1',
 				// Normal Credit Card
 				'#payment-group-instantPaymentPaymentGroup',
+        '.payment-method-order-2',
 				// PIX
 				'#payment-group-MercadoPagoProPaymentGroup',
+        '.payment-method-order-3',
 				// MERCADO PAGO
 				'#payment-group-NubankPaymentGroup',
+        '.payment-method-order-4',
 				// Nubank
 				'#payment-group-customPrivate_501PaymentGroup',
+        '.payment-method-order-5',
 				// SSG Itaucard
 				'#payment-group-bankInvoicePaymentGroup',
+        '.payment-method-order-6',
 				// Boleto
 				'#payment-group-SamsungPayPaymentGroup',
+        '.payment-method-order-7',
 				// SSG pay
 				'#payment-group-AmeDigitalPaymentGroup',
+        '.payment-method-order-8',
 				// Ame
-				'#payment-group-picPayPaymentGroup' // PicPay
+				'#payment-group-picPayPaymentGroup',
+        '.payment-method-order-9',
+         // PicPay
 			);
 
 		@for $i from 1 through length($PaymentGroups) {
@@ -309,7 +319,7 @@ svg.vtex-omnishipping-1-x-svg {
 			margin-bottom: 0px;
 			order: 20;
 		}
-	}
+	  }
 
 	p.link.link-gift-card *,
 	.payment-group-item * {
@@ -655,6 +665,13 @@ svg.vtex-omnishipping-1-x-svg {
 		}
 
 	}
+
+  @media(max-width:768px) {
+		.payment-pix-flow {
+        margin-top: calc(100vh - 380px);
+      }
+	}
+  
 }
 
 .step {
