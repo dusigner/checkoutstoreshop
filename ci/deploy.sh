@@ -12,7 +12,7 @@ APP_KEY="$2"
 APP_TOKEN="$3"
 
 erro_handler() {
-  echo "Erro na linha $1: comando '$2' falhou com c√≥digo $3"
+  echo "Erro na linha $1: comando '$2' falhou com código $3"
   exit 1
 }
 
@@ -26,7 +26,7 @@ git clone -b $BITBUCKET_BRANCH $GIT_REPO
 echo "cd repository ${BITBUCKET_REPO_SLUG}"
 cd $BITBUCKET_REPO_SLUG
 
-git config user.email fojlj5ra7srwprh9erckzfg6lib355@bots.bitbucket.org
+git config user.email cepjbcrwul6f8z6q9ylip1ve48taho@bots.bitbucket.org
 git remote set-url origin $GIT_REPO
 
 VENDOR=$(node -e "let p=require('./manifest.json'); console.log(p.vendor)")
