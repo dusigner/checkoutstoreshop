@@ -1,4 +1,4 @@
-import { OptInDimensions } from "./_optinDimensions"
+import { OptInDimensions } from "./_opDimensions"
 import { getSessionCookie } from "../components/_utils"
 
 /* eslint-disable no-prototype-builtins */

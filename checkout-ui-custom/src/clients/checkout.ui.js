@@ -31,7 +31,7 @@ import { fnsCustomAddressForm } from '../components/_customAddressForm'
 import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
-import { OptInDimensions } from '../components/_optinDimensions'
+import { OptInDimensions } from '../components/_opDimensions'
 
 const scripts = new Scripts()
 

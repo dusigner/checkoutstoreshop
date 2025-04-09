@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+
+### --- Ticket ---
+Ticket: [EENGS-3734](https://jira.sdslasupport.com/jira/browse/EENGS-3734)
+Branch: feature/eengs-3734
+Workspace: https://eengs3734pipeline--samsungbrshop.myvtex.com
+Dev: [Marlon Passos](m.felipe@partner.samsung.com)
+Data: 09-04-2025
+#### --- Description ---
+- Config CI to deploy to deploy APP by pipelines. 
+
 ## [0.8.15] - 2022-09-12
 
 ### Fixed

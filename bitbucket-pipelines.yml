@@ -1,0 +1,126 @@
+image: sdslasupport/vtex-toolbelt:latest
+
+definitions:
+  steps:
+    - step: &lint
+        name: lint code
+        script:
+          - echo "wihtout lint"
+    - step: &vtex_link
+        name: vtex link
+        max-time: 10
+        script:
+          - git config user.email fojlj5ra7srwprh9erckzfg6lib355@bots.bitbucket.org
+          - ./ci/install-deps.sh
+          - ./ci/link.sh
+        caches:
+          - yarn
+  caches:
+    yarn:
+      key:
+        files:
+          - yarn.lock
+          - checkout-ui-custom/yarn.lock
+      path: /usr/local/share/.cache/yarn
+
+pipelines:
+  default:
+    - parallel:
+        - step: *vtex_link
+        - step: *lint
+  custom:
+    deployment-to-samsungbrshop: &deployment-to-samsungbrshop
+      - step:
+          name: Deployment to samsungbrshop
+          script:
+            - ./ci/deploy.sh samsungbrshop $VTEX_APP_KEY_SHOP $VTEX_APP_TOKEN_SHOP
+    deployment-to-samsungbrtests: &deployment-to-samsungbrtests
+      - step:
+          name: Deployment to samsungbrtests
+          script:
+            - ./ci/deploy.sh samsungbrtests $VTEX_APP_KEY_BRTESTS $VTEX_APP_TOKEN_BRTESTS
+  deployment-to-brshop-and-brtests:
+      - parallel:
+            - <<: *deployment-to-samsungbrshop
+            - <<: *deployment-to-samsungbrtests
+  branches:
+    main:
+      - parallel:
+          - step: *vtex_link
+          - step: *lint
+      - step:
+          name: Tag version And Deploy
+          script:
+            - git clone -b $BITBUCKET_BRANCH git@bitbucket.org:${BITBUCKET_REPO_FULL_NAME}.git
+            - cd $BITBUCKET_REPO_SLUG
+            - git config user.email fojlj5ra7srwprh9erckzfg6lib355@bots.bitbucket.org
+            - git remote set-url origin git@bitbucket.org:${BITBUCKET_REPO_FULL_NAME}.git
+            - VENDOR=$(echo "let p=$(<manifest.json);console.log(p.vendor)" | node)
+            - NAME=$(echo "let p=$(<manifest.json);console.log(p.name)" | node)
+            - VERSION=$(echo "let p=$(<manifest.json);console.log(p.version)" | node)
+            - git tag -am "Version $VERSION" $VERSION
+            - ./ci/install-deps.sh
+            - git push origin $VERSION
+            - vtex login samsungbr --appkey $VTEX_APP_KEY_BR --apptoken $VTEX_APP_TOKEN_BR
+            - yes | vtex publish --force
+            - ./ci/send-logs.sh "Publish version" $BITBUCKET_REPO_SLUG "" $VENDOR.$NAME ""
+    release/*:
+      - parallel:
+          - step: *vtex_link
+          - step: *lint
+      - step:
+          clone:
+            enabled: false
+          name: Finish release
+          script:
+            - git clone -b $BITBUCKET_BRANCH git@bitbucket.org:${BITBUCKET_REPO_FULL_NAME}.git
+            - cd $BITBUCKET_REPO_SLUG
+            - git config user.email fojlj5ra7srwprh9erckzfg6lib355@bots.bitbucket.org
+            - git fetch origin develop:develop
+            - ./ci/bump-up-version.sh patch
+            - git add manifest.json
+
+            - VERSION=$(echo "let p=$(<manifest.json);console.log(p.version)" | node)
+            - git commit -m "[skip ci] Bump up package version $VERSION"
+            - ./ci/update-changelog.sh $VERSION
+            - git add CHANGELOG.md
+            - git commit -m "[skip ci] Update CHANGELOG.md $VERSION"
+            - git push origin $BITBUCKET_BRANCH
+          trigger: manual
+      - step:
+          clone:
+            enabled: false
+          name: Merge back
+          script:
+            - git clone -b $BITBUCKET_BRANCH git@bitbucket.org:${BITBUCKET_REPO_FULL_NAME}.git
+            - cd $BITBUCKET_REPO_SLUG
+            - git config user.email fojlj5ra7srwprh9erckzfg6lib355@bots.bitbucket.org
+            - VENDOR=$(echo "let p=$(<manifest.json);console.log(p.vendor)" | node)
+            - NAME=$(echo "let p=$(<manifest.json);console.log(p.name)" | node)
+            - VERSION=$(echo "let p=$(<manifest.json);console.log(p.version)" | node)
+            - git fetch origin develop:develop
+            - git fetch origin main:main
+            - git reset $(git merge-base develop $(git branch --show-current))
+            - git add .
+            - git commit -m "[skip ci] Release $VERSION"
+            - git checkout main
+            - git merge --strategy recursive $BITBUCKET_BRANCH
+            - git push origin main
+            - git checkout develop
+            - git merge --strategy recursive $BITBUCKET_BRANCH
+            - git push origin develop
+            - ./ci/send-logs.sh "Create release" $BITBUCKET_REPO_SLUG "" $VENDOR.$NAME $VERSION
+            - ./ci/run-pipeline.sh main
+      - step:
+          name: Delete release
+          script:
+            - git push origin --delete $BITBUCKET_BRANCH
+    develop:
+      - parallel:
+          - step: *vtex_link
+          - step: *lint
+      - step:
+          name: Create release
+          script:
+            - ./ci/create-release.sh
+          trigger: manual
