@@ -79,7 +79,7 @@ pipelines:
             - git fetch origin develop:develop
             - ./ci/bump-up-version.sh patch
             - git add manifest.json
-            -git branch -l
+            - git branch -l
             - VERSION=$(echo "let p=$(<manifest.json);console.log(p.version)" | node)
             - git commit -m "[skip ci] Bump up package version $VERSION"
             - ./ci/update-changelog.sh $VERSION
