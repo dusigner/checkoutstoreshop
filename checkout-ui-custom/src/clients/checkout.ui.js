@@ -1153,44 +1153,7 @@ export class CheckoutCustom {
     updateDebounce()
   }
 
-  paymentBuilder(orderForm) {
-    const _this = this
-
-    if (orderForm && $('.payment-group-item-cards').length === 0) {
-      if (orderForm.paymentData) {
-        const paymentGroups = [
-          'debitCardPaymentGroup',
-          'creditCardPaymentGroup',
-        ]
-
-        let paymentGroupCardsHtml = ``
-
-        $.each(paymentGroups, function (p) {
-          paymentGroupCardsHtml = `<span class="payment-group-item-cards">`
-          $.each(
-            orderForm.paymentData.paymentSystems.filter(
-              item => item.groupName === paymentGroups[p]
-            ),
-            function () {
-              paymentGroupCardsHtml += `<span class="card-flag ${this.name}">${this.name}</span>`
-            }
-          )
-          paymentGroupCardsHtml += `</span>`
-          if (_this.accordionPayments) {
-            $(`#payment-group-${paymentGroups[p]}`).append(
-              paymentGroupCardsHtml
-            )
-          }
-        })
-
-        if (!_this.accordionPayments) {
-          $('#iframe-placeholder-creditCardPaymentGroup').prepend(
-            paymentGroupCardsHtml
-          )
-        }
-      }
-    }
-
+  paymentBuilder() {
     if (
       !this.accordionPayments ||
       $('.payment-group-list-btn').find('.v-custom-payment-item-wrap').length >
@@ -1328,33 +1291,42 @@ export class CheckoutCustom {
     }, 500);
   }
 
-  orderPaymentMethod(){
-    if (window.innerWidth > 769) return;
+  orderPaymentMethod() {
+		if (window.innerWidth > 769) return;
 
-    const _this = this
-    $(".payment-group-item").each(function (index) {
-        let paymentMethod = $(".payment-method").eq(index);
-        $(this).after(paymentMethod);
-        paymentMethod.addClass(`payment-method-order-${index + 1}`);
-    });
+		let lastIndex = null;
 
-    $(".payment-group-item").on("click", function () {
-        let index = $(".payment-group-item").index(this);
-        let paymentMethod = $(".payment-method").eq(index);
+		const observer = new MutationObserver((mutations, obs) => {
+			if ($('.payment-group-item').length > 0 && $('.payment-method').length > 0) {
+				obs.disconnect();
 
-        $(".payment-method").removeClass(function (index, className) {
-            return (className.match(/(^|\s)order-\d+/g) || []).join(' ');
-        });
+				const _this = this;
 
-        paymentMethod.addClass(`payment-method-order-${index + 1}`);
+				$('.payment-group-item').each(function (index) {
+					let paymentMethod = $('.payment-method').eq(index);
+					$(this).after(paymentMethod);
+					paymentMethod.addClass(`payment-method-order-${index + 1}`);
+				});
 
-        if (!paymentMethod.is(":visible")) {
-            paymentMethod.slideDown();
-        }
+				$('.payment-group-item').on('click', function () {
+					let index = $('.payment-group-item').index(this);
+					let paymentMethod = $('.payment-method').eq(index);
 
-        _this.orderPaymentMethodScroll(paymentMethod);
-    });
-  }
+					if (lastIndex === index) {
+						paymentMethod.slideToggle();
+						lastIndex = paymentMethod.is(':visible') ? index : null;
+					} else {
+						paymentMethod.slideDown();
+						lastIndex = index;
+					}
+
+					_this.orderPaymentMethodScroll(paymentMethod);
+				});
+			}
+		});
+
+		observer.observe(document.body, { childList: true, subtree: true });
+	}
 
 
   defaultPaymentMethod() {
@@ -1635,7 +1607,7 @@ export class CheckoutCustom {
 
     if (this.orderForm) {
       this.update(this.orderForm)
-      this.paymentBuilder(this.orderForm)
+      this.paymentBuilder()
       this.CSP.init(this.orderForm)
       this.SummaryGiftCard.init(this.orderForm)
       if (window.location.hash === '#/payment') {
@@ -1806,7 +1778,7 @@ export class CheckoutCustom {
         }
         if (_this.orderForm) {
           _this.indexedInItems(_this.orderForm)
-          _this.paymentBuilder(_this.orderForm)
+          _this.paymentBuilder()
           _this.customAddressFormInit(_this.orderForm)
           _this.removeCILoader()
 
