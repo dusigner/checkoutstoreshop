@@ -10,7 +10,7 @@ definitions:
         name: vtex link
         max-time: 10
         script:
-          - git config user.email cepjbcrwul6f8z6q9ylip1ve48taho@bots.bitbucket.org
+          - git config user.email $EMAIL_BOT_BITBUCKET
           - ./ci/install-deps.sh
           - ./ci/link.sh
         caches:
@@ -51,9 +51,9 @@ pipelines:
       - step:
           name: Tag version And Deploy
           script:
-            - git clone -b $BITBUCKET_BRANCH git@bitbucket.org:${BITBUCKET_REPO_FULL_NAME}.git
+            - git clone https://x-token-auth:$ACCESS_TOKEN_BITBUCKET@bitbucket.org/sdsla/samsungbr.store-checkout.git
             - cd $BITBUCKET_REPO_SLUG
-            - git config user.email cepjbcrwul6f8z6q9ylip1ve48taho@bots.bitbucket.org
+            - git config user.email $EMAIL_BOT_BITBUCKET
             - git remote set-url origin git@bitbucket.org:${BITBUCKET_REPO_FULL_NAME}.git
             - VENDOR=$(echo "let p=$(<manifest.json);console.log(p.vendor)" | node)
             - NAME=$(echo "let p=$(<manifest.json);console.log(p.name)" | node)
@@ -73,9 +73,9 @@ pipelines:
             enabled: false
           name: Finish release
           script:
-            - git clone -b $BITBUCKET_BRANCH git@bitbucket.org:${BITBUCKET_REPO_FULL_NAME}.git
+            - git clone https://x-token-auth:$ACCESS_TOKEN_BITBUCKET@bitbucket.org/sdsla/samsungbr.store-checkout.git
             - cd $BITBUCKET_REPO_SLUG
-            - git config user.email cepjbcrwul6f8z6q9ylip1ve48taho@bots.bitbucket.org
+            - git config user.email $EMAIL_BOT_BITBUCKET
             - git fetch origin develop:develop
             - ./ci/bump-up-version.sh patch
             - git add manifest.json
@@ -92,9 +92,9 @@ pipelines:
             enabled: false
           name: Merge back
           script:
-            - git clone -b $BITBUCKET_BRANCH git@bitbucket.org:${BITBUCKET_REPO_FULL_NAME}.git
+            - git clone https://x-token-auth:$ACCESS_TOKEN_BITBUCKET@bitbucket.org/sdsla/samsungbr.store-checkout.git
             - cd $BITBUCKET_REPO_SLUG
-            - git config user.email cepjbcrwul6f8z6q9ylip1ve48taho@bots.bitbucket.org
+            - git config user.email $EMAIL_BOT_BITBUCKET
             - VENDOR=$(echo "let p=$(<manifest.json);console.log(p.vendor)" | node)
             - NAME=$(echo "let p=$(<manifest.json);console.log(p.name)" | node)
             - VERSION=$(echo "let p=$(<manifest.json);console.log(p.version)" | node)
