@@ -1352,7 +1352,7 @@ export class CheckoutCustom {
             paymentMethod.slideDown();
         }
 
-        _this.orderPaymentMethodScroll(paymentMethod);
+        // _this.orderPaymentMethodScroll(paymentMethod);
     });
   }
 
@@ -1370,7 +1370,7 @@ export class CheckoutCustom {
         !$defaultPaymentMethod.is('.active')
       ) {
         $defaultPaymentMethod.trigger('click')
-        _this.orderPaymentMethodScroll($defaultPaymentMethod);
+        // _this.orderPaymentMethodScroll($defaultPaymentMethod);
       }
 
       this.hasSelectedDefaultPaymentMethod = true
@@ -1784,7 +1784,7 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
-          _this.orderPaymentMethod()
+          // _this.orderPaymentMethod()
           if (_this.orderForm) {
             _this.defaultGiftCard(_this.orderForm)
             _this.verifyCSP(_this.orderForm)
@@ -1996,7 +1996,7 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
-          _this.orderPaymentMethod()
+          // _this.orderPaymentMethod()
         }
 
         // #shipping
