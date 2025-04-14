@@ -1205,8 +1205,7 @@ svg.vtex-omnishipping-1-x-svg {
 		@media(max-width: 980px) {
 			width: 100%;
 			max-width: 100%;
-			position: relative;
-			top: 0;
+			position: unset;
 		}
 
 		.cart-items {
