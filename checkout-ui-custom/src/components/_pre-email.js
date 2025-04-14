@@ -75,10 +75,8 @@ export default class CustomPreEmail {
   }
 
   bindEvents() {
-    const _this = this
-
     $(document).on('click', '#btn-samsung-account', function () {
-      const returnUrl = encodeURIComponent(window?.location?.pathname);
+      const returnUrl = encodeURIComponent('/checkout/#/profile');
       const currentUrl = window?.location?.href;
       let newUrl;
       const oAuthRedirect = `/login?oAuthRedirect=Samsung&returnUrl=${returnUrl}`
