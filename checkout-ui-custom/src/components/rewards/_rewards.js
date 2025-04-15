@@ -55,6 +55,8 @@ export class Rewards {
               this.showObsRewards()
             }
           }
+
+          this.updateCustomData();
         },
         error: err => {
           return () => {
@@ -67,6 +69,7 @@ export class Rewards {
         this.getPointsSearch()
         this.showRewardsCalc()
         this.showObsRewards()
+        this.updateCustomData()
       }
     }
   }
@@ -358,7 +361,9 @@ export class Rewards {
     if ($('.switch-rewards input').length > 0) {
       $('.switch-rewards input').prop('disabled', false)
     }
+  }
 
+  updateCustomData() {
     const rewardsAccepted = $('#inputRewards').is(':checked')
 
     const data = {
