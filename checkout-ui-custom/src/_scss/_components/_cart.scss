@@ -45,6 +45,34 @@ h1#cart-title {
   display: none !important;
 }
 
+.container-cart h1#cart-title {
+  display: block !important;
+  font-size: 0 !important;
+
+  &::before {
+    content: "Carrinho";
+    font-size: 20px !important;
+    font-weight: bold;
+  }
+
+  &::after {
+    content: attr(data-quantity);
+    font-size: 12px !important;
+    font-weight: normal;
+    margin-left: 16px;
+    padding-left: 16px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    position: relative;
+    top: -1px;
+    border-left: 1px solid #000000;
+  }
+
+  body.v-custom-cart-empty & {
+    display: none !important;
+  }
+}
+
 .cart-more-options,
 .cart-template-holder .cart {
   padding: 20px 30px;
@@ -372,7 +400,6 @@ h1#cart-title {
 
         &.product-price,
         &.quantity-price {
-          width: 90px !important;
           white-space: nowrap;
           line-height: 16px;
 
@@ -405,6 +432,10 @@ h1#cart-title {
             &__best {
               font-weight: bold;
               font-size: $fontSize;
+
+              &::after {
+                content: " à vista";
+              }
             }
 
             &__list {
@@ -500,6 +531,7 @@ h1#cart-title {
         &.product-name {
           order: 2;
           grid-area: name;
+          max-width: 90%;
         }
 
         &.shipping-date {
@@ -512,7 +544,7 @@ h1#cart-title {
         &.product-price {
           order: 4;
           grid-area: price;
-          text-align: end;
+          text-align: left;
         }
 
         &.quantity-price {
@@ -1352,6 +1384,14 @@ h1#cart-title {
         font-weight: 700;
         color: #000;
       }
+    }
+
+    .new-discount-total {
+      font-weight: 700;
+    }
+
+    tr.Discounts .monetary, .new-discount-total {
+      color: #2189ff !important;
     }
   }
 

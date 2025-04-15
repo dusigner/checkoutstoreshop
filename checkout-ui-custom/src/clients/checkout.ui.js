@@ -966,6 +966,17 @@ export class CheckoutCustom {
     }
   }
 
+  setItemsCount(items = []) {
+    try {
+      const quantity = items.reduce((acc, item) => acc += item.quantity, 0)
+      const text = quantity === 1 ? 'item' : 'itens'
+
+      $('h1#cart-title').attr('data-quantity', `${quantity} ${text}`)
+    } catch (error) {
+      console.error('error: ', error);
+    }
+  }
+
   async enchancementSummaryCart(orderForm, path) {
 
     try {
@@ -1024,6 +1035,17 @@ export class CheckoutCustom {
           item => item.paymentSystem == 125
         ).installments
 
+        const creditCardPaymentGroup = orderForm?.paymentData?.paymentSystems?.find(
+          paymentSystem => paymentSystem?.groupName === 'creditCardPaymentGroup'
+        )
+
+        const customPrivate_501PaymentGroup = orderForm?.paymentData?.paymentSystems?.find(
+          paymentSystem => paymentSystem?.groupName === 'customPrivate_501PaymentGroup'
+        )
+
+        const paymentSystemId = 
+          customPrivate_501PaymentGroup?.stringId || creditCardPaymentGroup?.stringId
+
         if (!installmentPix.length) return
         const inCashPrice = installmentPix[0].total
         // Encontra as installments para do cartao visa (código 2)
@@ -1034,14 +1056,11 @@ export class CheckoutCustom {
         // ONLY WILL DO A NEW REQUEST CASE ORDERFORM TOTALPRICE BE CHANGED.
         if (_this.lastOrderFormTotalPrice !== orderForm.value) {
           _this.lastOrderFormTotalPrice = orderForm.value
-          _this.maxInstallment = await getMaxInstallmentByPaymentSystem('2')
+
+          if (paymentSystemId) {
+            _this.maxInstallment = await getMaxInstallmentByPaymentSystem(paymentSystemId)
+          }
         }
-        const discounts = orderForm.totalizers.filter(
-          val => val.id === 'Discounts'
-        )
-        const discountValue =
-          Math.abs(discounts && discounts.length > 0 ? discounts[0]?.value : 0) +
-          Math.abs(_this.discountPrices ? _this.discountPrices : 0)
 
         const _component =
           `
@@ -1051,26 +1070,11 @@ export class CheckoutCustom {
                 <p class="estimate-shipping">
                   ${formatCurrencyBRL(inCashPrice)}
                 </p>
-              </div>
-          ${!!_this.subTotalValueFinal && !!discountValue ?
-            `<div class="discount-values" style="font-size: 14px; margin-top: 10px; display: flex; justify-content: end; gap: 24px;">
-                <span style="text-decoration: line-through">
-                  ${formatCurrencyBRL(_this.subTotalValueFinal)}
-                </span> 
-                <b style="color:#2189FF; text-align: right">Economia de 
-                  ${formatCurrencyBRL(discountValue)}
-                </b>
-              </div>`
-            : ''
-          }
-          ${(_this.maxInstallment?.count > 1) ? (
+            </div>
+          ${(_this.maxInstallment?.count > 1 && _this.maxInstallment?.total > 0) ? (
             `<div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                <p>Ou parcelado em até ${_this.maxInstallment?.count}x
+                <p>Ou <strong>${formatCurrencyBRL(_this.maxInstallment.total)}</strong> parcelado em até <strong>${_this.maxInstallment.count}x</strong>
                   <span class="custom-tooltip">i</span>
-                </p>
-
-                <p class="discount-total" style="font-weight: 700;">
-                  ${formatCurrencyBRL(_this.maxInstallment?.total)}
                 </p>
               </div>
             </div>`
@@ -1108,6 +1112,7 @@ export class CheckoutCustom {
   async update(orderForm) {
     const _this = this
 
+    this.setItemsCount(orderForm?.items ?? [])
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)

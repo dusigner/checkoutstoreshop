@@ -1,8 +1,15 @@
 body {
-  &.v-custom-step-cart,
   &.v-custom-step-email {
     padding-top: 190px;
 
+    @media (max-width: $mobileWidth) {
+      padding-top: 112px;
+    }
+  }
+
+  &.v-custom-step-cart {
+    padding-top: 142px;
+    
     @media (max-width: $mobileWidth) {
       padding-top: 112px;
     }
