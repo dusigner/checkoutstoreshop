@@ -219,9 +219,17 @@ body {
 
 .container-cart h1,
 h1#orderform-title {
-  font-size: 22px !important;
+  font-family: "SamsungSharpSans";
+  margin-top: 0;
+  font-size: 20px !important;
   font-weight: 400 !important;
   color: $muted1 !important;
+
+  @media screen and (max-width: 769px) {
+    line-height: 1;
+    margin-left: 12px;
+    margin-right: 12px;
+  }
 }
 
 h1#orderform-title {

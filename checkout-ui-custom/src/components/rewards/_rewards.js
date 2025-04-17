@@ -363,7 +363,8 @@ export class Rewards {
 
     const data = {
       SAGuid: this.userSaGuid || localStorage.getItem('saGuid') || 'GUEST',
-      rewardsAccepted: this.userRewardsAccepted || rewardsAccepted
+      rewardsAccepted: this.userRewardsAccepted || rewardsAccepted,
+      orderFormId: orderForm.orderFormId,
     }
 
     $.ajax({
@@ -378,6 +379,7 @@ export class Rewards {
         if (!saGuid) return
 
         this.totalPointsCurrentOrder = res.TotalPointAmount
+        this.putCustomData(data)
         this.createElementTotalPoints(res.TotalPointAmount)
       },
       error: err => {
@@ -386,5 +388,28 @@ export class Rewards {
         }
       },
     })
+    
+  }
+  async putCustomData(data) {
+
+    const dataRewards = {
+        total_points_earned: this.totalPointsCurrentOrder,
+        terms_accepted: data.rewardsAccepted,
+        saguid: data.SAGuid,
+    }
+
+    try {
+      await $.ajax({
+        url: `${rootPath()}/v1/pub/putCheckoutCustomData/${data.orderFormId}/rewards`,
+        type: 'PUT',
+        crossDomain: true,
+        accept: 'application/vnd.vtex.ds.v10+json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(dataRewards),
+      })
+
+    } catch (error) {
+      console.error('Error in putCustomData Rewards:', error)
+    }
   }
 }
