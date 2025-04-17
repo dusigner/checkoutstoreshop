@@ -358,6 +358,8 @@ export class Rewards {
     if ($('.switch-rewards input').length > 0) {
       $('.switch-rewards input').prop('disabled', false)
     }
+    
+    const rewardsAccepted = $('#inputRewards').is(':checked')
 
     const data = {
       SAGuid: this.userSaGuid || localStorage.getItem('saGuid') || 'GUEST',
