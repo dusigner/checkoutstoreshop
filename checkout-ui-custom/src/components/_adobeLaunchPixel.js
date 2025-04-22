@@ -18,10 +18,9 @@ class AdobeLaunchPixel {
 
     /* ATTENTION: THOSE FILES ARE RELATED TO STAGING ENVIRONMENT OF ADOBE DTM, EACH ONE OF THESE ARE RELATED TO ONE SPECIFIC COUNTRY/REGION */
     this.scriptFiles = {
-      br:
-        '//assets.adobedtm.com/72afb75f5516/901a9e1a98ec/launch-a82080575b1a.min.js',
+      br: '//assets.adobedtm.com/72afb75f5516/901a9e1a98ec/launch-a82080575b1a.min.js',
       br_staging:
-        '//assets.adobedtm.com/72afb75f5516/901a9e1a98ec/launch-c78d04fd7f6b-staging.min.js'
+        '//assets.adobedtm.com/72afb75f5516/901a9e1a98ec/launch-c78d04fd7f6b-staging.min.js',
     }
 
     this.version2 = ['br']
@@ -87,7 +86,7 @@ class AdobeLaunchPixel {
           }
         }
       }, 100)
-      
+
       _this._populateDataLayer()
 
       _this._trackLogin()
@@ -147,20 +146,21 @@ class AdobeLaunchPixel {
           }
 
           if (_this.pageType === 'checkout') {
-            $('.item-link-remove.data-omni-remove').on('click', function (
-              event
-            ) {
-              const { target } = event
-              const dataOmni = target.getAttribute('data-omni-variant')
+            $('.item-link-remove.data-omni-remove').on(
+              'click',
+              function (event) {
+                const { target } = event
+                const dataOmni = target.getAttribute('data-omni-variant')
 
-              if (dataOmni) {
-                _this._removeFromDigitalData(dataOmni)
-              } else {
-                _this._removeFromDigitalData(
-                  target.parentElement.getAttribute('data-omni-variant')
-                )
+                if (dataOmni) {
+                  _this._removeFromDigitalData(dataOmni)
+                } else {
+                  _this._removeFromDigitalData(
+                    target.parentElement.getAttribute('data-omni-variant')
+                  )
+                }
               }
-            })
+            )
           }
         })
       })
@@ -696,7 +696,7 @@ class AdobeLaunchPixel {
         pathnameArr[p] === undefined
           ? ''
           : (window.digitalData.page.pathIndicator[`depth_${depthIndex}`] =
-            pathnameArr[p])
+              pathnameArr[p])
     }
   }
 
@@ -761,7 +761,7 @@ class AdobeLaunchPixel {
               let modelCacheSCPlus = {
                 cacheModelName: `${scplus.model_name}`,
                 cacheModelVariant: `${scplus.modelVariant}`,
-                cacheSkuId: `${scplus.skuId}`
+                cacheSkuId: `${scplus.skuId}`,
               }
 
               _this.cacheProducts.push(modelCacheSCPlus)
@@ -775,7 +775,6 @@ class AdobeLaunchPixel {
               }
 
               itemsQuantity.push(1)
-
             } else {
               const model = await _this._getModel(item)
 
@@ -796,7 +795,7 @@ class AdobeLaunchPixel {
               let modelCache = {
                 cacheModelName: `${model.modelName}`,
                 cacheModelVariant: `${item.refId}`,
-                cacheSkuId: `${item.id}`
+                cacheSkuId: `${item.id}`,
               }
 
               _this.cacheProducts.push(modelCache)
@@ -871,7 +870,11 @@ class AdobeLaunchPixel {
 
     const hostArr = window.location.host.split('.')
 
-    if (hostArr[0].includes('samsungbrtest') || hostArr[0].indexOf("samsungbrshop")) return 'br';
+    if (
+      hostArr[0].includes('samsungbrtest') ||
+      hostArr[0].indexOf('samsungbrshop')
+    )
+      return 'br'
     const tldCode = hostArr[hostArr.length - 1]
     if (_this.countryCodes.indexOf(tldCode) > -1) return tldCode
     const pathNameArr = window.location.pathname.replace('/', '').split('/')
@@ -912,7 +915,9 @@ class AdobeLaunchPixel {
           window.location.hash === '#/profile')
       ) {
         if (window.digitalData.product) {
-          setTimeout(() => { window._satellite.track('page_view') }, 1000)
+          setTimeout(() => {
+            window._satellite.track('page_view')
+          }, 1000)
         }
       }
     } catch (e) {
@@ -930,19 +935,21 @@ class AdobeLaunchPixel {
         window._satellite !== null &&
         'track' in window._satellite
       ) {
-        if (window.location.hash === '#/shipping' ||
-          window.location.hash === '#/payment' ||
-          window.location.hash === '#/profile') {
-          if (!loginStatus && saGuid) {
-            window.digitalData.user.loginStatus = true
-            window._satellite.track('samsung_account_login')
-          } else {
-            window.digitalData.user.loginStatus = true
-          }
+        if (
+          (window.location.hash === '#/shipping' ||
+            window.location.hash === '#/payment' ||
+            window.location.hash === '#/profile') &&
+          !loginStatus &&
+          saGuid
+        ) {
+          window.digitalData.user.loginStatus = true
+          window._satellite.track('samsung_account_login')
         }
-        if (window.location.hash === '#/cart' ||
-          window.location.hash === '#/email') {
-          if (customerLogged !== null) {
+        if (
+          window.location.hash === '#/cart' ||
+          window.location.hash === '#/email'
+        ) {
+          if (customerLogged !== null && saGuid) {
             window.digitalData.user.loginStatus = true
           } else {
             if (saGuid) {
@@ -962,9 +969,12 @@ class AdobeLaunchPixel {
       if (
         window._satellite !== undefined &&
         window._satellite !== null &&
-        'track' in window._satellite) {
+        'track' in window._satellite
+      ) {
         if (window.digitalData.product) {
-          setTimeout(() => { window._satellite.track('page_view') }, 1000)
+          setTimeout(() => {
+            window._satellite.track('page_view')
+          }, 1000)
         }
       }
     } catch (e) {
@@ -1033,7 +1043,10 @@ class AdobeLaunchPixel {
           data = findItemCacheApi.cacheModelVariant
         }
       } else {
-        data = dataOmni === 'base' ? findItemCacheApi.cacheModelName : findItemCacheApi.cacheModelVariant
+        data =
+          dataOmni === 'base'
+            ? findItemCacheApi.cacheModelName
+            : findItemCacheApi.cacheModelVariant
       }
     } catch (e) {
       console.error(`_mountDataBuyNow: ${e}`)
@@ -1070,9 +1083,10 @@ class AdobeLaunchPixel {
         productFamily =
           response.more.resultData.Products.Product.BasicInfo[0].PviCategories
             .ProductSubTypeName
-        allCategories = response.more.resultData.Products.Product.BasicInfo[0].Categories.Category[0].CategoryEnglishNamePath.split(
-          '|'
-        )
+        allCategories =
+          response.more.resultData.Products.Product.BasicInfo[0].Categories.Category[0].CategoryEnglishNamePath.split(
+            '|'
+          )
         pimSubType = allCategories.length > 2 ? allCategories[2] : ''
 
         return {
