@@ -31,7 +31,9 @@ import { fnsCustomAddressForm } from '../components/_customAddressForm'
 import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
-import { OptInDimensions } from '../components/_opDimensions'
+import { OptInDimensions } from '../components/_optinDimensions'
+import Payment from '../components/_payment'
+
 
 const scripts = new Scripts()
 
@@ -83,6 +85,7 @@ export class CheckoutCustom {
     // this.topBanners = new TopBanners()
     this.SummaryGiftCard = new SummaryGiftCard()
     this.optInDimensions = new OptInDimensions()
+    this.payment = new Payment()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1742,6 +1745,7 @@ export class CheckoutCustom {
       $(window).on('checkoutRequestBegin.vtex', function (event, request) {
         _this.CheckoutLimit.limitQuantity(event, request)
         _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
+        _this.payment.updateInstallmentsInPaymentGroups(event, request)
       })
 
       $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
@@ -1749,6 +1753,7 @@ export class CheckoutCustom {
         _this.CheckoutLimit.sync(orderForm)
         _this.installationService.sync(orderForm)
         _this.optInDimensions.sync(orderForm)
+        _this.payment.sync(orderForm)
       })
 
       function trackLogin(accessKeyURL) {

@@ -138,7 +138,7 @@ export default class Discounts {
   }
 
   _renderUI(orderForm) {
-    if (!this.discounts.length && !orderForm.marketingData.coupon) {
+    if (!this.discounts.length && !orderForm.marketingData?.coupon) {
        return
     }
 
@@ -197,7 +197,7 @@ export default class Discounts {
           title: item.title,
           value: item.value,
           isCoupon: item.isCoupon,
-          coupon: orderForm.marketingData && orderForm.marketingData.coupon
+          coupon: orderForm.marketingData && orderForm.marketingData?.coupon
         })
       })
 
