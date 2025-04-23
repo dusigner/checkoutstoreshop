@@ -719,81 +719,65 @@ svg.vtex-omnishipping-1-x-svg {
 				}
 			}
 
-			&.box-payment-samsungpay {
-				.box-payment-samsung-wallet {
-					margin-top: -20px;
-				}
-
-				.payment-samsung-wallet-value-title {
-					font-size: 12px;
-					font-weight: 700;
-					font-family: SamsungOne;
-					color: #000;
-				}
-
-				.payment-container-samsung-wallet-value {
-					border: 1px solid #D6D6D6;
-					border-radius: 3px;
-					padding: 16px 16px 5px;
-					margin-bottom: 26px;
-				}
-
-				.payment-samsung-wallet-value-text {
-					font-size: 14px;
-					font-weight: 400;
-					color: #767676;
-					font-family: SamsungOne;
+			&.box-payment-nubank {
+				.nu-extra-limit {
+					padding: 0px;
 					margin: 0px;
+					background-color: unset;
 				}
-
-				.payment-samsung-wallet-container-logo-name {
-					display: flex;
-					flex-direction: row;
-					margin-bottom: 26px;
+				.nu-extra-limit-samsung {
+					padding: 16px;
+					background-color: #f4e7ff;
+					margin: 24px 24px 0;
+					@media(min-width: 768px) {
+						margin: 24px 0 0;
+					}
 				}
-
-				.payment-samsung-wallet-logo {
-					width: 36px;
-					height: 36px;
-					margin-right: 8px;
+				.nu-body-items-samsung {
+					.nu-body-item-icon {
+						background-color: #f4e7ff;
+					}
+					hr {
+						margin: 24px 10px 0px;
+    					border-top: 1px solid #4c0677;
+    					border-bottom: 0px;
+					}
 				}
-
-				.payment-samsung-wallet-title-logo {
-					font-size: 22px;
-					font-weight: bold;
-					font-family: 'SamsungSharpSans';
-					color: #000;
-				}
-
-				.payment-samsung-wallet-description-subtitle {
-					font-size: 16px;
-					font-weight: 700;
-					color: #707070;
-					font-family: SamsungOne;
-					margin-bottom: 26px;
-				}
-
-				.payment-samsung-wallet-description-text {
-					font-size: 16px;
-					font-weight: 400;
-					color: #000;
-					font-family: SamsungOne;
-					margin-bottom: 26px;
-					line-height: 22px;
-				}
-
-				.payment-samsungpay-help-text,
-				.payment-samsungpay-help-text a {
-					font-size: 14px;
-					font-weight: 400;
-					color: #969EA4;
-					font-family: SamsungOne;
-					line-height: 22px;
-				}
-
-				@media(max-width: $mobileWidth) {
-					.box-payment-samsung-wallet {
-						margin-top: 0px;
+			}
+			&.box-payment-mercadopago {
+				.mercadopago-box-wrapper-samsung {
+					.header-mercado-pago-samsung{
+						display: flex;
+						justify-content: space-between;
+						padding: 20px 20px 0px;
+						align-items: center;
+					}
+					.header-mercado-pago-samsung p,
+					.mini-box-samsung p{
+						margin: 0px;
+					}
+					.thumbnails-grid-samsung {
+						display: grid;
+						grid-template-columns: 1fr 1fr;
+						padding: 10px 25px 0;
+						@media(min-width: 768px) {
+							padding: 10px 50px 0;
+						}
+					}
+					.mini-box-samsung {
+						display: flex;
+						text-align: center;
+						align-items: center;
+						width: 100%;
+					}
+					.payment-mercadopago-ico{
+						margin: 0 10px;
+						width: 20px;
+						height: 20px;
+						background-size: 20px 20px;
+					}
+					.mini-box-line-one {
+						margin-bottom: 30px;
 					}
 				}
 			}
