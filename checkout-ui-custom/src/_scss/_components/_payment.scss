@@ -6,6 +6,20 @@
 	color: #8F8F8F;
 }
 
+%loading_placeholder {
+  overflow: hidden;
+  pointer-events: none;
+  width: 100%;
+  background-color: #F0F0F0;
+  animation: pulse_placeholder 1s cubic-bezier(.4, 0, .6, 1) infinite;
+}
+
+@keyframes pulse_placeholder {
+  50% {
+    opacity: .5;
+  }
+}
+
 // loadin shhimer
 
 
@@ -149,7 +163,8 @@ svg.vtex-omnishipping-1-x-svg {
 
 				&::before {
 					content: "";
-					margin-right: 25px;
+          align-self: center;
+					margin-right: 18px;
 					width: 30px;
 					height: 24px;
 					background-image: url(https://samsungbrshop.vteximg.com.br/arquivos/cartaossgitaunewcheckout.jpg) !important;
@@ -165,49 +180,6 @@ svg.vtex-omnishipping-1-x-svg {
 				}
 			}
 		}
-
-		p.link.link-gift-card,
-		.payment-group-item {
-			box-sizing: border-box;
-			margin: 0 6px 10px 0;
-			border-radius: $borderRadius;
-			border: 0;
-			border-bottom: 1px solid #D6D6D6;
-			opacity: 1;
-			text-decoration: none;
-			color: $muted1;
-			transition: all ease 0.3s;
-
-			padding: 0 12px;
-			text-align: center;
-			display: flex;
-			align-items: left;
-			justify-content: space-between;
-			background: #FFFFFF;
-			float: left;
-			width: 100%;
-
-			&.active {
-				background: #F7F7F7;
-
-				span {
-					color: #000;
-					font-weight: bold;
-					font-size: 12px;
-				}
-			}
-
-			&:hover {
-				cursor: pointer;
-			}
-
-			&.active,
-			&:hover {
-				background: #F7F7F7;
-			}
-		}
-
-
 
 		p.link.link-gift-card,
 		fieldset.payment-group {
@@ -240,7 +212,7 @@ svg.vtex-omnishipping-1-x-svg {
 		}
 
 		p.link.link-gift-card {
-			margin-bottom: 10px;
+			margin-bottom: 16px;
 			padding: 0;
 			width: max-content;
 			border: 1px solid #000;
@@ -260,15 +232,27 @@ svg.vtex-omnishipping-1-x-svg {
 			width: 100%;
 			display: flex;
 			flex-direction: column;
+      gap: 8px;
+
+      &:not(.has-btn-installments) .payment-group-item::before  {
+        content: "";
+        @extend %loading_placeholder;
+        position: absolute;
+        left: 60px;
+        bottom: 9px;
+        max-width: calc(80% - 60px);
+        height: 11px;
+        border-radius: 2px;
+      }
 
 			// To sort the PaymentGroup positions, just change the order
 			$PaymentGroups: (
+        // PIX
+				'#payment-group-instantPaymentPaymentGroup',
+        '.payment-method-order-2',
 				// Normal Credit Card
 				'#payment-group-creditCardPaymentGroup',
         '.payment-method-order-1',
-				// PIX
-				'#payment-group-instantPaymentPaymentGroup',
-        '.payment-method-order-2',
 				// MERCADO PAGO
 				'#payment-group-MercadoPagoProPaymentGroup',
         '.payment-method-order-3',
@@ -301,10 +285,6 @@ svg.vtex-omnishipping-1-x-svg {
 		}
 
 		a {
-			text-align: left;
-			border-radius: 0;
-			box-shadow: none;
-			margin-bottom: 0px;
 			order: 20;
 		}
 	  }
@@ -315,72 +295,70 @@ svg.vtex-omnishipping-1-x-svg {
 	}
 
 	.payment-group-item {
-		position: relative;
-		height: 40px;
+    all: unset; // reset vtex styles
+    position: relative;
+    padding: 0 12px;
+    border: 1px solid #DDDDDD;
+    border-radius: 10px;
+    margin-right: 2px;
+    min-width: 240px;
+    min-height: 48px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &:hover {
+      background: #F7F7F7;
+
+      .payment-group-installments {
+        background: #F7F7F7;
+      }
+    }
+
+    &.active {
+      background: #F7F7F7;
+      border-color: #2189FF;
+      box-shadow: 0 0 0 1px #2189FF;
+
+      &::after {
+        content: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuMzY2NjUgMTEuOTk5OUwyLjU2NjY1IDguMTk5OTRMMy41MTY2NSA3LjI0OTk0TDYuMzY2NjUgMTAuMDk5OUwxMi40ODMzIDMuOTgzMjhMMTMuNDMzMyA0LjkzMzI4TDYuMzY2NjUgMTEuOTk5OVoiIGZpbGw9IiMwMDZCRUEiLz4KPC9zdmc+Cg==");
+        line-height: 1;
+      }
+
+      .payment-group-installments {
+        background: #F7F7F7;
+      }
+    }
 
 		span.payment-group-item-text {
-			padding: 0;
 			line-height: 17px;
 			display: flex;
-			align-items: center;
 			background-size: 24px;
 			background-position-x: left;
-			padding-left: 55px;
-			min-height: 44px;
+      padding: 0;
+			padding-left: 48px;
+			min-height: 34px;
+
+      color: #000;
+      font-weight: 700;
+      font-size: 12px;
 		}
 
-		.payment-group-item {
-			width: 100%;
-			margin-right: 0;
-			height: auto;
-
-			&:after,
-			&:before {
-				display: none;
-			}
-
-			&:hover {
-				top: 0;
-			}
-		}
-
-		&:last-child {
-			margin-right: 0;
-		}
-
-		&:hover {
-			position: relative;
-			background: #FFF;
-			top: 0px;
-		}
-
-		&.active {
-
-			&:after,
-			&:before {
-				content: '';
-				display: block;
-				position: absolute;
-				left: 50%;
-				transform: translateX(-50%);
-				top: 100%;
-				width: 0;
-				height: 0;
-				border-style: solid;
-			}
-
-			&:after {
-				display: none;
-				border-color: #FFF transparent transparent transparent;
-				border-width: 6px;
-			}
-
-			&:before {
-				display: none;
-				border-color: $actionPrimary transparent transparent transparent;
-				border-width: 7px;
-			}
-		}
+    span.payment-group-installments {
+      position: absolute;
+      bottom: 9px;
+      line-height: 1;
+      display: block;
+      font-size: 12px;
+      font-weight: 400;
+      color: #000;
+      left: 60px;
+      width: 175px;
+      background: #fff;  
+      z-index: 1;
+    }
 	}
 
 	.gift-card-section.form-step.box-default {
@@ -530,14 +508,6 @@ svg.vtex-omnishipping-1-x-svg {
 		}
 
 		.payment-group-item {
-			border: none;
-			border-bottom: 1px solid transparent;
-			box-shadow: none;
-			margin: 0;
-			width: 100% !important;
-			height: auto;
-			top: 0;
-
 			&-text {
 				margin-right: auto;
 				text-align: left;
@@ -662,6 +632,19 @@ svg.vtex-omnishipping-1-x-svg {
 	background: none;
 	margin-bottom: 0;
 
+  &.active {
+    #payments-title {
+      &::after {
+        content: "Selecione o método de pagamento";
+        display: block;
+        font-size: 12px;
+        line-height: 18px;
+        margin-top: 8px;
+        color: #000000;
+      }
+    }
+  }
+
 	@media(max-width:868px) {
 		width: 100%;
 	}
@@ -719,81 +702,65 @@ svg.vtex-omnishipping-1-x-svg {
 				}
 			}
 
-			&.box-payment-samsungpay {
-				.box-payment-samsung-wallet {
-					margin-top: -20px;
-				}
-
-				.payment-samsung-wallet-value-title {
-					font-size: 12px;
-					font-weight: 700;
-					font-family: SamsungOne;
-					color: #000;
-				}
-
-				.payment-container-samsung-wallet-value {
-					border: 1px solid #D6D6D6;
-					border-radius: 3px;
-					padding: 16px 16px 5px;
-					margin-bottom: 26px;
-				}
-
-				.payment-samsung-wallet-value-text {
-					font-size: 14px;
-					font-weight: 400;
-					color: #767676;
-					font-family: SamsungOne;
+			&.box-payment-nubank {
+				.nu-extra-limit {
+					padding: 0px;
 					margin: 0px;
+					background-color: unset;
 				}
-
-				.payment-samsung-wallet-container-logo-name {
-					display: flex;
-					flex-direction: row;
-					margin-bottom: 26px;
+				.nu-extra-limit-samsung {
+					padding: 16px;
+					background-color: #f4e7ff;
+					margin: 24px 24px 0;
+					@media(min-width: 768px) {
+						margin: 24px 0 0;
+					}
 				}
-
-				.payment-samsung-wallet-logo {
-					width: 36px;
-					height: 36px;
-					margin-right: 8px;
+				.nu-body-items-samsung {
+					.nu-body-item-icon {
+						background-color: #f4e7ff;
+					}
+					hr {
+						margin: 24px 10px 0px;
+    					border-top: 1px solid #4c0677;
+    					border-bottom: 0px;
+					}
 				}
-
-				.payment-samsung-wallet-title-logo {
-					font-size: 22px;
-					font-weight: bold;
-					font-family: 'SamsungSharpSans';
-					color: #000;
-				}
-
-				.payment-samsung-wallet-description-subtitle {
-					font-size: 16px;
-					font-weight: 700;
-					color: #707070;
-					font-family: SamsungOne;
-					margin-bottom: 26px;
-				}
-
-				.payment-samsung-wallet-description-text {
-					font-size: 16px;
-					font-weight: 400;
-					color: #000;
-					font-family: SamsungOne;
-					margin-bottom: 26px;
-					line-height: 22px;
-				}
-
-				.payment-samsungpay-help-text,
-				.payment-samsungpay-help-text a {
-					font-size: 14px;
-					font-weight: 400;
-					color: #969EA4;
-					font-family: SamsungOne;
-					line-height: 22px;
-				}
-
-				@media(max-width: $mobileWidth) {
-					.box-payment-samsung-wallet {
-						margin-top: 0px;
+			}
+			&.box-payment-mercadopago {
+				.mercadopago-box-wrapper-samsung {
+					.header-mercado-pago-samsung{
+						display: flex;
+						justify-content: space-between;
+						padding: 20px 20px 0px;
+						align-items: center;
+					}
+					.header-mercado-pago-samsung p,
+					.mini-box-samsung p{
+						margin: 0px;
+					}
+					.thumbnails-grid-samsung {
+						display: grid;
+						grid-template-columns: 1fr 1fr;
+						padding: 10px 25px 0;
+						@media(min-width: 768px) {
+							padding: 10px 50px 0;
+						}
+					}
+					.mini-box-samsung {
+						display: flex;
+						text-align: center;
+						align-items: center;
+						width: 100%;
+					}
+					.payment-mercadopago-ico{
+						margin: 0 10px;
+						width: 20px;
+						height: 20px;
+						background-size: 20px 20px;
+					}
+					.mini-box-line-one {
+						margin-bottom: 30px;
 					}
 				}
 			}

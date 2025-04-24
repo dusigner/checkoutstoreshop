@@ -32,6 +32,8 @@ import { adobeLaunchInit } from '../components/_adobeLaunchPixel'
 import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
 import { OptInDimensions } from '../components/_opDimensions'
+import Payment from '../components/_payment'
+
 
 const scripts = new Scripts()
 
@@ -51,6 +53,7 @@ export class CheckoutCustom {
     this.orderForm = ''
     this.orderId = this.orderForm ? this.orderForm.orderFormId : ''
     this.lang = ''
+    this.isMobile = false
 
     this.accordionPayments = accordionPayments
     this.deliveryDateFormat = deliveryDateFormat
@@ -82,6 +85,7 @@ export class CheckoutCustom {
     // this.topBanners = new TopBanners()
     this.SummaryGiftCard = new SummaryGiftCard()
     this.optInDimensions = new OptInDimensions()
+    this.payment = new Payment()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -934,35 +938,109 @@ export class CheckoutCustom {
     }
   }
 
-  showMessageSamsungWallet(orderForm) {
+  verifyMobileScreen() {
+    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) this.isMobile = true;
+  }
+
+  showMessageMercadoPagoPayment(orderForm) {
     try {
       if (orderForm.items === 0) return
-      const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-samsungpay')
-      const _containerSamsungWalletElement = _containerTotalizers.find('.box-payment-samsung-wallet')
-      const descriptionSamsungWalletText = `
-          <div class="box-payment-samsung-wallet">
-            <p class="payment-samsung-wallet-value-title">Valor total</p>
-            <div class="payment-container-samsung-wallet-value">
-              <p class="payment-samsung-wallet-value-text">Pagamento à vista - ${formatCurrencyBRL(orderForm.value)}<p>
+      const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-mercadopago .mercadopago-box-wrapper')
+      const _containerMercadoPagoElement = _containerTotalizers.find('.mercadopago-box-wrapper-samsung')
+      const descriptionMercadoPagoText = `
+          <div class="mercadopago-box-wrapper-samsung">
+            <div class="header-mercado-pago-samsung">
+                <p>Mercado Pago</p>
+                <div class="payment-mercadopago-ico-logo"></div>
             </div>
-            <div class="payment-samsung-wallet-container-logo-name">
-              <img class="payment-samsung-wallet-logo" src="https://samsungbrshop.vteximg.com.br/arquivos/icon-samsungpay-payment.png"/>
-              <h4 class="payment-samsung-wallet-title-logo">Samsung Pay</h4>
-            </div>
-            <div class="payment-container-samsung-wallet-description">
-              <p class="payment-samsung-wallet-description-subtitle">Pague com Samsung Pay, direto do seu celular.</p>
-              <p class="payment-samsung-wallet-description-text">Ao finalizar a compra, acesse o app Samsung Wallet e confirme o pagamento com a sua biometria ou senha com Samsung Pay.</p>
-              <p class="payment-samsung-wallet-description-text">É necessário ter um cartão de débito ou crédito registrado no seu app Samsung Wallet.</p>
-              <p class="payment-samsungpay-help-text">Confira os aparelhos compatíveis: <a href="https://www.samsung.com.br/services/wallet/" rel="noreferrer noopener" target="_blank">www.samsung.com.br/services/wallet/</a></p>
+            <div class="row-fluid">
+                <div class="box-title">
+                  <p class="span12">
+                    Clique no botão <strong>"Finalizar compra"</strong> ${this.isMobile ? "abaixo" : "ao lado"} e pague em até 12x com segurança, com ou sem uma conta Mercado Pago
+                  </p>
+                </div>
+            </div>        
+            <div>
+                <div class="row-fluid">
+                  <ul class="box-img thumbnails-grid-samsung">
+                      <li class="span4 mini-box-samsung mini-box-line-one">
+                        <div class="payment-mercadopago-ico payment-mercadopago-ico-credit-card"></div>
+                        <p>Cartões de crédito</p>
+                      </li>
+                      <li class="span4 mini-box-samsung mini-box-line-one">
+                        <div class="payment-mercadopago-ico payment-mercadopago-ico-debit-card"></div>
+                        <p>Cartões de débito</p>
+                      </li>
+                      <li class="span4 mini-box-samsung">
+                        <div class="payment-mercadopago-ico payment-mercadopago-ico-pix img-pix mb-img"></div>
+                        <p>Pix</p>
+                      </li>
+                      <li class="span4 mini-box-samsung">
+                        <div class="payment-mercadopago-ico payment-mercadopago-ico-credito"></div>
+                        <p>Linha de Crédito</p>
+                      </li>
+                  </ul>
+                </div>
+            </div>           
+            <div class="row-fluid">
+                <div class="box-flags">
+                  <p class="span12">Bandeiras aceitas: </p>           
+                  <div class="payment-mercadopago-flags payment-mercadopago-flags-bra"></div>
+                </div>
             </div>
           </div>
         `;
-      if (_containerSamsungWalletElement.length === 0) {
+      if (_containerMercadoPagoElement.length === 0) {
         _containerTotalizers.empty()
       }
-      _containerTotalizers.html(descriptionSamsungWalletText);
+      _containerTotalizers.html(descriptionMercadoPagoText);
     } catch (e) {
-      console.error("showMessageSamsungWallet", e)
+      console.error("showMessageMercadoPagoPayment", e)
+    }
+  }
+
+  showMessageNubankPayment(orderForm) {
+    try {
+      if (orderForm.items === 0) return
+      const _containerTotalizersNubankExtra = $('.box-step .box-step-content .steps-view .box-payment-nubank .nu-container .nu-extra-limit')
+      const _containerNubankExtraElement = _containerTotalizersNubankExtra.find('.nu-extra-limit-samsung')
+      const descriptionNubankExtraText = `
+          <div class="nu-extra-limit-samsung">
+            <div class="nu-extra-limit-badge">Novidade</div>
+            <span class="nu-extra-limit-text"><strong class="nu-extra-limit-text-bold">Você pode ter um limite adicional para essa compra!</strong> Verifique no momento do pagamento se está disponível.</span>  
+          </div>
+        `;
+
+      const _containerTotalizers = $('.box-step .box-step-content .steps-view .box-payment-nubank .nu-container .nu-body')
+      const _containerNubankElement = _containerTotalizers.find('.nu-body-items-samsung')
+      const descriptionNubankText = `
+          <div class="nu-body-items-samsung">
+            <div class="nu-body-item">
+                <div class="nu-body-item-icon">
+                  <strong class="nu-extra-limit-text-bold">1</strong>
+                </div>
+                <div class="nu-body-item-text">Clique no botão <strong>"Finalizar compra"</strong> ${this.isMobile ? "abaixo" : "ao lado"}</div>
+            </div>
+            <div class="nu-body-item">
+                <div class="nu-body-item-icon">
+                  <strong class="nu-extra-limit-text-bold">2</strong>
+                </div>
+                <div class="nu-body-item-text">Depois abra o <strong>app Nubank</strong> para finalizar com o pagamento</div>
+            </div>
+            <hr class="nu-hr-space-body">
+          </div>
+        `;
+      if (_containerNubankElement.length === 0) {
+        _containerTotalizers.prepend(descriptionNubankText);
+      }
+
+      if (_containerNubankExtraElement.length === 0) {
+        _containerTotalizersNubankExtra.empty()
+      }
+        
+      _containerTotalizersNubankExtra.html(descriptionNubankExtraText);
+    } catch (e) {
+      console.error("showMessageNubankPayment", e)
     }
   }
 
@@ -1120,7 +1198,8 @@ export class CheckoutCustom {
     this.shippingColor(orderForm)
 
     if (window.location.hash === '#/payment') {
-      this.showMessageSamsungWallet(orderForm)
+      this.showMessageNubankPayment(orderForm)
+      this.showMessageMercadoPagoPayment(orderForm)
     }
 
     if (!$('body').hasClass('modalActive')) {
@@ -1642,6 +1721,7 @@ export class CheckoutCustom {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       })
 
+      _this.verifyMobileScreen()
       _this.init()
       $(function () {
         _this.messages.init()
@@ -1665,6 +1745,7 @@ export class CheckoutCustom {
       $(window).on('checkoutRequestBegin.vtex', function (event, request) {
         _this.CheckoutLimit.limitQuantity(event, request)
         _this.samsungCarePlus.sendSameQuantityAsAttachedItem(event, request)
+        _this.payment.updateInstallmentsInPaymentGroups(event, request)
       })
 
       $(window).on('checkoutRequestEnd.vtex', function (event, orderForm) {
@@ -1672,6 +1753,7 @@ export class CheckoutCustom {
         _this.CheckoutLimit.sync(orderForm)
         _this.installationService.sync(orderForm)
         _this.optInDimensions.sync(orderForm)
+        _this.payment.sync(orderForm)
       })
 
       function trackLogin(accessKeyURL) {
