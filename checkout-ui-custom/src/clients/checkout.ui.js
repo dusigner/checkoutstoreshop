@@ -1819,7 +1819,6 @@ export class CheckoutCustom {
                     })
                     .catch(console.error)
                 })
-              window.digitalData.user.loginStatus = true
             }, 1000)
           }
         }
