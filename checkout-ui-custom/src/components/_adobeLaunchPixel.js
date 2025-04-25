@@ -934,21 +934,19 @@ class AdobeLaunchPixel {
         window._satellite !== null &&
         'track' in window._satellite
       ) {
-        if (
-          (window.location.hash === '#/shipping' ||
-            window.location.hash === '#/payment' ||
-            window.location.hash === '#/profile') &&
-          !loginStatus && customerLogged &&
-          saGuid
-        ) {
-          window.digitalData.user.loginStatus = true
-          window._satellite.track('samsung_account_login')
+        if (window.location.hash === '#/shipping' ||
+          window.location.hash === '#/payment' ||
+          window.location.hash === '#/profile') {
+          if (!loginStatus && saGuid) {
+            window.digitalData.user.loginStatus = true
+            window._satellite.track('samsung_account_login')
+          } else {
+            window.digitalData.user.loginStatus = true
+          }
         }
-        if (
-          window.location.hash === '#/cart' ||
-          window.location.hash === '#/email'
-        ) {
-          if (customerLogged && saGuid) {
+        if (window.location.hash === '#/cart' ||
+          window.location.hash === '#/email') {
+          if (customerLogged !== null) {
             window.digitalData.user.loginStatus = true
           } else {
             if (saGuid) {
@@ -966,10 +964,13 @@ class AdobeLaunchPixel {
         window._satellite !== undefined &&
         window._satellite !== null &&
         'track' in window._satellite
+      
       ) {
         if (window.digitalData.product) {
           setTimeout(() => {
+           
             window._satellite.track('page_view')
+         
           }, 1000)
         }
       }
