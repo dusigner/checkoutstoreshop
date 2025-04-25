@@ -926,10 +926,9 @@ class AdobeLaunchPixel {
   }
   _trackLogin() {
     const { orderForm } = window.vtexjs.checkout
-    const customerLogged = orderForm.clientProfileData
+    const customerLogged = orderForm.loggedIn
     const saGuid = localStorage.getItem('saGuid')
     const loginStatus = window.digitalData.user.loginStatus
-    try {
       if (
         window._satellite !== undefined &&
         window._satellite !== null &&
@@ -939,7 +938,7 @@ class AdobeLaunchPixel {
           (window.location.hash === '#/shipping' ||
             window.location.hash === '#/payment' ||
             window.location.hash === '#/profile') &&
-          !loginStatus &&
+          !loginStatus && customerLogged &&
           saGuid
         ) {
           window.digitalData.user.loginStatus = true
@@ -949,19 +948,16 @@ class AdobeLaunchPixel {
           window.location.hash === '#/cart' ||
           window.location.hash === '#/email'
         ) {
-          if (customerLogged !== null && saGuid) {
+          if (customerLogged && saGuid) {
             window.digitalData.user.loginStatus = true
           } else {
             if (saGuid) {
-              localStorage.setItem('saGuid', '')
+              localStorage.removeItem('saGuid')
             }
             window.digitalData.user.loginStatus = false
           }
         }
       }
-    } catch (e) {
-      console.error('[DTM]: Error window._satellite.track')
-    }
   }
 
   _pageTrackCart() {
