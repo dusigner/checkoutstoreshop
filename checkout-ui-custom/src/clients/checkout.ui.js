@@ -942,6 +942,75 @@ export class CheckoutCustom {
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) this.isMobile = true;
   }
 
+  showMessagePix(orderForm) {
+    try {
+      if (orderForm.items === 0) return
+      const _containerQRCode = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__qrcode-container')
+      const _containerPixHeaderDescription = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__container-info .VTEX-PIX__container-info-head')
+      const _containerPixDescription = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__container-info .VTEX-PIX__container-info-description')
+      const _containerPixElement = _containerPixHeaderDescription.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescription.find('.VTEX-PIX__container-info-head-samsung')
+      const headerDescriptionPixText = `
+        <div class="VTEX-PIX__container-info-head-samsung">Instruções para Pagamento</div>
+      `;
+      const descriptionPixText = `
+        <div class="VTEX-PIX__container-info-description-samsung">
+          <ol>
+            <li>Abra o aplicativo do seu banco: Se preferir, você pode fazer isso em outro celular.</li>
+            <li>Selecione a opção "Pix"</li>
+            <li>Aponte a câmera do seu celular para o código QR.</li>
+          </ol>
+          <span>Se ocorrer algum erro, por favor, faça um novo pedido.</span>
+        </div>
+      `;
+
+      if(_containerQRCode.length > 0){
+        if (_containerPixElement.length === 0) {
+          _containerPixHeaderDescription.empty()
+          _containerPixDescription.empty()
+        }
+        _containerPixHeaderDescription.html(headerDescriptionPixText);
+        _containerPixDescription.html(descriptionPixText);
+      }
+    } catch (e) {
+      console.error("showMessagePix", e)
+    }
+  }
+
+  showMessagePixMobile(orderForm) {
+    try {
+      if (orderForm.items === 0) return
+      const _containerQRCodeMobile = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__mobile .VTEX-PIX__center-container .VTEX-PIX__qrcode-container')
+      const _containerPixHeaderDescriptionMobile = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__mobile .VTEX-PIX__center-container .VTEX-PIX__center-container-head-mobile')
+      const _containerPixDescriptionMobile = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__mobile .VTEX-PIX__center-container .VTEX-PIX__center-container-subhead-mobile')
+      const _containerPixElementMobile = _containerPixHeaderDescriptionMobile.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescriptionMobile.find('.VTEX-PIX__container-info-head-samsung')
+      const headerDescriptionPixTextMobile = `
+        <div class="VTEX-PIX__container-info-head-samsung">Instruções para Pagamento</div>
+      `;
+      const descriptionPixTextMobile = `
+        <div class="VTEX-PIX__container-info-description-samsung">
+          <ol>
+            <li>Abra o aplicativo do seu banco: Se preferir, você pode fazer isso em outro celular.</li>
+            <li>Selecione a opção "Pix"</li>
+            <li>Aponte a câmera do seu celular para o código QR.</li>
+          </ol>
+          <span>Se ocorrer algum erro, por favor, faça um novo pedido.</span>
+        </div>
+      `;
+
+      if(_containerQRCodeMobile.length > 0){
+        if (_containerPixElementMobile.length === 0) {
+          _containerPixHeaderDescriptionMobile.empty()
+          _containerPixDescriptionMobile.empty()
+        }
+        _containerPixHeaderDescriptionMobile.html(headerDescriptionPixTextMobile);
+        _containerPixDescriptionMobile.html(descriptionPixTextMobile);
+      }
+    } catch (e) {
+      console.error("showMessagePix Mobile", e)
+    }
+  }
+
+
   showMessageMercadoPagoPayment(orderForm) {
     try {
       if (orderForm.items === 0) return
@@ -1200,6 +1269,11 @@ export class CheckoutCustom {
     if (window.location.hash === '#/payment') {
       this.showMessageNubankPayment(orderForm)
       this.showMessageMercadoPagoPayment(orderForm)
+      if(this.isMobile) {
+        this.showMessagePixMobile(orderForm)
+      } else {
+        this.showMessagePix(orderForm)
+      }
     }
 
     if (!$('body').hasClass('modalActive')) {
@@ -1609,6 +1683,16 @@ export class CheckoutCustom {
       _this.customAddressFormInit(_this.orderForm)
     })
 
+    $('body').on('click', '.VTEX-PIX__dry-button', function () {
+      setTimeout(function () {
+        if(_this.isMobile) {
+          _this.showMessagePixMobile(_this.orderForm)
+        } else {
+          _this.showMessagePix(_this.orderForm)
+        }
+      }, 10)
+    })
+
     $('body').on('click', '.show-more-items-button', function () {
       _this.general()
     })
@@ -1894,7 +1978,6 @@ export class CheckoutCustom {
       if(!_this.sessionPolicy) {
         getSessionCookie().then(session => {
           const policy = session?.namespaces?.store?.channel?.value
-          console.log("policy ==>", policy)
           _this.sessionPolicy = policy
         })
       }
