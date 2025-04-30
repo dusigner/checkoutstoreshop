@@ -942,6 +942,39 @@ export class CheckoutCustom {
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) this.isMobile = true;
   }
 
+  buttonCheckoutOrder(orderForm) {
+    const _this = this
+    const buttons = document.querySelectorAll('button[id="payment-data-submit"]');
+
+    function verifyPixMessage() {
+      const pixPayment = orderForm.paymentData.payments.find(
+        item => item.paymentSystem === '125'
+      )
+      if(pixPayment){
+        setTimeout(function () {
+          let count = 0
+          const interval = setInterval(function () {
+            if ($('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background').length) {
+              _this.showMessagePix(orderForm)
+              clearInterval(interval)
+            } else {
+              count++
+              if(count === 20) {
+                clearInterval(interval)
+              }
+            }
+          }, 1000)
+        }, 5000)
+      }
+    }
+
+    if(buttons){
+      buttons.forEach(button => {
+        button.addEventListener('click', verifyPixMessage);
+      });
+    } 
+  }
+
   showMessagePix(orderForm) {
     try {
       if (orderForm.items === 0) return
@@ -1251,6 +1284,7 @@ export class CheckoutCustom {
     if (window.location.hash === '#/payment') {
       this.showMessageNubankPayment(orderForm)
       this.showMessageMercadoPagoPayment(orderForm)
+      this.buttonCheckoutOrder(orderForm)
     }
 
     if (!$('body').hasClass('modalActive')) {
@@ -1664,28 +1698,6 @@ export class CheckoutCustom {
       setTimeout(function () {
         _this.showMessagePix(_this.orderForm)
       }, 10)
-    })
-
-    $('body').on('click', '#payment-data-submit', function () {
-      const pixPayment = _this.orderForm.paymentData.payments.find(
-        item => item.paymentSystem === '125'
-      )
-      if(pixPayment){
-        setTimeout(function () {
-          let count = 0
-          const interval = setInterval(function () {
-            if ($('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background').length) {
-              _this.showMessagePix(_this.orderForm)
-              clearInterval(interval)
-            } else {
-              count++
-              if(count === 20) {
-                clearInterval(interval)
-              }
-            }
-          }, 1000)
-        }, 5000)
-      }
     })
 
     $('body').on('click', '.show-more-items-button', function () {
