@@ -946,12 +946,17 @@ export class CheckoutCustom {
     try {
       if (orderForm.items === 0) return
       const _containerQRCode = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__qrcode-container')
-      const _containerPixHeaderDescription = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__container-info .VTEX-PIX__container-info-head')
-      const _containerPixDescription = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__container-info .VTEX-PIX__container-info-description')
-      const _containerPixElement = _containerPixHeaderDescription.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescription.find('.VTEX-PIX__container-info-head-samsung')
+      const _containerPixHeaderDescription = $(`.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background ${this.isMobile ? '.VTEX-PIX__center-container-head-mobile' : '.VTEX-PIX__container-info-head'}`)
+      const _containerPixDescription = $(`.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background ${this.isMobile ? '.VTEX-PIX__center-container-subhead-mobile' : '.VTEX-PIX__container-info-description'}`)
+      const _containerPixDescriptionInfos = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__container-info')
+      const _containerPixValueFooter = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__footer .VTEX-PIX_footer-value')
+      const _containerPixElementValue = _containerPixValueFooter.find('.VTEX-PIX_footer-value-samsung')
+      const _containerPixElement = _containerPixHeaderDescription.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescription.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescriptionInfos.find('.VTEX-PIX_description-footer-samsung')
+      
       const headerDescriptionPixText = `
         <div class="VTEX-PIX__container-info-head-samsung">Instruções para Pagamento</div>
       `;
+
       const descriptionPixText = `
         <div class="VTEX-PIX__container-info-description-samsung">
           <ol>
@@ -959,57 +964,34 @@ export class CheckoutCustom {
             <li>Selecione a opção "Pix"</li>
             <li>Aponte a câmera do seu celular para o código QR.</li>
           </ol>
-          <span>Se ocorrer algum erro, por favor, faça um novo pedido.</span>
         </div>
       `;
 
+      const descriptionFooterPix = `
+        <span class="VTEX-PIX_description-footer-samsung">Se ocorrer algum erro, por favor, refaça seu pedido.</span>
+      `;
+
+      const valueFooterPix = `
+        <span class="VTEX-PIX_footer-value">${formatCurrencyBRL(orderForm.value)}</span>
+      `;
+      
       if(_containerQRCode.length > 0){
         if (_containerPixElement.length === 0) {
           _containerPixHeaderDescription.empty()
           _containerPixDescription.empty()
+          _containerPixDescriptionInfos.append(descriptionFooterPix);
         }
         _containerPixHeaderDescription.html(headerDescriptionPixText);
         _containerPixDescription.html(descriptionPixText);
       }
+      if (_containerPixElementValue.length === 0) {
+        _containerPixValueFooter.empty()
+      }
+      _containerPixValueFooter.html(valueFooterPix);
     } catch (e) {
       console.error("showMessagePix", e)
     }
   }
-
-  showMessagePixMobile(orderForm) {
-    try {
-      if (orderForm.items === 0) return
-      const _containerQRCodeMobile = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__mobile .VTEX-PIX__center-container .VTEX-PIX__qrcode-container')
-      const _containerPixHeaderDescriptionMobile = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__mobile .VTEX-PIX__center-container .VTEX-PIX__center-container-head-mobile')
-      const _containerPixDescriptionMobile = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__mobile .VTEX-PIX__center-container .VTEX-PIX__center-container-subhead-mobile')
-      const _containerPixElementMobile = _containerPixHeaderDescriptionMobile.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescriptionMobile.find('.VTEX-PIX__container-info-head-samsung')
-      const headerDescriptionPixTextMobile = `
-        <div class="VTEX-PIX__container-info-head-samsung">Instruções para Pagamento</div>
-      `;
-      const descriptionPixTextMobile = `
-        <div class="VTEX-PIX__container-info-description-samsung">
-          <ol>
-            <li>Abra o aplicativo do seu banco: Se preferir, você pode fazer isso em outro celular.</li>
-            <li>Selecione a opção "Pix"</li>
-            <li>Aponte a câmera do seu celular para o código QR.</li>
-          </ol>
-          <span>Se ocorrer algum erro, por favor, faça um novo pedido.</span>
-        </div>
-      `;
-
-      if(_containerQRCodeMobile.length > 0){
-        if (_containerPixElementMobile.length === 0) {
-          _containerPixHeaderDescriptionMobile.empty()
-          _containerPixDescriptionMobile.empty()
-        }
-        _containerPixHeaderDescriptionMobile.html(headerDescriptionPixTextMobile);
-        _containerPixDescriptionMobile.html(descriptionPixTextMobile);
-      }
-    } catch (e) {
-      console.error("showMessagePix Mobile", e)
-    }
-  }
-
 
   showMessageMercadoPagoPayment(orderForm) {
     try {
@@ -1269,11 +1251,7 @@ export class CheckoutCustom {
     if (window.location.hash === '#/payment') {
       this.showMessageNubankPayment(orderForm)
       this.showMessageMercadoPagoPayment(orderForm)
-      if(this.isMobile) {
-        this.showMessagePixMobile(orderForm)
-      } else {
-        this.showMessagePix(orderForm)
-      }
+      this.showMessagePix(orderForm)
     }
 
     if (!$('body').hasClass('modalActive')) {
@@ -1685,11 +1663,7 @@ export class CheckoutCustom {
 
     $('body').on('click', '.VTEX-PIX__dry-button', function () {
       setTimeout(function () {
-        if(_this.isMobile) {
-          _this.showMessagePixMobile(_this.orderForm)
-        } else {
-          _this.showMessagePix(_this.orderForm)
-        }
+        _this.showMessagePix(_this.orderForm)
       }, 10)
     })
 

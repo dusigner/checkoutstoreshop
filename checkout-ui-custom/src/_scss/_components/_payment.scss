@@ -90,23 +90,27 @@ svg.vtex-omnishipping-1-x-svg {
 	
 			.VTEX-PIX__container-info {
 				margin-top: 0.5em;
+				display: grid;
 	
 				.VTEX-PIX__container-info-head {
 					margin-bottom: 0.5em;
 				}
 	
 				.VTEX-PIX__container-info-description {
-					margin-bottom: 0.5em;
+					margin-bottom: 0px;
 				}
 			}
 			
 			.VTEX-PIX__container-info-description-samsung ol{
 				text-align: left;
-				margin: 20px;
+				margin: 20px 20px 5px;
 			}	
 			.VTEX-PIX__container-info-description-samsung li{
 				text-align: left;
 				margin: 5px 0px;
+			}
+			.VTEX-PIX_description-footer-samsung {
+				margin-top: 10px;
 			}
 	
 			.VTEX-PIX__footer {
