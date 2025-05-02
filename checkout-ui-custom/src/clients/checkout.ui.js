@@ -1754,6 +1754,7 @@ export class CheckoutCustom {
         _this.installationService.sync(orderForm)
         _this.optInDimensions.sync(orderForm)
         _this.payment.sync(orderForm)
+        _this.TradeIn.sync(orderForm)
       })
 
       function trackLogin(accessKeyURL) {

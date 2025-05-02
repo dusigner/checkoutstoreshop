@@ -127,12 +127,14 @@ export async function deleteCustomData({ app, fields }) {
 
   if (!orderFormId) return
   
-  Object.keys(fields ?? {}).forEach((field) => {
-    return $.ajax({
-      url: `${rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/${app}/${field}`,
-      type: 'POST',
+  return Promise.all(
+    Object.keys(fields ?? {}).map((field) => {
+      return $.ajax({
+        url: `${rootPath()}/v1/pub/deleteCheckoutCustomData/${orderFormId}/${app}/${field}`,
+        type: 'POST',
+      })
     })
-  })
+  )
 }
 
 export async function getMaxInstallmentByPaymentSystem(paymentSystemId = '2') {    

@@ -1,55 +1,35 @@
 /* eslint-disable vtex/prefer-early-return */
-import { formatCurrencyBRL, getCustomDataFields } from './_utils'
+import { deleteCustomData, formatCurrencyBRL, getCustomDataFields, rootPath } from './_utils'
 import SendAttachment from './_sendAttachment'
 
 export default class TradeIn {
   constructor() {
+    this.app = 'domain-assurant'
+    this.empty = false
     this.SendAttachment = new SendAttachment()
   }
   async init(orderForm) {
-    const { items } = orderForm
+    const { items = [] } = orderForm ?? {}
 
     const tradeInFromLocalStorage = JSON.parse(localStorage.getItem('transport'))
-    const tradeInFromCustomData = this.getTradeInFromCustomData()
+    const { trade_in_option_selected } = getCustomDataFields({ app: this.app })
 
-    if (items.length && tradeInFromCustomData) {
-      this.checkTradeIn(items, tradeInFromCustomData?.trade_in_option_selected ?? [])
+    if (items.length && trade_in_option_selected) {
+      this.checkTradeIn(items, trade_in_option_selected ?? [])
     } else if (
-      !items.length &&
-      tradeInFromCustomData &&
-      tradeInFromLocalStorage
-    ) {
-      await this.removeCustomDataTradeIn()
-    }  else if (
       tradeInFromLocalStorage &&
-      !tradeInFromCustomData
+      !trade_in_option_selected
     ) {
       const itemWithTradeIn = items?.find(
         item => tradeInFromLocalStorage?.some(
           transportItem => item.productId === transportItem.mainProductId
         )
       )
-  
+
       if (itemWithTradeIn) {
         const { id, detailUrl } = itemWithTradeIn
         this.openWarningTradein({ detailUrl: `${detailUrl}?skuId=${id}` })
       }
-    }
-  }
-
-  getTradeInFromCustomData() {
-    try {
-      const fields = getCustomDataFields({
-        app: 'domain-assurant'
-      })
-  
-      if (Object.keys(fields).length) {
-        return fields
-      }
-  
-      return null
-    } catch {
-      return null
     }
   }
 
@@ -62,7 +42,7 @@ export default class TradeIn {
             <p class="text-warning-modal-tradein">
               <b>Atenção:</b> Os dados da sua Troca Smart Samsung não foram salvos. Por favor refaça o processo para confirmar.
             </p>
-            <a href="${this.rootPath()}${detailUrl}&scroll=tradeIn" class="action-warning-modal-tradein">Refazer</a>
+            <a href="${rootPath()}${detailUrl}&scroll=tradeIn" class="action-warning-modal-tradein">Refazer</a>
           </div>
         </div>
       `
@@ -84,10 +64,6 @@ export default class TradeIn {
     } catch (e) {
       console.error('openWarningTradein error:', e)
     }
-  }
-
-  rootPath() {
-    return window.location.pathname.split('/')[1] === 'br' ? '/br' : ''
   }
 
   checkTradeIn(items, transport) {
@@ -114,23 +90,18 @@ export default class TradeIn {
 
     if (totalTradeIn > 0) {
       this.showTotalTradeIn(totalTradeIn)
+
       $('#total-tradein-value').text(
         `${formatCurrencyBRL(totalTradeIn, false)}*`
       )
-    } else if (totalTradeIn === 0) {
-      // this.openWarningTradein()
-      this.removeCustomDataTradeIn()
-    }
 
-    const newTransport = transport.filter(item =>
-      items.some(orderItem => orderItem.productId === item.mainProductId)
-    )
-
-    if (!newTransport.length) {
-      // this.openWarningTradein()
-      this.removeCustomDataTradeIn()
-    } else if (newTransport.length < transport.length) {
-      this.putCustomData(newTransport, totalTradeIn)
+      const newTransport = transport.filter(item =>
+        items.some(orderItem => orderItem.productId === item.mainProductId)
+      )
+  
+      if (newTransport.length < transport.length) {
+        this.putCustomData(newTransport, totalTradeIn)
+      }
     }
   }
 
@@ -161,15 +132,20 @@ export default class TradeIn {
   }
 
   async putCustomData(transport, total) {
-    const { orderFormId, items } = window.vtexjs.checkout.orderForm
-    const newData = {
-      trade_in_option_selected: JSON.stringify(transport),
-      trade_in_total_value: total,
-    }
-
     try {
+      const { orderFormId, items } = window?.vtexjs?.checkout?.orderForm ?? {}
+
+      if (!orderFormId || !items?.length) {
+        return
+      }
+
+      const newData = {
+        trade_in_option_selected: JSON.stringify(transport),
+        trade_in_total_value: total,
+      }
+
       await $.ajax({
-        url: `${this.rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/domain-assurant`,
+        url: `${rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/domain-assurant`,
         type: 'PUT',
         crossDomain: true,
         accept: 'application/vnd.vtex.ds.v10+json',
@@ -181,39 +157,6 @@ export default class TradeIn {
     } catch (error) {
       console.error('Error in putCustomData:', error)
     }
-  }
-
-  async removeCustomDataTradeIn() {
-    const t0 = performance.now()
-
-    const { orderFormId } = window.vtexjs.checkout.orderForm
-
-    const tradeInCustom = localStorage.getItem('tradeInCustom')
-    const transport = localStorage.getItem('transport')
-
-    if(tradeInCustom) localStorage.removeItem('tradeInCustom')
-    if(transport) localStorage.removeItem('transport')
-
-    $('#total-details-tradein').remove()
-    $('#text-details-tradein').remove()
-    
-    const deleteRequests = [
-      $.ajax({
-        url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_option_selected`,
-        type: 'DELETE',
-      }),
-      $.ajax({
-        url: `${this.rootPath()}/api/checkout/pub/orderForm/${orderFormId}/customData/domain-assurant/trade_in_total_value`,
-        type: 'DELETE',
-      }),
-    ]
-
-    // chamadas em paralelo reduzindo bons segundos das requisições
-    await Promise.all(deleteRequests).catch(error => {
-      console.error('Erro ao excluir dados personalizados:', error)
-    })
-
-    this.SendAttachment.sendOpenTextField()
   }
 
   openWarningTradeinUpdate() {
@@ -273,8 +216,7 @@ export default class TradeIn {
           item.idBrand
         }&idModel=${item.idModel}&nocache=${Date.now()}`
         const request = fetch(
-          `${this.rootPath()}/tradein/trocafone/getProduct?${params}&isBoosted=${
-            item.boosted
+          `${rootPath()}/tradein/trocafone/getProduct?${params}&isBoosted=${item.boosted
           }`
         )
           .then(response => response.json())
@@ -316,12 +258,105 @@ export default class TradeIn {
 
         if (
           transportString !==
-          customDataDomain[0].fields.trade_in_option_selected
+          customDataDomain[0].fields.trade_in_option_selected && 
+          total > 0
         ) {
           this.openWarningTradeinUpdate()
           this.putCustomData(transport, total)
         }
       })
+    }
+  }
+
+  async removeCustomDataTradeIn() {
+    const fields = getCustomDataFields({ app: this.app })
+    return deleteCustomData({ app: this.app, fields })
+  }
+
+  clearGTI(orderForm) {
+    try {
+      const { marketingData } = orderForm ?? {}
+
+      const marketingTags = marketingData?.marketingTags?.filter(marketingTag => (
+        !marketingTag?.toUpperCase()?.startsWith('GTI')
+      )) || []
+
+      vtexjs?.checkout?.sendAttachment('marketingData', {
+        ...marketingData,
+        marketingTags
+      })
+    } catch (error) {
+      console.error(`clearAllTradeInData: ${error}`);
+    }
+  }
+
+  clearOpenTextField(orderForm) {
+    try {
+      const { openTextField } = orderForm ?? {}
+
+      vtexjs?.checkout?.sendAttachment('openTextField', {
+        ...openTextField,
+        value: null,
+      })
+    } catch (error) {
+      console.error(`clearOpenTextField: ${error}`);
+    }
+  }
+
+  clearTransport() {
+    try {
+      localStorage.removeItem('transport')
+      localStorage.removeItem('tradeInCustom')
+    } catch (error) {
+      console.error(`clearTransport: ${error}`);
+    }
+  }
+
+  clearTotalizerMessages() {
+    $('#total-details-tradein').remove()
+    $('#text-details-tradein').remove()
+  }
+
+  clearAllTradeInData(orderForm) {
+    const _this = this
+
+    this.removeCustomDataTradeIn()
+      .then(() => {
+        _this.clearTotalizerMessages()
+        _this.clearTransport()
+        _this.clearGTI(orderForm)
+        _this.clearOpenTextField(orderForm)
+      })
+      .catch(error => {
+        console.error(`clearAllTradeInData: ${error}`)
+      })
+      .finally(() => {
+        _this.empty = true
+      })
+  }
+
+  shouldClearAllTradeInData(orderForm) {
+    if (this.empty) {
+      return false
+    }
+
+    const { items = [] } = orderForm ?? {}
+    const { trade_in_option_selected } = getCustomDataFields({ app: this.app })
+
+    return !trade_in_option_selected || trade_in_option_selected?.some(option => (
+      !items.some(item => item.productId === option?.mainProductId)
+    ))
+  }
+
+  sync(orderForm) {
+    try {
+      const shouldClearAllTradeInData = this.shouldClearAllTradeInData(orderForm)
+
+      if (shouldClearAllTradeInData) {
+        this.clearAllTradeInData(orderForm)
+      }
+    } catch (error) {
+      console.error(`Erro ao sincronizar dados do TradeIn: ${error}`);
     }
   }
 }
