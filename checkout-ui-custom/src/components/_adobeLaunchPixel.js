@@ -929,33 +929,35 @@ class AdobeLaunchPixel {
     const customerLogged = orderForm.loggedIn
     const saGuid = localStorage.getItem('saGuid')
     const loginStatus = window.digitalData.user.loginStatus
+    if (
+      window._satellite !== undefined &&
+      window._satellite !== null &&
+      'track' in window._satellite
+    ) {
       if (
-        window._satellite !== undefined &&
-        window._satellite !== null &&
-        'track' in window._satellite
-      ) {
-        if (window.location.hash === '#/shipping' ||
+        (window.location.hash === '#/shipping' ||
           window.location.hash === '#/payment' ||
-          window.location.hash === '#/profile') {
-          if (!loginStatus && saGuid) {
-            window.digitalData.user.loginStatus = true
-            window._satellite.track('samsung_account_login')
-          } else {
-            window.digitalData.user.loginStatus = true
+          window.location.hash === '#/profile') &&
+        !loginStatus && customerLogged &&
+        saGuid
+      ) {
+        window.digitalData.user.loginStatus = true
+        window._satellite.track('samsung_account_login')
+      }
+      if (
+        window.location.hash === '#/cart' ||
+        window.location.hash === '#/email'
+      ) {
+        if (customerLogged && saGuid) {
+          window.digitalData.user.loginStatus = true
+        } else {
+          if (saGuid) {
+            localStorage.removeItem('saGuid')
           }
-        }
-        if (window.location.hash === '#/cart' ||
-          window.location.hash === '#/email') {
-          if (customerLogged !== null) {
-            window.digitalData.user.loginStatus = true
-          } else {
-            if (saGuid) {
-              localStorage.removeItem('saGuid')
-            }
-            window.digitalData.user.loginStatus = false
-          }
+          window.digitalData.user.loginStatus = false
         }
       }
+    }
   }
 
   _pageTrackCart() {
