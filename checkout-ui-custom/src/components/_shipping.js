@@ -178,11 +178,12 @@ export default class CustomShippingData {
       status,
       cepResponseBody,
       errorMessage,
+      pageUrl: window.location.href,
     }
 
     try {
-      const endpoint = "/_v/private/app-pdp/v1/report-cep-attempts";
-      const url = new URL(endpoint, this.rootPath() || window.location.origin);
+      const endpoint = `${this.rootPath()}/_v/private/app-pdp/v1/report-cep-attempts`;
+      const url = new URL(endpoint, window.location.origin);
 
       const { status } = await fetch(url, {
         method: "POST",
