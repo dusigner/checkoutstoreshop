@@ -349,6 +349,10 @@ export default class TradeIn {
   }
 
   sync(orderForm) {
+    if (!orderForm?.items) {
+      return 
+    }
+    
     try {
       const shouldClearAllTradeInData = this.shouldClearAllTradeInData(orderForm)
 
