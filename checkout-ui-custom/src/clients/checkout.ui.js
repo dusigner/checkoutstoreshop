@@ -942,6 +942,85 @@ export class CheckoutCustom {
     if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) this.isMobile = true;
   }
 
+  buttonCheckoutOrder(orderForm) {
+    const _this = this
+    const buttons = document.querySelectorAll('button[id="payment-data-submit"]');
+    function verifyPixMessage() {
+      const pixPayment = orderForm.paymentData.payments.find(
+        item => item.paymentSystem === '125'
+      )
+      if(pixPayment){
+        setTimeout(function () {
+          let count = 0
+          const interval = setInterval(function () {
+            if ($('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background').length) {
+              _this.showMessagePix(orderForm)
+              clearInterval(interval)
+            } else {
+              count++
+              if(count === 20) {
+                clearInterval(interval)
+              }
+            }
+          }, 1000)
+        }, 5000)
+      }
+    }
+    if(buttons){
+      buttons.forEach(button => {
+        button.addEventListener('click', verifyPixMessage);
+      });
+    } 
+  }
+
+  showMessagePix(orderForm) {
+    try {
+      if (orderForm.items === 0) return
+      const _containerQRCode = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__qrcode-container')
+      const _containerPixHeaderDescription = $(`.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background ${this.isMobile ? '.VTEX-PIX__center-container-head-mobile' : '.VTEX-PIX__container-info-head'}`)
+      const _containerPixDescription = $(`.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background ${this.isMobile ? '.VTEX-PIX__center-container-subhead-mobile' : '.VTEX-PIX__container-info-description'}`)
+      const _containerPixDescriptionInfos = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__container-info')
+      const _containerPixValueFooter = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__footer .VTEX-PIX_footer-value')
+      const _containerPixElementValue = _containerPixValueFooter.find('.VTEX-PIX_footer-value-samsung')
+      const _containerPixElement = _containerPixHeaderDescription.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescription.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescriptionInfos.find('.VTEX-PIX_description-footer-samsung')
+      
+      const headerDescriptionPixText = `
+        <div class="VTEX-PIX__container-info-head-samsung">Instruções para Pagamento</div>
+      `;
+      const descriptionPixText = `
+        <div class="VTEX-PIX__container-info-description-samsung">
+          <ol>
+            <li>Abra o aplicativo do seu banco: Se preferir, você pode fazer isso em outro celular.</li>
+            <li>Selecione a opção "Pix"</li>
+            <li>Aponte a câmera do seu celular para o código QR.</li>
+          </ol>
+        </div>
+      `;
+      const descriptionFooterPix = `
+        <span class="VTEX-PIX_description-footer-samsung">Se ocorrer algum erro, por favor, refaça seu pedido.</span>
+      `;
+      const valueFooterPix = `
+        <span class="VTEX-PIX_footer-value">${formatCurrencyBRL(orderForm.value)}</span>
+      `;
+      
+      if(_containerQRCode.length > 0){
+        if (_containerPixElement.length === 0) {
+          _containerPixHeaderDescription.empty()
+          _containerPixDescription.empty()
+          _containerPixDescriptionInfos.append(descriptionFooterPix);
+        }
+        _containerPixHeaderDescription.html(headerDescriptionPixText);
+        _containerPixDescription.html(descriptionPixText);
+      }
+      if (_containerPixElementValue.length === 0) {
+        _containerPixValueFooter.empty()
+      }
+      _containerPixValueFooter.html(valueFooterPix);
+    } catch (e) {
+      console.error("showMessagePix", e)
+    }
+  }
+
   showMessageMercadoPagoPayment(orderForm) {
     try {
       if (orderForm.items === 0) return
@@ -1200,6 +1279,7 @@ export class CheckoutCustom {
     if (window.location.hash === '#/payment') {
       this.showMessageNubankPayment(orderForm)
       this.showMessageMercadoPagoPayment(orderForm)
+      this.buttonCheckoutOrder(orderForm)
     }
 
     if (!$('body').hasClass('modalActive')) {
@@ -1609,6 +1689,12 @@ export class CheckoutCustom {
       _this.customAddressFormInit(_this.orderForm)
     })
 
+    $('body').on('click', '.VTEX-PIX__dry-button', function () {
+      setTimeout(function () {
+        _this.showMessagePix(_this.orderForm)
+      }, 10)
+    })
+
     $('body').on('click', '.show-more-items-button', function () {
       _this.general()
     })
@@ -1895,7 +1981,6 @@ export class CheckoutCustom {
       if(!_this.sessionPolicy) {
         getSessionCookie().then(session => {
           const policy = session?.namespaces?.store?.channel?.value
-          console.log("policy ==>", policy)
           _this.sessionPolicy = policy
         })
       }
