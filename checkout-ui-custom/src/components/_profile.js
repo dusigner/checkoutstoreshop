@@ -213,6 +213,7 @@ export default class CustomProfileData {
     let r = v.replace(/\D/g, '')
 
     r = r.replace(/^0/, '')
+    r = r.substring(0, 11);
     if (r.length > 10) {
       r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, '($1) $2-$3')
     } else if (r.length > 5) {
@@ -395,6 +396,40 @@ export default class CustomProfileData {
     $context.find('#go-to-shipping, #go-to-payment').prop('disabled', !disabled)
   }
 
+  updateSubmitButtons() {
+    setTimeout(() => {
+      const hasPhoneErrors = $('.input-phone-error').length > 0;
+      $('#go-to-shipping, #go-to-payment').prop('disabled', hasPhoneErrors);
+    }, 50);
+  };
+
+  setErrorPhone(input, message) {
+    const _this = this
+    let errorElement = input.next('.phone-error-message');
+    
+    if (!errorElement.length) {
+      errorElement = $('<span class="phone-error-message" style="display:none; color:red; font-size:12px; margin-top:5px;"></span>');
+      input.after(errorElement);
+    }
+    
+    input.addClass('input-phone-error error');
+    errorElement.text(message).show();
+    _this.updateSubmitButtons(); 
+  };
+
+  clearErrorPhone(input) {
+    const _this = this
+    input.removeClass('input-phone-error error');
+    input.closest('.client-phone').removeClass('has-error');
+    
+    const errorElement = input.next('.phone-error-message');
+    if (errorElement.length) {
+      errorElement.hide();
+    }
+    
+    _this.updateSubmitButtons();
+  };
+
   bindEvents() {
     const _this = this
 
@@ -409,15 +444,68 @@ export default class CustomProfileData {
       }
     )
 
-    $('body').on('keypress', '#client-phone', function (e) {
-      setTimeout(() => {
-        const v = _this.mphone(e.target.value)
+    $('body').on('input', '#client-phone', function () {
+      const phoneInput = $(this);
+      let rawValue = phoneInput.val().replace(/\D/g, '');
+    
+      const formattedValue = phoneInput.val();
+      const isCelular = /^\(\d{2}\) [6-9]/.test(formattedValue);
+    
+      const maxLength = isCelular ? 11 : 10;
+    
+      if (rawValue.length > maxLength) {
+        rawValue = rawValue.substring(0, maxLength); 
+      }
+    
+      let formatted = '';
+      if (rawValue.length <= 10) {
+        // Fixo
+        formatted = rawValue.replace(/^(\d{0,2})(\d{0,4})(\d{0,4})$/, function(_, ddd, part1, part2) {
+          return (ddd ? `(${ddd}) ` : '') + (part1 || '') + (part2 ? `-${part2}` : '');
+        });
+      } else {
+        // Celular
+        formatted = rawValue.replace(/^(\d{0,2})(\d{0,5})(\d{0,4})$/, function(_, ddd, part1, part2) {
+          return (ddd ? `(${ddd}) ` : '') + (part1 || '') + (part2 ? `-${part2}` : '');
+        });
+      }
+    
+      phoneInput.val(formatted);
+    });
 
-        if (v !== e.target.value) {
-          e.target.value = v
+    $('body').on('input keyup keypress blur', '#client-phone', function(e) {
+      try {
+        const phoneInput = $(this);
+        const phoneValue = phoneInput.val().replace(/\D/g, '');
+        const formattedValue = phoneInput.val();
+        
+        _this.clearErrorPhone(phoneInput);
+        
+        // Verifica se é celular (começa com 6,7,8,9 após o DDD)
+        const isCelular = /^\(\d{2}\) [6-9]/.test(formattedValue);
+
+        if (phoneValue.length > 0) {
+          if (isCelular) {
+            // Validação para celular (11 dígitos)
+            if (phoneValue.length !== 11) {
+              _this.setErrorPhone(phoneInput, "Número de celular deve ter 11 dígitos (DDD + número)");
+              return;
+            }
+          } else {
+            // Validação para telefone fixo (10 dígitos)
+            if (phoneValue.length !== 10) {
+              _this.setErrorPhone(phoneInput, "Número de telefone fixo deve ter 10 dígitos (DDD + número)");
+              return;
+            }
+          }
         }
-      }, 1)
-    })
+
+        _this.updateSubmitButtons();
+
+      } catch (err) {
+        console.error('Erro na validação do telefone:', err);
+      }
+    });
 
     $('body').on('change', '#client-birth-date', function (e) {
       _this.validateAge(e.target.value)
