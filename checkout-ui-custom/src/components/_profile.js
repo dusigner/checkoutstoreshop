@@ -278,14 +278,14 @@ export default class CustomProfileData {
     const $field = `<div class="whatsapp-optin">
       <h3>Whatsapp (opcional)</h3>
       <label class="inputOptInWhats checkbox-inline">
-        <input type="checkbox" id="inputWhats" checked />
+        <input type="checkbox" id="inputWhats" />
         <span class="custom-checkbox-icon"></span>
         <span>
           Desejo receber notificações do status do pedido por WhatsApp 
         </span>
       </label>
       <label style="margin-top: 16px">
-        <input type="checkbox" id="isWhatsAppPromotionOptIn" checked />
+        <input type="checkbox" id="isWhatsAppPromotionOptIn"/>
         <span class="custom-checkbox-icon"></span>
         <span>
           Desejo receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp. 
