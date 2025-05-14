@@ -1927,6 +1927,8 @@ export class CheckoutCustom {
         _this.checkProfileFocus()
         _this.fixLabels()
 
+        _this.TradeIn.clearAllTradeInDataTradeInCSP(_this.orderForm)
+
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
           _this.orderPaymentMethod()
@@ -2030,6 +2032,8 @@ export class CheckoutCustom {
           _this.verifyCSP(orderForm)
           _this.TradeIn.validateTradeinCustomData(orderForm)
         }
+
+        _this.TradeIn.clearAllTradeInDataTradeInCSP(orderForm)
 
         if (window.location.hash === '#/profile') {
           // Add WhatsApp
