@@ -5,6 +5,7 @@ import SendAttachment from './_sendAttachment'
 export default class TradeIn {
   constructor() {
     this.app = 'domain-assurant'
+    this.appEndlessAisle = 'tradein_csp' 
     this.empty = false
     this.SendAttachment = new SendAttachment()
   }
@@ -273,6 +274,11 @@ export default class TradeIn {
     return deleteCustomData({ app: this.app, fields })
   }
 
+  async removeCustomDataTradeInEndlessAisle() {
+    const fields = getCustomDataFields({ app: this.appEndlessAisle })
+    return deleteCustomData({ app: this.appEndlessAisle, fields })
+  }
+
   clearGTI(orderForm) {
     try {
       const { marketingData } = orderForm ?? {}
@@ -335,6 +341,41 @@ export default class TradeIn {
       })
   }
 
+  clearAllTradeInDataTradeInCSP(orderForm) {
+    const _this = this
+
+    const isEndlessCustomData = orderForm.customData?.customApps?.some(
+      customApp => customApp.id === 'endlessaisle'
+    )
+
+    const { trade_in_option_selected } = getCustomDataFields({
+      app: this.appEndlessAisle,
+    })
+
+    if (isEndlessCustomData && trade_in_option_selected) {
+      const tradeInAssurant = orderForm.customData?.customApps?.some(
+        customApp => customApp.id === this.app
+      )
+      const { items = [] } = orderForm ?? {}
+      const tradeInValidateProduct = trade_in_option_selected?.some(option =>
+        items.some(item => item.id === option?.sku)
+      )
+      
+      if (!tradeInAssurant && !tradeInValidateProduct) {
+        this.removeCustomDataTradeInEndlessAisle()
+          .then(() => {
+            _this.clearGTI(orderForm)
+          })
+          .catch(error => {
+            console.error(`clearAllTradeInData: ${error}`)
+          })
+          .finally(() => {
+            _this.empty = true
+          })
+      }
+    }
+  }
+
   shouldClearAllTradeInData(orderForm) {
     if (this.empty) {
       return false
@@ -354,9 +395,13 @@ export default class TradeIn {
     }
     
     try {
+      const tradeInCSPEndless = orderForm.customData?.customApps?.some(
+        customApp => customApp.id === this.appEndlessAisle
+      )
+
       const shouldClearAllTradeInData = this.shouldClearAllTradeInData(orderForm)
 
-      if (shouldClearAllTradeInData) {
+      if (shouldClearAllTradeInData && !tradeInCSPEndless) {
         this.clearAllTradeInData(orderForm)
       }
     } catch (error) {
