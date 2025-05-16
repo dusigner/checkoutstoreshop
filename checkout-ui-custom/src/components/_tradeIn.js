@@ -269,6 +269,36 @@ export default class TradeIn {
     }
   }
 
+  addGTITag(orderForm) {
+     try {
+      const { marketingData } = orderForm ?? {}
+
+      const marketingTagsHasGTI = marketingData?.marketingTags?.some(marketingTag => (
+        marketingTag?.toUpperCase()?.startsWith('GTI')
+      ))
+
+      const { trade_in_option_selected } = getCustomDataFields({ app: this.app })
+      const gtiMarketingTag = trade_in_option_selected?.[0]?.gtiMarketingTag
+
+      if (marketingTagsHasGTI || !gtiMarketingTag) {
+        return // avoid infinite loop
+      }
+
+      const marketingTags = marketingData?.marketingTags?.filter(marketingTag => (
+        !marketingTag?.toUpperCase()?.startsWith('GTI')
+      )) || []
+
+      marketingTags.push(gtiMarketingTag)
+
+      vtexjs?.checkout?.sendAttachment('marketingData', {
+        ...marketingData,
+        marketingTags
+      })
+    } catch (error) {
+      console.error(`addGTITag: ${error}`);
+    }
+  }
+
   async removeCustomDataTradeIn() {
     const fields = getCustomDataFields({ app: this.app })
     return deleteCustomData({ app: this.app, fields })
@@ -390,11 +420,13 @@ export default class TradeIn {
   }
 
   sync(orderForm) {
-    if (!orderForm?.items) {
-      return 
-    }
-    
     try {
+      if (!orderForm?.items) {
+        return 
+      }
+
+      this.addGTITag(orderForm)
+
       const tradeInCSPEndless = orderForm.customData?.customApps?.some(
         customApp => customApp.id === this.appEndlessAisle
       )
