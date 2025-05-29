@@ -581,34 +581,6 @@ export class CheckoutCustom {
     }
   }
 
-  setPixAsDefaultPaymentMethod() {
-    vtexjs.checkout.getOrderForm().done(function (orderForm) {
-      try {
-        const pixInstalments = orderForm.paymentData.installmentOptions.filter(
-          payment => {
-            return payment.paymentSystem === '125'
-          }
-        )
-
-        if (!pixInstalments.length) return
-
-        const data = {
-          payments: [
-            {
-              paymentSystem: 125,
-              installments: 1,
-              referenceValue: pixInstalments[0].value,
-            },
-          ],
-        }
-
-        vtexjs.checkout.sendAttachment('paymentData', data)
-      } catch (err) {
-        console.error(`Erro ao exibir preço à vista para items no carrinho.`)
-      }
-    })
-  }
-
   enchancementUnavailableProduct() {
     try {
       const _trElem = $(`.table.cart-items tbody`)
@@ -1188,8 +1160,18 @@ export class CheckoutCustom {
         window.vtexjs.checkout.orderForm &&
         window.vtexjs.checkout.orderForm.items.length > 0
       ) {
+
+        const account = window?.__RUNTIME__?.account
+
+        const accountPaymentMap = {
+          samsungbrshopeppnubank: 178,
+          default: 125,
+        }
+        
+        const paymentSystem = accountPaymentMap[account] || accountPaymentMap.default
+
         const installmentPix = orderForm.paymentData.installmentOptions.find(
-          item => item.paymentSystem == 125
+          item => item.paymentSystem == paymentSystem
         ).installments
 
         const creditCardPaymentGroup = orderForm?.paymentData?.paymentSystems?.find(
@@ -2081,7 +2063,7 @@ export class CheckoutCustom {
 
       // ok load
       $(window).load(async function () {
-        _this.setPixAsDefaultPaymentMethod()
+        _this.payment.setPixAsDefaultPaymentMethod()
         if (window.location.hash === '#/cart') {
           _this.Rewards?.cancelRewardsDiscount()
 
