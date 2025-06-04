@@ -1178,12 +1178,7 @@ export class CheckoutCustom {
           paymentSystem => paymentSystem?.groupName === 'creditCardPaymentGroup'
         )
 
-        const customPrivate_501PaymentGroup = orderForm?.paymentData?.paymentSystems?.find(
-          paymentSystem => paymentSystem?.groupName === 'customPrivate_501PaymentGroup'
-        )
-
-        const paymentSystemId = 
-          customPrivate_501PaymentGroup?.stringId || creditCardPaymentGroup?.stringId
+        const paymentSystemId = creditCardPaymentGroup?.stringId
 
         if (!installmentPix.length) return
         const inCashPrice = installmentPix[0].total
