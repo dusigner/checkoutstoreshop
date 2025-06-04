@@ -97,8 +97,46 @@ export default class CustomProfileData {
       $('#client-birth-date').addClass('success').val(clientDateBirth)
       $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
       $('#inputTermAndPolicies').prop('checked', acceptTermsAndPrivacyPolicy)
-      $('#inputWhats').prop('checked', isWhatsAppOptIn)
-      $('#isWhatsAppPromotionOptIn').prop('checked', isWhatsAppPromotionOptIn)
+
+      const whatsappStatusExists = $('input[name="whatsapp_status"]').length > 0
+      const whatsappMarketingExists =
+        $('input[name="whatsapp_marketing"]').length > 0
+      const whatsappUnifiedExists =
+        $('input[name="whatsapp_unified"]').length > 0
+
+      if (
+        whatsappStatusExists ||
+        whatsappMarketingExists ||
+        whatsappUnifiedExists
+      ) {
+        if (whatsappStatusExists) {
+          $(
+            `input[name="whatsapp_status"][value="${
+              isWhatsAppOptIn ? 'yes' : 'no'
+            }"]`
+          ).prop('checked', true)
+        }
+        if (whatsappMarketingExists) {
+          $(
+            `input[name="whatsapp_marketing"][value="${
+              isWhatsAppPromotionOptIn ? 'yes' : 'no'
+            }"]`
+          ).prop('checked', true)
+        }
+        if (whatsappUnifiedExists) {
+          const unifiedConsentValue =
+            isWhatsAppOptIn && isWhatsAppPromotionOptIn
+          $(
+            `input[name="whatsapp_unified"][value="${
+              unifiedConsentValue ? 'yes' : 'no'
+            }"]`
+          ).prop('checked', true)
+        }
+      } else {
+        $('#inputWhats').prop('checked', isWhatsAppOptIn)
+        $('#isWhatsAppPromotionOptIn').prop('checked', isWhatsAppPromotionOptIn)
+      }
+
       this.toggleGoToShippingDisabled()
     } catch (err) {
       console.error(`Erro ao preencher dados de perfil de usuário: ${err}`)
@@ -114,11 +152,11 @@ export default class CustomProfileData {
     try {
       const { email } = window.vtexjs.checkout.orderForm.clientProfileData
       const whatsAppResponse = await fetch(`${url}/_v/private/conversation/v1/frontend`, {
-        method: 'POST',
-        headers: {
+          method: 'POST',
+          headers: {
           vtexAuth
-        },
-        body: JSON.stringify({
+          },
+          body: JSON.stringify({
             action: '2a7e3',
             params:{
               account
@@ -275,24 +313,123 @@ export default class CustomProfileData {
 
   async addWhatsappOptIn() {
     if ($('.whatsapp-optin').length) return
+
+    const isShop = window.vtex.accountName === 'samsungbrshop'
     const $field = `<div class="whatsapp-optin">
-      <h3>Whatsapp (opcional)</h3>
-      <label class="inputOptInWhats checkbox-inline">
-        <input type="checkbox" id="inputWhats" />
-        <span class="custom-checkbox-icon"></span>
-        <span>
-          Desejo receber notificações do status do pedido por WhatsApp 
-        </span>
+    <h3>Whatsapp (opcional)</h3>
+    <label class="inputOptInWhats checkbox-inline">
+      <input type="checkbox" id="inputWhats" />
+      <span class="custom-checkbox-icon"></span>
+      <span>
+        Desejo receber notificações do status do pedido por WhatsApp 
+      </span>
+    </label>
+    <label style="margin-top: 16px">
+      <input type="checkbox" id="isWhatsAppPromotionOptIn"/>
+      <span class="custom-checkbox-icon"></span>
+      <span>
+        Desejo receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp. 
+      </span>
+    </label>
+  </div>`
+
+    if (!isShop) {
+      return $('.newsletter-optin').before($field)
+    }
+
+    const solution1 = 
+      sessionStorage.getItem('codigoTesteWhatsOptinSolution1') !== null
+    const solution2 =
+      sessionStorage.getItem('codigoTesteWhatsOptinSolution2') !== null
+    const solution3 =
+      sessionStorage.getItem('codigoTesteWhatsOptinSolution3') !== null
+    const solution4 =
+      sessionStorage.getItem('codigoTesteWhatsOptinSolution4') !== null
+
+    const hasSolution = solution1 || solution2 || solution3 || solution4
+
+    if (!hasSolution) {
+      return $('.newsletter-optin').before($field)
+    }
+
+    let version = null
+    if (solution1) version = 1
+    else if (solution2) version = 2
+    else if (solution3) version = 3
+    else if (solution4) version = 4
+
+    function createRadios(nameAttr) {
+      return `
+      <div class="whatsapp-optin__radios" style="display: flex; gap: 30px; margin-top: 16px;">
+      <label class="whatsapp-optin__label">
+        <input type="radio" name="${nameAttr}" value="yes" class="custom-checkbox-icon" />
+        <span>Sim</span>
       </label>
-      <label style="margin-top: 16px">
-        <input type="checkbox" id="isWhatsAppPromotionOptIn"/>
-        <span class="custom-checkbox-icon"></span>
-        <span>
-          Desejo receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp. 
-        </span>
+      <label class="whatsapp-optin__label">
+        <input type="radio" name="${nameAttr}" value="no" class="custom-checkbox-icon"/>
+        <span>Não</span>
       </label>
-    </div>`
-    $('.newsletter-optin').before($field)
+      </div>
+    `
+    }
+
+    const isMandatory = version === 1 || version === 2
+    const titleHtml = `<h3>WhatsApp (${
+      isMandatory ? 'obrigatório' : 'opcional'
+    })</h3>`
+
+    let questionsHtml = ''
+    switch (version) {
+      case 1:
+        questionsHtml = `
+        <div class="whatsapp-optin__question">
+          <span>Deseja receber notificações do status do pedido por WhatsApp?</span>
+            ${createRadios('whatsapp_status')}
+        </div>
+        <div class="whatsapp-optin__question" style="margin-top: 16px;">
+          <span>Deseja receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp?</span>
+            ${createRadios('whatsapp_marketing')}
+        </div>
+      `
+        break
+
+      case 2:
+        questionsHtml = `
+        <div class="whatsapp-optin__question">
+          <span>Aceito receber informações sobre meu pedido, bem como comunicações de marketing da Samsung via WhatsApp.</span>
+            ${createRadios('whatsapp_unified')}
+        </div>
+      `
+        break
+
+      case 3:
+        questionsHtml = `
+        <div class="whatsapp-optin__question">
+          <span>Aceito receber informações sobre meu pedido, bem como comunicações de marketing da Samsung via WhatsApp.</span>
+            ${createRadios('whatsapp_unified')}
+        </div>
+      `
+        break
+
+      case 4:
+        questionsHtml = `
+        <div class="whatsapp-optin__question">
+          <span>Deseja receber notificações do status do pedido por WhatsApp?</span>
+            ${createRadios('whatsapp_status')}
+        </div>
+        <div class="whatsapp-optin__question" style="margin-top: 16px;">
+          <span>Deseja receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp?</span>
+            ${createRadios('whatsapp_marketing')}
+        </div>
+      `
+        break
+    }
+
+    const $container = $(
+      `<div class="whatsapp-optin">${titleHtml}${questionsHtml}</div>`
+    )
+
+    $('.newsletter-optin').before($container)
   }
 
   addNewsletterOptIn() {
@@ -406,12 +543,12 @@ export default class CustomProfileData {
   setErrorPhone(input, message) {
     const _this = this
     let errorElement = input.next('.phone-error-message');
-    
+
     if (!errorElement.length) {
       errorElement = $('<span class="phone-error-message" style="display:none; color:red; font-size:12px; margin-top:5px;"></span>');
       input.after(errorElement);
     }
-    
+
     input.addClass('input-phone-error error');
     errorElement.text(message).show();
     _this.updateSubmitButtons(); 
@@ -421,12 +558,12 @@ export default class CustomProfileData {
     const _this = this
     input.removeClass('input-phone-error error');
     input.closest('.client-phone').removeClass('has-error');
-    
+
     const errorElement = input.next('.phone-error-message');
     if (errorElement.length) {
       errorElement.hide();
     }
-    
+
     _this.updateSubmitButtons();
   };
 
@@ -447,16 +584,16 @@ export default class CustomProfileData {
     $('body').on('input', '#client-phone', function () {
       const phoneInput = $(this);
       let rawValue = phoneInput.val().replace(/\D/g, '');
-    
+
       const formattedValue = phoneInput.val();
       const isCelular = /^\(\d{2}\) [6-9]/.test(formattedValue);
-    
+
       const maxLength = isCelular ? 11 : 10;
-    
+
       if (rawValue.length > maxLength) {
         rawValue = rawValue.substring(0, maxLength); 
       }
-    
+
       let formatted = '';
       if (rawValue.length <= 10) {
         // Fixo
@@ -469,7 +606,7 @@ export default class CustomProfileData {
           return (ddd ? `(${ddd}) ` : '') + (part1 || '') + (part2 ? `-${part2}` : '');
         });
       }
-    
+
       phoneInput.val(formatted);
     });
 
@@ -478,9 +615,9 @@ export default class CustomProfileData {
         const phoneInput = $(this);
         const phoneValue = phoneInput.val().replace(/\D/g, '');
         const formattedValue = phoneInput.val();
-        
+
         _this.clearErrorPhone(phoneInput);
-        
+
         // Verifica se é celular (começa com 6,7,8,9 após o DDD)
         const isCelular = /^\(\d{2}\) [6-9]/.test(formattedValue);
 
@@ -618,11 +755,11 @@ export default class CustomProfileData {
             vtexAuth
           },
           body: JSON.stringify({
-              action: '10a1',
-              account,
+            action: '10a1',
+            account,
               params:{
-                  account,
-                  phoneNumber,
+              account,
+              phoneNumber,
                   consent
               }
           })
@@ -633,7 +770,7 @@ export default class CustomProfileData {
       }
     }
   
-    
+
     $(document).on('click', '#go-to-shipping', function () {
         const isChecked = $('#inputWhats').prop('checked');
         updateWhatsappConsent(isChecked);
@@ -679,8 +816,8 @@ export default class CustomProfileData {
       '#edit-profile-data, #cart-to-orderform, #btn-client-pre-email, .checkout-steps_item_identification',
       function () {
           if(vtexjs.checkout.orderForm.clientProfileData !== null) {
-            _this.persistClientProfileData()
-          }
+          _this.persistClientProfileData()
+        }
       }
     )
 
@@ -704,14 +841,14 @@ export default class CustomProfileData {
   addFieldsProfileToSummary(orderForm) {
     const _this = this;
     const { clientProfileData } = orderForm;
-  
+
     if (!clientProfileData) return;
-  
+
     const documentCpf = clientProfileData.document;
-  
+
     // Adicionar CPF ao resumo do perfil
     let $documentCpfField = $('#documentCpfField');
-  
+
     if (!$documentCpfField.length) {
       $documentCpfField = $(`
         <p id="documentCpfField" class="client-profile-summary cpf-field">
@@ -724,10 +861,10 @@ export default class CustomProfileData {
     } else {
       $documentCpfField.find('.name').text(documentCpf);
     }
-  
+
     // Criar ou atualizar o campo de Data de Nascimento
     let $dateBirthField = $('#dateBirthField');
-  
+
     if (!$dateBirthField.length) {
       $dateBirthField = $(`
         <p id="dateBirthField" class="client-profile-summary date-birth-field">
@@ -738,16 +875,16 @@ export default class CustomProfileData {
       `);
       $documentCpfField.after($dateBirthField);
     }
-  
+
     const $birthDateFieldValue = $dateBirthField.find('.name');
-  
+
     // Fazer a requisição para buscar a data de nascimento
     getClientProfileData().then(function (data) {
-      if (!data || !data[0].birthDate) {
+        if (!data || !data[0].birthDate) {
         $birthDateFieldValue.text('Não informado');
         return;
-      }
-  
+        }
+
       const clientDateBirth = _this.convertDateToLocaleDateString(data[0].birthDate);
       $birthDateFieldValue.text(clientDateBirth);
     }).catch(() => {
