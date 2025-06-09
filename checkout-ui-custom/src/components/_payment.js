@@ -126,6 +126,12 @@ export default class Payment {
     }
   }
 
+  setPendingPaymentInLocalStorage() {
+    localStorage.setItem('pendingPayment', JSON.stringify({
+      timestamp: Date.now()
+    }))
+  }
+
   sync(orderForm) {
     try {
       this.addInstallmentsInPaymentGroups(orderForm)

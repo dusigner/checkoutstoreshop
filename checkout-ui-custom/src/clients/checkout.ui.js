@@ -1905,6 +1905,7 @@ export class CheckoutCustom {
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
           _this.orderPaymentMethod()
+          _this.payment.setPendingPaymentInLocalStorage()
           if (_this.orderForm) {
             _this.defaultGiftCard(_this.orderForm)
             _this.verifyCSP(_this.orderForm)
@@ -2118,6 +2119,7 @@ export class CheckoutCustom {
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
           _this.orderPaymentMethod()
+          _this.payment.setPendingPaymentInLocalStorage()
         }
 
         // #shipping
