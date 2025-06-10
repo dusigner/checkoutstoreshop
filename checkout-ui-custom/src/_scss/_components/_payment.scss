@@ -152,7 +152,9 @@ svg.vtex-omnishipping-1-x-svg {
 	}
 
 	#payment-data {
-
+		.box-payment-pix {
+			display: none;
+		}
 		#payment-group-MercadoCreditoPaymentGroup {
 			background: url(https://samsungbrshop.vteximg.com.br/arquivos/mercado-credito.png) !important;
 			background-repeat: no-repeat !important;
@@ -483,10 +485,6 @@ svg.vtex-omnishipping-1-x-svg {
 		iframe {
 			margin: 0;
 		}
-
-    .box-payment-pix {
-      display: none;
-    }
 	}
 
 	p.notification {
@@ -639,6 +637,9 @@ svg.vtex-omnishipping-1-x-svg {
 			display: none;
 		}
 
+	}
+	.box-payment-pix {
+		display: none;
 	}
 }
 
