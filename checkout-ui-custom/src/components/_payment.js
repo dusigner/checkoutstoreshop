@@ -126,6 +126,12 @@ export default class Payment {
     }
   }
 
+  setPendingPaymentInLocalStorage() {
+    localStorage.setItem('pendingPayment', JSON.stringify({
+      timestamp: Date.now()
+    }))
+  }
+
   sync(orderForm) {
     try {
       this.addInstallmentsInPaymentGroups(orderForm)
@@ -170,4 +176,52 @@ export default class Payment {
       }
     })
   }
+
+  orderPaymentMethodScroll(paymentMethod) {
+    let headerHeight = $(".main-header").outerHeight() || 0;
+  
+    requestAnimationFrame(() => {
+      const offsetTop = paymentMethod.offset().top;
+  
+      $("html, body").animate({
+        scrollTop: offsetTop - (headerHeight + 65)
+      }, 500);
+    });
+  }
+
+  orderPaymentMethod() {
+		if (window.innerWidth > 769) return;
+
+		let lastIndex = null;
+
+		const observer = new MutationObserver((mutations, obs) => {
+			if ($('.payment-group-item').length > 0 && $('.payment-method').length > 0) {
+				obs.disconnect();
+
+				const _this = this;
+
+				$('.payment-group-item').each(function (index) {
+					let paymentMethod = $('.payment-method').eq(index);
+					$(this).after(paymentMethod);
+					paymentMethod.addClass(`payment-method-order-${index + 1}`);
+				});
+
+				$('.payment-group-item').on('click', function () {
+					let index = $('.payment-group-item').index(this);
+					let paymentMethod = $('.payment-method').eq(index);
+
+					if (lastIndex === index) {
+						paymentMethod.slideToggle();
+						lastIndex = paymentMethod.is(':visible') ? index : null;
+					} else {
+						paymentMethod.slideDown();
+						lastIndex = index;
+					}
+					_this.orderPaymentMethodScroll(paymentMethod);
+				});
+			}
+		});
+
+		observer.observe(document.body, { childList: true, subtree: true });
+	}
 }

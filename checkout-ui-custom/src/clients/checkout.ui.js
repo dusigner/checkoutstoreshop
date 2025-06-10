@@ -1421,51 +1421,6 @@ export class CheckoutCustom {
     })
   }
 
-  orderPaymentMethodScroll(paymentMethod){
-    let headerHeight = $(".main-header").outerHeight() || 0;
-    $("html, body").animate({
-        scrollTop: paymentMethod.offset().top - (headerHeight + 50)
-    }, 500);
-  }
-
-  orderPaymentMethod() {
-		if (window.innerWidth > 769) return;
-
-		let lastIndex = null;
-
-		const observer = new MutationObserver((mutations, obs) => {
-			if ($('.payment-group-item').length > 0 && $('.payment-method').length > 0) {
-				obs.disconnect();
-
-				const _this = this;
-
-				$('.payment-group-item').each(function (index) {
-					let paymentMethod = $('.payment-method').eq(index);
-					$(this).after(paymentMethod);
-					paymentMethod.addClass(`payment-method-order-${index + 1}`);
-				});
-
-				$('.payment-group-item').on('click', function () {
-					let index = $('.payment-group-item').index(this);
-					let paymentMethod = $('.payment-method').eq(index);
-
-					if (lastIndex === index) {
-						paymentMethod.slideToggle();
-						lastIndex = paymentMethod.is(':visible') ? index : null;
-					} else {
-						paymentMethod.slideDown();
-						lastIndex = index;
-					}
-
-					_this.orderPaymentMethodScroll(paymentMethod);
-				});
-			}
-		});
-
-		observer.observe(document.body, { childList: true, subtree: true });
-	}
-
-
   defaultPaymentMethod() {
     try {
       const _this = this
@@ -1479,7 +1434,7 @@ export class CheckoutCustom {
         !$defaultPaymentMethod.is('.active')
       ) {
         $defaultPaymentMethod.trigger('click')
-        _this.orderPaymentMethodScroll($defaultPaymentMethod);
+        _this.payment.orderPaymentMethodScroll($defaultPaymentMethod);
       }
 
       this.hasSelectedDefaultPaymentMethod = true
@@ -1904,7 +1859,8 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
-          _this.orderPaymentMethod()
+          _this.payment.orderPaymentMethod()
+          _this.payment.setPendingPaymentInLocalStorage()
           if (_this.orderForm) {
             _this.defaultGiftCard(_this.orderForm)
             _this.verifyCSP(_this.orderForm)
@@ -2117,7 +2073,8 @@ export class CheckoutCustom {
 
         if (window.location.hash === '#/payment') {
           _this.defaultPaymentMethod()
-          _this.orderPaymentMethod()
+          _this.payment.orderPaymentMethod()
+          _this.payment.setPendingPaymentInLocalStorage()
         }
 
         // #shipping

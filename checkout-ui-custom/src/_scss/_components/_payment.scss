@@ -258,14 +258,22 @@ svg.vtex-omnishipping-1-x-svg {
         border-radius: 2px;
       }
 
+      .payment-method-order-1 {
+        height: 0 !important;
+        margin-top: 0px !important;
+        div {
+          display: none;
+        }
+      }
+
 			// To sort the PaymentGroup positions, just change the order
 			$PaymentGroups: (
         // PIX
 				'#payment-group-instantPaymentPaymentGroup',
-        '.payment-method-order-2',
+        '.payment-method-order-1',
 				// Normal Credit Card
 				'#payment-group-creditCardPaymentGroup',
-        '.payment-method-order-1',
+        '.payment-method-order-2',
 				// MERCADO PAGO
 				'#payment-group-MercadoPagoProPaymentGroup',
         '.payment-method-order-3',
