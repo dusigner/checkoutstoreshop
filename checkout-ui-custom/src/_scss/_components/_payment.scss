@@ -258,14 +258,6 @@ svg.vtex-omnishipping-1-x-svg {
         border-radius: 2px;
       }
 
-      .payment-method-order-1 {
-        height: 0 !important;
-        margin-top: 0px !important;
-        div {
-          display: none;
-        }
-      }
-
 			// To sort the PaymentGroup positions, just change the order
 			$PaymentGroups: (
         // PIX
