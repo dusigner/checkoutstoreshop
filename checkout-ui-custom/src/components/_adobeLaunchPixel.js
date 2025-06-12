@@ -409,7 +409,10 @@ class AdobeLaunchPixel {
             _this.setElementOmni(addItemButton, 'data-omni-buynow', {
               base: _this._mountDataBuyNow('base', skuId),
               variant: _this._mountDataBuyNow('variant', skuId),
+              imageurl: _this._mountDataBuyNow('imageUrl', skuId),
+              name: _this._mountDataBuyNow('displayName', skuId),
             })
+            
             $(
               `.product-item[data-sku="${skuId}"] #item-quantity-change-increment-${skuId}`
             ).on('click', function () {
@@ -762,6 +765,8 @@ class AdobeLaunchPixel {
                 cacheModelName: `${scplus.model_name}`,
                 cacheModelVariant: `${scplus.modelVariant}`,
                 cacheSkuId: `${scplus.skuId}`,
+                cacheImageUrl: '',
+                cacheDisplayName: '',
               }
 
               _this.cacheProducts.push(modelCacheSCPlus)
@@ -796,6 +801,8 @@ class AdobeLaunchPixel {
                 cacheModelName: `${model.modelName}`,
                 cacheModelVariant: `${item.refId}`,
                 cacheSkuId: `${item.id}`,
+                cacheImageUrl: `${item.imageUrl}`,
+                cacheDisplayName: `${model.displayNameEng}`,
               }
 
               _this.cacheProducts.push(modelCache)
@@ -1041,11 +1048,22 @@ class AdobeLaunchPixel {
         if (dataOmni === 'variant') {
           data = findItemCacheApi.cacheModelVariant
         }
+
+        // modelCode
+        if (dataOmni === 'imageUrl') {
+          data = findItemCacheApi.cacheImageUrl
+        }
+
+        // modelCode
+        if (dataOmni === 'displayName') {
+          data = findItemCacheApi.cacheDisplayName
+        }
       } else {
         data =
           dataOmni === 'base'
-            ? findItemCacheApi.cacheModelName
-            : findItemCacheApi.cacheModelVariant
+            ? findItemCacheApi.cacheModelName : dataOmni === 'variant' 
+            ? findItemCacheApi.cacheModelVariant : dataOmni === 'imageUrl' 
+            ? findItemCacheApi.cacheImageUrl : findItemCacheApi.cacheDisplayName
       }
     } catch (e) {
       console.error(`_mountDataBuyNow: ${e}`)
@@ -1066,6 +1084,7 @@ class AdobeLaunchPixel {
     let productFamily = ''
     let allCategories = ''
     let pimSubType = ''
+    let displayNameEng = ''
     const currentPath = window.__RUNTIME__.rootPath
       ? window.__RUNTIME__.rootPath
       : ''
@@ -1087,6 +1106,7 @@ class AdobeLaunchPixel {
             '|'
           )
         pimSubType = allCategories.length > 2 ? allCategories[2] : ''
+        displayNameEng = response.more.resultData.Products.Product.BasicInfo[0].FamilyEngName
 
         return {
           modelCode: response.ModelCode,
@@ -1094,10 +1114,12 @@ class AdobeLaunchPixel {
           productDivision: productDivision || 'N/A',
           productFamily: productFamily || 'N/A',
           pimSubType: pimSubType || 'N/A',
+          displayNameEng: displayNameEng || 'N/A',
         }
       })
       .catch(() => {
         const categories = Object.values(product.productCategories)
+        displayNameEng = product.name
 
         return {
           modelCode: skuId || '',
@@ -1105,6 +1127,7 @@ class AdobeLaunchPixel {
           productDivision: categories[0] || 'N/A',
           productFamily: categories.length > 1 ? categories[1] : 'N/A',
           pimSubType: categories[categories.length - 1] || 'N/A',
+          displayNameEng: displayNameEng || 'N/A',
         }
       })
   }
