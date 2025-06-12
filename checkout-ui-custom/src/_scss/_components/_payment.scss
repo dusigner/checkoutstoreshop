@@ -152,7 +152,6 @@ svg.vtex-omnishipping-1-x-svg {
 	}
 
 	#payment-data {
-
 		#payment-group-MercadoCreditoPaymentGroup {
 			background: url(https://samsungbrshop.vteximg.com.br/arquivos/mercado-credito.png) !important;
 			background-repeat: no-repeat !important;
@@ -240,75 +239,6 @@ svg.vtex-omnishipping-1-x-svg {
 				font-size: 14px !important;
 			}
 		}
-
-		.payment-group-list-btn {
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-      gap: 8px;
-
-      &:not(.has-btn-installments) .payment-group-item::before  {
-        content: "";
-        @extend %loading_placeholder;
-        position: absolute;
-        left: 60px;
-        bottom: 9px;
-        max-width: calc(80% - 60px);
-        height: 11px;
-        border-radius: 2px;
-      }
-
-      .payment-method-order-1 {
-        height: 0 !important;
-        margin-top: 0px !important;
-        div {
-          display: none;
-        }
-      }
-
-			// To sort the PaymentGroup positions, just change the order
-			$PaymentGroups: (
-        // PIX
-				'#payment-group-instantPaymentPaymentGroup',
-        '.payment-method-order-1',
-				// Normal Credit Card
-				'#payment-group-creditCardPaymentGroup',
-        '.payment-method-order-2',
-				// MERCADO PAGO
-				'#payment-group-MercadoPagoProPaymentGroup',
-        '.payment-method-order-3',
-				// Nubank
-				'#payment-group-NubankPaymentGroup',
-        '.payment-method-order-4',
-				// SSG Itaucard
-				'#payment-group-customPrivate_501PaymentGroup',
-        '.payment-method-order-5',
-				// Boleto
-				'#payment-group-bankInvoicePaymentGroup',
-        '.payment-method-order-6',
-				// SSG pay
-				'#payment-group-SamsungPayPaymentGroup',
-        '.payment-method-order-7',
-				// Ame
-				'#payment-group-AmeDigitalPaymentGroup',
-        '.payment-method-order-8',
-        // PicPay
-				'#payment-group-picPayPaymentGroup',
-        '.payment-method-order-9',
-			);
-
-		@for $i from 1 through length($PaymentGroups) {
-			$button: nth($PaymentGroups, $i);
-
-			#{$button} {
-				order: $i;
-			}
-		}
-
-		a {
-			order: 20;
-		}
-	  }
 
 	p.link.link-gift-card *,
 	.payment-group-item * {
@@ -643,6 +573,9 @@ svg.vtex-omnishipping-1-x-svg {
 			display: none;
 		}
 
+	}
+	.box-payment-pix {
+		display: none;
 	}
 }
 
@@ -2348,4 +2281,71 @@ svg.vtex-omnishipping-1-x-svg {
 		}
 
 	}
+}
+
+.payment-group {
+	.payment-group-list-btn {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		  gap: 8px;
+	
+	&:not(.has-btn-installments) .payment-group-item::before  {
+	content: "";
+	@extend %loading_placeholder;
+	position: absolute;
+	left: 60px;
+	bottom: 9px;
+	max-width: calc(80% - 60px);
+	height: 11px;
+	border-radius: 2px;
+	}
+	
+		// To sort the PaymentGroup positions, just change the order
+		$PaymentGroups: (
+	// PIX
+			'#payment-group-instantPaymentPaymentGroup',
+	'.payment-method-order-0',
+			// Normal Credit Card
+			'#payment-group-creditCardPaymentGroup',
+	'.payment-method-order-1',
+			// MERCADO PAGO
+			'#payment-group-MercadoPagoProPaymentGroup',
+	'.payment-method-order-2',
+			// Nubank
+			'#payment-group-NubankPaymentGroup',
+	'.payment-method-order-3',
+			// SSG Itaucard
+			'#payment-group-customPrivate_501PaymentGroup',
+	'.payment-method-order-4',
+			// Boleto
+			'#payment-group-bankInvoicePaymentGroup',
+	'.payment-method-order-5',
+			// SSG pay
+			'#payment-group-SamsungPayPaymentGroup',
+	'.payment-method-order-6',
+			// Ame
+			'#payment-group-AmeDigitalPaymentGroup',
+	'.payment-method-order-7',
+	// PicPay
+			'#payment-group-picPayPaymentGroup',
+	'.payment-method-order-8',
+		);
+	
+	@for $i from 1 through length($PaymentGroups) {
+		$button: nth($PaymentGroups, $i);
+	
+		#{$button} {
+			order: $i;
+		}
+	}
+	
+	a {
+		order: 20;
+	}
+	}
+}
+
+.box-payment-pix {
+	display: none;
 }
