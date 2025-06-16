@@ -33,6 +33,7 @@ import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
 import { OptInDimensions } from '../components/_opDimensions'
 import Payment from '../components/_payment'
+import ToastMessages from '../components/_toastMessage'
 
 
 const scripts = new Scripts()
@@ -86,6 +87,7 @@ export class CheckoutCustom {
     this.SummaryGiftCard = new SummaryGiftCard()
     this.optInDimensions = new OptInDimensions()
     this.payment = new Payment()
+    this.toastMessages = new ToastMessages()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1241,13 +1243,13 @@ export class CheckoutCustom {
 
   async update(orderForm) {
     const _this = this
-
     this.setItemsCount(orderForm?.items ?? [])
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
     this.shippingColor(orderForm)
+    this.toastMessages.notifyItemRemovalFromCart(orderForm)
 
     if (window.location.hash === '#/payment') {
       this.showMessageNubankPayment(orderForm)
