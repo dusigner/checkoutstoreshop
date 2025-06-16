@@ -582,6 +582,8 @@ export default class CustomProfileData {
     )
 
     $('body').on('input', '#client-phone', function () {
+      if(navigator.userAgent.match(/iPhone|iPad|iPod/i)) return
+
       const phoneInput = $(this);
       let rawValue = phoneInput.val().replace(/\D/g, '');
 
@@ -610,6 +612,18 @@ export default class CustomProfileData {
       phoneInput.val(formatted);
     });
 
+    $('body').on('keypress blur', '#client-phone', function (e) {
+      if(!navigator.userAgent.match(/iPhone|iPad|iPod/i)) return
+
+      setTimeout(() => {
+        const v = _this.mphone(e.target.value)
+
+        if (v !== e.target.value) {
+          e.target.value = v
+        }
+      }, 1)
+    })
+
     $('body').on('input keyup keypress blur', '#client-phone', function(e) {
       try {
         const phoneInput = $(this);
@@ -619,7 +633,7 @@ export default class CustomProfileData {
         _this.clearErrorPhone(phoneInput);
 
         // Verifica se é celular (começa com 6,7,8,9 após o DDD)
-        const isCelular = /^\(\d{2}\) [6-9]/.test(formattedValue);
+        const isCelular = /^\(\d{2}\) [6-9]/.test(formattedValue) || /^\d{2}[6-9]/.test(formattedValue);
 
         if (phoneValue.length > 0) {
           if (isCelular) {
