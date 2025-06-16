@@ -390,11 +390,15 @@ export default class CustomShippingData {
     if (!profileData) return;
   
     try {
-      const receiverName = `${profileData.firstName} ${profileData.lastName}`;
+      let receiverName = '';
+      
+      if (profileData.firstName && profileData.lastName && !profileData.firstName.includes('*') && !profileData.lastName.includes('*')) {
+        receiverName = `${profileData.firstName} ${profileData.lastName}`;
+      }
       const $receiverNameInput = $('#ship-receiverName');
-  
-      // Adicionar o valor inicial se o campo estiver vazio
-      if (!$receiverNameInput.val().trim() && (!$receiverNameInput.attr('data-edited') || $receiverNameInput.attr('data-edited') === 'false')) {
+
+      // Adicionar o valor inicial se o campo estiver vazio e existir receiverName
+      if (!$receiverNameInput.val().trim() && (!$receiverNameInput.attr('data-edited') || $receiverNameInput.attr('data-edited') === 'false') && receiverName) {
         $receiverNameInput.val(receiverName);
       }
   
