@@ -55,16 +55,16 @@ export default class CustomProfileData {
 
       const finalDate = new Date(formattedDate)
 
+      const isWhatsAppPromotionOptIn = $('#checkboxWhatsAppPromotionOptIn').is(':checked') ||
+        $('input[name="radioWhatsAppPromotionOptIn"]:checked').val() === 'yes' || 
+        $('input[name="unifiedRadios"]:checked').val() === 'yes'
+
       const newData = {
         email: $('.email').text(),
         birthDate: finalDate,
         acceptTermsAndPrivacyPolicy: $('#inputTermAndPolicies').is(':checked'),
         isNewsletterOptIn: $('#opt-in-newsletter').is(':checked'),
-        isWhatsAppOptIn: $('#inputWhatsapp').is(':checked'),
-        isWhatsAppPromotionOptIn: $('#isWhatsAppPromotionOptIn').is(':checked'),
-        whatsappPhoneNumber: $('#inputWhatsapp').is(':checked')
-          ? $('.whatsapp_phone').val()
-          : '',
+        isWhatsAppPromotionOptIn,
       }
 
       const newDataWithOptin = {
@@ -98,43 +98,44 @@ export default class CustomProfileData {
       $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
       $('#inputTermAndPolicies').prop('checked', acceptTermsAndPrivacyPolicy)
 
-      const whatsappStatusExists = $('input[name="whatsapp_status"]').length > 0
-      const whatsappMarketingExists =
-        $('input[name="whatsapp_marketing"]').length > 0
-      const whatsappUnifiedExists =
-        $('input[name="whatsapp_unified"]').length > 0
+      const hasRadioWhatsAppOptIn = $('input[name="radioWhatsAppOptIn"]').length > 0
+      const hasRadioWhatsAppPromotionOptIn = $('input[name="radioWhatsAppPromotionOptIn"]').length > 0
+      const hasUnifiedRadios = $('input[name="unifiedRadios"]').length > 0
 
-      if (
-        whatsappStatusExists ||
-        whatsappMarketingExists ||
-        whatsappUnifiedExists
-      ) {
-        if (whatsappStatusExists) {
-          $(
-            `input[name="whatsapp_status"][value="${
-              isWhatsAppOptIn ? 'yes' : 'no'
-            }"]`
-          ).prop('checked', true)
+      if( hasRadioWhatsAppOptIn || hasRadioWhatsAppPromotionOptIn || hasUnifiedRadios) {
+        const $whatsContainer = $('.whatsapp-optin');
+        const isWhatsMandatory = $whatsContainer.data('mandatory') === true;
+
+        if (hasRadioWhatsAppOptIn && !isWhatsMandatory) {
+          $(`input[name="radioWhatsAppOptIn"][value="${isWhatsAppOptIn ? 'yes' : 'no'}"]`).prop('checked', true)
         }
-        if (whatsappMarketingExists) {
-          $(
-            `input[name="whatsapp_marketing"][value="${
-              isWhatsAppPromotionOptIn ? 'yes' : 'no'
-            }"]`
-          ).prop('checked', true)
+        if (hasRadioWhatsAppOptIn && isWhatsMandatory) {
+          if (isWhatsAppOptIn) {
+            $(`input[name="radioWhatsAppOptIn"][value="yes"]`).prop('checked', true)
+          }
         }
-        if (whatsappUnifiedExists) {
-          const unifiedConsentValue =
-            isWhatsAppOptIn && isWhatsAppPromotionOptIn
-          $(
-            `input[name="whatsapp_unified"][value="${
-              unifiedConsentValue ? 'yes' : 'no'
-            }"]`
-          ).prop('checked', true)
+
+        if (hasRadioWhatsAppPromotionOptIn && !isWhatsMandatory) {
+          $(`input[name="radioWhatsAppPromotionOptIn"][value="${isWhatsAppPromotionOptIn ? 'yes' : 'no'}"]`).prop('checked', true)
+        }
+        if (hasRadioWhatsAppPromotionOptIn && isWhatsMandatory) {
+          if (isWhatsAppPromotionOptIn) {
+            $(`input[name="radioWhatsAppPromotionOptIn"][value="yes"]`).prop('checked', true)
+          }
+        }
+
+        if (hasUnifiedRadios && !isWhatsMandatory) {
+          const unifiedValue = isWhatsAppOptIn && isWhatsAppPromotionOptIn
+          $(`input[name="unifiedRadios"][value="${unifiedValue ? 'yes' : 'no'}"]`).prop('checked', true)
+        }
+        if (hasUnifiedRadios && isWhatsMandatory) {
+          if (isWhatsAppOptIn && isWhatsAppPromotionOptIn) {
+            $(`input[name="unifiedRadios"][value="yes"]`).prop('checked', true)
+          }
         }
       } else {
-        $('#inputWhats').prop('checked', isWhatsAppOptIn)
-        $('#isWhatsAppPromotionOptIn').prop('checked', isWhatsAppPromotionOptIn)
+        $('#checkboxWhatsAppOptIn').prop('checked', isWhatsAppOptIn)
+        $('#checkboxWhatsAppPromotionOptIn').prop('checked', isWhatsAppPromotionOptIn)
       }
 
       this.toggleGoToShippingDisabled()
@@ -315,29 +316,30 @@ export default class CustomProfileData {
     if ($('.whatsapp-optin').length) return
 
     const isShop = window.vtex.accountName === 'samsungbrshop'
+
     const $field = `<div class="whatsapp-optin">
-    <h3>Whatsapp (opcional)</h3>
-    <label class="inputOptInWhats checkbox-inline">
-      <input type="checkbox" id="inputWhats" />
-      <span class="custom-checkbox-icon"></span>
-      <span>
-        Desejo receber notificações do status do pedido por WhatsApp 
-      </span>
-    </label>
-    <label style="margin-top: 16px">
-      <input type="checkbox" id="isWhatsAppPromotionOptIn"/>
-      <span class="custom-checkbox-icon"></span>
-      <span>
-        Desejo receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp. 
-      </span>
-    </label>
-  </div>`
+      <h3>Whatsapp (opcional)</h3>
+      <label class="inputOptInWhats checkbox-inline">
+        <input type="checkbox" id="checkboxWhatsAppOptIn" />
+        <span class="custom-checkbox-icon"></span>
+        <span>
+          Desejo receber notificações do status do pedido por WhatsApp 
+        </span>
+      </label>
+      <label style="margin-top: 16px">
+        <input type="checkbox" id="checkboxWhatsAppPromotionOptIn"/>
+        <span class="custom-checkbox-icon"></span>
+        <span>
+          Desejo receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp. 
+        </span>
+      </label>
+    </div>`
 
     if (!isShop) {
       return $('.newsletter-optin').before($field)
     }
 
-    const solution1 = 
+    const solution1 =
       sessionStorage.getItem('codigoTesteWhatsOptinSolution1') !== null
     const solution2 =
       sessionStorage.getItem('codigoTesteWhatsOptinSolution2') !== null
@@ -374,60 +376,42 @@ export default class CustomProfileData {
     }
 
     const isMandatory = version === 1 || version === 2
-    const titleHtml = `<h3>WhatsApp (${
-      isMandatory ? 'obrigatório' : 'opcional'
-    })</h3>`
+
+    const titleHtml = `<h3>WhatsApp (${isMandatory ? 'obrigatório' : 'opcional'})</h3>`;
 
     let questionsHtml = ''
     switch (version) {
       case 1:
+      case 4:
         questionsHtml = `
-        <div class="whatsapp-optin__question">
-          <span>Deseja receber notificações do status do pedido por WhatsApp?</span>
-            ${createRadios('whatsapp_status')}
-        </div>
-        <div class="whatsapp-optin__question" style="margin-top: 16px;">
-          <span>Deseja receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp?</span>
-            ${createRadios('whatsapp_marketing')}
-        </div>
-      `
+      <div class="whatsapp-optin__question">
+        <span>Deseja receber notificações do status do pedido por WhatsApp?</span>
+        ${createRadios('radioWhatsAppOptIn')}
+      </div>
+      <div class="whatsapp-optin__question" style="margin-top: 16px;">
+        <span>Deseja receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp?</span>
+        ${createRadios('radioWhatsAppPromotionOptIn')}
+      </div>
+    `
         break
 
       case 2:
-        questionsHtml = `
-        <div class="whatsapp-optin__question">
-          <span>Aceito receber informações sobre meu pedido, bem como comunicações de marketing da Samsung via WhatsApp.</span>
-            ${createRadios('whatsapp_unified')}
-        </div>
-      `
-        break
-
       case 3:
         questionsHtml = `
-        <div class="whatsapp-optin__question">
-          <span>Aceito receber informações sobre meu pedido, bem como comunicações de marketing da Samsung via WhatsApp.</span>
-            ${createRadios('whatsapp_unified')}
-        </div>
-      `
-        break
-
-      case 4:
-        questionsHtml = `
-        <div class="whatsapp-optin__question">
-          <span>Deseja receber notificações do status do pedido por WhatsApp?</span>
-            ${createRadios('whatsapp_status')}
-        </div>
-        <div class="whatsapp-optin__question" style="margin-top: 16px;">
-          <span>Deseja receber comunicações, ofertas e novidades sobre a Samsung por WhatsApp?</span>
-            ${createRadios('whatsapp_marketing')}
-        </div>
-      `
+      <div class="whatsapp-optin__question">
+        <span>Aceito receber informações sobre meu pedido, bem como comunicações de marketing da Samsung via WhatsApp.</span>
+        ${createRadios('unifiedRadios')}
+      </div>
+    `
         break
     }
 
-    const $container = $(
-      `<div class="whatsapp-optin">${titleHtml}${questionsHtml}</div>`
-    )
+    const $container = $(`
+    <div class="whatsapp-optin" data-mandatory="${isMandatory}">
+      ${titleHtml}
+      ${questionsHtml}
+    </div>
+  `);
 
     $('.newsletter-optin').before($container)
   }
@@ -521,17 +505,50 @@ export default class CustomProfileData {
 
   toggleGoToShippingDisabled() {
     const $context = $('#client-profile-data')
-
+  
     const $allVisibleInputs = $context.find('p.input input:visible')
     const $validInputs = $context.find('p.input input.success:visible')
 
     const hasInvalidInputs = $validInputs.length < $allVisibleInputs.length
 
     const isTermsChecked = $('#inputTermAndPolicies').is(':checked')
-    const disabled = !hasInvalidInputs && isTermsChecked
+
+    const $whatsContainer = $('.whatsapp-optin');
+    const isWhatsMandatory = $whatsContainer.data('mandatory') === true;
+
+    let areRadiosValid = true;
+
+    if (isWhatsMandatory) { 
+      const radioWhatsAppOptIn = $('input[name="radioWhatsAppOptIn"]').length;
+      const radioWhatsAppPromotionOptIn = $('input[name="radioWhatsAppPromotionOptIn"]').length;
+      const unifiedRadios = $('input[name="unifiedRadios"]').length;
+
+      if (radioWhatsAppOptIn) {
+        const invalid = $('input[name="radioWhatsAppOptIn"]:checked').length === 0
+        if (invalid) {
+          return areRadiosValid = false
+        }
+      }
+
+      if (radioWhatsAppPromotionOptIn) {
+        const invalid = $('input[name="radioWhatsAppPromotionOptIn"]:checked').length === 0;
+        if (invalid) {
+          return areRadiosValid = false
+        }
+      }
+
+      if (unifiedRadios) {
+        const invalid = $('input[name="unifiedRadios"]:checked').length === 0;
+        if (invalid) {
+          return areRadiosValid = false
+        }
+      }
+    }
+
+    const disabled = !hasInvalidInputs && isTermsChecked && (!isWhatsMandatory || areRadiosValid)
 
     $context.find('#go-to-shipping, #go-to-payment').prop('disabled', !disabled)
-  }
+}
 
   updateSubmitButtons() {
     setTimeout(() => {
@@ -751,6 +768,24 @@ export default class CustomProfileData {
     })
 
     
+    function getWhatsAppConsentStatus() {
+      const defaultCheckbox = $('#checkboxWhatsAppOptIn')
+      if (defaultCheckbox.length) {
+        return defaultCheckbox.prop('checked')
+      }
+
+      const statusRadio = $('input[name="radioWhatsAppOptIn"]:checked')
+      if (statusRadio.length) {
+        return statusRadio.val() === 'yes'
+      }
+
+      const unifiedRadio = $('input[name="unifiedRadios"]:checked')
+      if (unifiedRadio.length) {
+        return unifiedRadio.val() === 'yes'
+      }
+
+      return false
+    }
 
     async function updateWhatsappConsent(isChecked) {
       const cookieSession = await getSessionCookie();
@@ -785,9 +820,9 @@ export default class CustomProfileData {
     }
   
 
-    $(document).on('click', '#go-to-shipping', function () {
-        const isChecked = $('#inputWhats').prop('checked');
-        updateWhatsappConsent(isChecked);
+    $('body').on('click', '#go-to-shipping', function () {
+      const isChecked = getWhatsAppConsentStatus()
+      updateWhatsappConsent(isChecked);
     });
 
     $('body').on('change', '#inputWhatsapp', function () {
@@ -819,7 +854,7 @@ export default class CustomProfileData {
 
     $('body').on(
       'change',
-      '#client-profile-data input[type="checkbox"]',
+      '#client-profile-data input[type="checkbox"], #client-profile-data input[type="radio"]',
       function () {
         setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
       }
