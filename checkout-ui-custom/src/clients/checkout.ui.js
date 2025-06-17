@@ -33,6 +33,7 @@ import { createLayoutEmptyCart } from '../components/emptyCart'
 import { ServicesLinks } from '../components/_servicesLinks'
 import { OptInDimensions } from '../components/_opDimensions'
 import Payment from '../components/_payment'
+import ToastMessages from '../components/_toastMessage'
 
 
 const scripts = new Scripts()
@@ -86,6 +87,7 @@ export class CheckoutCustom {
     this.SummaryGiftCard = new SummaryGiftCard()
     this.optInDimensions = new OptInDimensions()
     this.payment = new Payment()
+    this.toastMessages = new ToastMessages()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -198,82 +200,135 @@ export class CheckoutCustom {
     }
   }
 
-  couponInfo(response) {
+  showCustomToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `vtex-toast${type}`;
+  toast.innerHTML = `
+    <div class="vtex-toast-content">
+      <span class="vtex-toast-icon">${type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+      <span class="vtex-toast-message">${message}</span>
+    </div>
+  `;
+  Object.assign(toast.style, {
+    position: 'fixed',
+    top: '20px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    background: '#f2f4f5',
+    color: '#3f3f40',
+    padding: '12px 16px',
+    borderLeft: type === 'warning' ? '4px solid #f71963' : '4px solid #368df7',
+    borderRadius: '4px',
+    zIndex: 9999,
+    boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+    fontSize: '14px',
+    maxWidth: '320px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    opacity: '0.95',
+  });
 
-    const { marketingData, messages, ratesAndBenefitsData } = response;
+  document.body.appendChild(toast);
 
-    const _trElem = $('.summary-template-holder');
-    const couponFields = _trElem.find('.coupon-fieldset');
-    const messagesElem = $('.vtex-front-messages-placeholder-opened');
-    const inputCoupon = $('.coupon-value.input-small');
+  setTimeout(() => {
+    toast.style.transition = 'opacity 0.4s';
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 400);
+  }, 6000);
+}
 
-    couponFields.find('.div-coupon-info').remove();
+couponInfo(response) {
+  const { marketingData, messages, ratesAndBenefitsData } = response;
 
-    const couponExists = ratesAndBenefitsData.rateAndBenefitsIdentifiers.some(item => {
-      return item.matchedParameters && item.matchedParameters['couponCode@Marketing'] === marketingData?.coupon;
-    });
+  const _trElem = $('.summary-template-holder');
+  const couponFields = _trElem.find('.coupon-fieldset');
+  const messagesElem = $('.vtex-front-messages-placeholder-opened');
+  const inputCoupon = $('.coupon-value.input-small');
 
-    try {
-      const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
+  couponFields.find('.div-coupon-info').remove();
 
-      if (marketingData && marketingData.coupon) {
-        if (couponExists) {
-          inputCoupon.each(function () { $(this).prop('disabled', true); });
-          couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
-          return
+  const couponExists = ratesAndBenefitsData.rateAndBenefitsIdentifiers.some(item => {
+    return item.matchedParameters && item.matchedParameters['couponCode@Marketing'] === marketingData?.coupon;
+  });
+
+  try {
+    const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
+
+    if (marketingData && marketingData.coupon) {
+      if (couponExists) {
+        inputCoupon.each(function () { $(this).prop('disabled', true); });
+        couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
+        couponFields.append(couponInfoElement); 
+        return;
+      }
+
+      couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
+      vtexjs.checkout.removeDiscountCoupon().then((res, code) => {
+        if (code === 'success') {
+          window.location.reload();
+        }
+      });
+    } else {
+      if (messages && messages.length > 0) {
+        const warningMessage = messages.find(message => message.status === 'warning');
+        const errorMessage = messages.find(message => message.status === 'error');
+
+        if (["giftCardCommunicationError", "invalidGiftCard"].includes(errorMessage?.code)) {
+          messagesElem.css('display', 'block');
+          return;
         }
 
-        couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
-      } else {
-        if (messages && messages.length > 0) {
-          const warningMessage = messages.find(message => message.status === 'warning');
-          const errorMessage = messages.find(message => message.status === 'error');
+        if (warningMessage) {
+          const text = warningMessage.text?.trim();
 
-          if (["giftCardCommunicationError", "invalidGiftCard"].includes(errorMessage?.code)) {
-            messagesElem.css('display', 'block');
-            return
+          if (text === 'O valor do frete foi alterado') {
+            this.showCustomToast(text, 'warning');
+            messagesElem.empty(); 
+            return; 
           }
 
-          if (warningMessage) {
-
-            if (warningMessage.text === 'O valor dos itens foi alterado') {
-              // Nenhum cupom aplicado - Remove Cupom
-              messagesElem.css('display', 'none');
-              couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
-              couponFields.append(couponInfoElement);
-              return
-            }
-            // Cupom expirado
+          if (text === 'O valor dos itens foi alterado') {
             messagesElem.css('display', 'none');
-            const couponCodeMatch = warningMessage.text.match(/Cupom (.+?) (?:inválido|expirado)/);
-            const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
-            const isRewardsCoupon = couponCode?.toLowerCase().includes('rewards')
-            const isReward = window.vtex.accountName == 'samsungbrshopfidelidade' || window.vtex.accountName == 'samsungbrtestsfidelidade'
-
-            if (!isReward && isRewardsCoupon) {
-              couponInfoElement.find('p').text('Esse cupom é para uso exclusivo do Portal Rewards! Acesse agora para finalizar sua compra').css('color', 'red');
-              couponInfoElement.addClass('isReward')
-              $('.coupon-fields button').addClass('isButtonReward')
-            } else {
-              const messageErrorValidate = warningMessage.text
-              couponInfoElement.find('p').text(messageErrorValidate).css('color', 'red');
-            }
-
-            inputCoupon.each(function () {
-              $(this).css('border-bottom', 'solid 1px red').val(couponCode);
-            });
+            couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
             couponFields.append(couponInfoElement);
             return;
           }
+
+          // Cupom expirado
+          messagesElem.css('display', 'none');
+          const couponCodeMatch = text.match(/Cupom (.+?) (?:inválido|expirado)/);
+          const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
+          const isRewardsCoupon = couponCode?.toLowerCase().includes('rewards');
+          const isReward = window.vtex.accountName === 'samsungbrshopfidelidade' || window.vtex.accountName === 'samsungbrtestsfidelidade';
+
+          if (!isReward && isRewardsCoupon) {
+            couponInfoElement.find('p').text('Esse cupom é para uso exclusivo do Portal Rewards! Acesse agora para finalizar sua compra').css('color', 'red');
+            couponInfoElement.addClass('isReward');
+            $('.coupon-fields button').addClass('isButtonReward');
+          } else {
+            couponInfoElement.find('p').text(text).css('color', 'red');
+          }
+
+          inputCoupon.each(function () {
+            $(this).css('border-bottom', 'solid 1px red').val(couponCode);
+          });
+
+          couponFields.append(couponInfoElement);
+          return;
         }
-        // Nenhum cupom aplicado
-        couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
       }
-      couponFields.append(couponInfoElement);
-    } catch (e) {
-      console.error('couponInfo error:', e);
+
+      // Nenhum cupom aplicado
+      couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
     }
+
+    couponFields.append(couponInfoElement);
+  } catch (e) {
+    console.error('couponInfo error:', e);
   }
+}
+
 
   buildVertical() {
     $('body').addClass('body-cart-vertical')
@@ -1118,6 +1173,12 @@ export class CheckoutCustom {
           g => g.provider === 'SSG_REWARDS'
         )
 
+        const continueButton = $('.summary-template-holder .cart-links-bottom')
+
+        if (continueButton.length > 0) {
+          continueButton?.[1]?.setAttribute('style', 'display: none !important')
+        }
+
         let discount = 0
 
         if (
@@ -1241,13 +1302,13 @@ export class CheckoutCustom {
 
   async update(orderForm) {
     const _this = this
-
     this.setItemsCount(orderForm?.items ?? [])
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)
     this.enchancementTotalPrice(orderForm)
     this.enchancementProductCart(orderForm)
     this.shippingColor(orderForm)
+    this.toastMessages.notifyItemRemovalFromCart(orderForm)
 
     if (window.location.hash === '#/payment') {
       this.showMessageNubankPayment(orderForm)
