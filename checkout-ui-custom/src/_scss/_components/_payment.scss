@@ -2305,37 +2305,28 @@ svg.vtex-omnishipping-1-x-svg {
 		$PaymentGroups: (
 	// PIX
 			'#payment-group-instantPaymentPaymentGroup',
-	'.payment-method-order-0',
 			// Normal Credit Card
 			'#payment-group-creditCardPaymentGroup',
-	'.payment-method-order-1',
 			// MERCADO PAGO
 			'#payment-group-MercadoPagoProPaymentGroup',
-	'.payment-method-order-2',
 			// Nubank
 			'#payment-group-NubankPaymentGroup',
-	'.payment-method-order-3',
 			// SSG Itaucard
 			'#payment-group-customPrivate_501PaymentGroup',
-	'.payment-method-order-4',
 			// Boleto
 			'#payment-group-bankInvoicePaymentGroup',
-	'.payment-method-order-5',
 			// SSG pay
 			'#payment-group-SamsungPayPaymentGroup',
-	'.payment-method-order-6',
 			// Ame
 			'#payment-group-AmeDigitalPaymentGroup',
-	'.payment-method-order-7',
-	// PicPay
-			'#payment-group-picPayPaymentGroup',
-	'.payment-method-order-8',
+	  // PicPay
+			'#payment-group-picPayPaymentGroup'
 		);
 	
 	@for $i from 1 through length($PaymentGroups) {
 		$button: nth($PaymentGroups, $i);
 	
-		#{$button} {
+		#{$button}, .payment-method-order-#{$i} {
 			order: $i;
 		}
 	}
@@ -2347,5 +2338,5 @@ svg.vtex-omnishipping-1-x-svg {
 }
 
 .box-payment-pix {
-	display: none;
+	display: none !important;
 }

@@ -1604,6 +1604,25 @@ couponInfo(response) {
     }
   }
 
+  handleModalAuthConflictRedirect() {
+    try {
+      $(this).addClass("js-loading");
+
+      const notMyvtex = window?.location?.href?.indexOf('myvtex') === -1;
+      const orderFormId = window?.vtexjs?.checkout?.orderForm?.orderFormId
+      
+      if (notMyvtex && orderFormId) {
+        const returnUrl = `${window.vtex.endpointAPI.split('/api')[0]}/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId}`
+  
+        window.location.assign(
+          `${window.vtex.endpointAPI}/pub/logout?scope=${window.vtex.accountName}&returnUrl=${returnUrl}`
+        )
+      };
+    } catch (error) {
+      console.error('error handleModalAuthConflictRedirect: ', error);
+    }
+  }
+
   bind() {
     const _this = this
 
@@ -1746,6 +1765,10 @@ couponInfo(response) {
         $this.closest('span').removeClass('has-value')
       }
     })
+
+    $("body")
+      .off("click", ".js-checkEmailAuthConflict__modal--button")
+      .on("click", ".js-checkEmailAuthConflict__modal--button", _this.handleModalAuthConflictRedirect)
   }
 
   init() {
