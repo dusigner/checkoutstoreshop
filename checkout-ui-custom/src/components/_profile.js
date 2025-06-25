@@ -51,7 +51,7 @@ export default class CustomProfileData {
         })
       }
 
-      const formattedDate = $('#client-birth-date').val()
+      const formattedDate = $('#client-birth-date').val().split('/').reverse().join('-')
 
       const finalDate = new Date(formattedDate)
 
@@ -92,7 +92,7 @@ export default class CustomProfileData {
     isWhatsAppPromotionOptIn
   }) {
     try {
-      const clientDateBirth = birthDate?.split('T')?.[0]
+      const clientDateBirth = birthDate?.split('T')?.[0]?.split('-')?.reverse()?.join('/')
 
       $('#client-birth-date').addClass('success').val(clientDateBirth)
       $('#opt-in-newsletter').prop('checked', isNewsletterOptIn)
@@ -192,7 +192,7 @@ export default class CustomProfileData {
   }
 
   updateBirthDateOnSummary() {
-    const birthDateInputVal = $('#client-birth-date').val().split('-').reverse().join('/')
+    const birthDateInputVal = $('#client-birth-date').val()
 
     if (birthDateInputVal) {
       $('#dateBirthField span.name').text(birthDateInputVal)
@@ -214,10 +214,10 @@ export default class CustomProfileData {
     let isValidDate = true
     const timezoneOffset = new Date().getTimezoneOffset()
 
-    const formattedDate = dataUser.split('-')
+    const formattedDate = dataUser.split('/')
 
     if (!!formattedDate[0] && !!formattedDate[1] && !!formattedDate[2]) {
-      const dataRecebida = new Date(formattedDate.join('-'))
+      const dataRecebida = new Date(formattedDate.reverse().join('-'))
 
       dataRecebida.setUTCHours(0, timezoneOffset, 0, 0)
       isValid = !!this.calculateAge(
@@ -271,7 +271,7 @@ export default class CustomProfileData {
 
     const $dateBirthField = `<p class="client-date-birth input text required">
       <label for="client-date-birth">Data de Nascimento</label>
-      <input type="date" id="client-birth-date" max="${new Date().toISOString().split("T")[0]}" class="input-small">
+      <input type="text" id="client-birth-date" class="input-small" placeholder="dd/mm/aaaa" inputmode="numeric">
       <span id="error-client-date-birth-required" class="help error" style="display:none">Campo obrigatório.</span>
       <span id="error-client-date-birth" class="help error" style="display:none;">
         Menores de 18 anos não estão autorizados a efetuar o cadastro em nosso site. Em caso de dúvidas, acesse shop.samsung.com/br/faq.
@@ -282,6 +282,30 @@ export default class CustomProfileData {
     </p>`
 
     $('.client-document').first().after($dateBirthField)
+
+    $('#client-birth-date').on('input', function (e) {
+      let value = this.value;
+      const isBackspace = e?.originalEvent?.inputType === 'deleteContentBackward';
+
+      if (!isBackspace) {
+        value = value.replace(/\D/g, '');
+  
+        if (value.length >= 2) {
+          value = value.substring(0, 2) + '/' + value.substring(2);
+        }
+  
+        if (value.length >= 5) {
+          value = value.substring(0, 5) + '/' + value.substring(5);
+        }
+  
+        if (value.length > 10) {
+          value = value.substring(0, 10);
+        }
+      }
+
+      this.value = value;
+    })
+
   }
 
   addWhatsAppField() {

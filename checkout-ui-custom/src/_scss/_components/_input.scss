@@ -32,7 +32,7 @@ input, select, button {
 		border-color: #555555;
 	}
 
-	&::placeholder {
+	&::placeholder:not(#client-birth-date) {
 		color: #8F8F8F;
 		opacity: 0;
 	}
