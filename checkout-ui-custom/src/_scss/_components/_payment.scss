@@ -415,7 +415,6 @@ svg.vtex-omnishipping-1-x-svg {
 			max-width: none;
 			width: 100%;
 			padding: 0;
-			padding-top: 32px;
 		}
 
 		iframe {
@@ -1753,8 +1752,8 @@ svg.vtex-omnishipping-1-x-svg {
 		grid-template-areas:
 			'gift rewards-btn'
 			'giftcard-content giftcard-content'
-			'rewards-calc rewards-calc'
-			'payment-group steps';
+			'payment-group steps'
+			'rewards-calc rewards-calc';
 	}
 
 	@media screen and (max-width: 1200px) {
@@ -1776,9 +1775,9 @@ svg.vtex-omnishipping-1-x-svg {
 				'gift'
 				'rewards-btn'
 				'giftcard-content'
-				'rewards-calc'
 				'payment-group'
-				'steps';
+				'steps'
+				'rewards-calc';
 		}
 
 		.alert.payment-discounts-alert {
