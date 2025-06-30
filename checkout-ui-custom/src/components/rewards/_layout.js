@@ -3,6 +3,8 @@ import { formatNumberBRL } from '../_utils'
 const isFidelidadeAccount = (window.vtex && (window.vtex.accountName == 'samsungbrtestsfidelidade' || window.vtex.accountName == 'samsungbrshopfidelidade'));
 
 function createLayoutGroupCalcRewards({ totalPointsUser }) {
+  if (parseFloat(totalPointsUser) <= 0) return '<div />'
+
   return `
   <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">
         <div

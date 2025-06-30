@@ -1173,12 +1173,6 @@ couponInfo(response) {
           g => g.provider === 'SSG_REWARDS'
         )
 
-        const continueButton = $('.summary-template-holder .cart-links-bottom')
-
-        if (continueButton.length > 0) {
-          continueButton?.[1]?.setAttribute('style', 'display: none !important')
-        }
-
         let discount = 0
 
         if (
