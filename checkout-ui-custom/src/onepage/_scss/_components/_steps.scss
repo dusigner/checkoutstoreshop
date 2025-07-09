@@ -1,0 +1,283 @@
+//steps
+
+  $numberStepSize:26px;
+
+
+  %countingStepsNormal {
+    content: unset;
+    background: #FFF;
+    border:1px solid $muted1;
+    color:$muted1;
+
+    width:$numberStepSize;
+    height: $numberStepSize;
+    line-height: $numberStepSize;
+    font-size: 15px;
+
+  }
+
+  %countingStepsActive {
+    content: unset;
+    background:$actionPrimary;
+    border-color:$actionPrimary;
+    color:#FFF;
+  }
+
+  %countingStepsFilled {
+    @extend %countingStepsActive;
+  }
+
+
+
+  //keep attention changing anything below
+
+  @if $countingSteps {
+    .client-pre-email h3.client-pre-email-h span:before,
+    .client-profile-data .accordion-toggle > span:before,
+    .shipping-data .accordion-toggle:before,
+    .payment-data .accordion-toggle > span:not(.payment-edit-link):before {
+
+      @extend %countingStepsNormal;
+
+      text-align: center;
+      margin-right:10px;
+      border-radius: 100%;
+
+      display: inline-block;
+
+      font-weight:bold;
+      vertical-align: middle;
+      margin-top: -2px;
+    }
+  }
+
+
+  %checkout-steps-active {
+    color:$muted1;
+    font-weight: bold;
+    pointer-events: initial;
+    background: #ddd;
+  }
+
+  body {
+    .checkout-steps_item_cart,
+    .checkout-steps_item_confirmation {
+      display: none !important
+    }
+    &.v-custom-step-cart .checkout-steps_item_cart {
+      opacity: 1;
+      .text {
+        @extend %checkout-steps-active;
+        pointer-events: none;
+      }
+    }
+    &.v-custom-step-email,
+    &.v-custom-step-profile{
+      .checkout-steps_item_identification {
+        opacity: 1;
+        .text {
+          @extend %checkout-steps-active;
+          span {
+            &::after {
+              @media(max-width: $mobileWidth) {
+                background-color: #2189FF;
+              }
+            }
+          }
+        }
+      }
+      .checkout-steps_item_identification .text {pointer-events: none;}
+
+      .client-pre-email h3.client-pre-email-h span:before {
+        @extend %countingStepsActive;
+      }
+    }
+
+    &.v-custom-step-shipping {
+      .checkout-steps_item_shipping {
+        opacity: 1;
+        .text {
+          @extend %checkout-steps-active;
+          span {
+            &::after {
+              @media(max-width: $mobileWidth) {
+                background-color: #2189FF;
+              }
+            }
+          }
+        }
+      }
+      .checkout-steps_item_shipping .text {pointer-events: none;}
+    }
+
+    &.v-custom-step-payment {
+      .checkout-steps_item_payment {
+        opacity: 1;
+        .text {
+          @extend %checkout-steps-active;
+          span {
+            &::after {
+              @media(max-width: $mobileWidth) {
+                background-color: #2189FF;
+              }
+            }
+          }
+        }
+      }
+      .checkout-steps_item_payment .text {pointer-events: none;}
+    }
+
+    &.v-custom-step-profile {
+      .client-pre-email h3.client-pre-email-h span:before {
+        @extend %countingStepsFilled;
+      }
+
+      .client-profile-data .accordion-toggle > span:before {@extend %countingStepsActive;}
+    }
+    &.v-custom-step-shipping {
+
+      .client-pre-email h3.client-pre-email-h span:before,
+      .client-profile-data .accordion-toggle > span:before {
+        @extend %countingStepsFilled;
+      }
+
+      .shipping-data .accordion-toggle:before {@extend %countingStepsActive;}
+    }
+    &.v-custom-step-payment {
+
+      .client-pre-email h3.client-pre-email-h span:before,
+      .client-profile-data .accordion-toggle > span:before,
+      .shipping-data .accordion-toggle:before {
+        @extend %countingStepsFilled;
+      }
+
+      .payment-data .accordion-toggle > span:not(.payment-edit-link):before {@extend %countingStepsActive;}
+    }
+  }
+  .checkout-steps {
+    position: relative;
+    width: 100%;
+    margin-bottom: 32px;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    z-index: 999;
+    display: none;
+
+    &_items {
+      display:flex;
+      width: 100%;
+      height: 50px;
+      background: #eee;
+      overflow: hidden;
+      border-radius: 10px;
+      max-width: 1440px;
+      @media(max-width: $mobileWidth) {
+        margin: 0 18px;
+        height: 76px;
+      }
+    }
+
+    &_item {
+      position:relative;
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity:0.6;
+      font-weight: 700;
+      width: 100%;
+
+      &_identification,
+      &_shipping,
+      &_payment {
+        .text {
+          span {
+            &::after {
+              display: block;
+              margin-right: 3px;
+              @media(max-width: $mobileWidth) {
+                width: 19px;
+                height: 19px;
+                display: flex;
+                font-size: 12px;
+                border-radius: 50%;
+                background-color: #aaa;
+                color: #fff;
+                align-items: center;
+                justify-content: center;
+                margin-top: 13px;
+              }
+            }
+          }
+        }
+      }
+
+      &_identification {
+        .text {
+          @media(max-width: $mobileWidth) {
+            padding: 0 13px;
+            line-height: 12px;
+          }
+          span {
+            &::after {
+              content: '1.';
+              @media(max-width: $mobileWidth) {
+                content: '1';
+              }
+            }
+          }
+        }
+      }
+
+      &_shipping {
+        border-left: 1px solid #aaa;
+        border-right: 1px solid #aaa;
+        .text {
+          span {
+            &::after {
+              content: '2.';
+              @media(max-width: $mobileWidth) {
+                content: '2';
+              }
+            }
+          }
+        }
+      }
+
+      &_payment {
+        .text {
+          span {
+            &::after {
+              content: '3.';
+              @media(max-width: $mobileWidth) {
+                content: '3';
+              }
+            }
+          }
+        }
+      }
+
+      .text {
+        cursor:pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-family: SamsungSharpSans;
+        @media(max-width: $mobileWidth) {
+          font-size: 12px;
+          flex-direction: column;
+          justify-content: space-evenly;
+          padding-bottom: 13px;
+        }
+      }
+
+      &_payment:after {
+        display: none !important;
+      }
+      &_confirmation:after {display:none;}
+    }
+  }

@@ -1,0 +1,471 @@
+// _global.scss
+.checkout-container {
+  min-height: 400px;
+}
+
+body {
+  font-family: $fontFamily;
+  min-width: initial !important;
+  padding: 0;
+  background: $base;
+
+  min-height: calc(100vh - 170px);
+  position: relative;
+  font-size: $fontSize;
+
+  overflow-x: hidden;
+
+  a {
+    color: $actionPrimary;
+    &:hover {
+      color: $actionPrimaryDarken;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding-bottom: 0px !important;
+  }
+
+  //short preloader to don't show a empty cart
+  .cart-template.full-cart {
+    > * {
+      opacity: 0;
+      transition-delay: 1.2s;
+      transition-property: opacity;
+      -webkit-transition-duration: 0.5s;
+    }
+  }
+  &.v-custom-loaded {
+    .cart-template.full-cart {
+      > * {
+        opacity: initial;
+      }
+    }
+  }
+  //end short preloader to don't show a empty cart
+
+  &.v-custom-step-email {
+    #orderform-to-cart {
+      display: inline-block;
+    }
+
+    p.client-document + div {
+      width: calc(50% - 12px);
+      margin-left: 24px !important;
+    }
+
+    p.client-phone {
+      width: 100% !important;
+    }
+
+    p.client-date-birth,
+    p.client-whatsapp,
+    .pj-information,
+    .whatsapp-optin,
+    .newsletter-optin,
+    .terms-and-policies {
+      display: none !important;
+    }
+  }
+
+  .orderform-template-holder {
+    > .row-fluid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      max-width: 100%;
+      gap: 33px;
+      @media (max-width: $mobileWidth) {
+        grid-template-columns: 100%;
+      }
+      &::before, &::after {
+        display: none;
+      }
+    }
+  }
+
+}
+
+.newsletter-optin,
+.whatsapp-optin,
+.terms-and-policies,
+.optin-dimensions,
+.rewards-block {
+  margin-bottom: 32px;
+
+  h3 {
+    font-size: 12px;
+    color: #000000;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 0;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    padding-left: 0;
+  }
+
+  span {
+    line-height: 1;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+  }
+  
+  span.optin-text {
+    color: #000000;
+    font-weight: normal;
+    font-size: 16px;
+  }
+
+  input {
+    display: none;
+
+    &:checked + .custom-checkbox-icon {
+      background-color: #2189ff;
+      border-color: #2189ff;
+
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+
+  .custom-checkbox-icon {
+    position: relative;
+    display: inline-block;
+    min-width: 20px;
+    height: 20px;
+    border: 1px solid #555555;
+    border-radius: 999px;
+    margin-right: 10px;
+    box-sizing: border-box;
+
+    &:after {
+      content: '';
+      border: 2px solid #fff;
+      border-top: none;
+      border-right: none;
+      height: 5px;
+      left: 3px;
+      opacity: 0;
+      position: absolute;
+      top: 4px;
+      transform: rotate(-45deg);
+      width: 10px;
+    }
+  }
+}
+.newsletter-optin,
+.whatsapp-optin {
+  .newsletter-text{
+    display: none;
+  }
+  .newsletter-text-correct,
+  .whatsapp-text-correct {
+    display: block;
+  }
+}
+
+.onda-v1 .br-pill,
+.step,
+.cart,
+.totalizers {
+  border-radius: $borderRadius;
+}
+
+.loading.loading-bg {
+  background: $base;
+}
+
+// containers
+
+.container {
+  max-width: 1440px;
+  width: calc(100% - 40px);
+  @media (max-width: $mobileWidth) {
+    width: calc(100% - 20px);
+  }
+}
+
+.checkout-container {
+  overflow: initial !important;
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    margin-bottom: 30px;
+  }
+
+  .orderform-template,
+  .cart-template {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    justify-content: center;
+
+    &.inactive {
+      max-height: 50vh;
+      overflow: hidden;
+      top: 0;
+      position: absolute;
+    }
+  }
+  .full-cart {
+    &.inactive {
+      margin-left: -140%;
+    }
+  }
+  .orderform-template {
+    &.inactive {
+      left: 140%;
+      margin: 0;
+      display: none !important;
+    }
+  }
+}
+
+//titles
+
+.container-cart h1,
+h1#orderform-title {
+  font-family: "SamsungSharpSans";
+  margin-top: 0;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  color: $muted1 !important;
+
+  @media screen and (max-width: 769px) {
+    line-height: 1;
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+}
+
+h1#orderform-title {
+  display: none !important;
+}
+
+// assemblies custom vtex
+
+.v-custom-assemblies {
+  margin: 10px 0 3px 0;
+  overflow: hidden;
+  border-top: 1px solid $muted4;
+  padding-top: 7px;
+  @media (max-width: $mobileWidth) {
+    width: 100%;
+    left: 0;
+    margin-bottom: 2px;
+  }
+
+  p {
+    display: none;
+  }
+  &__values {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    &__item {
+      strong {
+        &:after {
+          content: ':';
+        }
+      }
+      span,
+      strong {
+        line-height: 14px;
+      }
+    }
+  }
+}
+
+.invalid-postal-code-msg,
+.invalid-postal-inventory {
+  display: none;
+  max-width: 566px;
+
+  body.body-cart & {
+    margin-top: 16px;
+  }
+
+  body.invalid-postal-code & {
+    display: block;
+  }
+
+  &__label {
+    display: inline-block;
+    margin: 8px 0;
+    font-size: 12px;
+    color: #d62e2e;
+
+    body.body-cart & {
+      display: none;
+    }
+  }
+  &__message {
+    font-size: 14px;
+    background: #fef6f3;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+  &__link {
+    text-decoration: underline;
+    color: #000000;
+  }
+}
+
+#client-profile-data {
+  @media (max-width: 768px) {
+    margin-top: 16px;
+  }
+}
+
+#shipping-data {
+  .accordion-toggle {
+    &:not(.accordion-toggle-active) {
+      font-size: 0;
+      margin-top: -40px;
+    }
+  }
+}
+
+#client-profile-data {
+  .box-info {
+    margin-left: 16px;
+  }
+}
+
+#client-profile-data,
+#shipping-data,
+#payment-data {
+  margin-bottom: 18px !important;
+
+  @media (max-width: 768px) {
+    box-sizing: border-box;
+    padding: 0 16px;
+  }
+
+  .step.client-profile-data {
+    @media (max-width: 768px) {
+      padding: 0 !important;
+    }
+  }
+
+  .accordion-inner {
+    padding: 0;
+  }
+
+  .box-info {
+    margin-top: 16px;
+
+    &.shipping-summary-placeholder {
+      margin-top: 0;
+
+      &.pickup-in-point-class {
+        .shp-summary-group {
+          &:nth-child(1) {
+            order: 1 !important;
+          }
+          &:nth-child(2) {
+            order: 2 !important;
+          }
+        }
+      }
+      &.delivery-class {
+      }
+    }
+  }
+
+  .accordion-toggle {
+    padding: 0;
+    @extend %steps-title;
+    font-size: 0;
+    margin-top: -20px;
+
+    line-height: 20px;
+    display: block;
+
+    &:not(.accordion-toggle-active) {
+      padding-bottom: 16px;
+    }
+
+    > i, span {
+      display: none;
+    }
+
+    + .customTitleStep1 {
+      display: none;
+    }
+
+    &-active {
+      & + .customTitleStep1 {
+        display: block;
+        font-size: 18px !important;
+        font-weight: bold;
+      }
+    }
+  }
+
+  p.notification,
+  .shipping-summary-info {
+    display: none !important;
+    display: block;
+    margin-top: 16px;
+    font-size: 14px;
+    color: #555555;
+    font-weight: bold;
+  }
+
+  .link-box-edit {
+    background: none;
+    box-shadow: none;
+    border: none;
+    color: #000000;
+    outline: none;
+
+    position: absolute;
+    right: 0;
+    top: auto;
+    bottom: -35px;
+    z-index: 1;
+    opacity: 1;
+
+    @media (max-width: 768px) {
+      right: 0;
+    }
+
+    &::after {
+      content: 'Editar';
+      padding-bottom: 2px;
+      border-bottom: 2px solid #000;
+      color: #000000;
+    }
+
+    i {
+      display: none;
+    }
+  }
+}
+//BESPOKE
+.customBespokeRemove + a {
+  display: none;
+}
+
+tr[install-item='true'] .quantity {
+  display: none !important;
+}
+
+// CLS IMPROVMENTS
+body.loading .container-main {
+  @media (min-width: 768px) {
+    min-height: 60vh !important;
+  }
+}
+.checkout-footer {
+  box-sizing: border-box;
+}
+// CLS IMPROVMENTS

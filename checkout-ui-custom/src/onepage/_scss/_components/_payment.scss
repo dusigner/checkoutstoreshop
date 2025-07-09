@@ -1,0 +1,2335 @@
+@import '_card-flags.scss';
+
+%label {
+	margin: 0;
+	display: block;
+	color: #000;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+%loading_placeholder {
+  overflow: hidden;
+  pointer-events: none;
+  width: 100%;
+  background-color: #F0F0F0;
+  animation: pulse_placeholder 1s cubic-bezier(.4, 0, .6, 1) infinite;
+}
+
+@keyframes pulse_placeholder {
+  50% {
+    opacity: .5;
+  }
+}
+
+// loadin shhimer
+
+
+@keyframes placeHolderShimmer {
+	0% {
+		background-position: -468px 0
+	}
+
+	100% {
+		background-position: 468px 0
+	}
+}
+
+%loading-shimmer {
+	animation-duration: 1.25s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: infinite;
+	animation-name: placeHolderShimmer;
+	animation-timing-function: linear;
+	background: darkgray;
+	background: linear-gradient(to right, #eeeeee 10%, #dddddd 18%, #eeeeee 33%);
+	background-size: 800px 104px;
+
+}
+
+// set svgs
+
+svg.pickup-marker-blue,
+svg.pickup-marker-blue path,
+svg.pkpmodal-pickup-point-marker-image,
+svg.pkpmodal-pickup-point-marker-image path,
+svg.vtex-omnishipping-1-x-svg,
+svg.vtex-omnishipping-1-x-svg path,
+svg.pkpmodal-pickup-point-best-marker-image path:not([fill="white"]) {
+	fill: $actionPrimary;
+}
+
+svg.vtex-omnishipping-1-x-svg {
+	width: 20px;
+	height: 20px;
+}
+
+// -- vertical checkout
+
+
+.container.container-main.container-order-form {
+	max-width: 1440px !important;
+
+	@media(max-width: 768px) {
+		width: 100%;
+	}
+	.VTEX-PIX__modal-background {
+		z-index: 10000;
+		.VTEX-PIX__modal-outer-container {
+			max-width: 600px;
+			max-height: 800px;
+			height: 40em;
+			width: 28em;
+			border-radius: 20px;
+			
+			.VTEX-PIX__timer-container {
+				margin-bottom: 5px
+			}
+	
+			.VTEX-PIX__qrcode-container {
+				width: 180px;
+			}
+	
+			.VTEX-PIX__container-info {
+				margin-top: 0.5em;
+				display: grid;
+	
+				.VTEX-PIX__container-info-head {
+					margin-bottom: 0.5em;
+				}
+	
+				.VTEX-PIX__container-info-description {
+					margin-bottom: 0px;
+				}
+			}
+
+			.VTEX-PIX__container-info-description-samsung ol{
+				text-align: left;
+				margin: 20px 20px 5px;
+			}	
+			.VTEX-PIX__container-info-description-samsung li{
+				text-align: left;
+				margin: 5px 0px;
+			}
+			.VTEX-PIX_description-footer-samsung {
+				margin-top: 10px;
+			}
+	
+			.VTEX-PIX__footer {
+				border-radius: 0px 0px 20px 20px;
+			}
+		}
+	}
+}
+
+.orderform-template-holder {
+	#client-profile-data {
+		width: 100%;
+	}
+
+	#client-profile-data .step.client-profile-data,
+	#shipping-data,
+	#payment-data {
+		width: 100% !important;
+		z-index: initial;
+		border: $bordersContainers;
+    margin: 0;
+
+	}
+
+	#payment-data {
+    @media (max-width: $mobileWidth) {
+      margin:42px 0;
+    }
+
+		#payment-group-MercadoCreditoPaymentGroup {
+			background: url(https://samsungbrshop.vteximg.com.br/arquivos/mercado-credito.png) !important;
+			background-repeat: no-repeat !important;
+			background-size: 24px !important;
+			background-position: 7% 50% !important;
+
+			.payment-group-item-text {
+				font-size: 0;
+
+				&::after {
+					content: "Parcele via Boleto em até 12x";
+					font-size: 12px;
+				}
+			}
+		}
+
+		#payment-group-customPrivate_501PaymentGroup {
+			.payment-group-item-text {
+				padding-left: 0px;
+				font-size: 0;
+
+				&::before {
+					content: "";
+          align-self: center;
+					margin-right: 18px;
+					width: 30px;
+					height: 24px;
+					background-image: url(https://samsungbrshop.vteximg.com.br/arquivos/cartaossgitaunewcheckout.jpg) !important;
+					display: block;
+					background-position: inherit;
+					background-repeat: no-repeat;
+					background-size: cover;
+				}
+
+				&::after {
+					content: "Cartão Samsung";
+					font-size: 12px;
+				}
+			}
+		}
+
+		p.link.link-gift-card,
+		fieldset.payment-group {
+			width: 100%;
+			left: 0;
+			display: block;
+			background: none;
+			position: relative;
+			margin: 0;
+			grid-area: payment-group;
+
+			#payment-group-SamsungPayPaymentGroup {
+				span {
+					background-position-y: calc(100% - 10px);
+				}
+			}
+
+
+			@media screen and (max-width: 768px) {
+				max-width: none;
+			}
+		}
+
+		.box-payment-option {
+      padding-top: 0;
+			padding-bottom: 32px;
+      iframe {
+        margin-bottom: 20px;
+        width: 99%;
+      }
+		}
+
+		p.link.link-gift-card {
+			margin-bottom: 16px;
+			padding: 0;
+			width: max-content;
+			border: 1px solid #000;
+			border-radius: 20px;
+			grid-area: gift;
+
+			a {
+				padding: 10px 24px;
+				display: block;
+				color: #000;
+				text-align: left;
+				font-size: 14px !important;
+			}
+		}
+
+	p.link.link-gift-card *,
+	.payment-group-item * {
+		font-weight: bold;
+	}
+
+    .payment-group-item {
+      all: unset; // reset vtex styles
+      position: relative;
+      padding: 0 12px;
+      border: 1px solid #DDDDDD;
+      border-radius: 10px;
+      margin-right: 2px;
+      min-width: 240px;
+      min-height: 48px;
+      cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &:hover {
+        background: #F7F7F7;
+
+        .payment-group-installments {
+          background: #F7F7F7;
+        }
+      }
+
+      &.active {
+        background: #F7F7F7;
+        border-color: #2189FF;
+        box-shadow: 0 0 0 1px #2189FF;
+
+        &::after {
+          content: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuMzY2NjUgMTEuOTk5OUwyLjU2NjY1IDguMTk5OTRMMy41MTY2NSA3LjI0OTk0TDYuMzY2NjUgMTAuMDk5OUwxMi40ODMzIDMuOTgzMjhMMTMuNDMzMyA0LjkzMzI4TDYuMzY2NjUgMTEuOTk5OVoiIGZpbGw9IiMwMDZCRUEiLz4KPC9zdmc+Cg==");
+          line-height: 1;
+        }
+
+        .payment-group-installments {
+          background: #F7F7F7;
+        }
+      }
+
+      span.payment-group-item-text {
+        line-height: 17px;
+        display: flex;
+        background-size: 24px;
+        background-position-x: left;
+        padding: 0;
+        padding-left: 48px;
+        min-height: 34px;
+
+        color: #000;
+        font-weight: 700;
+        font-size: 12px;
+      }
+
+      span.payment-group-installments {
+        position: absolute;
+        bottom: 9px;
+        line-height: 1;
+        display: block;
+        font-size: 12px;
+        font-weight: 400;
+        color: #000;
+        left: 60px;
+        width: 175px;
+        background: #fff;  
+        z-index: 1;
+      }
+    }
+
+    .gift-card-section.form-step.box-default {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+
+      label {
+        font-weight: bold;
+        color: #000;
+        font-size: 12px;
+      }
+    }
+
+    p.payment-discounts-options,
+    p.gift-card-provider-options {
+      display: flex;
+      align-items: center;
+      padding-bottom: 10px;
+
+      input,
+      select {
+        margin: 0 10px;
+      }
+
+      label {
+        line-height: 12px;
+        margin: 0;
+      }
+    }
+
+    .payment-discounts-list {
+      margin-bottom: 10px;
+
+      .gift-card-provider-group-loyalty-program {
+        border-bottom: 1px solid $muted5;
+      }
+
+      table {
+        width: 100%;
+
+        td {
+          padding: 0;
+        }
+
+        tbody,
+        tr {
+          display: flex;
+          width: 100%;
+          flex-wrap: wrap;
+          align-items: center;
+        }
+
+        td.code,
+        td.number {
+          margin-right: 20px;
+          flex-grow: 1;
+          padding: 0;
+
+          @media (max-width: 768px) {
+            margin-right: 0px;
+          }
+        }
+
+        #remove-gift-card {
+          text-decoration: underline;
+          color: $danger;
+        }
+
+        td.action {
+          a {
+            @extend .btn, .btn-secondary;
+          }
+        }
+      }
+
+    }
+
+    input#payment-discounts-code {
+      width: 100% !important;
+    }
+
+	  .gift-card-multiple-providers {}
+
+    #btn-add-gift-card {
+      @extend .btn-secondary;
+      height: $inputHeight;
+      border-radius: $borderRadius;
+    }
+
+    .steps-view {
+      max-width: 496px;
+      padding: 24px;
+      min-height: initial;
+      grid-area: steps;
+
+
+      @media screen and (max-width: 1050px) {
+        max-width: 374px;
+      }
+
+      @media screen and (max-width: 768px) {
+        max-width: none;
+        width: 100%;
+        padding: 0;
+        padding-top: 32px;
+      }
+
+      iframe {
+        margin: 0;
+      }
+    }
+
+    p.notification {
+      &:not([style="display: none;"])+.box-step {
+        padding: 0;
+        border: none;
+      }
+    }
+
+    &:last-child {
+      @media (min-width: 769px) {
+        margin-bottom: 0px !important;
+        padding-right: 16px;
+        margin-top: 330px;
+      }
+    }
+
+	  //custom (from js)
+
+    .v-custom-payment-item-wrap {
+      box-sizing: border-box;
+      border-radius: $borderRadius;
+      background: #FFF;
+      border: 1px solid $muted4;
+      color: $muted1;
+      transition: all ease 0.3s;
+      overflow: hidden;
+      margin-bottom: 10px;
+
+      &.active,
+      &:hover {
+        border-color: $actionPrimary;
+        box-shadow: 0 0 6px #ddd;
+      }
+
+      .payment-group-item {
+        &-text {
+          margin-right: auto;
+          text-align: left;
+          line-height: 27px !important;
+          white-space: nowrap;
+
+          &:before {
+            content: "";
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            border: 1px solid $muted3;
+            border-radius: 100%;
+            vertical-align: middle;
+            margin: -3px 10px 0 0;
+          }
+        }
+
+        &-cards {
+          display: flex;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+
+          .card-flag {
+
+            &:last-child {
+              margin: 0;
+            }
+          }
+
+          @media(max-width:360px) {
+            display: none;
+          }
+        }
+
+        &.active {
+          background: $actionSecondary;
+          border-bottom: 1px solid $actionPrimary;
+
+          .payment-group-item-text {
+
+            &:before {
+              background: $actionPrimary;
+              border-color: $actionPrimary;
+              box-shadow: inset 0 0 0 3px #FFF;
+            }
+          }
+
+          .payment-group-item-cards {
+            span {
+              opacity: 1;
+            }
+          }
+        }
+
+        &:hover {
+          .payment-group-item-text {
+            &:before {
+              border-color: $actionPrimary;
+            }
+          }
+        }
+
+        &:before,
+        &:after {
+          display: none;
+        }
+
+        &#payment-group-payPalPaymentGroup {
+          position: relative;
+
+          &:after {
+            content: "";
+            width: 50px;
+            height: 20px;
+            display: block;
+            background: url('https://io.vtex.com.br/checkout-ui/v6.18.19/img/payment-paypal-landscape.png') center no-repeat;
+            background-size: contain;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 12px;
+            left: initial;
+            border: none;
+          }
+        }
+
+        &#payment-group-AffirmPaymentGroup:after {
+          content: "";
+          width: 65px;
+          height: 25px;
+          display: block;
+          background: url(https://cdn-assets.affirm.com/images/black_logo-transparent_bg.png) center no-repeat;
+          background-size: contain;
+          position: absolute;
+          top: 49%;
+          transform: translateY(-50%);
+          right: 3px;
+          left: initial;
+          border: none;
+        }
+      }
+
+      .payment-group-item.active+div,
+      &.active>div {
+        padding: 20px;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+
+      .SecurityEnvironmentIcon {
+        display: none;
+      }
+
+    }
+}
+
+.step {
+
+	border: none;
+	padding: 0;
+	background: none;
+	margin-bottom: 0;
+
+  &.active {
+    #payments-title {
+      &::after {
+        content: "Selecione o método de pagamento";
+        display: block;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 18px;
+        margin-top: 8px;
+        color: #000000;
+      }
+    }
+  }
+
+	@media(max-width:868px) {
+		width: 100%;
+	}
+
+	.box-info {
+		color: $muted1;
+
+		p {
+			font-size: 14px;
+			font-weight: bold;
+			color: #000;
+		}
+
+		span.tel {
+			margin-top: 7px;
+			display: inline-block;
+		}
+	}
+
+	.form-step {
+
+		fieldset {
+			width: 100%;
+			float: none;
+
+      .payment-mercadopago-container-methods {
+        background-color: #f7f7f7;
+        border-radius: 20px;
+      }
+
+			p {
+				@media(max-width: $mobileWidth) {
+					float: none !important;
+				}
+
+				&.client-last-name,
+				&.client-first-name {
+					width: calc(50% - 5px);
+					position: relative;
+
+					@media(max-width: $mobileWidth) {
+						width: 100%;
+
+						input[type="text"] {
+							width: 100% !important;
+						}
+					}
+				}
+
+			}
+
+			&.box-client-info-pj {
+				padding-top: 15px;
+			}
+
+			&.box-payment-option {
+				h3 {
+					display: none;
+				}
+			}
+
+			&.box-payment-nubank {
+				.nu-extra-limit {
+					padding: 0px;
+					margin: 0px;
+					background-color: unset;
+				}
+				.nu-extra-limit-samsung {
+					padding: 16px;
+					background-color: #f4e7ff;
+					margin: 24px 24px 0;
+					@media(min-width: 768px) {
+						margin: 24px 0 0;
+					}
+				}
+				.nu-body-items-samsung {
+					.nu-body-item-icon {
+						background-color: #f4e7ff;
+					}
+					hr {
+						margin: 24px 10px 0px;
+    					border-top: 1px solid #4c0677;
+    					border-bottom: 0px;
+					}
+				}
+			}
+			&.box-payment-mercadopago {
+				.mercadopago-box-wrapper-samsung {
+					.header-mercado-pago-samsung{
+						display: flex;
+						justify-content: space-between;
+						padding: 20px 20px 0px;
+						align-items: center;
+					}
+					.header-mercado-pago-samsung p,
+					.mini-box-samsung p{
+						margin: 0px;
+					}
+					.thumbnails-grid-samsung {
+						display: grid;
+						grid-template-columns: 1fr 1fr;
+						padding: 10px 25px 0;
+						@media(min-width: 768px) {
+							padding: 10px 50px 0;
+						}
+					}
+					.mini-box-samsung {
+						display: flex;
+						text-align: center;
+						align-items: center;
+						width: 100%;
+					}
+					.payment-mercadopago-ico{
+						margin: 0 10px;
+						width: 20px;
+						height: 20px;
+						background-size: 20px 20px;
+					}
+					.mini-box-line-one {
+						margin-bottom: 30px;
+					}
+				}
+			}
+		}
+
+
+		#is-corporate-client {
+			color: $actionPrimary;
+		}
+
+	}
+
+	.input.text {
+		label {
+			@extend %label;
+		}
+	}
+
+	&.client-profile-data {
+		.client-notice.notice {
+			margin: 0 0 10px 0;
+		}
+
+		.box-client-info {
+			margin-bottom: 20px;
+		}
+
+		.client-document,
+		.client-phone {
+			width: calc(50% - 5px);
+
+			@media(max-width:$mobileWidth) {
+				width: 100%;
+			}
+		}
+
+
+	}
+
+	&.shipping-data {
+		.shp-summary-group {
+			&:nth-child(2) {
+				order: 0 !important;
+			}
+		}
+
+		.box-step {
+			display: flex;
+			flex-wrap: wrap;
+
+			>* {
+				width: 100%;
+				order: 1;
+
+				//&:not(#postalCode-finished-loading),
+				//&:not(.vtex-omnishipping-1-x-geolocation) {margin:0 0 20px 0;}
+
+				&.vtex-omnishipping-1-x-addressFormPart1 {
+					order: 1;
+					display: flex;
+					flex-direction: column;
+				}
+
+				&.vtex-omnishipping-1-x-addressFormPart1 {
+					.ship-postalCode {
+						order: 1;
+					}
+				}
+
+				&.vtex-omnishipping-1-x-deliveryGroup {
+					order: 2;
+					margin-bottom: 16px;
+				}
+
+				&.vtex-omnishipping-1-x-addressForm {
+					order: 3;
+
+					+.vtex-omnishipping-1-x-shippingSectionTitle {
+						order: 4;
+
+						+.vtex-omnishipping-1-x-addressFormPart1 {
+							order: 4;
+
+							+.vtex-omnishipping-1-x-teste {
+								order: 4;
+							}
+						}
+
+						+.vtex-omnishipping-1-x-btnDelivery {
+							order: 4 !important;
+							font-size: 0;
+
+							&::after {
+								content: 'Preencher endere\E7o do cliente';
+								font-size: 14px;
+							}
+						}
+
+						+.vtex-omnishipping-1-x-backToAddressList {
+							order: 4 !important;
+						}
+
+						+.vtex-omnishipping-1-x-addressList {
+							order: 4;
+						}
+
+						+.vtex-omnishipping-1-x-backToAddressList {
+							order: 4;
+
+							+.vtex-omnishipping-1-x-addressFormPart1 {
+								order: 4;
+
+								+.vtex-omnishipping-1-x-teste {
+									order: 4;
+								}
+							}
+						}
+					}
+				}
+
+				&.vtex-omnishipping-1-x-teste {
+					p.input {
+						@extend %field;
+					}
+				}
+
+				&.vtex-omnishipping-1-x-submitPaymentButton {
+					order: 100;
+				}
+
+				&.btn-link.vtex-omnishipping-1-x-btnDelivery {
+					order: 1;
+					margin-top: 20px;
+					background: $actionPrimary;
+
+				}
+
+				&#postalCode-finished-loading,
+				&:last-child {
+					margin: 0;
+				}
+
+				&.vtex-omnishipping-1-x-backToAddressList {
+					order: 1 !important;
+				}
+			}
+
+			&.vtex-omnishipping-1-x-btnDelivery:nth-child(5) {
+				font-size: 0;
+
+				&::after {
+					content: 'Preencher Endere\E7o do Cliente';
+					font-size: 14px;
+				}
+			}
+
+			.shp-summary-group.vtex-omnishipping-1-x-SummaryItemGroup:nth-last-child(2) {
+				.vtex-omnishipping-1-x-SummaryItemTitle {
+					font-size: 0;
+
+					&::after {
+						content: 'Endere\E7o do Cliente';
+						font-size: 14px;
+					}
+				}
+			}
+
+		}
+
+		.vtex-omnishipping-1-x-shippingSectionTitle {
+			font-weight: bold;
+			font-size: 0px;
+			color: #000000;
+			margin-bottom: 16px;
+      display: none;
+
+			&:nth-child(7) {
+				font-size: 0px !important;
+
+				&::after {
+					content: '3. Endere\E7o do Cliente';
+					font-size: 18px !important;
+					font-weight: bold;
+				}
+
+			}
+
+			&:nth-child(3),
+			&:nth-child(4) {
+				font-size: 0px !important;
+
+				&::after {
+					content: '2. Endere\E7o do Cliente';
+					font-size: 18px !important;
+					font-weight: bold;
+				}
+
+				+.vtex-omnishipping-1-x-btnDelivery {
+					order: 4 !important;
+					font-size: 0;
+
+					&::after {
+						content: 'Preencher endere\E7o do cliente';
+						font-size: 14px;
+					}
+				}
+
+			}
+
+		}
+
+		.vtex-omnishipping-1-x-scheduledDeliveryList {
+			border: 1px solid #E5E5E5;
+			border-radius: 6px;
+		}
+
+		.vtex-omnishipping-1-x-schedule {
+			color: #000000;
+			font-size: 14px;
+			min-height: 68px;
+			box-sizing: border-box;
+			padding-left: 18px;
+		}
+
+		.vtex-omnishipping-1-x-content {
+			align-items: center;
+		}
+
+		.vtex-omnishipping-1-x-deliveryChannelsOption {
+			background: #FFF;
+		}
+
+		.vtex-omnishipping-1-x-addressFormPart1.vtex-omnishipping-1-x-geolocation input {
+			@extend %input-style;
+		}
+
+		.vtex-omnishipping-1-x-pickupButton,
+		.vtex-pickup-points-modal-3-x-pickupViewOptionActive,
+		.vtex-pickup-points-modal-3-x-pickupViewOptionActive:hover,
+		.vtex-pickup-points-modal-3-x-pickupViewOptionActive:active,
+		.vtex-pickup-points-modal-3-x-pickupViewOptionActive:focus,
+		.vtex-omnishipping-1-x-deliveryChannelsTogglePickup,
+		.vtex-omnishipping-1-x-deliveryChannelsOption.vtex-omnishipping-1-x-deliveryOptionActive {
+			background: $actionPrimary;
+			border-color: $actionPrimary;
+			border-radius: $borderRadius;
+		}
+
+		.vtex-pickup-points-modal-3-x-pickupViewOptionInctive {
+			color: $actionPrimary;
+			border-color: $actionPrimary;
+			border-radius: $borderRadius;
+		}
+
+		.vtex-omnishipping-1-x-addressItemOption:hover,
+		.vtex-omnishipping-1-x-active {
+			background-color: $actionSecondary;
+		}    
+		.vtex-omnishipping-1-x-addressItemOption {
+			border-radius: 10px;
+		}
+
+		.shipping-method-toggle {
+			border-color: $actionPrimary;
+		}
+
+
+		.vtex-omnishipping-1-x-alert {
+			border-color: $warning;
+			display: flex;
+			align-items: center;
+		}
+
+		.vtex-omnishipping-1-x-linkEdit {
+			display: none;
+		}
+
+		.vtex-omnishipping-1-x-deliveryChannelsWrapper,
+		.vtex-omnishipping-1-x-deliveryChannelsToggle {
+			border-radius: $borderRadius;
+		}
+
+		.vtex-omnishipping-1-x-deliveryChannelsWrapper {
+			border: 1px solid $muted4;
+			width: 100%;
+			overflow: hidden;
+			margin: 0 0 20px 0;
+			display: none !important;
+			/* REMOVING TOOGLE BUTTON */
+		}
+
+		.vtex-omnishipping-1-x-summaryChange {
+			background: $actionSecondary;
+			border-color: $muted4;
+			color: $actionPrimary;
+		}
+
+		.vtex-omnishipping-1-x-leanShippingGroupList {
+			border: 0;
+			margin: 0;
+      gap: 10px;
+      display: flex;
+      flex-direction: column;
+
+			&+.vtex-omnishipping-1-x-shippingSectionTitle {
+				display: none;
+			}
+		}
+
+		.vtex-pickup-points-modal-3-x-modalDetailsBackLnk svg path,
+		.vtex-pickup-points-modal-3-x-modalDetailsBackLnk {
+			color: $muted2;
+			fill: $muted2;
+		}
+
+		.vtex-pickup-points-modal-3-x-primary {
+			outline: none;
+			background: $actionPrimary;
+			border-color: $actionPrimary;
+		}
+
+		.vtex-omnishipping-1-x-pickupPointChange {
+			border-color: $actionPrimary;
+		}
+
+		input#ship-addressQuery {
+			width: 100%;
+		}
+
+		.vtex-omnishipping-1-x-container.shp-pickup-receiver {
+			display: block;
+
+			svg.person-blue path {
+				fill: $actionPrimary;
+			}
+
+			.vtex-omnishipping-1-x-btn {
+				color: $actionPrimary;
+			}
+		}
+
+		&.vtex-omnishipping-1-x-shippingDataDev {
+
+			.btn-link.vtex-omnishipping-1-x-btnDelivery:nth-child(10) {
+				font-size: 0 !important;
+
+				&::after {
+					font-size: 14px;
+					content: 'Endere\E7o do Cliente';
+				}
+			}
+		}
+
+		@media (max-width: 490px) {
+			.vtex-omnishipping-1-x-dateLink {
+				width: 100%;
+			}
+		}
+	}
+
+	.submit.btn.btn-success {
+		display: block;
+		margin: 0 auto;
+		min-width: 55%;
+	}
+
+}
+
+}
+
+.orderform-template {
+	display: flex !important;
+
+	padding-top: 0px;
+	min-height: 400px !important;
+	align-items: flex-start;
+
+	@media(max-width: 980px) {
+		flex-wrap: wrap;
+	}
+
+	.orderform-template-holder {
+		width: 100%;
+	}
+
+	@media(max-width: $mobileWidth) {
+		width: 100%;
+		padding-top: 0px;
+    flex-direction: column-reverse;
+	}
+
+	.cart-template.mini-cart {
+    position: absolute;
+    right: 16px;
+    top: 0;
+    z-index: 2;
+    width: 100%;
+    max-width: 444.67px;
+    margin: 0;
+    padding: 0;
+
+    @media (max-width: $mobileWidth) {
+      position: relative;
+      margin: 0 20px;
+      max-width: -webkit-fill-available;
+      left: 0;
+    }
+
+    .summaryOrder {
+      display: none;
+    }
+
+    #text-details-rewards {
+      display: none;
+    }
+
+		.cart-items {
+			>.v-custom-indexed-item {
+				display: none !important;
+			}
+		}
+
+		.cart-fixed {
+			height: auto !important;
+			position: relative !important;
+			max-width: 100%;
+			width: 100% !important;
+			top: 0;
+			min-height: initial;
+			display: flex;
+			justify-content: center;
+			flex-wrap: wrap;
+      border-bottom: solid 1px #ddd;
+
+			@media(min-width: 769px) {
+				&.affix {}
+
+				&.affix-top {
+					position: relative !important;
+				}
+			}
+		}
+
+		h2 {
+			@extend %steps-title;
+			text-align: left;
+			border-top: none;
+			background: none !important;
+			margin-bottom: 15px;
+		}
+
+
+		.quantity {
+			min-width: 10px;
+			width: auto;
+			height: 10px;
+			display: inline-block;
+			background: $actionSecondary;
+			color: $actionPrimary;
+		}
+
+		.summary-template-holder {
+			width: 100%;
+			background: none;
+			border: none;
+			padding: 0;
+
+			.best-price {
+				@media screen and (max-width: 768px) {
+
+					.estimate-shipping,
+					.ref-id {
+						font-size: 18px;
+					}
+				}
+			}
+
+			.accordion-inner {
+				margin-top: 0px;
+			}
+
+			.summary-coupon p {
+				margin: 0;
+			}
+
+			.summary>.summary-coupon-wrap {
+				padding: 8px 0;
+			}
+
+			input[type=text],
+			button[type=submit],
+			p.coupon-fields span.info>span {
+				height: 40px !important;
+			}
+		}
+
+		.item {
+			padding: 10px 0;
+			margin: 0;
+			border: none;
+			border-bottom: 1px solid $muted5;
+
+			&:last-child {
+				border: none;
+			}
+
+			ul.service-list.unstyled {
+				margin: 0;
+				float: none;
+				width: 100%;
+				background: none;
+				display: inline-block;
+				clear: both;
+			}
+
+			.service-item,
+			&.v-custom-indexed-item {
+				background: $actionSecondary;
+				border: 1px dashed $muted4;
+				border-radius: $borderRadius;
+
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				box-sizing: border-box;
+				padding: 5px 10px;
+				margin: 10px 0 0 0;
+
+				.description {
+					margin-top: 0;
+				}
+
+				>a,
+				.quantity,
+				.shipping-date,
+				.item-subscription {
+					display: none;
+				}
+
+				.price {
+					margin: 0;
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+
+			&.v-custom-indexed-item {
+				.item-unavailable {
+					display: none;
+				}
+			}
+
+			.fn {
+				width: calc(82% - 20px);
+			}
+
+			.description {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.price,
+			span.shipping-date {
+				white-space: nowrap;
+			}
+
+			.url {
+				border-radius: $borderRadius;
+				overflow: hidden;
+			}
+
+		}
+
+		.summary-totalizers {
+			margin-bottom: 0;
+		}
+
+		#go-to-cart-button {
+			position: absolute;
+			top: 0px;
+			right: 7px;
+			color: $actionPrimary;
+			text-decoration: underline;
+			display: none;
+
+			@media (max-width: $mobileWidth) {
+				display: none;
+			}
+		}
+
+
+		.summary-totalizers {
+			tbody {
+				padding: 14px 0;
+				display: grid !important;
+
+				tr {
+					&.CustomTax:not(.CustomTax--total) {
+						display: none !important;
+					}
+				}
+
+				td {
+					display: inline-block;
+					text-align: left !important;
+					width: auto;
+					color: #000;
+					font-size: 14px;
+					padding: 0 0 8px 0 !important;
+
+					&.monetary {
+						text-align: right !important;
+						margin-left: auto;
+						float: right;
+					}
+				}
+
+				&+tbody {
+					border-top: none;
+				}
+
+				&.shipping-reset,
+				&.shipping-calculate {
+					display: none !important;
+				}
+			}
+
+			tfoot {
+				display: none;
+			}
+		}
+
+		.cart {
+			margin-bottom: 0;
+			max-height: calc(100vh - 355px);
+			overflow: auto;
+
+			&::-webkit-scrollbar {
+				width: 6px
+			}
+
+			&::-webkit-scrollbar-track {
+				background: transparent;
+				border-radius: $borderRadius
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background: $muted4;
+				border-radius: 30px
+			}
+
+			&:hover::-webkit-scrollbar-thumb {
+				background: $muted5;
+			}
+
+			.cart-items:not(.v-loaded) {
+				max-height: 100px;
+				overflow: hidden;
+
+				li.item {
+					overflow: hidden;
+					position: relative;
+					border: none !important;
+
+					>* {
+						opacity: 0;
+					}
+
+					&:after {
+						content: "";
+						width: 100%;
+						height: 100%;
+						display: block;
+						top: 0px;
+						left: 0;
+						position: absolute;
+						@extend %loading-shimmer;
+					}
+				}
+			}
+		}
+
+
+	}
+
+	.payment-confirmation-wrap {
+		border: none;
+		padding: 0;
+    position: unset;
+
+		.payment-submit-wrap {
+			margin: 20px 40px 30px;
+
+			
+		}
+
+		@media(max-width: 768px) {
+			border: none !important;
+
+			.payment-submit-wrap,
+			button {
+				margin: 0 !important;
+			}
+		}
+
+		#payment-data-submit {
+			&:disabled span {
+				display: none;
+			}
+		}
+	}
+
+	.summary-note {
+		display: none !important;
+
+		p.note-data {
+			display: none !important;
+		}
+
+		>div {
+			display: block !important;
+		}
+
+		.note-textarea {
+			@extend %input-style;
+			height: 50px;
+			line-height: 20px;
+			max-width: 100%;
+			width: 100%;
+			font-family: $fontFamily;
+			max-height: 100px;
+		}
+	}
+
+	.custom-cart-template-wrap {
+		position: relative;
+		background: #fff;
+		text-align: left;
+		box-sizing: border-box;
+		border-radius: $borderRadius;
+		border: $bordersContainers;
+		width: 100%;
+
+
+		@media screen and (max-width: 979px) {
+			border-radius: 0;
+			display: block;
+			max-width: 100%;
+			width: 100%;
+		}
+
+		h2 {
+			display: none;
+		}
+
+		.summary-cart-template-holder {
+			height: auto !important;
+			display: none !important;
+		}
+
+		.summary-template-holder {
+			margin-top: 0;
+		}
+
+		.summaryOrder {
+			color: #000;
+
+			h6 {
+				font-size: 14px;
+			}
+
+			li {
+				font-size: 12px;
+			}
+		}
+	}
+
+}
+
+/* hide default rewards calculator */
+.gift-card-provider-options.text.input.span7 {
+
+	label,
+	select {
+		display: none;
+	}
+}
+
+.testeVITE2 {
+  background-color: #000;
+}
+
+.btn-custom {
+	border-radius: 30px !important;
+}
+
+.btn-reject {
+	color: #000 !important;
+	background: #fff !important;
+}
+
+.payment-discounts-alert-wrap {
+	// display: none;
+	grid-area: 2 / 1 / span 1 / span 2;
+}
+
+.alert.payment-discounts-alert {
+	pointer-events: none;
+	text-decoration: none;
+	color: #000;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #F3F9FE 0% 0% no-repeat padding-box;
+	border-radius: 3px;
+	border: none;
+	font-size: 0px;
+
+	&:before {
+		content: "Você possui créditos para usar na compra! Deseja exibí-los?";
+		font-size: 16px;
+		color: #000;
+		height: 60px;
+		display: flex;
+		align-items: center;
+	}
+
+	&:after {
+		content: 'Clique aqui';
+		font-weight: bold;
+		border: 1px solid #707070;
+		height: 37px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		width: 136px;
+		border-radius: 30px;
+		min-width: 110px;
+		font-size: 16px;
+	}
+}
+
+.payment-discounts-list .gift-card-provider-group-ssg_rewards,
+.gift-card-provider,
+.partialValue {
+	display: none !important;
+}
+
+#cumulative-discount-warn {
+  display: none;
+	margin-top: 32px;
+	color: #363636;
+	font-size: 16px;
+
+	@media (max-width: 768px) {
+		font-size: 13px;
+	}
+}
+
+.payment-discoints-table {
+	display: flex;
+	justify-content: start;
+
+	.code {
+		&:before {
+			content: "";
+			display: block;
+			width: 24px;
+			height: 17px;
+			margin: 0;
+			margin-right: 10px;
+			padding-bottom: 12px;
+			background-image: url(https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/46d62ae8-f815-4b3d-a68c-cc78c5093764___b0a3636….svg);
+			background-size: contain;
+			background-repeat: no-repeat;
+
+			@media (max-width: 768px) {
+				display: block;
+				margin: 0 auto;
+			}
+		}
+
+		span {
+			text-align: center;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+
+			&:before {
+				content: 'Crédito disponível:';
+				display: inline-block;
+				font-weight: bold;
+			}
+		}
+
+		@media (min-width: 768px) {
+			display: flex;
+		}
+	}
+
+	.action {
+		width: auto !important;
+
+		a {
+			color: #000;
+			font-weight: bold;
+
+			&[data-i18n="global.addCredit"] {
+				font-size: 0 !important;
+				background: #000 !important;
+				color: #fff !important;
+				padding: 0 12px !important;
+
+				&::after {
+					content: 'Utilizar crédito';
+					display: inline-block;
+					font-size: 14px;
+					line-height: 28px;
+					font-weight: 100;
+				}
+			}
+
+			&[data-i18n="global.keepCredit"] {
+				font-size: 0px !important;
+				padding: 0 12px !important;
+
+				&::after {
+					content: "Não utilizar crédito";
+					display: inline-block;
+					font-size: 14px;
+					line-height: 28px;
+					font-weight: 100;
+				}
+			}
+		}
+
+		@media (max-width: 768px) {
+			margin-top: 9px;
+		}
+	}
+
+	.number {
+		min-width: 100px;
+
+		.muted {
+			color: #006BEA;
+			font-weight: bold;
+		}
+
+		span:not(.muted) {
+			display: none !important;
+		}
+
+		@media (max-width: 768px) {
+			min-width: unset;
+		}
+	}
+}
+
+.gift-card-section {
+	background: #F5F7FE !important;
+	padding: 15px 15px 5px 15px !important;
+	margin-bottom: 10px !important;
+}
+
+.payment-discounts-list {
+	margin-bottom: 0px !important;
+
+	table {
+		tr {
+			&:nth-child(2) {
+				flex-wrap: nowrap !important;
+			}
+
+			@media (max-width: 768px) {
+				flex-direction: column;
+			}
+		}
+	}
+}
+
+.gift-card-provider-group {
+	margin-bottom: 10px;
+}
+
+.srp-summary-voucher {
+	margin-top: 2px;
+	margin-bottom: 2px;
+	grid-area: evoucher;
+
+	.monetaryvoucher {
+		margin-left: auto;
+	}
+}
+
+#rewards-remove-discount:hover {
+	cursor: pointer;
+}
+
+#show-rewards-parent {
+	&.disabled {
+		cursor: not-allowed;
+		pointer-events: none;
+		border: 1px solid #DDDDDD !important;
+
+		.link-payment-discounts-cod {
+			color: #DDDDDD !important;
+		}
+	}
+}
+
+// counting steps
+
+@if $countingSteps {
+
+	.step.client-profile-data.active .box-step .form-step[style*="display: block"],
+	.step.shipping-data.active .accordion-inner.shipping-container,
+	#payment-data .box-step form.form-step {
+		padding-top: 20px !important;
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-areas:
+			'gift'
+      'rewards-btn'
+			'giftcard-content'
+      'giftcard-content'
+			'rewards-calc'
+      'rewards-calc'
+			'payment-group'
+      'steps';
+	}
+
+	@media screen and (max-width: 1200px) {
+
+		.step.client-profile-data.active .box-step .form-step[style*="display: block"],
+		.step.shipping-data.active .accordion-inner.shipping-container,
+		#payment-data .box-step form.form-step {
+			grid-template-columns: 1fr auto;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+
+		.step.client-profile-data.active .box-step .form-step[style*="display: block"],
+		.step.shipping-data.active .accordion-inner.shipping-container,
+		#payment-data .box-step form.form-step {
+			grid-template-columns: 1fr;
+			grid-template-areas:
+				'gift'
+				'rewards-btn'
+				'giftcard-content'
+				'rewards-calc'
+				'payment-group'
+				'steps';
+		}
+
+		.alert.payment-discounts-alert {
+			font-size: 14px;
+		}
+
+	}
+
+	.client-pre-email+.client-profile-data .accordion-body:before {
+		display: none;
+	}
+
+	body.v-custom-step-shipping #shipping-data .shipping-summary-info,
+	body.v-custom-step-payment #shipping-data .shipping-summary-info {
+		display: block
+	}
+}
+
+// end counting steps
+
+.container-switch-rewards {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.switch-rewards {
+	position: relative;
+	display: inline-block;
+	width: 36px;
+	min-width: 36px;
+	height: 16px;
+
+	input {
+		opacity: 0;
+		width: 0;
+		height: 0;
+
+		&:checked+.slider {
+			background: #2189FF;
+			border-color: #2189FF;
+		}
+
+		&:checked+.slider:before {
+			-webkit-transform: translate(12px, 50%);
+			-ms-transform: translate(12px, 50%);
+			transform: translate(12px, 50%);
+			border: 1px solid #2189FF;
+		}
+
+		&:disabled+.slider {
+			opacity: 0.7;
+			cursor: not-allowed;
+		}
+	}
+
+	.slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #fff;
+		border: 1px solid #8F8F8F;
+		border-radius: 8px;
+		-webkit-transition: .4s;
+		transition: .4s;
+
+		&:before {
+			position: absolute;
+			content: "";
+			height: 24px;
+			width: 24px;
+			left: -2px;
+			bottom: 50%;
+			transform: translateY(50%);
+			background-color: #fff;
+			border: 1px solid #8F8F8F;
+			border-radius: 50%;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+	}
+}
+
+.text-switch-rewards {
+	font-weight: bold;
+	margin-left: 8px;
+}
+
+//iframe
+
+.steps-view,
+.gift-card-section,
+.App.iframe-credit-card-payment-group {
+	background: #FFF;
+}
+
+#app-container {
+	min-height: 100vh;
+	background: #FFF;
+
+
+	input[type=text],
+	input[type=tel],
+	input[type=email],
+	select {
+		// @extend %input-style;
+		width: 92%;
+		width: -webkit-fill-available;
+		height: auto;
+		box-shadow: none;
+		padding: 15px 16px 11px 16px;
+		font-size: 14px;
+		line-height: 14px;
+		text-align: left;
+
+		@media screen and (max-width: 1200px) {
+			width: 91%;
+			width: -webkit-fill-available;
+		}
+	}
+
+	select {
+		width: 100%;
+	}
+
+	.PaymentInstallments select {
+		width: 100% !important;
+		max-width: 100% !important;
+	}
+
+	.SecurityEnvironmentIcon {
+		margin-bottom: 20px;
+		display: none;
+	}
+
+	.CardForm {
+		>div {
+			position: relative;
+			clear: both;
+		}
+
+		.PaymentValue {
+			display: none;
+		}
+
+		input#creditCardpayment-card-0Number[value=""] {
+			background: #FFF;
+			position: relative;
+			z-index: 1;
+		}
+
+		.SavedCardsList {
+			width: calc(100% - 1px);
+		}
+
+		.SavedCard .link-delete {
+			right: 8px;
+			top: 50%;
+			margin-top: -10px;
+			border: 1px solid #ccc;
+			background: #FFF;
+			width: 20px;
+			height: 20px;
+			line-height: 17px;
+		}
+	}
+
+	.FormFieldLabel {
+		line-height: 30px;
+	}
+
+	.PaymentCardFlags {
+		p {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+		.card-flag-label[title="Visa"] { order: 1; }
+    .card-flag-label[title="Mastercard"] { order: 2; }
+    .card-flag-label[title="American Express"] { order: 3; }
+    .card-flag-label[title="Elo"] { order: 4; }
+    .card-flag-label[title="Hipercard"] { order: 5; }
+    .card-flag-label[title="Diners"] { order: 6; }
+	}
+
+
+	.label-vertical-group {
+		padding: 9px;
+
+		&:hover {
+			color: $actionPrimary;
+		}
+
+		&.active {
+			color: $actionPrimary;
+			background: $actionSecondary;
+		}
+
+
+		&:not(.SavedCard) {
+			.card-flag {
+				position: absolute;
+				left: 5px;
+				top: 8px;
+			}
+		}
+
+
+		.icon-ok-circle,
+		.icon-circle-blank {
+			top: 9px;
+		}
+
+		&.UseAnotherCard {
+			background-color: $muted5;
+			padding: 4px;
+			font-size: 11px;
+			text-decoration: underline;
+
+			#use-another-card {
+				color: $muted2;
+			}
+
+			&:hover {
+				#use-another-card {
+					text-decoration: underline;
+					color: $muted3;
+				}
+			}
+		}
+	}
+
+	.PaymentCardDueDate,
+	.PaymentCardCVV {
+		label.FormFieldLabel {
+			width: 100%;
+		}
+	}
+
+	.PaymentCardDueDate {
+		.payment-card-due-month {
+			margin-right: 24px;
+		}
+
+		.payment-card-lash {
+			display: none;
+		}
+
+		select.input-mini+span.error {
+			width: fit-content;
+		}
+	}
+
+	label.FormFieldLabel {
+		display: block;
+		clear: both;
+		width: auto;
+		margin-right: 10px;
+		color: #000;
+		font-size: 12px;
+		font-weight: bold;
+	}
+
+	.AddressForm {
+		display: flex;
+		flex-wrap: wrap;
+
+		>* {
+			width: 100%;
+			order: 10;
+		}
+
+		input {
+			max-width: 100%;
+		}
+
+		.payment-billing-address-street {
+			order: 1;
+		}
+
+		.payment-billing-address-complement {
+			order: 2;
+		}
+
+		.payment-billing-address-city {
+			order: 3;
+		}
+
+		.payment-billing-address-state {
+			order: 4;
+		}
+
+		.PostalCode {
+			order: 5;
+		}
+	}
+
+
+
+}
+
+.totalizers-list {
+	.Discounts {
+		.info {
+			font-weight: bold;
+			font-size: 0 !important;
+
+			&::after {
+				content: "Descontos Totais";
+				font-size: 14px;
+			}
+		}
+	}
+}
+
+
+.srp-summary-result {
+	.info {
+		font-size: 0px !important;
+
+		&::after {
+			content: "Frete";
+			font-size: 14px;
+		}
+	}
+}
+
+.itauCardMessage {
+	background-color: #F7F7F7;
+	border-radius: 10px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+
+	&__title {
+		font-size: 16px;
+		color: #000000;
+		margin: 0;
+	}
+
+	&__visaFlag,
+	&__mastercardFlag {
+		display: -webkit-inline-box;
+		color: #000000;
+		font-size: 12px;
+
+		&::before {
+			content: "";
+			margin-right: 5px;
+			width: 32px;
+			height: 20px;
+			display: block;
+			background-position: inherit;
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+	}
+
+	&__visaFlag {
+		&::before {
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='32' height='20' viewBox='0 0 40 25'%3E%3Cdefs%3E%3CclipPath id='clip-path'%3E%3Crect id='Rectangle_128' data-name='Rectangle 128' width='36' height='12' fill='%23fff'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg id='Group_222' data-name='Group 222' transform='translate(-665.5 0.5)'%3E%3Cg id='Group_221' data-name='Group 221' transform='translate(666)'%3E%3Crect id='Rectangle_127' data-name='Rectangle 127' width='39' height='24' rx='2.5' fill='%23fff' stroke='%23d6d6d6' stroke-width='1'/%3E%3Cg id='Group_220' data-name='Group 220' transform='translate(1.5 6.5)' clip-path='url(%23clip-path)'%3E%3Cpath id='Path_261' data-name='Path 261' d='M17.607,18.8H14.67L16.5,7.208h2.937Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_262' data-name='Path 262' d='M12.2,7.208,9.4,15.18l-.332-1.718L8.078,8.253A1.272,1.272,0,0,0,6.684,7.208H2.054L2,7.4A10.876,10.876,0,0,1,5.072,8.728L7.626,18.8h3.06L15.358,7.208Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_263' data-name='Path 263' d='M35.3,18.8H38L35.648,7.208H33.285a1.354,1.354,0,0,0-1.355.865L27.551,18.8h3.06l.613-1.721h3.733Zm-3.232-4.1,1.542-4.338L34.48,14.7Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_264' data-name='Path 264' d='M27.781,9.995l.42-2.49A8.291,8.291,0,0,0,25.56,7c-1.458,0-4.919.654-4.919,3.839,0,3,4.062,3.033,4.062,4.6s-3.643,1.293-4.847.3l-.438,2.6A8.061,8.061,0,0,0,22.735,19c2,0,5.028-1.067,5.028-3.969,0-3.014-4.1-3.3-4.1-4.6S26.523,9.282,27.781,9.995Z' transform='translate(-2 -7)' fill='%23005ca9'/%3E%3Cpath id='Path_265' data-name='Path 265' d='M9.065,13.466,8.078,8.253A1.272,1.272,0,0,0,6.684,7.208H2.054L2,7.4A11.281,11.281,0,0,1,6.361,9.652,9.059,9.059,0,0,1,9.065,13.466Z' transform='translate(-2 -7)' fill='%23f7a823'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+		}
+	}
+
+	&__mastercardFlag {
+		&::before {
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='32' height='20' viewBox='0 0 40 25'%3E%3Cdefs%3E%3CclipPath id='clip-path'%3E%3Crect id='Rectangle_136' data-name='Rectangle 136' width='36' height='23.294' fill='%23fff'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg id='Group_230' data-name='Group 230' transform='translate(0 0.5)'%3E%3Crect id='Rectangle_135' data-name='Rectangle 135' width='39' height='24' rx='2.5' transform='translate(0.5)' fill='%23fff' stroke='%23d6d6d6' stroke-width='1'/%3E%3Cg id='Group_229' data-name='Group 229' transform='translate(2 0.5)' clip-path='url(%23clip-path)'%3E%3Cpath id='Path_274' data-name='Path 274' d='M24.868,3.492H15.134V21.8h9.734Z' transform='translate(-2 -1)' fill='%23ff5f00'/%3E%3Cpath id='Path_275' data-name='Path 275' d='M15.751,12.647a11.885,11.885,0,0,1,4.234-9.156A10.748,10.748,0,0,0,13.125,1,11.388,11.388,0,0,0,2,12.647,11.388,11.388,0,0,0,13.125,24.294a10.748,10.748,0,0,0,6.86-2.491A11.834,11.834,0,0,1,15.751,12.647Z' transform='translate(-2 -1)' fill='%23eb001b'/%3E%3Cpath id='Path_276' data-name='Path 276' d='M38,12.647A11.388,11.388,0,0,1,26.876,24.294a10.748,10.748,0,0,1-6.86-2.491,11.785,11.785,0,0,0,4.233-9.156,11.885,11.885,0,0,0-4.233-9.156A10.748,10.748,0,0,1,26.876,1,11.408,11.408,0,0,1,38,12.647Z' transform='translate(-2 -1)' fill='%23f79e1b'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+		}
+	}
+
+	&__text {
+		font-size: 12px;
+		display: block;
+		margin-left: 32px;
+	}
+}
+
+.payment-unauthorized-show-details {
+	display: none;
+}
+
+.payment-unauthorized-security {
+	margin-bottom: 0px;
+}
+
+
+.gift-card-group {
+	label.gift-card-input-group {
+		border: none;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 12px;
+
+		@media (max-width: 768px) {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		&::before {
+			content: "";
+			width: 24px;
+			height: 17px;
+			display: inline-block;
+			margin-right: 10px;
+			background-image: url(https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/46d62ae8-f815-4b3d-a68c-cc78c5093764___b0a3636….svg);
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
+
+		.gift-card-friendly-name {
+			font-weight: 400;
+			width: 100%;
+			text-align: left;
+
+			&:before {
+				content: "Crédito disponível: ";
+				display: inline-block;
+				font-weight: bold;
+			}
+
+			@media (max-width: 768px) {
+				text-align: center;
+				margin-top: 11px;
+			}
+		}
+
+		.gift-card-balance {
+			font-size: 15px;
+			font-weight: 700;
+			color: #006BEA;
+			min-width: fit-content;
+			margin-right: 32px;
+
+			@media (max-width: 768px) {
+				margin-right: 0;
+			}
+		}
+
+		.icon-circle-blank {
+			font-size: 0px;
+			position: static;
+
+			&::before {
+				content: "Utilizar crédito";
+				font-family: 'SamsungOne';
+				border: 1px solid;
+				padding: 8px;
+				background-color: #000;
+				color: #FFF;
+				font-size: 12px;
+				border-radius: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+
+				@media (max-width: 768px) {
+					margin-top: 12px;
+					margin-bottom: 12px;
+				}
+
+				width: max-content;
+			}
+		}
+
+		.icon-ok-circle {
+			font-size: 0px;
+			position: static;
+
+			&::before {
+				content: "Não utilizar crédito";
+				font-family: 'SamsungOne';
+				border: 1px solid;
+				padding: 8px;
+				background-color: #fff;
+				color: #000;
+				font-size: 12px;
+				border-radius: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+
+				@media (max-width: 768px) {
+					margin-top: 12px;
+					margin-bottom: 12px;
+				}
+
+				width: max-content;
+			}
+		}
+
+		.gift-card-separator,
+		span:last-of-type {
+			display: none;
+		}
+
+	}
+}
+
+.payment-group {
+	.payment-group-list-btn {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	
+    &:not(.has-btn-installments) .payment-group-item::before  {
+      content: "";
+      @extend %loading_placeholder;
+      position: absolute;
+      left: 60px;
+      bottom: 9px;
+      max-width: calc(80% - 60px);
+      height: 11px;
+      border-radius: 2px;
+    }
+	
+		// To sort the PaymentGroup positions, just change the order
+		$PaymentGroups: (
+	    // PIX
+			'#payment-group-instantPaymentPaymentGroup',
+	    '.payment-method-order-1',
+			// Normal Credit Card
+			'#payment-group-creditCardPaymentGroup',
+	    '.payment-method-order-2',
+			// MERCADO PAGO
+			'#payment-group-MercadoPagoProPaymentGroup',
+	    '.payment-method-order-3',
+			// Nubank
+			'#payment-group-NubankPaymentGroup',
+	    '.payment-method-order-4',
+			// SSG Itaucard
+			'#payment-group-customPrivate_501PaymentGroup',
+	    '.payment-method-order-5',
+			// Boleto
+			'#payment-group-bankInvoicePaymentGroup',
+	    '.payment-method-order-6',
+			// SSG pay
+			'#payment-group-SamsungPayPaymentGroup',
+	    '.payment-method-order-7',
+			// Ame
+			'#payment-group-AmeDigitalPaymentGroup',
+	    '.payment-method-order-8',
+	    // PicPay
+			'#payment-group-picPayPaymentGroup',
+	    '.payment-method-order-9',
+		);
+	
+	@for $i from 1 through length($PaymentGroups) {
+		$button: nth($PaymentGroups, $i);
+	
+		#{$button} {
+			order: $i;
+		}
+	}
+	
+	a {
+		order: 20;
+	}
+	}
+}
+

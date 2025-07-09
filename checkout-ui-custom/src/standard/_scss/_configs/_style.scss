@@ -1,0 +1,85 @@
+// IMPORTED FROM STORE THEME
+
+@font-face {
+  font-family: 'SamsungOne';
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  src: url(https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/fonts/SamsungOne-400.woff2);
+}
+
+@font-face {
+  font-family: 'SamsungOne';
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+  src: url(https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/fonts/SamsungOne-700.woff2);
+}
+
+@font-face {
+  font-family: 'SamsungSharpSans';
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+  src: url(https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/fonts/SamsungSharpSansBd.woff2);
+}
+
+@font-face {
+	font-family: 'SamsungSharpSans';
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+  src: url(https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/fonts/SamsungSharpSansMd.woff2);
+}
+
+
+$base: #ffffff; // body bg...
+$baseInverted: #21364f; // general
+
+$actionPrimary: #2189ff; //links, buttons borders, backgrounds
+$actionPrimaryDarken: #1d63be; // usually 15% more
+
+$actionSecondary: #f1f7ff;
+
+$emphasis: #000000;
+$disabled: #999999;
+
+$success: #2189ff; // success button, cta, usually the "checkout", "login", "pay"
+$successDarken: #006bea; // usually 15% more
+$successFaded: #006bea;
+
+$danger: #ff4c4c;
+$dangerFaded: #ffe6e6;
+
+$warning: #ffb100;
+$warningFaded: #fff6e0;
+
+$muted1: #000000; //titles & borders
+$muted2: #000000; //borders
+$muted3: #dddddd; //borders
+$muted4: #cbcbcb; //borders
+$muted5: #00000033; //borders
+$muted6: #f3f3f3; //borders & bg
+
+// CHECKOUT VARS
+
+$fontSize: 14px;
+$borderRadius: 20px;
+$btnBorderRadius: 20px;
+
+$maxWrapper: 1440px;
+$inputHeight: 40px;
+
+$bordersContainers: none; // 2px solid $muted5
+
+//font
+
+$fontFamily: 'SamsungOne';
+
+// NOT included on admin -- kept for future (no change!)
+
+$showCouponField: true;
+$countingSteps: true;
+$showCheckoutSteps: true;
+$buttonShadow: false;
+$mobileWidth: 690px;

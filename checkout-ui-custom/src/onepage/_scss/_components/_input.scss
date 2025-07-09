@@ -1,0 +1,88 @@
+
+input, select, button {
+	outline: none !important;
+}
+//input
+
+%input-style {
+	font-family:$fontFamily;
+	width: 100%;
+	max-width: 100%;
+	font-size: 14px;
+	font-weight: 400;
+	padding: 5px 0 8px;
+	height: auto;
+	box-shadow: none;
+	border: 0;
+	border-radius: 0;
+	color: #000000;
+	background: none;
+	border: 1px solid #2189FF;
+  border-radius: 8px;
+  padding: 12px 16px;
+  max-height: 40px;
+
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+
+	@media (max-width: 768px) {
+		font-size: 14px;
+	}
+
+	&:focus,
+	p.filled & {
+		border-color: #bbb;
+    color: #1A1126;
+	}
+
+	&::placeholder {
+		color: #000;
+    font-weight: 700;
+		opacity: 0;
+    margin-bottom: 8px;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+	}
+
+	&.success:not([invalid="true"]) {
+		background-image: none;
+	}
+
+	&.error {
+		border-color: $danger;
+		border-width: 2px;
+	}
+
+	~ span.error,
+	~ small {
+		margin-left: 0;
+		margin-top: 8px;
+		display: block;
+		line-height: 1;
+		font-size: 12px;
+	}
+}
+
+
+input#creditCardpayment-card-0Number,
+input#creditCardpayment-card-0Code,
+input#creditCardpayment-card-1Number,
+input#creditCardpayment-card-1Code{
+	font-size:14px;
+}
+
+//remove autofill from chrome
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active  {
+    animation: input_background_autofill 0s forwards;
+}
+@keyframes input_background_autofill {
+    100% { background-color: transparent }
+}
+

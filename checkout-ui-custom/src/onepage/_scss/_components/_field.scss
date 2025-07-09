@@ -1,0 +1,58 @@
+%field {
+    width: 100%;
+	position: relative;
+	margin-top: 9px !important;
+	margin-bottom: 9px !important;
+
+	@media (max-width: 768px) {
+		margin-top: 7px !important;
+		margin-bottom: 7px !important;
+	}
+
+    select {
+      @extend %select-style;
+    }
+
+    input {
+        @extend %input-style;
+    }
+
+    label {
+		position: initial; /* BUGFIX CSP */
+		top: 26px;
+		left: 0;
+		font-size: 14px;
+		transition: 0.2s;
+		cursor: initial;
+
+		@media (max-width: 768px) {
+			font-size: 14px;
+		}
+
+		&::after {
+			font-size: 14px;
+			transition: 0.2s;
+		}
+	}
+
+    label[for="ship-state"] {
+		top: 0;
+	}
+
+    &.required label {
+        &::after {
+            content: "*";
+        }
+    }
+
+    &.filled,
+	&:focus-within {
+		label {
+			top: 0;
+			font-size: 14px;
+			&::after {
+				font-size: 14px;
+			}
+		}
+	}
+}
