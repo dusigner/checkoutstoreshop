@@ -1780,8 +1780,8 @@ svg.vtex-omnishipping-1-x-svg {
 				'rewards-calc';
 		}
 
-		.alert.payment-discounts-alert {
-			font-size: 14px;
+		.alert.payment-discounts-alert::before {
+			font-size: 14px !important;
 		}
 
 	}
