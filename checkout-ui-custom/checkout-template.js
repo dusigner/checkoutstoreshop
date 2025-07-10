@@ -23,15 +23,21 @@ const data = {
   }
 };
 
+document.body.style.visibility = 'hidden';
+
 const isOnePageCheckout = sessionStorage.getItem('codigoTesteABCheckoutOnePage') === '59';
 const selectedCheckout = isOnePageCheckout ? data.checkout.onepage : data.checkout.standard;
-
-const script = document.createElement('script');
-script.src = selectedCheckout.js.url;
-script.id = selectedCheckout.js.id;
-document.body.appendChild(script);
 
 const linkElement = document.createElement('link');
 linkElement.rel = 'stylesheet';
 linkElement.href = selectedCheckout.css.url;
 document.head.appendChild(linkElement);
+
+linkElement.onload = () => {
+  document.body.style.visibility = 'visible';
+};
+
+const script = document.createElement('script');
+script.src = selectedCheckout.js.url;
+script.id = selectedCheckout.js.id;
+document.body.appendChild(script);
