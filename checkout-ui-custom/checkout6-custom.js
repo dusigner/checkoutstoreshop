@@ -1,4 +1,4 @@
-const version = '0.3.228';
+const version = '0.3.232';
 
 const data = {
   checkout: {
