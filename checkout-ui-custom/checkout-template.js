@@ -1,23 +1,29 @@
 const version = '__VERSION__';
 
+const hostname = window.location.hostname;
+const pathname = window.location.pathname;
+const needsBRPrefix = hostname === 'shop.samsung.com' && pathname.startsWith('/br');
+
+const prefixPath = (path) => needsBRPrefix ? `/br${path}` : path;
+
 const data = {
   checkout: {
     onepage: {
       js: {
-        url: `/_v/private/assets/v1/linked/samsungbr.store-checkout@${version}/public/checkout/onepage/script.js`,
+        url: prefixPath(`/_v/private/assets/v1/linked/samsungbr.store-checkout@${version}/public/checkout/onepage/script.js`),
         id: 'checkoutNovoScript',
       },
       css: {
-        url: `/_v/private/assets/v1/linked/samsungbr.store-checkout@${version}/public/checkout/onepage/style.css`
+        url: prefixPath(`/_v/private/assets/v1/linked/samsungbr.store-checkout@${version}/public/checkout/onepage/style.css`)
       }
     },
     standard: {
       js: {
-        url: `/_v/private/assets/v1/linked/samsungbr.store-checkout@${version}/public/checkout/standard/script.js`,
+        url: prefixPath(`/_v/private/assets/v1/linked/samsungbr.store-checkout@${version}/public/checkout/standard/script.js`),
         id: 'checkoutAtualScript',
       },
       css: {
-        url: `/_v/private/assets/v1/linked/samsungbr.store-checkout@${version}/public/checkout/standard/style.css`
+        url: prefixPath(`/_v/private/assets/v1/linked/samsungbr.store-checkout@${version}/public/checkout/standard/style.css`)
       }
     }
   }
