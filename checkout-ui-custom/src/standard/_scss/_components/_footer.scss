@@ -1,0 +1,188 @@
+.checkout-footer {
+	background-color: #f7f7f7;
+	padding: 15px 0;
+	position:sticky;
+	width: 100%;
+	top: 100vh;
+	bottom:0px;
+
+	@media screen and (max-width: 1024px) {
+		padding: 30px 20px;
+		position: unset;
+		.flex {
+			display: block;
+		}
+	}
+
+	@media screen and (max-width: 690px) {
+		padding: 30px 20px 50px;
+		position: unset;
+		.flex {
+			display: block;
+		}
+	}
+
+	.container {
+		position: unset;
+		& > div {
+			width: 90%;
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			margin-inline: auto;
+
+			@media screen and (max-width: 768px) {
+				width: 100%;
+			}
+
+			.checkout-footer-payment-flag {
+				@media screen and (max-width: 1024px) {
+					text-align: center;
+					padding-bottom: 5px;
+					margin-bottom: 5px;
+					flex-direction: column !important;
+					align-items: flex-end !important;
+				}
+
+				.checkout-footer-payment-flag-content {
+					display: flex;
+					align-items: center;
+					flex-wrap: wrap;
+				}
+
+				@media screen and (max-width: 600px) {
+					border-bottom: 1px solid #d6d6d6;
+					max-width: 100% !important;
+				}
+
+				svg {
+					margin: 0 10px;
+				}
+
+				.checkout-footer-payment-text {
+					font-size: 14px;
+					font-weight: 700;
+					color: #373737;
+					min-width: 154px;
+
+					@media screen and (max-width: 1024px) {
+						margin-bottom: 10px;
+					}
+
+					& ~ div {
+						display: flex;
+						align-items: center;
+
+						@media screen and (max-width: 1024px) {
+							flex-wrap: wrap;
+
+							svg {
+								margin-left: 10px;
+								margin-right: 0px;
+								width: 35px;
+							}
+						}
+
+						@media screen and (max-width: 600px) {
+							display: grid;
+							width: 100%;
+							grid-template-columns: repeat(5, 1fr);
+							row-gap: 8px;
+
+							svg, img {
+								margin: 0 auto !important;
+							}
+						}
+					}
+				}
+
+				.footer-infomations {
+					margin-top: 40px;
+
+					@media screen and (max-width: 1024px) {
+						display: none;
+					}
+
+					p {
+						font-size: 12px;
+						font-weight: normal;
+						font-stretch: normal;
+						font-style: normal;
+						line-height: 1.17;
+						letter-spacing: normal;
+						text-align: left;
+						color: #1c1c1c;
+					}
+				}
+			}
+
+			.checkout-footer-security-seal {
+				@media screen and (max-width: 1024px) {
+					display: block;
+				}
+
+				text-align: center;
+			}
+
+			.checkout-footer-payment-links {
+				@media screen and (max-width: 1024px) {
+					display: none;
+				}
+
+				a {
+					font-size: 14px;
+					text-align: center;
+					color: #373737;
+					padding: 0 20px;
+				}
+			}
+
+			.help-section {
+				
+				span {
+					display: block;
+					h2,
+					h3 {
+						line-height: normal;
+						color: #1428a0;
+						font-size: 19px;
+						font-weight: bold;
+						margin: 0 auto;
+					}
+
+					h3 {
+						color: #373737;
+					}
+				}
+				ul {
+					margin: 10px 0px 0px 0px;
+					li {
+						list-style: none;
+						a {
+							font-size: 12px;
+							color: #373737;
+						}
+					}
+				}
+			}
+		}
+
+		.footer-infomations-mobile {
+			@media screen and (max-width: 1024px) {
+				display: block;
+				margin-top: 20px;
+				border-top: 1px solid #d6d6d6;
+				padding-top: 20px;
+
+				p {
+					font-size: 10.5px;
+					line-height: initial;
+				}
+			}
+
+			@media screen and (min-width: 1024px) {
+				display: none;
+			}
+		}
+	}
+}

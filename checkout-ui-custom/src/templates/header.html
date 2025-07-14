@@ -1,50 +1,111 @@
-<header class="main-header">
-  <div class="container">
-    <a href="/">
-      <head>
-        <link
-          href="//www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/images/global-samsung-logo.svg"
-          as="image"
-          rel="preload"
-          type="image/svg+xml"
-        />
-      </head>
-      <img
-        fetchpriority="high"
-        src="https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/images/global-samsung-logo.svg"
-        alt="logo samsung"
-        height="105"
-        width="85"
-      />
-    </a>
-    <div class="checkout-steps">
-      <div class="checkout-steps-wrap">
-        <span class="checkout-steps_bar">
-          <span class="checkout-steps_bar_inner"></span>
-          <span class="checkout-steps_bar_inner-active"></span>
-        </span>
-        <div class="checkout-steps_items">
-          <span
-            class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile"
-            data-url="/checkout/#/profile"
-          >
-            <span class="text" data-before="1">Dados Pessoais</span>
-          </span>
-          <span
-            class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping"
-            data-url="/checkout/#/shipping"
-          >
-            <span class="text" data-before="2">Entrega</span>
-          </span>
-          <span
-            class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment"
-            data-url="/checkout/#/payment"
-          >
-            <span class="text" data-before="3">Pagamento</span>
-          </span>
-        </div>
-      </div>
+<!-- Ambos os headers inicialmente escondidos -->
+<div id="header-onepage" style="display: none;">
+  <!-- header 1 aqui -->
+  <header class="main-header">
+    <div class="container">
+      <a href="https://www.samsung.com/br/">
+        <img width="105" height="16" src="https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/images/global-samsung-logo.svg" alt="Samsung" />
+      </a>
+      <span class="checkout-secure-buy">Compra 100% segura.</span>
     </div>
-    <span class="checkout-secure-buy"> Compra 100% segura. </span>
+  </header>
+
+  <p id="go-to-cart-button-custom" style="display:none" data-bind="if: !window.router.sac.isActive()">
+    <small>
+      <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>
+    </small>
+  </p>
+
+  <div class="checkout-steps">
+    <div class="checkout-steps_items">
+      <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="/checkout/#/profile">
+        <span class="text" data-before="1"><span></span>Dados Pessoais</span>
+      </span>
+      <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="/checkout/#/shipping">
+        <span class="text" data-before="2"><span></span>Entrega</span>
+      </span>
+      <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="/checkout/#/payment">
+        <span class="text" data-before="3"><span></span>Pagamentos</span>
+      </span>
+    </div>
   </div>
-</header>
+</div>
+
+<div id="header-standard" style="display: none;">
+  <!-- header 2 aqui -->
+  <header class="main-header">
+    <div class="container">
+      <a href="https://www.samsung.com/br/">
+      <img width="105" height="16" src="https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-common/resources/images/global-samsung-logo.svg" alt="Samsung" />
+    </a>
+       <div class="checkout-steps">
+            <div class="checkout-steps-wrap">
+              <span class="checkout-steps_bar">
+                <span class="checkout-steps_bar_inner"></span>
+                <span class="checkout-steps_bar_inner-active"></span>
+              </span>
+              <div class="checkout-steps_items">
+                <span class="checkout-steps_item checkout-steps_item_identification js-checkout-steps-item v-custom-step-profile" data-url="/checkout/#/profile">
+                  
+                    <span class="text" data-before="1">Dados Pessoais</span>
+          
+                  
+                </span>
+                <span class="checkout-steps_item checkout-steps_item_shipping js-checkout-steps-item v-custom-step-shipping" data-url="/checkout/#/shipping">
+                  <span class="text" data-before="2">Entrega</span>
+                </span>
+                <span class="checkout-steps_item checkout-steps_item_payment js-checkout-steps-item v-custom-step-payment" data-url="/checkout/#/payment">
+                  <span class="text" data-before="3">Pagamento</span>
+                </span>
+              </div>
+            </div>
+          </div>
+    <span class="checkout-secure-buy">
+      Compra 100% segura.
+    </span>
+    </div>
+  </header>
+  
+  <p id="go-to-cart-button-custom" style="display:none" data-bind="if: !window.router.sac.isActive()">
+    <small>
+      <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>
+    </small>
+  </p>
+  
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch(
+      window.location.origin === "https://shop.samsung.com"
+        ? "/br/files/checkout6-custom.js"
+        : "/files/checkout6-custom.js",
+      {
+        referrer: "https://shop.samsung.com/",
+        referrerPolicy: "strict-origin-when-cross-origin",
+        body: null,
+        method: "GET",
+        mode: "cors",
+        credentials: "omit",
+      }
+    )
+      .then((response) => {})
+      .catch((error) => {
+        console.warn("O script pode estar bloqueado pela rede!", error);
+        window.location.href = "/";
+      });
+
+    const testCode = sessionStorage.getItem("codigoTesteABCheckoutOnePage");
+
+    const headerOne = document.getElementById("header-onepage");
+    const headerTwo = document.getElementById("header-standard");
+
+    if (testCode === "59") {
+      headerOne.style.display = "block";
+      headerTwo.style.display = "none";
+    } else {
+      headerOne.style.display = "none";
+      headerTwo.style.display = "block";
+    }
+  });
+</script>

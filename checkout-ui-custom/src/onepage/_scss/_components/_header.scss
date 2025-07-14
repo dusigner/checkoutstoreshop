@@ -1,0 +1,162 @@
+body {
+  &.v-custom-step-email {
+    padding-top: 190px;
+
+    @media (max-width: $mobileWidth) {
+      padding-top: 112px;
+    }
+  }
+
+  &.v-custom-step-cart {
+    padding-top: 142px;
+    
+    @media (max-width: $mobileWidth) {
+      padding-top: 112px;
+    }
+  }
+
+  &.v-custom-step-profile,
+  &.v-custom-step-shipping,
+  &.v-custom-step-payment {
+    .cart-template.mini-cart {
+      @media (max-width: $mobileWidth) {
+        top: 0;
+      }
+    }
+  }
+
+  .vtex-front-messages-placeholder {
+    z-index: 99999;
+  }
+
+  .main-header {
+    text-align: center;
+    position: fixed;
+    background-color: #fff;
+    color: #000;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+
+    .container {
+      display: grid;
+      grid-template-areas: 'logo secure';
+      align-items: center;
+      justify-content: space-between;
+
+      @media screen and (max-width: 768px) {
+        width: auto;
+        margin-left: 16px;
+        margin-right: 16px;
+        row-gap: 6px;
+        grid-template-areas:
+          'logo secure'
+          'steps steps';
+      }
+    }
+
+    > .container {
+      &:before,
+      &:after {
+        display: none;
+      }
+    }
+
+    .checkout-secure-buy {
+      font-weight: bold;
+      text-align: right;
+      grid-area: secure;
+      @media (max-width: $mobileWidth) {
+        padding: 15px 10px;
+      }
+    }
+
+    @media (max-width: $mobileWidth) {
+      margin-bottom: 15px;
+    }
+
+    a {
+      grid-area: logo;
+      display: flex;
+      min-height: 73px;
+      align-items: center;
+
+      #partnerPlaceholder {
+        display: block;
+        width: 84px;
+        height: 29px;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: 100%;
+      }
+
+      #logoSpacerBar {
+        width: 1px;
+        height: 34px;
+        background-color: #aaaaaa;
+        margin: 0 13px 0 14px;
+        display: none;
+      }
+
+      img {
+        @media (max-width: 490px) {
+          width: 87px;
+        }
+      }
+
+      @media (max-width: $mobileWidth) {
+        min-height: 28px;
+        padding: 15px 10px;
+      }
+    }
+
+    .checkout-steps {
+      display: none;
+      grid-area: steps;
+      max-width: 540px;
+      margin: 0 auto 32px auto;
+
+      @media (max-width: $mobileWidth) {
+        min-height: auto;
+        margin-bottom: 16px;
+      }
+    }
+
+    .checkout-steps_items {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  #go-to-cart-button-custom {
+    display: none;
+    max-height: 34px;
+    gap: 4px;
+    max-width: 1440px;
+    margin: 0 auto;
+    margin-bottom: 32px;
+    width: 100%;
+    position: inherit; 
+
+    @media (max-width: $mobileWidth) {
+      margin-left: 16px;      
+    }
+
+    &:before {
+      content: '<';
+      display: flex;
+      font-size: 21px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    #orderform-minicart-to-cart {
+      color: #000;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+}
