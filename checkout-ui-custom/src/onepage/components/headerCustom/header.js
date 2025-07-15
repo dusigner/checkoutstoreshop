@@ -47,10 +47,12 @@ export function customHeader() {
       const currentUrl = window.location.href
       const newUrlProfile = 'br/checkout/#/profile'
       const newUrlShipping = 'br/checkout/#/shipping'
+      const newUrlPayment = 'br/checkout/#/payment'
   
       if (currentUrl.indexOf("/br") !== -1) {
         $('.v-custom-step-profile').attr('data-url', newUrlProfile);
         $('.v-custom-step-shipping').attr('data-url', newUrlShipping);
+        $('.v-custom-step-payment').attr('data-url', newUrlPayment);
         console.log("A URL contém '/br'");
       }
     }
