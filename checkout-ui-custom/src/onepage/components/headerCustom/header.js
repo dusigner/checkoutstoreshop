@@ -21,7 +21,7 @@ export function customHeader() {
   
         if (showHeader.includes(hash)) {
           console.log('show header', hash)
-          _stepElem.css('display', 'block')
+          _stepElem.css('display', 'flex')
           _gotoCartElem.css('display', 'flex')
           _gotoCartElem.css('margin-top', '110px')
         } else {
