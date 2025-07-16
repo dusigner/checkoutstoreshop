@@ -17,6 +17,7 @@ import ShippingEstimateCustom from '../components/_shippingEstimateCustom'
 import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 import SummaryGiftCard from '../components/_summaryGiftCard'
+import RenderLoaderFallback from '../components/_renderLoaderFallback'
 
 import {
   debounce,
@@ -88,6 +89,7 @@ export class CheckoutCustom {
     this.optInDimensions = new OptInDimensions()
     this.payment = new Payment()
     this.toastMessages = new ToastMessages()
+    this.renderLoaderFallback = new RenderLoaderFallback()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1813,6 +1815,7 @@ couponInfo(response) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       })
 
+      _this.renderLoaderFallback.init()
       _this.verifyMobileScreen()
       _this.init()
       $(function () {
@@ -2162,6 +2165,8 @@ couponInfo(response) {
         $(window).one('componentValidated.vtex', () => _this.builder())
         _this.messages.init()
       })
+
+
     } catch (error) {
       general()
     }

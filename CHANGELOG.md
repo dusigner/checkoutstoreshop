@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.228-hkignore.0] - 2025-07-10 [EENGS-4908](https://jira.sdslasupport.com/jira/browse/EENGS-4908)
+
+### Added
+- Introduced `RenderLoaderFallback` component to handle render loader timeout fallback.
 
 ### --- Ticket ---
 Ticket: [EENGS-3734](https://jira.sdslasupport.com/jira/browse/EENGS-3734)

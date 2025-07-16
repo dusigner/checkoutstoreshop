@@ -303,62 +303,61 @@
 </script>
 
 <script>
-  ;(function () {
-    var t = window,
-      e = t.sprChat,
-      a = e && !!e.loaded,
-      n = document,
-      r = function () {
-        r.m(arguments)
-      }
-    ;(r.q = []),
-      (r.m = function (t) {
-        r.q.push(t)
-      }),
-      (t.sprChat = a ? e : r)
-    var o = function () {
-      var e = n.createElement('script')
-      ;(e.type = 'text/javascript'),
-        (e.async = !0),
-        (e.src =
-          'https://prod-live-chat.sprinklr.com/api/livechat/handshake/widget/' +
-          t.sprChatSettings.appId),
-        (e.onerror = function () {
-          t.sprChat.loaded = !1
-        }),
-        (e.onload = function () {
-          t.sprChat.loaded = !0
-        })
-      var a = n.getElementsByTagName('script')[0]
-      a.parentNode.insertBefore(e, a)
-    }
-    'function' == typeof e
-      ? a
-        ? e('update', t.sprChatSettings)
-        : o()
-      : 'loading' !== n.readyState
-      ? o()
-      : n.addEventListener('DOMContentLoaded', o)
-  })()
+  onFirstUserInteraction(openChat);
 
-  if (
-    window.location.href.indexOf('shop.samsung.com/br') > -1 &&
-    window.location.href.indexOf('orderPlaced') > -1
-  ) {
-    var orderID
+  if (isLiveChatInOrderPlaced()) {
+    sendOrderIdToLiveChat();
+  }
 
-    if (__RUNTIME__.query?.og !== undefined) {
-      orderID = __RUNTIME__.query?.og
+  function isLiveChatInOrderPlaced() {
+    return (window.location.href.indexOf("shop.samsung.com/br") > -1) && (window.location.href.indexOf("orderPlaced") > -1);
+  }
+
+  function sendOrderIdToLiveChat() {
+    let orderID = null
+
+    if(window?.__RUNTIME__?.query?.og !== undefined){
+      orderID = window?.__RUNTIME__.query?.og;
     }
 
     window.sprChat('updateConversationContext', {
       context: {
-        _c_60825ca5e85e811f0d6e1be2: [orderID], //internalorderID
-        _c_608185ccbb01be725a2cb487: ['YES'], //internalplaced
+          "_c_60825ca5e85e811f0d6e1be2": [orderID], //internalorderID
+          "_c_608185ccbb01be725a2cb487": ['YES'], //internalplaced
       },
       includeDeleted: true,
-    })
+    });
   }
+
+/**
+ * Registers a one-time listener for common user interactions,
+ * then calls `callback` and cleans up all listeners.
+ *
+ * @param {() => void} callback – Function to run after first interaction
+ */
+function onFirstUserInteraction(callback) {
+  const events = ['mousemove', 'keydown', 'touchstart', 'scroll', 'click', 'resize'];
+
+  const handler = () => {
+    // Cleanup: remove all listeners
+    events.forEach(evt => {
+      window.removeEventListener(evt, handler);
+    });
+    // Run the callback
+    callback();
+  };
+
+  events.forEach(evt => {
+    window.addEventListener(evt, handler, { once: true });
+  });
+}
+
+  /**
+   * Native Sprinklr chat widget loader.
+   * We does not refactor this function to avoid breaking changes.
+   **/
+  function openChat(){var t=window,e=t.sprChat,a=e&&!!e.loaded,n=document,r=function(){r.m(arguments)};r.q=[],r.m=function(t){r.q.push(t)},t.sprChat=a?e:r;var o=function(){var e=n.createElement("script");e.type="text/javascript",e.async=!0,e.src="https://prod-live-chat.sprinklr.com/api/livechat/handshake/widget/"+t.sprChatSettings.appId,e.onerror=function(){t.sprChat.loaded=!1},e.onload=function(){t.sprChat.loaded=!0};var a=n.getElementsByTagName("script")[0];a.parentNode.insertBefore(e,a)};"function"==typeof e?a?e("update",t.sprChatSettings):o():"loading"!==n.readyState?o():n.addEventListener("DOMContentLoaded",o)}
+
 </script>
 
 <link rel="dns-prefetch" href="//cdn.decibelinsight.net">
