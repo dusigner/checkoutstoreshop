@@ -20,6 +20,8 @@ vtex link
 
 ### Build Prod
 
+### AVISO IMPORTANTE: Antes de rodar o comando para compilar os arquivos para deploy, será necessario mudar a versão do manifest para os arquivos serem compilados na versão correta.
+
 Abra um novo terminal e execute o comando para criar o build de prod:
 
 ```sh
