@@ -23,7 +23,6 @@ export function customHeader() {
           console.log('show header', hash)
           _stepElem.css('display', 'flex')
           _gotoCartElem.css('display', 'flex')
-          _gotoCartElem.css('margin-top', '110px')
         } else {
           _stepElem.css('display', 'none')
           _gotoCartElem.css('display', 'none')

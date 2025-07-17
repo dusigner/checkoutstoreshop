@@ -976,7 +976,7 @@ h1#cart-title {
                 margin-top: 25px;
 
                 &.isButtonReward{
-                  margin-top: 60px; 
+                  margin-top: 60px;
                 }
               }
             }
@@ -1113,7 +1113,7 @@ h1#cart-title {
               width: 14px;
               height: 14px;
               display: block;
-              
+
               &::before {
                 content: "";
                 background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2aWV3Qm94PSIwIDAgMTUgMTUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgaWQ9InN1cmZhY2UxIiB0cmFuc2Zvcm09Im1hdHJpeCgwLjk5OTk5OTk5OTk5OTk5OTksIDAsIDAsIDAuOTk5OTk5OTk5OTk5OTk5OSwgLTEuMTEwMjIzMDI0NjI1MTU2NWUtMTYsIC0xLjExMDIyMzAyNDYyNTE1NjVlLTE2KSI+CiAgICA8cGF0aCBzdHlsZT0ic3Ryb2tlOiBub25lOyBmaWxsLXJ1bGU6IG5vbnplcm87IGZpbGwtb3BhY2l0eTogMTsgZmlsbDogcmdiKDAsIDEwNywgMjM0KTsiIGQ9Ik0gNy41IDAuMzkwNjI1IEMgMTEuNDIxODc1IDAuMzkwNjI1IDE0LjYwOTM3NSAzLjU4MjAzMSAxNC42MDkzNzUgNy41IEMgMTQuNjA5Mzc1IDExLjQyMTg3NSAxMS40MjE4NzUgMTQuNjA5Mzc1IDcuNSAxNC42MDkzNzUgQyA1LjYwMTU2MiAxNC42MDkzNzUgMy44MTY0MDYgMTMuODcxMDk0IDIuNDcyNjU2IDEyLjUyNzM0NCBDIDEuMTI4OTA2IDExLjE4MzU5NCAwLjM5MDYyNSA5LjM5ODQzOCAwLjM5MDYyNSA3LjUgQyAwLjM5MDYyNSAzLjU3ODEyNSAzLjU3ODEyNSAwLjM5MDYyNSA3LjUgMC4zOTA2MjUgWiBNIDkuODc1IDQuMTI4OTA2IEwgNy4zOTA2MjUgNi42MTcxODggTCA0LjkwMjM0NCA0LjEyODkwNiBMIDQuMTI4OTA2IDQuOTAyMzQ0IEwgNi42MTcxODggNy4zOTA2MjUgTCA0LjEyODkwNiA5Ljg3NSBMIDQuOTAyMzQ0IDEwLjY0ODQzOCBMIDcuMzkwNjI1IDguMTY0MDYyIEwgOS44NzUgMTAuNjQ4NDM4IEwgMTAuNjQ4NDM4IDkuODc1IEwgOC4xNjQwNjIgNy4zOTA2MjUgTCAxMC42NDg0MzggNC45MDIzNDQgWiBNIDkuODc1IDQuMTI4OTA2ICIvPgogIDwvZz4KPC9zdmc+);
@@ -1316,7 +1316,7 @@ h1#cart-title {
       display: flex;
       align-items: center;
       gap: 2px;
-      
+
       #cart-coupon-remove {
         display: none;
         height: 15px;
@@ -1436,6 +1436,17 @@ h1#cart-title {
     opacity: 1;
   }
 
+  @media screen and (max-width: 769px) {
+    .custom-tooltip::after {
+      margin-left: -12.5rem;
+      transform: unset;
+      white-space: normal;
+      z-index: 1;
+      width: 65vw;
+      margin-bottom: 0.25rem;
+      text-align: center;
+    }
+  }
 }
 
 .summary-coupon {

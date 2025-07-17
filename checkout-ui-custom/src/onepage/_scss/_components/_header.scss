@@ -1,4 +1,8 @@
 body {
+  padding-top: 65px !important;
+  .cc-toolbar {
+    display: none;
+  }
   &.v-custom-step-email {
     padding-top: 190px;
 
@@ -8,7 +12,7 @@ body {
   }
 
   &.v-custom-step-cart {
-    padding-top: 142px;
+    padding-top: 65px !important;
     
     @media (max-width: $mobileWidth) {
       padding-top: 112px;
@@ -135,8 +139,7 @@ body {
     max-height: 34px;
     gap: 4px;
     max-width: 1440px;
-    margin: 0 auto;
-    margin-bottom: 32px;
+    margin: 32px auto  32px auto;
     width: 100%;
     position: inherit; 
 

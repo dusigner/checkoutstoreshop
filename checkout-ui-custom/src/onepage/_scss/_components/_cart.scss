@@ -48,6 +48,7 @@ h1#cart-title {
 .container-cart h1#cart-title {
   display: block !important;
   font-size: 0 !important;
+  margin: 50px 0 -5px 0;
 
   &::before {
     content: "Carrinho";
