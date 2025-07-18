@@ -74,6 +74,10 @@ export default class TradeIn {
       ).length
 
       if (itemLinkTradeInValid > 0) {
+        if (itemLinkTradeIn?.galaxyClubValue) {
+          return itemLinkTradeIn?.galaxyClubValue
+        }
+
         const totalItemTradeIn = itemLinkTradeIn.evaluatedProducts.reduce(
           (itemTotal, evaluatedProduct, k) => {
             const price =
@@ -89,8 +93,10 @@ export default class TradeIn {
       return total
     }, 0)
 
+    const isGalaxyClub = transport?.[0]?.galaxyClubValue ? true : false;
+
     if (totalTradeIn > 0) {
-      this.showTotalTradeIn(totalTradeIn)
+      this.showTotalTradeIn(totalTradeIn, isGalaxyClub)
 
       $('#total-tradein-value').text(
         `${formatCurrencyBRL(totalTradeIn, false)}*`
@@ -106,13 +112,17 @@ export default class TradeIn {
     }
   }
 
-  showTotalTradeIn(totalTradeIn) {
+  showTotalTradeIn(totalTradeIn, isGalaxyClub) {
     try {
+      const tradeinText = isGalaxyClub 
+        ? "New Galaxy Club - Valor máximo pré-avaliado que poderá ser creditado em sua conta após a entrega do aparelho e a avaliação da Assurant."
+        : "Troca Smart Samsung - Valor máximo pré-avaliado que poderá ser creditado em sua conta após a entrega do aparelho e a avaliação da Assurant." 
+
       const _checkoutElem = $('.summary-template-holder')
       const _component = `
         <tbody id="total-details-tradein">
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'">
-            <td style="font-size: 14px; color: #000000; font-weight: 400; max-width: 245px;">Troca Smart Samsung - Dinheiro creditado em conta após a entrega do aparelho usado e a avaliação da Assurant</td>
+            <td style="font-size: 14px; color: #000000; font-weight: 400; max-width: 245px;">${tradeinText}</td>
             <td id="total-tradein-value" style="font-size: 14px; color: #0077C8; font-weight: 700;">${formatCurrencyBRL(
               totalTradeIn,
               false
