@@ -395,41 +395,47 @@ export default class CustomShippingData {
       if (profileData.firstName && profileData.lastName && !profileData.firstName.includes('*') && !profileData.lastName.includes('*')) {
         receiverName = `${profileData.firstName} ${profileData.lastName}`;
       }
-      const $receiverNameInput = $('#ship-receiverName');
+      const $receiverNameInput = document.getElementById('ship-receiverName');
+      const keyReact = Object.keys($receiverNameInput).find(key => key.startsWith('__reactEventHandlers$'));
 
-      // Adicionar o valor inicial se o campo estiver vazio e existir receiverName
-      if (!$receiverNameInput.val().trim() && (!$receiverNameInput.attr('data-edited') || $receiverNameInput.attr('data-edited') === 'false') && receiverName) {
-        $receiverNameInput.val(receiverName);
+      // Adicionar o valor inicial se o campo estiver vazio e existir receiverName e tiver keyReact
+      if (!$receiverNameInput.value.trim() && (!$receiverNameInput.attributes['data-edited'] || $receiverNameInput.attributes['data-edited'].value === 'false') && receiverName && keyReact) {
+        $receiverNameInput[keyReact].onChange({
+          target: {
+            value: receiverName
+          }
+        });
       }
-  
-      if (!$receiverNameInput.attr('data-edited')) {
-        $receiverNameInput.attr('data-edited', 'false');
+
+      if (!$receiverNameInput.attributes['data-edited']) {
+        $receiverNameInput.attributes['data-edited'] = 'false';
       }
-  
-      $receiverNameInput.on('focus', function () {
-        if (!$(this).val().trim() && $(this).attr('data-edited') === 'false') {
-          $(this).val(receiverName).trigger('input');
+
+      $receiverNameInput.addEventListener('focus', function () {
+        if (!this.value.trim() && this.attributes['data-edited'] === 'false') {
+          this.value = receiverName;
+          this.dispatchEvent(new Event('input'));
         }
       });
-  
+
       const updateLabel = () => {
-        const label = $receiverNameInput.prev('label[for="ship-receiverName"]');
-        if ($receiverNameInput.val().trim() === receiverName.trim()) {
-          label.text('Destinatário é o mesmo da entrega');
+        const label = $receiverNameInput.previousElementSibling;
+        if ($receiverNameInput.value.trim() === receiverName.trim()) {
+          label.textContent = 'Destinatário é o mesmo da entrega';
         } else {
-          label.text('Destinatário');
+          label.textContent = 'Destinatário';
         }
       };
-  
-      $receiverNameInput.on('input', function () {
-        if ($(this).val().trim()) {
-          $(this).attr('data-edited', 'true');
+
+      $receiverNameInput.addEventListener('input', function () {
+        if (this.value.trim()) {
+          this.attributes['data-edited'] = 'true';
         }
         updateLabel();
       });
-  
+
       updateLabel();
-  
+
       if (!$('#changeReceiverLink').length) {
         const $link = $('<a>')
           .attr('href', '#')
@@ -446,13 +452,14 @@ export default class CustomShippingData {
           })
           .on('click', function (e) {
             e.preventDefault();
-            $receiverNameInput[0].focus();
-            $receiverNameInput.val('0').attr('data-edited', 'true');
-            $receiverNameInput.trigger('input');
+            $receiverNameInput.focus();
+            $receiverNameInput.value = '0';
+            $receiverNameInput.attributes['data-edited'] = 'true';
+            $receiverNameInput.dispatchEvent(new Event('input'));
           });
-  
+
         // Inserir o link após o input
-        $receiverNameInput.parent().append($link);
+        $receiverNameInput.parentNode.appendChild($link);
       }
     } catch (err) {
       console.error(`Erro ao verificar campo destinatário: ${err}`);

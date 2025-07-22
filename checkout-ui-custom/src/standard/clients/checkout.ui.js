@@ -1771,6 +1771,7 @@ couponInfo(response) {
     if (window.location && this.orderForm) {
       const hash = window.location.hash
       this.handleOrderFromEndless(hash, this.orderForm)
+      this.showPersonalDataEndless(this.orderForm)
     }
 
     if (window.vtex) {
@@ -2188,9 +2189,9 @@ couponInfo(response) {
    * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar
    * para o cliente.
    */
+  
   handleOrderFromEndless(hash, orderForm) {
     if (hash !== '#/cart') return
-
     const _this = this
 
     try {
@@ -2215,6 +2216,27 @@ couponInfo(response) {
             _this.changeToAnonymousUserAndReload(orderFormId)
           }
         })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  showPersonalDataEndless(orderForm) {
+    
+    try {
+      const isEndlessOrderForm = orderForm.customData?.customApps?.some(
+        customApp => customApp.id === 'endlessaisle'
+      )
+
+      if (isEndlessOrderForm) {
+        if (!document.querySelector(`#show-personal-data-from-storeplus`)) {
+              document.querySelector(`body`).insertAdjacentHTML("afterbegin", `
+                <style id="show-personal-data-from-storeplus">
+                  #client-profile-data .box-info {
+                    display: block !important;
+                  }
+                </style>`)
+          }
       }
     } catch (e) {
       console.error(e)
