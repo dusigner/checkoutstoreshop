@@ -210,7 +210,7 @@ class AdobeLaunchPixel {
 
     _this.pageInterval = setInterval(function () {
       if (document.body) {
-        const rootDivs = document.querySelectorAll('body > div, body > header')
+        const rootDivs = document.querySelectorAll('header')
 
         for (let i = 0; i < rootDivs.length; i++) {
           Object.keys(_this.dtmWatchPages).forEach(function (page) {
@@ -626,7 +626,7 @@ class AdobeLaunchPixel {
       .replace('#', '')
 
     if (document.body) {
-      const rootDivs = document.querySelectorAll('body > div')
+      const rootDivs = document.querySelectorAll('header')
 
       for (let i = 0; i < rootDivs.length; i++) {
         Object.keys(_this.dtmWatchPages).forEach(function (page) {
