@@ -1,4 +1,4 @@
-const version = '0.3.245';
+const version = '0.3.246';
 
 const hostname = window.location.hostname;
 const pathname = window.location.pathname;
