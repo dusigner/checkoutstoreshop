@@ -454,7 +454,7 @@ class AdobeLaunchPixel {
       })
     }
 
-    const backtocart2 = document.querySelector('#go-to-cart-button-custom')
+    const backtocart2 = document.querySelector('#go-to-cart-button-custom-onepage')
 
     if (backtocart2 !== null) {
       if (backtocart2.querySelector('#orderform-minicart-to-cart') !== null) {

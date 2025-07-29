@@ -1,35 +1,18 @@
 body {
-  #header-standard {
-    height: 80px;
-    margin: -25px;
-  }
-  &.v-custom-step-email {
-    padding-top: 190px;
-
-    @media (max-width: $mobileWidth) {
-      padding-top: 112px;
-    }
-  }
-
+  &.v-custom-step-email,
   &.v-custom-step-cart {
-    padding-top: 142px;
-    
+    padding-top: 100px;
     @media (max-width: $mobileWidth) {
-      padding-top: 112px;
+      padding-top: 70px;
     }
   }
 
   &.v-custom-step-profile,
   &.v-custom-step-shipping,
   &.v-custom-step-payment {
-    // padding-top: 127px;
-
-    .cart-template.mini-cart {
-      top: 170px;
-
-      @media (max-width: $mobileWidth) {
-        top: 0;
-      }
+    padding-top: 100px;
+    @media (max-width: $mobileWidth) {
+      padding-top: 0px;
     }
   }
 
@@ -142,7 +125,7 @@ body {
     }
   }
 
-  #go-to-cart-button-custom {
+  #go-to-cart-button-custom-standard {
     display: none;
     max-height: 34px;
     gap: 4px;
