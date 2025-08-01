@@ -334,9 +334,6 @@ couponInfo(response) {
 
   buildVertical() {
     $('body').addClass('body-cart-vertical')
-    $('.cart-template .cart-links-bottom:eq(0)').appendTo(
-      '.cart-template > .summary-template-holder'
-    )
   }
 
   showDeliveryOptions() {
@@ -681,24 +678,20 @@ couponInfo(response) {
   }
 
   wrapSummary() {
-    try {
-      const _trElem = $(`.cart-template.full-cart`)
+	  try {
+		  const _trElem = $(`.cart-template.full-cart`);
+		  const summaryHolder = _trElem.find('> .summary-template-holder');
 
-      if (_trElem.find('.summary-to-new-components').length > 0) {
-        return
-      }
+		  if (summaryHolder.parent().hasClass('summary-to-new-components')) {
+			  $('.cart-links-bottom').appendTo(summaryHolder);
+			  return;
+		  }
 
-      _trElem
-        .find('> .summary-template-holder')
-        .wrap(`<div class="summary-to-new-components"></div>`)
-
-      // Corrigir bug que o botão, em alguns momentos, fica fora do wrapper
-      $('.clearfix.pull-right.cart-links.cart-links-bottom.hide').appendTo(
-        '.summary-template-holder'
-      )
-    } catch (e) {
-      console.error('WrapSummary error:', e)
-    }
+		  summaryHolder.wrap(`<div class="summary-to-new-components"></div>`);
+		  $('.cart-links-bottom').appendTo(summaryHolder);
+	  } catch (e) {
+		  console.error('WrapSummary error:', e);
+	  }
   }
 
   addMedalliaScript() {
@@ -1983,10 +1976,12 @@ couponInfo(response) {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.optInDimensions.render()
             _this.customizeLogOut()
+            _this.profile.redirectProfileNotBirthDate(_this.orderForm)
           }
 
           if (window.location.hash === '#/payment') {
             _this.itauCardMessage(_this.orderForm)
+            _this.profile.redirectProfileNotBirthDate(_this.orderForm)
           }
         }
       })

@@ -67,6 +67,7 @@ svg.vtex-omnishipping-1-x-svg {
 
 .container.container-main.container-order-form {
 	max-width: 1440px !important;
+  margin-top: -55px;
 
 	@media(max-width: 768px) {
 		width: calc(100% - 20px);
@@ -2343,3 +2344,67 @@ svg.vtex-omnishipping-1-x-svg {
 .box-payment-pix {
 	display: none !important;
 }
+
+
+/*START Payment card ordenation*/
+.ChangeNumberOfPayments a {
+    padding: 10px 24px;
+    display: flex;
+    color: #000;
+    text-align: left;
+    font-size: 0px !important;
+    margin-bottom: 16px;
+    padding: 0 20px;
+    width: max-content;
+    border: 1px solid #000;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    background: #fff;
+    font-weight: bold;
+}
+
+.ChangeNumberOfPayments a:hover {
+  color: #000;
+}
+
+#app-container .App .CardForm + .CardForm + .ChangeNumberOfPayments a:before {
+    content: 'Pagar com um cartão';
+    font-size: 12px;
+}
+
+#app-container .App .CardForm + .ChangeNumberOfPayments a:before {
+    content: 'Pagar com dois cartões';
+    font-size: 12px;
+}
+
+.App.iframe-credit-card-payment-group > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.ChangeNumberOfPayments {
+  order: 0;
+  margin-top: 15px;
+}
+
+.CardForm {
+    order: 1;
+}
+
+.SecurityEnvironmentIcon {display: none;}
+
+div#app-container {
+    background: #fff;
+}
+
+.PaymentCardValue .input-prepend .add-on {
+    width: 45px;
+}
+
+.PaymentCardValue .input-prepend .input-mini {
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+/*END Payment card ordenation*/

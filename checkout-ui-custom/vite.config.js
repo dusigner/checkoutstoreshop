@@ -4,6 +4,8 @@ import fs from 'fs'
 import manifest from '../manifest.json' assert { type: 'json' }
 
 const version = manifest.version
+const vendor = manifest.vendor
+const name = manifest.name
 
 function generateCheckoutScript() {
   return {
@@ -21,9 +23,28 @@ function generateCheckoutScript() {
   }
 }
 
+function copyCheckoutCssFromBuildOutput() {
+  return {
+    name: 'copy-generated-standard-css',
+    closeBundle() {
+      const sourcePath = path.resolve(__dirname, '../public/checkout/standard/style.css')
+      const destPath = path.resolve(__dirname, 'checkout6-custom.css')
+
+      try {
+        fs.copyFileSync(sourcePath, destPath)
+        console.log('✅ checkout6-custom.css copiado de /public/checkout/standard/style.css para a raiz com sucesso.')
+      } catch (err) {
+        console.error('❌ Erro ao copiar style.css como checkout6-custom.css:', err)
+      }
+    }
+  }
+}
+
 
 export default defineConfig({
   define: {
+    __CHECKOUT_NAME__: JSON.stringify(name),
+    __CHECKOUT_VENDOR__: JSON.stringify(vendor),
     __CHECKOUT_VERSION__: JSON.stringify(version),
   },
   build: {
@@ -65,5 +86,8 @@ export default defineConfig({
       include: '/src/**/*.{js,scss}',
     },
   },
-  plugins: [generateCheckoutScript()],
+  plugins: [
+    generateCheckoutScript(),
+    copyCheckoutCssFromBuildOutput()
+  ],
 })
