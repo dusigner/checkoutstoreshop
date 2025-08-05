@@ -408,7 +408,7 @@ couponInfo(response) {
           const matchedTag = tagList.find(tag =>
             tag.productIdTag === String(productId) &&
             tag.productTag === "Instalado pela Samsung" &&
-            tag.activeTag === true
+            tag.tagCheckoutVisible === true
           );
  
           const installedHtml = matchedTag
