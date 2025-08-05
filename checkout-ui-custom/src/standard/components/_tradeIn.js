@@ -74,7 +74,7 @@ export default class TradeIn {
       ).length
 
       if (itemLinkTradeInValid > 0) {
-        if (itemLinkTradeIn?.galaxyClubValue) {
+        if (itemLinkTradeIn?.bestOffer === "galaxy-club") {
           return itemLinkTradeIn?.galaxyClubValue
         }
 
