@@ -526,6 +526,7 @@ h1#cart-title {
         &.product-image {
           order: 1;
           grid-area: image;
+          background: none;
         }
 
         &.product-name {
@@ -2101,4 +2102,12 @@ p.input.ship-receiverName {
   span {
     color: #555
   }
+}
+
+.samsung-tag {
+  font-size: 11px;
+  padding: 1px 10px;
+  display: inline-block;
+  border-radius: 20px;
+  margin: 10px 0;
 }
