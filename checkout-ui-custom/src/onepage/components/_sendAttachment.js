@@ -54,14 +54,18 @@ export default class SendAttachment {
         let totalItemTradeIn = 0
         let ean = ''
 
-        itemLinkTradeIn.evaluatedProducts.forEach((evaluatedProduct, k) => {
-          if (k > 0 && totalItemTradeIn > 0) {
-            totalItemTradeIn += evaluatedProduct.price
-          } else {
-            totalItemTradeIn +=
-              evaluatedProduct.price + parseFloat(itemLinkTradeIn.boostSSG)
-          }
-        })
+        if (itemLinkTradeIn?.bestOffer === 'galaxy-club') {
+					totalItemTradeIn = itemLinkTradeIn?.galaxyClubValue;
+				} else {
+          itemLinkTradeIn.evaluatedProducts.forEach((evaluatedProduct, k) => {
+            if (k > 0 && totalItemTradeIn > 0) {
+              totalItemTradeIn += evaluatedProduct.price
+            } else {
+              totalItemTradeIn +=
+                evaluatedProduct.price + parseFloat(itemLinkTradeIn.boostSSG)
+            }
+          })
+        }
 
         ean = itemLinkTradeInValid[0].ean
         obsToOpenTextField.push({
