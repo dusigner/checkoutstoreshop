@@ -10,7 +10,7 @@ body {
   &.v-custom-step-profile,
   &.v-custom-step-shipping,
   &.v-custom-step-payment {
-    padding-top: 100px;
+    padding-top: 100px !important;
     @media (max-width: $mobileWidth) {
       padding-top: 0px;
     }
@@ -130,14 +130,12 @@ body {
     max-height: 34px;
     gap: 4px;
     max-width: 1280px;
-    margin: 0 auto;
-    margin-bottom: 32px;
+    margin: 0px auto 32px;
     width: 100%;
     position: inherit; 
 
     @media (max-width: $mobileWidth) {
-      margin-left: 16px;
-      margin-top: 140px !important;
+      margin: 36px 0px 10px 16px;
     }
 
     &:before {
