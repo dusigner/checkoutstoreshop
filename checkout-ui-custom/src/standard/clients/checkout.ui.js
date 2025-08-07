@@ -136,6 +136,19 @@ export class CheckoutCustom {
     })
   }
 
+
+  getFlagsProductMD() {
+    fetch(`${rootPath()}/_v/private/getTagsProducts`)
+      .then(resp => resp.json())
+      .then(tagData => {
+        window.samsungProductTags = tagData;
+      })
+      .catch(err => {
+        console.error('Erro ao buscar tags', err);
+        window.samsungProductTags = [];
+      });
+  }
+
   addAssemblies(orderForm) {
     try {
       $.each(orderForm.items, function (i) {
@@ -374,41 +387,51 @@ couponInfo(response) {
         }
 
         const logisticsInfoData =
-          orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel ===
-            'delivery' &&
-            orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+          orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' &&
+          orderForm.shippingData.logisticsInfo[i].selectedSla !== null
             ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
             : orderForm.shippingData.logisticsInfo[i].selectedSla === null
               ? ''
-              : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(
-                pickup =>
-                  pickup.name ===
-                  orderForm.shippingData.logisticsInfo[i].selectedSla
-              ).pickupStoreInfo.friendlyName
-              }</span><br /> Retirada após confirmação via e-mail`
-
-        const refId = orderForm.items[i].refId || ''
-        const { detailUrl } = orderForm.items[i]
-        const isInstallService = detailUrl.includes('/install-service/p')
-        const isSamsungCare = detailUrl.includes('/samsung-care-')
-
-        const shippingText =
-          isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
-
-
-        const moreInfoHtml = `
-            <div class="more-info ${isInstallService || isSamsungCare ? 'isServices' : ''
-          }">
+              : `Retirada em: <span>${
+                  orderForm.shippingData.logisticsInfo[i].slas.find(
+                    pickup =>
+                      pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla
+                  ).pickupStoreInfo.friendlyName
+                }</span><br /> Retirada após confirmação via e-mail`;
+          const productId = String(orderForm.items[i].productId);
+          const refId = orderForm.items[i].refId || '';
+          const { detailUrl } = orderForm.items[i];
+          const isInstallService = detailUrl.includes('/install-service/p');
+          const isSamsungCare = detailUrl.includes('/samsung-care-');
+          const shippingText = isInstallService || isSamsungCare ? 'Após a entrega do produto' : '';
+ 
+          const tagList = window.samsungProductTags || [];
+          const matchedTag = tagList.find(tag =>
+            tag.productIdTag === String(productId) &&
+            tag.productTag === "Instalado pela Samsung" &&
+            tag.tagCheckoutVisible === true
+          );
+ 
+          const installedHtml = matchedTag
+          ? `<p class="samsung-tag" style="
+                background-color: ${matchedTag.colorTag};
+                color: ${matchedTag.colorTextTag};
+            ">Instalado pela Samsung</p>`
+          : '';
+ 
+          const moreInfoHtml = `
+            <div class="more-info ${isInstallService || isSamsungCare ? 'isServices' : ''}">
+              ${installedHtml}
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
               <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
             </div>
-          `
-
-        _trElem.find('td.product-name').append(moreInfoHtml)
-      })
+          `;
+ 
+          _trElem.find('td.product-name').append(moreInfoHtml);
+      });
     } catch (e) {
-      console.error('enchancementProductName error:', e)
+      console.error('enchancementProductName error:', e);
     }
   }
 
@@ -1614,7 +1637,7 @@ couponInfo(response) {
 
   bind() {
     const _this = this
-
+    _this.getFlagsProductMD()
     _this.removeInstallationProduct()
     $('body').on('click', '#v-custom-edit-login-data', function (e) {
       e.preventDefault()
