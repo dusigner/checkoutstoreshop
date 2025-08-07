@@ -7,7 +7,7 @@ const version = manifest.version
 const vendor = manifest.vendor
 const name = manifest.name
 
-function generateCheckoutScript() {
+function generateCheckoutScript(buildState, assetVisibility, env) {
   return {
     name: 'generate-checkout6-custom',
     closeBundle() {
@@ -15,9 +15,13 @@ function generateCheckoutScript() {
       const outputPath = path.resolve(__dirname, 'checkout6-custom.js')
 
       let content = fs.readFileSync(templatePath, 'utf-8')
-      content = content.replace(/__VERSION__/g, version)
+      content = content
+        .replace(/__VERSION__/g, version)
+        .replace(/__BUILD_STATE__/g, buildState)
+        .replace(/__ASSET_VISIBILITY__/g, assetVisibility)
 
       fs.writeFileSync(outputPath, content)
+      console.log(`✅ Ambiente: ${env}, assetVisibility: ${assetVisibility}, buildState: ${buildState}`)
       console.log(`✅ checkout6-custom.js gerado com versão ${version}`)
     }
   }
@@ -41,53 +45,61 @@ function copyCheckoutCssFromBuildOutput() {
 }
 
 
-export default defineConfig({
-  define: {
-    __CHECKOUT_NAME__: JSON.stringify(name),
-    __CHECKOUT_VENDOR__: JSON.stringify(vendor),
-    __CHECKOUT_VERSION__: JSON.stringify(version),
-  },
-  build: {
-    outDir: '../public',
-    emptyOutDir: false,
-    minify: 'terser',
-    terserOptions: {
-      compress: true,
-      keep_classnames: true
+export default defineConfig(({}) => {
+  const env = process.env.NODE_ENV
+  const isProduction = env === 'production'
+
+  const buildState = isProduction ? 'published' : 'linked'
+  const assetVisibility = isProduction ? 'public' : 'private'
+
+  return {
+    define: {
+      __CHECKOUT_NAME__: JSON.stringify(name),
+      __CHECKOUT_VENDOR__: JSON.stringify(vendor),
+      __CHECKOUT_VERSION__: JSON.stringify(version),
     },
-    rollupOptions: {
-      input: {
-        // Entradas para checkout padrão
-        'checkout/standard/script': path.resolve(__dirname, 'src/standard/checkout6-custom.js'),
-        'checkout/standard/style': path.resolve(__dirname, 'src/standard/checkout6-custom.scss'),
-        // Entradas para checkout one page
-        'checkout/onepage/script': path.resolve(__dirname, 'src/onepage/checkout6-custom.js'),
-        'checkout/onepage/style': path.resolve(__dirname, 'src/onepage/checkout6-custom.scss'),
+    build: {
+      outDir: '../public',
+      emptyOutDir: false,
+      minify: 'terser',
+      terserOptions: {
+        compress: true,
+        keep_classnames: true
       },
-      output: {
-        entryFileNames: `[name].js`,
-        chunkFileNames: `[name].js`,
-        assetFileNames: `[name].[ext]`,
+      rollupOptions: {
+        input: {
+          // Entradas para checkout padrão
+          'checkout/standard/script': path.resolve(__dirname, 'src/standard/checkout6-custom.js'),
+          'checkout/standard/style': path.resolve(__dirname, 'src/standard/checkout6-custom.scss'),
+          // Entradas para checkout one page
+          'checkout/onepage/script': path.resolve(__dirname, 'src/onepage/checkout6-custom.js'),
+          'checkout/onepage/style': path.resolve(__dirname, 'src/onepage/checkout6-custom.scss'),
+        },
+        output: {
+          entryFileNames: `[name].js`,
+          chunkFileNames: `[name].js`,
+          assetFileNames: `[name].[ext]`,
+        },
+        plugins: [{
+          name: 'wrap-in-iife',
+          generateBundle(outputOptions, bundle) {
+            Object.keys(bundle).forEach((fileName) => {
+              const file = bundle[fileName]
+              if (fileName.slice(-3) === '.js' && 'code' in file) {
+                file.code = `;(($) => {\n${file.code}})(jQuery)`
+              }
+            })
+          }
+        }]
       },
-      plugins: [{
-        name: 'wrap-in-iife',
-        generateBundle(outputOptions, bundle) {
-          Object.keys(bundle).forEach((fileName) => {
-            const file = bundle[fileName]
-            if (fileName.slice(-3) === '.js' && 'code' in file) {
-              file.code = `;(($) => {\n${file.code}})(jQuery)`
-            }
-          })
-        }
-      }]
+      watch: {
+        exclude: 'node_modules/**',
+        include: ['/src/**/*.{js,scss}','checkout-template.js']
+      },
     },
-    watch: {
-      exclude: 'node_modules/**',
-      include: '/src/**/*.{js,scss}',
-    },
-  },
-  plugins: [
-    generateCheckoutScript(),
-    copyCheckoutCssFromBuildOutput()
-  ],
+    plugins: [
+      generateCheckoutScript(buildState, assetVisibility, env),
+      copyCheckoutCssFromBuildOutput()
+    ],
+  }
 })
