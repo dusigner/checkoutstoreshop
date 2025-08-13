@@ -54,3 +54,9 @@ jsconfig.json
 
 # Typescript builds
 dist
+
+# VTEX
+public/checkout/onepage/*.js
+public/checkout/onepage/*.css
+public/checkout/standard/*.css
+public/checkout/standard/*.js

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.266] - 2025-08-12 [EENGS-4951](https://jira.sdslasupport.com/jira/browse/EENGS-4951)
+
+### Added
+- Create script to help to public new versions
+- exclude some builded files in .gitignore
+
+### Fixed
+- Fixed bug where if any payment method is selected, we update the native payment method to PIX in SHOP and Fidelity.
+
 ## [0.3.228-hkignore.0] - 2025-07-10 [EENGS-4908](https://jira.sdslasupport.com/jira/browse/EENGS-4908)
 
 ### Added

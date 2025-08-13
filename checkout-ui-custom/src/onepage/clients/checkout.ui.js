@@ -26,6 +26,7 @@ import {
   getMaxInstallmentByPaymentSystem,
   getSessionCookie
 } from '../components/_utils'
+import { hasSelectedPaymentMethod } from "../components/utils/_hasSelectedPaymentMethod"
 import { customHeader } from '../components/headerCustom/header'
 import { Rewards } from '../components/rewards/_rewards'
 import { fnsCustomAddressForm } from '../components/_customAddressForm'
@@ -1528,6 +1529,10 @@ couponInfo(response) {
   }
 
   defaultPaymentMethod() {
+    if (hasSelectedPaymentMethod()) {
+      return
+    }
+
     try {
       const _this = this
       // Default Payment Method: PIX
