@@ -980,12 +980,12 @@ export default class CustomProfileData {
 
   redirectProfileNotBirthDate(orderForm) {
     const email = orderForm.clientProfileData.email
-
+    const rootPath = window.__RUNTIME__?.rootPath ? window.__RUNTIME__.rootPath : ''
     getClientProfileData(email).then(function (data) {
       try {
         if (!data || !data[0].birthDate) {
           toast.notifyMissingBirthDate()
-          window.location.href = '/checkout/#/profile'
+          window.location.href = `${rootPath}/checkout/#/profile`
           return;
         }
         
