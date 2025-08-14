@@ -321,7 +321,7 @@ export default class CustomProfileData {
 
     this.ensureOptinsWrapperExists()
 
-    const isShop = window.vtex.accountName === 'samsungbrshop'
+    const isShop = window.vtex.accountName === 'samsungbrshop' || window.vtex.accountName === 'samsungbrtests'
 
     const $field = `<div class="whatsapp-optin">
       <h3>Whatsapp (opcional)</h3>
@@ -547,21 +547,21 @@ export default class CustomProfileData {
       if (radioWhatsAppOptIn) {
         const invalid = $('input[name="radioWhatsAppOptIn"]:checked').length === 0
         if (invalid) {
-          return areRadiosValid = false
+          areRadiosValid = false
         }
       }
 
       if (radioWhatsAppPromotionOptIn) {
         const invalid = $('input[name="radioWhatsAppPromotionOptIn"]:checked').length === 0;
         if (invalid) {
-          return areRadiosValid = false
+          areRadiosValid = false
         }
       }
 
       if (unifiedRadios) {
         const invalid = $('input[name="unifiedRadios"]:checked').length === 0;
         if (invalid) {
-          return areRadiosValid = false
+          areRadiosValid = false
         }
       }
     }
