@@ -44,6 +44,46 @@ function copyCheckoutCssFromBuildOutput() {
   }
 }
 
+function checkRootPathPlugin() {
+  return {
+    name: 'check-rootpath',
+    enforce: 'pre',
+    buildStart() {
+      const files = [];
+      const walk = (dir) => {
+        fs.readdirSync(dir).forEach((file) => {
+          const filepath = path.join(dir, file);
+          const stat = fs.statSync(filepath);
+          if (stat.isDirectory()) {
+            walk(filepath);
+          } else if (/\.(js|ts|jsx|tsx)$/.test(file)) {
+            files.push(filepath);
+          }
+        });
+      };
+
+      walk(path.resolve(__dirname, './src'));
+
+      const regex = /\b(window\.location\.(href|assign)|navigate)\s*=\s*([`'"])\s*\/checkout|\b(window\.location\.(href|assign)|navigate)\s*\(\s*([`'"])\s*\/checkout/i;
+      const errors = [];
+
+      files.forEach((file) => {
+        const content = fs.readFileSync(file, 'utf8');
+        content.split('\n').forEach((line, idx) => {
+          if (regex.test(line) && !/rootPath\s*\(/.test(line)) {
+            errors.push(`${file}:${idx + 1} → ${line.trim()}`);
+          }
+        });
+      });
+
+      if (errors.length) {
+        this.error(
+          `🚨 Foram encontrados redirecionamentos ou URLs para /checkout sem rootPath:\n${errors.join('\n')}`
+        );
+      }
+    }
+  };
+}
 
 export default defineConfig(({}) => {
   const env = process.env.NODE_ENV
@@ -99,7 +139,8 @@ export default defineConfig(({}) => {
     },
     plugins: [
       generateCheckoutScript(buildState, assetVisibility, env),
-      copyCheckoutCssFromBuildOutput()
+      copyCheckoutCssFromBuildOutput(),
+      checkRootPathPlugin()
     ],
   }
 })
