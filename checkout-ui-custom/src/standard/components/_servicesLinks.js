@@ -1,3 +1,5 @@
+import { rootPath } from "./utils/_rootPath"
+
 const CHECK_SERVICES = {
   ['samsungCare']: (refId, orderForm) => {
     return orderForm.items.some(item => {
@@ -67,7 +69,7 @@ export class ServicesLinks {
         <td class="empty-gap"></td>
         <td class="empty-gap"></td>
         <td class="service-links-wrapper" id="${serviceId}-${skuId}" >
-          <a class="service-link" href="${linkUrl}">
+          <a class="service-link" href="${linkUrl}" data-sku-id=${skuId} data-service-id=${serviceId}>
             ${linkText}
           </a>
         </td>
@@ -75,6 +77,7 @@ export class ServicesLinks {
     }
   }
 
+  
   _priorizeInstantVoucherLink() {
     const serviceIds = ['instantVoucher', 'addon'];
     const prioritizedLinks = [];
@@ -93,6 +96,7 @@ export class ServicesLinks {
 
   init(orderForm) {
     try {
+      this._addSSGCareTrigger()
       this._priorizeInstantVoucherLink()
       
       if (!orderForm.items) {
@@ -131,5 +135,52 @@ export class ServicesLinks {
     } catch (err) {
       console.error(`Ocorreu um erro ao adicionar links de serviços: ${err}`)
     }
+  }
+
+  _addSSGCareTrigger() {
+    const isTestAB = window.sessionStorage.getItem('codigoTesteABCheckoutSamsungCare');
+    if(isTestAB && isTestAB === '56') {
+    const _this = this;
+      $(document).off('click', '.service-link').on('click', '.service-link', function (event) {
+        event.preventDefault();
+        const target = event.target.closest('.service-link');
+        if (target) {
+          const skuId = target.dataset.skuId;
+          const serviceId = target.dataset.serviceId
+          if(serviceId !== 'samsungCare') return 
+  
+          if (!document.getElementById('ssg-care-script')) {
+            const script = document.createElement('script');
+            script.src =  `${rootPath()}/_v/private/assets/v1/linked/${__CHECKOUT_VENDOR__}.${__CHECKOUT_NAME__}@${__CHECKOUT_VERSION__}/public/scPlus/js/samsungCare.js`;
+            script.id = 'ssg-care-script';
+            script.type = 'module';
+            script.onload = () => {
+              _this.dispatchSsgCareEvent(skuId, serviceId);
+            };
+            document.body.appendChild(script);
+        
+            const linkElement = document.createElement('link');
+            linkElement.rel = 'stylesheet';
+            linkElement.type = 'text/css';
+            linkElement.id = 'ssg-care-style';
+            linkElement.href =  `${rootPath()}/_v/private/assets/v1/linked/${__CHECKOUT_VENDOR__}.${__CHECKOUT_NAME__}@${__CHECKOUT_VERSION__}/public/scPlus/css/samsung-care.css`;
+            document.head.appendChild(linkElement);
+          }else {
+            _this.dispatchSsgCareEvent(skuId, serviceId);
+          }
+        }
+      });  
+    }
+  }
+
+  dispatchSsgCareEvent(skuId, serviceId) {
+    const event = new CustomEvent('ssg-care', {
+      detail: {
+        message: 'modal opened',
+        serviceId,
+        skuId
+      }
+    });
+    window.dispatchEvent(event);
   }
 }

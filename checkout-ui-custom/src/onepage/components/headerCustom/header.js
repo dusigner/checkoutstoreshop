@@ -14,7 +14,7 @@ export function customHeader() {
   
       function steps(hash) {
         const _stepElem = $(`.checkout-steps`)
-        const _gotoCartElem = $(`#go-to-cart-button-custom`)
+        const _gotoCartElem = $(`#go-to-cart-button-custom-onepage`)
         const _headerElem = $(`.main-header`)
   
         const showHeader = ['#/payment', '#/shipping', '#/profile']
@@ -57,7 +57,7 @@ export function customHeader() {
     }
   
     function _fixBackToCartLink() {
-      $('#go-to-cart-button-custom a[href="#/cart"]').each(function (_, el) {
+      $('#go-to-cart-button-custom-onepage a[href="#/cart"]').each(function (_, el) {
         $(el).attr('href', window.checkout.cartURL())
       })
     }

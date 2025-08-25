@@ -152,7 +152,7 @@ export default class CustomShippingData {
       console.error(`Ocorreu um erro ao consultar o estoque virtual: ${err}`)
     }
   }
-  
+
   /**
    * @async
    * @param {Object} params 
@@ -163,9 +163,9 @@ export default class CustomShippingData {
    * @returns {Promise<boolean>}
    */
   async reportCepAttempt({ zipCode, status, cepResponseBody, errorMessage }) {
-    const { 
+    const {
       id: vtexSessionId = "unknown",
-     } = await getSessionCookie() 
+    } = await getSessionCookie()
 
 
 
@@ -195,7 +195,7 @@ export default class CustomShippingData {
 
       if (status !== 200) {
         console.error(`Unexpected status code ${status} when sending CEP attempt to the server`);
-					return false;
+        return false;
       }
 
       return true
@@ -266,7 +266,7 @@ export default class CustomShippingData {
             })
             _this.setInvalidPostalCode()
             _this.addInvalidPostalCodeMessage()
-            
+
           } else {
             _this.reportCepAttempt({
               zipCode: orderFormAddress.postalCode,
@@ -275,16 +275,16 @@ export default class CustomShippingData {
             })
             _this.setValidPostalCode()
             _this.removeInvalidPostalCodeMessage()
-            
+
           }
         })
-        .error(function(_, __, errorThrown) {
+          .error(function (_, __, errorThrown) {
             _this.reportCepAttempt({
-            zipCode: orderFormAddress.postalCode,
-            status: "error",
-            errorMessage: errorThrown instanceof Error ? errorThrown.message : "unknown error"
+              zipCode: orderFormAddress.postalCode,
+              status: "error",
+              errorMessage: errorThrown instanceof Error ? errorThrown.message : "unknown error"
+            })
           })
-        })
       }
     } catch (err) {
       this.reportCepAttempt({
@@ -371,7 +371,7 @@ export default class CustomShippingData {
     if ($optinDimensionsInput.length) {
       disabled = disabled && $optinDimensionsInput.prop('checked')
       OptInDimensions.toggleRequiredMessage()
-    } 
+    }
     ////
 
     //used for pickup point
@@ -385,51 +385,57 @@ export default class CustomShippingData {
 
   checkReceiverName(orderForm) {
     if (!orderForm) return;
-  
+
     const profileData = orderForm.clientProfileData;
     if (!profileData) return;
-  
+
     try {
       let receiverName = '';
-      
+
       if (profileData.firstName && profileData.lastName && !profileData.firstName.includes('*') && !profileData.lastName.includes('*')) {
         receiverName = `${profileData.firstName} ${profileData.lastName}`;
       }
-      const $receiverNameInput = $('#ship-receiverName');
+      const $receiverNameInput = document.getElementById('ship-receiverName');
+      const keyReact = Object.keys($receiverNameInput).find(key => key.startsWith('__reactEventHandlers$'));
 
-      // Adicionar o valor inicial se o campo estiver vazio e existir receiverName
-      if (!$receiverNameInput.val().trim() && (!$receiverNameInput.attr('data-edited') || $receiverNameInput.attr('data-edited') === 'false') && receiverName) {
-        $receiverNameInput.val(receiverName);
+      // Adicionar o valor inicial se o campo estiver vazio e existir receiverName e tiver keyReact
+      if (!$receiverNameInput.value.trim() && (!$receiverNameInput.attributes['data-edited'] || $receiverNameInput.attributes['data-edited'].value === 'false') && receiverName && keyReact) {
+        $receiverNameInput[keyReact].onChange({
+          target: {
+            value: receiverName
+          }
+        });
       }
-  
-      if (!$receiverNameInput.attr('data-edited')) {
-        $receiverNameInput.attr('data-edited', 'false');
+
+      if (!$receiverNameInput.attributes['data-edited']) {
+        $receiverNameInput.attributes['data-edited'] = 'false';
       }
-  
-      $receiverNameInput.on('focus', function () {
-        if (!$(this).val().trim() && $(this).attr('data-edited') === 'false') {
-          $(this).val(receiverName).trigger('input');
+
+      $receiverNameInput.addEventListener('focus', function () {
+        if (!this.value.trim() && this.attributes['data-edited'] === 'false') {
+          this.value = receiverName;
+          this.dispatchEvent(new Event('input'));
         }
       });
-  
+
       const updateLabel = () => {
-        const label = $receiverNameInput.prev('label[for="ship-receiverName"]');
-        if ($receiverNameInput.val().trim() === receiverName.trim()) {
-          label.text('Destinatário é o mesmo da entrega');
+        const label = $receiverNameInput.previousElementSibling;
+        if ($receiverNameInput.value.trim() === receiverName.trim()) {
+          label.textContent = 'Destinatário é o mesmo da entrega';
         } else {
-          label.text('Destinatário');
+          label.textContent = 'Destinatário';
         }
       };
-  
-      $receiverNameInput.on('input', function () {
-        if ($(this).val().trim()) {
-          $(this).attr('data-edited', 'true');
+
+      $receiverNameInput.addEventListener('input', function () {
+        if (this.value.trim()) {
+          this.attributes['data-edited'] = 'true';
         }
         updateLabel();
       });
-  
+
       updateLabel();
-  
+
       if (!$('#changeReceiverLink').length) {
         const $link = $('<a>')
           .attr('href', '#')
@@ -445,19 +451,20 @@ export default class CustomShippingData {
           })
           .on('click', function (e) {
             e.preventDefault();
-            $receiverNameInput[0].focus();
-            $receiverNameInput.val('0').attr('data-edited', 'true');
-            $receiverNameInput.trigger('input');
+            $receiverNameInput.focus();
+            $receiverNameInput.value = '0';
+            $receiverNameInput.attributes['data-edited'] = 'true';
+            $receiverNameInput.dispatchEvent(new Event('input'));
           });
-  
+
         // Inserir o link após o input
-        $receiverNameInput.parent().append($link);
+        $receiverNameInput.parentNode.appendChild($link);
       }
     } catch (err) {
       console.error(`Erro ao verificar campo destinatário: ${err}`);
     }
   }
-  
+
   alertNumberOrReciver() {
     try {
       const $postalCodeForm = $('.vtex-omnishipping-1-x-addressFormPart1')
@@ -607,20 +614,20 @@ export default class CustomShippingData {
     const itemsOrderForm = vtexjs.checkout.orderForm.items
     const salesChannelValidate = vtexjs.checkout.orderForm.salesChannel;
     const hasMarketingTagEndless = vtexjs.checkout.orderForm.marketingData?.marketingTags?.find(item => item === "endlessaisle")
-    const salesChannelShop = ["1","5","11","12","60","93"].includes(salesChannelValidate)
-    const salesChannelFidelidade = ["1","5","11","70","72","78","48","50","2","44","54","3","18","27","30","31","43","59","61","69"].includes(salesChannelValidate)
+    const salesChannelShop = ["1", "5", "11", "12", "60", "93"].includes(salesChannelValidate)
+    const salesChannelFidelidade = ["1", "5", "11", "70", "72", "78", "48", "50", "2", "44", "54", "3", "18", "27", "30", "31", "43", "59", "61", "69"].includes(salesChannelValidate)
 
 
     if (salesChannelValidate === "56" && hasInvalidPrice) {
       vtexjs.checkout.removeAllItems();
     }
-    if(window.vtex.accountName === "samsungbrshop" && !hasMarketingTagEndless){
+    if (window.vtex.accountName === "samsungbrshop" && !hasMarketingTagEndless) {
       if (!salesChannelShop && itemsOrderForm.length > 0) {
         const orderFormIdClient = vtexjs.checkout.orderForm.orderFormId
         let urlClientFlow = document.referrer
         const referrerUrl = sessionStorage.getItem('UrlReferrer')
 
-        if(referrerUrl){
+        if (referrerUrl) {
           urlClientFlow = referrerUrl
           sessionStorage.removeItem('UrlReferrer')
         }
@@ -643,7 +650,7 @@ export default class CustomShippingData {
         await responseLogs.json()
       }
     }
-    if(window.vtex.accountName === "samsungbrshopfidelidade"){
+    if (window.vtex.accountName === "samsungbrshopfidelidade") {
       if (!salesChannelFidelidade) {
         vtexjs.checkout.removeAllItems();
       }

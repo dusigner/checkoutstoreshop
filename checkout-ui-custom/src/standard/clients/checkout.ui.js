@@ -26,6 +26,7 @@ import {
   getMaxInstallmentByPaymentSystem,
   getSessionCookie
 } from '../components/_utils'
+import { hasSelectedPaymentMethod } from '../components/utils/_hasSelectedPaymentMethod'
 import { customHeader } from '../components/headerCustom/header'
 import { Rewards } from '../components/rewards/_rewards'
 import { fnsCustomAddressForm } from '../components/_customAddressForm'
@@ -134,6 +135,19 @@ export class CheckoutCustom {
       childList: true,
       subtree: true,
     })
+  }
+
+
+  getFlagsProductMD() {
+    fetch(`${rootPath()}/_v/private/getTagsProducts`)
+      .then(resp => resp.json())
+      .then(tagData => {
+        window.samsungProductTags = tagData;
+      })
+      .catch(err => {
+        console.error('Erro ao buscar tags', err);
+        window.samsungProductTags = [];
+      });
   }
 
   addAssemblies(orderForm) {
@@ -334,9 +348,6 @@ couponInfo(response) {
 
   buildVertical() {
     $('body').addClass('body-cart-vertical')
-    $('.cart-template .cart-links-bottom:eq(0)').appendTo(
-      '.cart-template > .summary-template-holder'
-    )
   }
 
   showDeliveryOptions() {
@@ -377,41 +388,51 @@ couponInfo(response) {
         }
 
         const logisticsInfoData =
-          orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel ===
-            'delivery' &&
-            orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+          orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' &&
+          orderForm.shippingData.logisticsInfo[i].selectedSla !== null
             ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
             : orderForm.shippingData.logisticsInfo[i].selectedSla === null
               ? ''
-              : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(
-                pickup =>
-                  pickup.name ===
-                  orderForm.shippingData.logisticsInfo[i].selectedSla
-              ).pickupStoreInfo.friendlyName
-              }</span><br /> Retirada após confirmação via e-mail`
-
-        const refId = orderForm.items[i].refId || ''
-        const { detailUrl } = orderForm.items[i]
-        const isInstallService = detailUrl.includes('/install-service/p')
-        const isSamsungCare = detailUrl.includes('/samsung-care-')
-
-        const shippingText =
-          isInstallService || isSamsungCare ? 'Após a entrega do produto' : ''
-
-
-        const moreInfoHtml = `
-            <div class="more-info ${isInstallService || isSamsungCare ? 'isServices' : ''
-          }">
+              : `Retirada em: <span>${
+                  orderForm.shippingData.logisticsInfo[i].slas.find(
+                    pickup =>
+                      pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla
+                  ).pickupStoreInfo.friendlyName
+                }</span><br /> Retirada após confirmação via e-mail`;
+          const productId = String(orderForm.items[i].productId);
+          const refId = orderForm.items[i].refId || '';
+          const { detailUrl } = orderForm.items[i];
+          const isInstallService = detailUrl.includes('/install-service/p');
+          const isSamsungCare = detailUrl.includes('/samsung-care-');
+          const shippingText = isInstallService || isSamsungCare ? 'Após a entrega do produto' : '';
+ 
+          const tagList = window.samsungProductTags || [];
+          const matchedTag = tagList.find(tag =>
+            tag.productIdTag === String(productId) &&
+            tag.activeTag === true &&
+            tag.tagCheckoutVisible === true
+          );
+ 
+          const installedHtml = matchedTag
+          ? `<p class="samsung-tag" style="
+                background-color: ${matchedTag.colorTag};
+                color: ${matchedTag.colorTextTag};
+            ">Instalado pela Samsung</p>`
+          : '';
+ 
+          const moreInfoHtml = `
+            <div class="more-info ${isInstallService || isSamsungCare ? 'isServices' : ''}">
+              ${installedHtml}
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
               <p class="shipping-data">${logisticsInfoData}</p>
               <p class="estimate-shipping">${shippingText}</p>
             </div>
-          `
-
-        _trElem.find('td.product-name').append(moreInfoHtml)
-      })
+          `;
+ 
+          _trElem.find('td.product-name').append(moreInfoHtml);
+      });
     } catch (e) {
-      console.error('enchancementProductName error:', e)
+      console.error('enchancementProductName error:', e);
     }
   }
 
@@ -681,24 +702,20 @@ couponInfo(response) {
   }
 
   wrapSummary() {
-    try {
-      const _trElem = $(`.cart-template.full-cart`)
+	  try {
+		  const _trElem = $(`.cart-template.full-cart`);
+		  const summaryHolder = _trElem.find('> .summary-template-holder');
 
-      if (_trElem.find('.summary-to-new-components').length > 0) {
-        return
-      }
+		  if (summaryHolder.parent().hasClass('summary-to-new-components')) {
+			  $('.cart-links-bottom').appendTo(summaryHolder);
+			  return;
+		  }
 
-      _trElem
-        .find('> .summary-template-holder')
-        .wrap(`<div class="summary-to-new-components"></div>`)
-
-      // Corrigir bug que o botão, em alguns momentos, fica fora do wrapper
-      $('.clearfix.pull-right.cart-links.cart-links-bottom.hide').appendTo(
-        '.summary-template-holder'
-      )
-    } catch (e) {
-      console.error('WrapSummary error:', e)
-    }
+		  summaryHolder.wrap(`<div class="summary-to-new-components"></div>`);
+		  $('.cart-links-bottom').appendTo(summaryHolder);
+	  } catch (e) {
+		  console.error('WrapSummary error:', e);
+	  }
   }
 
   addMedalliaScript() {
@@ -1479,6 +1496,9 @@ couponInfo(response) {
   }
 
   defaultPaymentMethod() {
+    if (hasSelectedPaymentMethod()) {
+      return
+    }
     try {
       const _this = this
       // Default Payment Method: PIX
@@ -1621,7 +1641,7 @@ couponInfo(response) {
 
   bind() {
     const _this = this
-
+    _this.getFlagsProductMD()
     _this.removeInstallationProduct()
     $('body').on('click', '#v-custom-edit-login-data', function (e) {
       e.preventDefault()
@@ -1771,6 +1791,7 @@ couponInfo(response) {
     if (window.location && this.orderForm) {
       const hash = window.location.hash
       this.handleOrderFromEndless(hash, this.orderForm)
+      this.showPersonalDataEndless(this.orderForm)
     }
 
     if (window.vtex) {
@@ -1982,10 +2003,12 @@ couponInfo(response) {
             _this.shipping.checkReceiverName(_this.orderForm)
             _this.optInDimensions.render()
             _this.customizeLogOut()
+            _this.profile.redirectProfileNotBirthDate(_this.orderForm)
           }
 
           if (window.location.hash === '#/payment') {
             _this.itauCardMessage(_this.orderForm)
+            _this.profile.redirectProfileNotBirthDate(_this.orderForm)
           }
         }
       })
@@ -2188,9 +2211,9 @@ couponInfo(response) {
    * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar
    * para o cliente.
    */
+  
   handleOrderFromEndless(hash, orderForm) {
     if (hash !== '#/cart') return
-
     const _this = this
 
     try {
@@ -2215,6 +2238,27 @@ couponInfo(response) {
             _this.changeToAnonymousUserAndReload(orderFormId)
           }
         })
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  showPersonalDataEndless(orderForm) {
+    
+    try {
+      const isEndlessOrderForm = orderForm.customData?.customApps?.some(
+        customApp => customApp.id === 'endlessaisle'
+      )
+
+      if (isEndlessOrderForm) {
+        if (!document.querySelector(`#show-personal-data-from-storeplus`)) {
+              document.querySelector(`body`).insertAdjacentHTML("afterbegin", `
+                <style id="show-personal-data-from-storeplus">
+                  #client-profile-data .box-info {
+                    display: block !important;
+                  }
+                </style>`)
+          }
       }
     } catch (e) {
       console.error(e)

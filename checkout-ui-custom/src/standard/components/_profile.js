@@ -2,6 +2,10 @@
 /* eslint-disable vtex/prefer-early-return */
 /* eslint-disable func-names */
 import { getSessionCookie, getClientProfileData, insertClientPartial } from '../components/_utils'
+import ToastMessages from './_toastMessage'
+
+const toast = new ToastMessages()
+
 export default class CustomProfileData {
   rootPath() {
     return window.__RUNTIME__.rootPath ? window.__RUNTIME__.rootPath : ''
@@ -283,7 +287,7 @@ export default class CustomProfileData {
 
     $('.client-document').first().after($dateBirthField)
 
-    $('#client-birth-date').on('input', function (e) {
+    $('#client-birth-date').on('input change', function (e) {
       let value = this.value;
       const isBackspace = e?.originalEvent?.inputType === 'deleteContentBackward';
 
@@ -339,7 +343,7 @@ export default class CustomProfileData {
   async addWhatsappOptIn() {
     if ($('.whatsapp-optin').length) return
 
-    const isShop = window.vtex.accountName === 'samsungbrshop'
+    const isShop = window.vtex.accountName === 'samsungbrshop' || window.vtex.accountName === 'samsungbrtests'
 
     const $field = `<div class="whatsapp-optin">
       <h3>Whatsapp (opcional)</h3>
@@ -528,6 +532,7 @@ export default class CustomProfileData {
   }
 
   toggleGoToShippingDisabled() {
+    const _this = this
     const $context = $('#client-profile-data')
   
     const $allVisibleInputs = $context.find('p.input input:visible')
@@ -542,6 +547,10 @@ export default class CustomProfileData {
 
     let areRadiosValid = true;
 
+    if(hasInvalidInputs) {
+      _this.doubleCheckInputBirthDate()
+    }
+
     if (isWhatsMandatory) { 
       const radioWhatsAppOptIn = $('input[name="radioWhatsAppOptIn"]').length;
       const radioWhatsAppPromotionOptIn = $('input[name="radioWhatsAppPromotionOptIn"]').length;
@@ -550,21 +559,21 @@ export default class CustomProfileData {
       if (radioWhatsAppOptIn) {
         const invalid = $('input[name="radioWhatsAppOptIn"]:checked').length === 0
         if (invalid) {
-          return areRadiosValid = false
+          areRadiosValid = false
         }
       }
 
       if (radioWhatsAppPromotionOptIn) {
         const invalid = $('input[name="radioWhatsAppPromotionOptIn"]:checked').length === 0;
         if (invalid) {
-          return areRadiosValid = false
+          areRadiosValid = false
         }
       }
 
       if (unifiedRadios) {
         const invalid = $('input[name="unifiedRadios"]:checked').length === 0;
         if (invalid) {
-          return areRadiosValid = false
+          areRadiosValid = false
         }
       }
     }
@@ -572,7 +581,7 @@ export default class CustomProfileData {
     const disabled = !hasInvalidInputs && isTermsChecked && (!isWhatsMandatory || areRadiosValid)
 
     $context.find('#go-to-shipping, #go-to-payment').prop('disabled', !disabled)
-}
+  }
 
   updateSubmitButtons() {
     setTimeout(() => {
@@ -699,11 +708,11 @@ export default class CustomProfileData {
       }
     });
 
-    $('body').on('change', '#client-birth-date', function (e) {
+    $('body').on('change input blur keyup keypress', '#client-birth-date', function (e) {
       _this.validateAge(e.target.value)
     })
 
-    $('body').on('blur', '#client-birth-date', function (e) {
+    $('body').on('input blur keyup keypress', '#client-birth-date', function (e) {
       if (e.target.value.length < 10) {
         $('#error-client-date-birth').hide()
         $('#error-client-invalid-date-birth').hide()
@@ -876,9 +885,16 @@ export default class CustomProfileData {
       }
     )
 
+    $('#client-profile-data input').on(
+      'input blur keyup keypress, change',
+      function () {
+        setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
+      }
+    )
+
     $('body').on(
       'change',
-      '#client-profile-data input[type="checkbox"], #client-profile-data input[type="radio"]',
+      '#client-profile-data input[type="checkbox"], #client-profile-data input[type="radio"], #client-profile-data input[type="text"]',
       function () {
         setTimeout(() => _this.toggleGoToShippingDisabled(), 1)
       }
@@ -963,6 +979,32 @@ export default class CustomProfileData {
     }).catch(() => {
       $birthDateFieldValue.text('Erro ao carregar');
     });
+  }
+
+  doubleCheckInputBirthDate() {
+    if ($('#client-birth-date').hasClass('error')) {
+      setTimeout(() => {
+        const $context = $('#client-profile-data')
+        $context.find('#go-to-shipping, #go-to-payment').prop('disabled', true)
+      }, 100)
+    }
+  }
+
+  redirectProfileNotBirthDate(orderForm) {
+    const email = orderForm.clientProfileData.email
+    const rootPath = window.__RUNTIME__?.rootPath ? window.__RUNTIME__.rootPath : ''
+    getClientProfileData(email).then(function (data) {
+      try {
+        if (!data || !data[0].birthDate) {
+          toast.notifyMissingBirthDate()
+          window.location.href = `${rootPath}/checkout/#/profile`
+          return;
+        }
+        
+      } catch (err) {
+        console.error(`Erro ao recuperar dados de perfil de usuário: ${err}`)
+      }
+    })
   }
   
 }

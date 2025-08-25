@@ -244,6 +244,21 @@
       font-size: 14px;
       font-weight: bold;
     }
+
+    @media(max-width: 768px) {
+      z-index: 9999;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      left: 0;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      max-width: 100%;
+
+      &:disabled {
+        opacity: 1;
+      }
+    }
   }
 
   #go-to-shipping::after {

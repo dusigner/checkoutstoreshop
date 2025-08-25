@@ -1,4 +1,5 @@
 import { getMaxInstallmentByPaymentSystem } from "./_utils"
+import { hasSelectedPaymentMethod } from "./utils/_hasSelectedPaymentMethod"
 
 export default class Payment {
   static shouldUpdate = false
@@ -141,40 +142,33 @@ export default class Payment {
     }
   }
 
+  /**
+   * @returns {void}
+   */
   setPixAsDefaultPaymentMethod() {
-    vtexjs.checkout.getOrderForm().done(function (orderForm) {
-      try {
+    const account = window?.__RUNTIME__.account
+    const defaultPaymentSystemByAccount = {
+      samsungbrshopeppnubank: 178, 
+      default: 125, // pix 
+    }
+    const paymentSystemId = defaultPaymentSystemByAccount[account] || defaultPaymentSystemByAccount.default
+    const availableInstallments = vtexjs.checkout.orderForm.paymentData.installmentOptions.filter(
+      payment => payment.paymentSystem === String(paymentSystemId)
+    )
 
-        const account = window?.__RUNTIME__?.account
+    if (!availableInstallments.length || hasSelectedPaymentMethod()) return
 
-        const accountPaymentMap = {
-          samsungbrshopeppnubank: 178,
-          default: 125,
-        }
-        
-        const paymentSystem = accountPaymentMap[account] || accountPaymentMap.default
+    const paymentAttachment = {
+      payments: [
+        {
+          paymentSystem: paymentSystemId,
+          installments: 1,
+          referenceValue: availableInstallments[0].value,
+        },
+      ],
+    }
 
-        const pixInstalments = orderForm.paymentData.installmentOptions.filter(
-          payment => payment.paymentSystem === String(paymentSystem)
-        )
-
-        if (!pixInstalments.length) return
-
-        const data = {
-          payments: [
-            {
-              paymentSystem: paymentSystem,
-              installments: 1,
-              referenceValue: pixInstalments[0].value,
-            },
-          ],
-        }
-
-        vtexjs.checkout.sendAttachment('paymentData', data)
-      } catch (err) {
-        console.error(`Erro ao exibir preço à vista para items no carrinho.`)
-      }
-    })
+    vtexjs.checkout.sendAttachment('paymentData', paymentAttachment)
   }
 
   orderPaymentMethodScroll(paymentMethod) {

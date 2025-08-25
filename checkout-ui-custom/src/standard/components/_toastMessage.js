@@ -81,4 +81,8 @@ export default class toastMessages {
     this._previousItemsQuantity = currentQuantity
   }
 
+  notifyMissingBirthDate() {
+    this.showToastMessage('Preencha a data de nascimento')
+  }
+
 }

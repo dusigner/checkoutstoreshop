@@ -527,6 +527,7 @@ h1#cart-title {
         &.product-image {
           order: 1;
           grid-area: image;
+          background: none;
         }
 
         &.product-name {
@@ -1294,6 +1295,9 @@ h1#cart-title {
           color: #2189FF;
         }
       }
+      .shipping-sla-selector {
+        display: none;
+      }
     }
 
     .table {
@@ -2053,6 +2057,14 @@ p.input.ship-receiverName {
 
 .ref-id {
   margin-bottom: 0;
+}
+
+.samsung-tag {
+  font-size: 11px;
+  padding: 1px 10px;
+  display: inline-block;
+  border-radius: 20px;
+  margin: 10px 0;
 }
 
 .isServices {

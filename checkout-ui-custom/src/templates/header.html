@@ -10,7 +10,7 @@
     </div>
   </header>
 
-  <p id="go-to-cart-button-custom" style="display:none" data-bind="if: !window.router.sac.isActive()">
+  <p id="go-to-cart-button-custom-onepage" style="display:none" data-bind="if: !window.router.sac.isActive()">
     <small>
       <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>
     </small>
@@ -66,7 +66,7 @@
     </div>
   </header>
   
-  <p id="go-to-cart-button-custom" style="display:none" data-bind="if: !window.router.sac.isActive()">
+  <p id="go-to-cart-button-custom-standard" style="display:none" data-bind="if: !window.router.sac.isActive()">
     <small>
       <a data-bind="attr: { href: window.checkout.cartURL() }" id="orderform-minicart-to-cart" target="_self" data-event="orderformToCart" data-i18n="global.backToCart" href="#/cart">Voltar para o carrinho</a>
     </small>
@@ -76,24 +76,6 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    fetch(
-      window.location.origin === "https://shop.samsung.com"
-        ? "/br/files/checkout6-custom.js"
-        : "/files/checkout6-custom.js",
-      {
-        referrer: "https://shop.samsung.com/",
-        referrerPolicy: "strict-origin-when-cross-origin",
-        body: null,
-        method: "GET",
-        mode: "cors",
-        credentials: "omit",
-      }
-    )
-      .then((response) => {})
-      .catch((error) => {
-        console.warn("O script pode estar bloqueado pela rede!", error);
-        window.location.href = "/";
-      });
 
     const testCode = sessionStorage.getItem("codigoTesteABCheckoutOnePage");
 

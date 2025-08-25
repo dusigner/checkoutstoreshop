@@ -1,0 +1,291 @@
+.ssg-care-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    overflow: auto;
+}
+
+.ssg-care-modal {
+    background: #fff;
+    padding: 40px;
+    max-width: 642px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.18);
+    position: relative;
+    overflow: hidden;
+    top: 160px;
+}
+
+.ssg-care-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.ssg-care-title {
+    font-size: 16px;
+    font-family: 'SamsungSharpSans';
+    font-weight: 700;
+    margin: 0;
+    line-height: 24px;
+}
+
+.ssg-care-content {
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.ssg-care-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+}
+
+.ssg-care-option {
+    border: 1.5px solid #BBBBBB;
+    border-radius: 8px;
+    padding: 16px;
+    cursor: pointer;
+    transition: border 0.2s;
+    position: relative;
+}
+
+.ssg-care-option-recomended {
+    background-color: #2189FF;
+    color: #FFF;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 0px 8px;
+    border-radius: 20px;
+    margin: 0 auto;
+}
+
+.ssg-care-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ssg-care-option--selected {
+    border: 2px solid #2189FF;
+}
+
+.ssg-care-option-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+.ssg-care-option-title {
+    font-weight: 700;
+    font-size: 14px;
+}
+.ssg-care-option-badge {
+    background: #2189FF;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 2px 8px;
+    margin-left: 0.5em;
+}
+
+.ssg-care-option-price {
+    color: #2189ff;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+.ssg-care-option-details {
+    font-size: 12px;
+    border-top: 1px solid #BBBBBB;
+    padding-top: 16px;
+    margin-top: 16px;
+}
+
+.ssg-care-option-details ul {
+    margin: 0.3em 0 0.3em 1.2em;
+    padding: 0;
+    font-size: 0.97em;
+}
+
+.ssg-care-benefit {
+    font-size: 12px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding-bottom: 26px;
+    border-bottom: 1px solid #BBBBBB;
+    margin-bottom: 16px;
+}
+
+.ssg-care-benefit img.ssg-care-benefit-image {
+    width: 46px;
+    user-select: none;
+}
+
+.ssg-care-terms {
+    font-size: 12px;
+    margin-bottom: 24px;
+}
+
+.ssg-care-terms a {
+    color: #2189ff;
+}
+
+.ssg-care-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.ssg-care-btn {
+    border: none;
+    border-radius: 50px;
+    padding: 12px 48px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+}
+
+.ssg-care-btn-cancel {
+    background: #FFF;
+    border: 1px solid;
+}
+
+.ssg-care-btn-cancel:hover {
+    background: #e5e5e5;
+}
+
+.ssg-care-btn-confirm {
+    background: #2189ff;
+    color: #fff;
+}
+
+.ssg-care-btn-confirm:hover {
+    background: #176fd1;
+}
+
+.ssg-care-btn-confirm:disabled {
+    background-color: #DDDDDD;
+    cursor: not-allowed;
+}
+
+.ssg-care-skeleton-placeholder {
+    width: 640px;
+    height: 438px;
+    border-radius: 8px;
+    background: linear-gradient(
+      90deg,
+      #eeeeee 25%,
+      #dddddd 50%,
+      #eeeeee 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.ssg-care-option-open-close-icon {
+    transition: transform 0.3s ease;
+}
+
+.ssg-care-option--selected .ssg-care-option-open-close-icon {
+    transform: rotate(-180deg);
+}
+
+@keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .ssg-care-modal {
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        max-width: 98vw;
+        margin-left: 18px;
+        margin-right: 18px;
+        max-height: 90vh;
+        overflow: auto;
+        top: 0px;
+    }
+
+    .ssg-care-title {
+        font-size: 1rem;
+    }
+    .ssg-care-option-title {
+        font-size: 0.875rem;
+    }
+
+    .ssg-care-option-recomended,
+    .ssg-care-option-price  {
+        font-size: 0.75rem;
+    }
+
+    .ssg-care-option-details b {
+        font-size: 0.875rem;
+    }
+    
+    .ssg-care-option-details ul {
+        font-size: 0.75rem;
+    }
+
+    .ssg-care-benefit {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .ssg-care-option-header {
+        display: grid;
+        grid-template-areas: 'option-icon option-title open-close-btn'
+                            '. option-price .';
+        grid-template-columns: 20px 1fr 20px;
+    }
+
+    .ssg-care-option-header.ssg-main-option {
+        grid-template-areas: 'option-icon recommended open-close-btn'
+                            'option-title option-title option-title'
+                            'option-price option-price option-price';
+        grid-template-columns: 20px 1fr 20px;
+    }
+
+    .ssg-care-option-icon {
+        grid-area: option-icon;
+    }
+
+    .ssg-care-option-recomended {
+        grid-area: recommended;
+        text-align: left;
+        margin: 0 auto 0 0;
+    }
+
+    .ssg-care-option-title {
+        grid-area: option-title;
+    }
+
+    .ssg-care-option-price {
+        grid-area: option-price;
+        text-align: left;
+        width: 100%;
+    }
+
+    .ssg-care-option-open-close-icon {
+        grid-area: open-close-btn;
+    }
+}
