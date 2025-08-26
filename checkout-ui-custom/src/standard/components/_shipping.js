@@ -491,6 +491,28 @@ export default class CustomShippingData {
       )
     }
   }
+  
+  pickupRule(orderForm) {
+    const allHavePickupInPoint = orderForm?.shippingData?.logisticsInfo?.every(item =>
+      item.deliveryChannels.some(channel => channel.id === "pickup-in-point")
+    );
+
+    if(!allHavePickupInPoint) {
+      const $pickup = $('.srp-toggle__pickup');
+      const $togglePickup = $('.srp-toggle__wrapper');
+      if ($pickup.length && $togglePickup.length) {
+        $pickup.hide();
+        $togglePickup.css('border', 'none');
+      }
+    } else {
+      const $pickup = $('.srp-toggle__pickup');
+      const $togglePickup = $('.srp-toggle__wrapper');
+      if ($pickup.length && $togglePickup.length) {
+        $pickup.show();
+        $togglePickup.css('border', '1px #dddddd solid');
+      }
+    }
+  }
 
   autoTriggerSlasResult() {
     try {

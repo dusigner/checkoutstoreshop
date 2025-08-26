@@ -88,7 +88,7 @@ function checkRootPathPlugin() {
 export default defineConfig(({}) => {
   const env = process.env.NODE_ENV
   const isProduction = env === 'production'
-
+  
   const buildState = isProduction ? 'published' : 'linked'
   const assetVisibility = isProduction ? 'public' : 'private'
 
@@ -97,6 +97,8 @@ export default defineConfig(({}) => {
       __CHECKOUT_NAME__: JSON.stringify(name),
       __CHECKOUT_VENDOR__: JSON.stringify(vendor),
       __CHECKOUT_VERSION__: JSON.stringify(version),
+      __BUILD_STATE__: JSON.stringify(buildState),
+      __VISIBILITY__: JSON.stringify(assetVisibility),
     },
     build: {
       outDir: '../public',

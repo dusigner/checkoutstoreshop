@@ -151,7 +151,7 @@ export class ServicesLinks {
   
           if (!document.getElementById('ssg-care-script')) {
             const script = document.createElement('script');
-            script.src =  `${rootPath()}/_v/private/assets/v1/linked/${__CHECKOUT_VENDOR__}.${__CHECKOUT_NAME__}@${__CHECKOUT_VERSION__}/public/scPlus/js/samsungCare.js`;
+            script.src =  `${rootPath()}/_v/${__VISIBILITY__}/assets/v1/${__BUILD_STATE__}/${__CHECKOUT_VENDOR__}.${__CHECKOUT_NAME__}@${__CHECKOUT_VERSION__}/public/scPlus/js/samsungCare.js`;
             script.id = 'ssg-care-script';
             script.type = 'module';
             script.onload = () => {
@@ -163,7 +163,7 @@ export class ServicesLinks {
             linkElement.rel = 'stylesheet';
             linkElement.type = 'text/css';
             linkElement.id = 'ssg-care-style';
-            linkElement.href =  `${rootPath()}/_v/private/assets/v1/linked/${__CHECKOUT_VENDOR__}.${__CHECKOUT_NAME__}@${__CHECKOUT_VERSION__}/public/scPlus/css/samsung-care.css`;
+            linkElement.href =  `${rootPath()}/_v/${__VISIBILITY__}/assets/v1/${__BUILD_STATE__}/${__CHECKOUT_VENDOR__}.${__CHECKOUT_NAME__}@${__CHECKOUT_VERSION__}/public/scPlus/css/samsung-care.css`;
             document.head.appendChild(linkElement);
           }else {
             _this.dispatchSsgCareEvent(skuId, serviceId);

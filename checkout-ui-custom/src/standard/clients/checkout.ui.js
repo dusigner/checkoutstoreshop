@@ -18,6 +18,7 @@ import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 import SummaryGiftCard from '../components/_summaryGiftCard'
 import RenderLoaderFallback from '../components/_renderLoaderFallback'
+import CountDown from '../components/countdown/_countdown'
 
 import {
   debounce,
@@ -66,6 +67,7 @@ export class CheckoutCustom {
     this.hideEmailStep = hideEmailStep
     this.lastOrderFormTotalPrice = 0
     this.maxInstallment = undefined
+    this.maxInstallmentSamsungCard  = undefined
     this.subTotalValueFinal = null
     this.discountPrices = null
 
@@ -91,6 +93,7 @@ export class CheckoutCustom {
     this.payment = new Payment()
     this.toastMessages = new ToastMessages()
     this.renderLoaderFallback = new RenderLoaderFallback()
+    this.countDown = new CountDown()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -1237,7 +1240,7 @@ couponInfo(response) {
           samsungbrshopeppnubank: 178,
           default: 125,
         }
-        
+
         const paymentSystem = accountPaymentMap[account] || accountPaymentMap.default
 
         const installmentPix = orderForm.paymentData.installmentOptions.find(
@@ -1248,7 +1251,12 @@ couponInfo(response) {
           paymentSystem => paymentSystem?.groupName === 'creditCardPaymentGroup'
         )
 
-        const paymentSystemId = creditCardPaymentGroup?.stringId
+        const customPrivate_501PaymentGroup = orderForm?.paymentData?.paymentSystems?.find(
+          paymentSystem => paymentSystem?.groupName === 'customPrivate_501PaymentGroup'
+        )
+
+        const creditCardPaymentSystemId = creditCardPaymentGroup?.stringId
+        const samsungCardPaymentSystemId = customPrivate_501PaymentGroup?.stringId
 
         if (!installmentPix.length) return
         const inCashPrice = installmentPix[0].total
@@ -1261,9 +1269,27 @@ couponInfo(response) {
         if (_this.lastOrderFormTotalPrice !== orderForm.value) {
           _this.lastOrderFormTotalPrice = orderForm.value
 
-          if (paymentSystemId) {
-            _this.maxInstallment = await getMaxInstallmentByPaymentSystem(paymentSystemId)
+          const installmentsPromises = []
+
+          if (creditCardPaymentSystemId) {
+            installmentsPromises.push(
+              getMaxInstallmentByPaymentSystem(creditCardPaymentSystemId)
+            );
           }
+
+          if (samsungCardPaymentSystemId) {
+            installmentsPromises.push(
+              getMaxInstallmentByPaymentSystem(samsungCardPaymentSystemId)
+            );
+          }
+
+          const [
+            creditCardInstallments,
+            samsungCardInstallments
+          ] = await Promise.allSettled(installmentsPromises);
+
+          _this.maxInstallment = creditCardInstallments?.value
+          _this.maxInstallmentSamsungCard = samsungCardInstallments?.value
         }
 
         const _component =
@@ -1276,13 +1302,23 @@ couponInfo(response) {
                 </p>
             </div>
           ${(_this.maxInstallment?.count > 1 && _this.maxInstallment?.total > 0) ? (
-            `<div class="discount-price" style="text-align: right; font-size: 14px; margin-top: 10px; display: flex; justify-content: space-between;">
-                <p>Ou <strong>${formatCurrencyBRL(_this.maxInstallment.total)}</strong> parcelado em até <strong>${_this.maxInstallment.count}x</strong>
-                  <span class="custom-tooltip">i</span>
+            `<div class="discount-price" style="text-align: left; font-size: 14px; margin-top: 10px;">
+                <p style="margin-bottom: 0;">
+                  <strong>${formatCurrencyBRL(_this.maxInstallment.total)}</strong> em até <strong>${_this.maxInstallment.count}x sem juros</strong>
+                  ${!_this.maxInstallmentSamsungCard?.total ? (
+                  `<span class="custom-tooltip">i</span>`
+                ) : ''}
                 </p>
+
+                ${(_this.maxInstallmentSamsungCard?.count > 1) ? (
+                  `<p>
+                      ou <strong>${_this.maxInstallmentSamsungCard.count}x sem juros</strong> com o Cartão Samsung 
+                      <span class="custom-tooltip">i</span>
+                    </p>`
+                ) : ''}
               </div>
             </div>`
-          ) : '<div style="margin-top: 10px; height: 27px" />'}`
+          ) : '<div style="margin-top: 10px; height: 54px" />'}`
 
         if (_trElem.find('.cart-total').length === 0) {
           _trElem.prepend(_component)
@@ -1322,6 +1358,10 @@ couponInfo(response) {
     this.enchancementProductCart(orderForm)
     this.shippingColor(orderForm)
     this.toastMessages.notifyItemRemovalFromCart(orderForm)
+
+    if (window.location.hash === '#/cart') {
+      this.shipping.pickupRule(orderForm)
+    }
 
     if (window.location.hash === '#/payment') {
       this.showMessageNubankPayment(orderForm)
@@ -1856,6 +1896,8 @@ couponInfo(response) {
 
         // #profile
         _this.profile.bindEvents()
+
+        _this.countDown.init()
       })
 
       $(window).on('checkoutRequestBegin.vtex', function (event, request) {
