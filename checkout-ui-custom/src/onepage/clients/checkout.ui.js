@@ -1342,7 +1342,7 @@ export class CheckoutCustom {
 
                 ${(_this.maxInstallmentSamsungCard?.count > 1) ? (
                   `<p>
-                      ou <strong>${_this.maxInstallmentSamsungCard.count}x sem juros</strong> com o Cartão Samsung 
+                      ou <strong>${_this.maxInstallmentSamsungCard.count}x sem juros</strong> com o <strong>Cartão Samsung</strong> 
                       <span class="custom-tooltip">i</span>
                     </p>`
                 ) : ''}

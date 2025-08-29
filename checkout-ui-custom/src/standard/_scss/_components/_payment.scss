@@ -152,6 +152,25 @@ svg.vtex-omnishipping-1-x-svg {
 	}
 
 	#payment-data {
+    #payment-group-creditCardPaymentGroup {
+      span.payment-group-item-text {
+        min-height: 50px;
+        font-size: 0 !important;
+      
+        &::before {
+          content: "Pagar com 1 ou 2 cartões de crédito";
+          color: rgb(0, 0, 0);
+          font-size: 12px !important;
+          padding: 8px 5px 8px 0px;
+        }
+
+        @media screen and (max-width: 360px) {
+          min-height: 67px;
+          max-width: 174px;
+        }
+      }
+    }
+
 		#payment-group-MercadoCreditoPaymentGroup {
 			background: url(https://samsungbrshop.vteximg.com.br/arquivos/mercado-credito.png) !important;
 			background-repeat: no-repeat !important;
@@ -252,7 +271,7 @@ svg.vtex-omnishipping-1-x-svg {
     border: 1px solid #DDDDDD;
     border-radius: 10px;
     margin-right: 2px;
-    min-width: 240px;
+    min-width: 260px;
     min-height: 48px;
     cursor: pointer;
 
