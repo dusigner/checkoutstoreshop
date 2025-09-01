@@ -19,6 +19,7 @@ import { rootPath } from '../components/utils/_rootPath'
 import SummaryGiftCard from '../components/_summaryGiftCard'
 import RenderLoaderFallback from '../components/_renderLoaderFallback'
 import CountDown from '../components/countdown/_countdown'
+import fixProfileForm from '../components/_fixProfileData'
 
 import {
   debounce,
@@ -1350,6 +1351,7 @@ couponInfo(response) {
   }
 
   async update(orderForm) {
+    fixProfileForm()
     const _this = this
     this.setItemsCount(orderForm?.items ?? [])
     this.checkEmpty(orderForm.items)

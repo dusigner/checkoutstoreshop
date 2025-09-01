@@ -598,7 +598,7 @@ svg.vtex-omnishipping-1-x-svg {
   &.active {
     #payments-title {
       &::after {
-        content: "Selecione o método de pagamento";
+        content: "Selecione o método de pagamento. Para compras com cartão de crédito é necessário que tenha o limite total disponível.";
         display: block;
         font-size: 16px;
         font-weight: 700;
@@ -2319,43 +2319,43 @@ svg.vtex-omnishipping-1-x-svg {
     }
 	
 		// To sort the PaymentGroup positions, just change the order
-		$PaymentGroups: (
-	    // PIX
-			'#payment-group-instantPaymentPaymentGroup',
-	    '.payment-method-order-1',
-			// Normal Credit Card
-			'#payment-group-creditCardPaymentGroup',
-	    '.payment-method-order-2',
-			// MERCADO PAGO
-			'#payment-group-MercadoPagoProPaymentGroup',
-	    '.payment-method-order-3',
-			// Nubank
-			'#payment-group-NubankPaymentGroup',
-	    '.payment-method-order-4',
-			// SSG Itaucard
-			'#payment-group-customPrivate_501PaymentGroup',
-	    '.payment-method-order-5',
-			// Boleto
-			'#payment-group-bankInvoicePaymentGroup',
-	    '.payment-method-order-6',
-			// SSG pay
-			'#payment-group-SamsungPayPaymentGroup',
-	    '.payment-method-order-7',
-			// Ame
-			'#payment-group-AmeDigitalPaymentGroup',
-	    '.payment-method-order-8',
-	    // PicPay
-			'#payment-group-picPayPaymentGroup',
-	    '.payment-method-order-9',
-		);
+	// 	$PaymentGroups: (
+	//     // PIX
+	// 		'#payment-group-instantPaymentPaymentGroup',
+	//     '.payment-method-order-1',
+	// 		// Normal Credit Card
+	// 		'#payment-group-creditCardPaymentGroup',
+	//     '.payment-method-order-2',
+	// 		// MERCADO PAGO
+	// 		'#payment-group-MercadoPagoProPaymentGroup',
+	//     '.payment-method-order-3',
+	// 		// Nubank
+	// 		'#payment-group-NubankPaymentGroup',
+	//     '.payment-method-order-4',
+	// 		// SSG Itaucard
+	// 		'#payment-group-customPrivate_501PaymentGroup',
+	//     '.payment-method-order-5',
+	// 		// Boleto
+	// 		'#payment-group-bankInvoicePaymentGroup',
+	//     '.payment-method-order-6',
+	// 		// SSG pay
+	// 		'#payment-group-SamsungPayPaymentGroup',
+	//     '.payment-method-order-7',
+	// 		// Ame
+	// 		'#payment-group-AmeDigitalPaymentGroup',
+	//     '.payment-method-order-8',
+	//     // PicPay
+	// 		'#payment-group-picPayPaymentGroup',
+	//     '.payment-method-order-9',
+	// 	);
 	
-	@for $i from 1 through length($PaymentGroups) {
-		$button: nth($PaymentGroups, $i);
+	// @for $i from 1 through length($PaymentGroups) {
+	// 	$button: nth($PaymentGroups, $i);
 	
-		#{$button} {
-			order: $i;
-		}
-	}
+	// 	#{$button} {
+	// 		order: $i;
+	// 	}
+	// }
 	
 	a {
 		order: 20;

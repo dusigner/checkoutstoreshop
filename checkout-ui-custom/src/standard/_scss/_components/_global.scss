@@ -22,6 +22,10 @@ body {
     }
   }
 
+  .cc-toolbar {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     padding-bottom: 0px !important;
   }

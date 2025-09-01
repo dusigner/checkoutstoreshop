@@ -607,7 +607,7 @@ svg.vtex-omnishipping-1-x-svg {
   &.active {
     #payments-title {
       &::after {
-        content: "Selecione o método de pagamento";
+        content: "Selecione o método de pagamento. Para compras com cartão de crédito é necessário que tenha o limite total disponível.";
         display: block;
         font-size: 12px;
         line-height: 18px;
@@ -2332,14 +2332,19 @@ svg.vtex-omnishipping-1-x-svg {
 		$PaymentGroups: (
 	// PIX
 			'#payment-group-instantPaymentPaymentGroup',
+      '.payment-method-order-1',
 			// Normal Credit Card
 			'#payment-group-creditCardPaymentGroup',
+      '.payment-method-order-2',
 			// MERCADO PAGO
 			'#payment-group-MercadoPagoProPaymentGroup',
+      '.payment-method-order-5',
 			// Nubank
 			'#payment-group-NubankPaymentGroup',
+      '.payment-method-order-3',
 			// SSG Itaucard
 			'#payment-group-customPrivate_501PaymentGroup',
+      '.payment-method-order-4',
 			// Boleto
 			'#payment-group-bankInvoicePaymentGroup',
 			// SSG pay

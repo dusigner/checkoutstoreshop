@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 const version = '0.3.273';
 const buildState = 'published'; // 'linked' ou 'published'
 const assetVisibility = 'public'; // 'private' ou 'public'
+=======
+const version = '0.3.270';
+const buildState = 'linked'; // 'linked' ou 'published'
+const assetVisibility = 'private'; // 'private' ou 'public'
+>>>>>>> 87db77eb9d0755d7b850852df35484b1dd5004ce
 
 const hostname = window.location.hostname;
 const pathname = window.location.pathname;

@@ -181,7 +181,7 @@ export default class Payment {
   }
 
   orderPaymentMethodScroll(paymentMethod) {
-    let headerHeight = $(".main-header").outerHeight() || 0;
+    let headerHeight = $("#header-onepage .main-header").outerHeight() || 0;
   
     requestAnimationFrame(() => {
       const offsetTop = paymentMethod.offset().top;
