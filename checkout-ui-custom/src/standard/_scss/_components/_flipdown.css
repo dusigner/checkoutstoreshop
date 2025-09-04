@@ -11,21 +11,21 @@
   color: #000000;
 }
 /* Delimeters */
-.flipdown.flipdown__theme-dark .rotor-group:nth-child(-n+2):before,
-.flipdown.flipdown__theme-dark .rotor-group:nth-child(-n+2):after {
+.flipdown.flipdown__theme-dark .rotor-group:nth-child(-n + 2):before,
+.flipdown.flipdown__theme-dark .rotor-group:nth-child(-n + 2):after {
   background-color: #151515;
 }
 /* Rotor tops */
 .flipdown.flipdown__theme-dark .rotor,
 .flipdown.flipdown__theme-dark .rotor-top,
 .flipdown.flipdown__theme-dark .rotor-leaf-front {
-  color: #FFFFFF;
+  color: #ffffff;
   background-color: #151515;
 }
 /* Rotor bottoms */
 .flipdown.flipdown__theme-dark .rotor-bottom,
 .flipdown.flipdown__theme-dark .rotor-leaf-rear {
-  color: #EFEFEF;
+  color: #efefef;
   background-color: #202020;
 }
 /* Hinge */
@@ -41,25 +41,25 @@
 }
 /* Rotor group headings */
 .flipdown.flipdown__theme-light .rotor-group-heading:before {
-  color: #EEEEEE;
+  color: #eeeeee;
 }
 /* Delimeters */
-.flipdown.flipdown__theme-light .rotor-group:nth-child(-n+2):before,
-.flipdown.flipdown__theme-light .rotor-group:nth-child(-n+2):after {
-  background-color: #DDDDDD;
+.flipdown.flipdown__theme-light .rotor-group:nth-child(-n + 2):before,
+.flipdown.flipdown__theme-light .rotor-group:nth-child(-n + 2):after {
+  background-color: #dddddd;
 }
 /* Rotor tops */
 .flipdown.flipdown__theme-light .rotor,
 .flipdown.flipdown__theme-light .rotor-top,
 .flipdown.flipdown__theme-light .rotor-leaf-front {
   color: #222222;
-  background-color: #DDDDDD;
+  background-color: #dddddd;
 }
 /* Rotor bottoms */
 .flipdown.flipdown__theme-light .rotor-bottom,
 .flipdown.flipdown__theme-light .rotor-leaf-rear {
   color: #333333;
-  background-color: #EEEEEE;
+  background-color: #eeeeee;
 }
 /* Hinge */
 .flipdown.flipdown__theme-light .rotor:after {
@@ -107,7 +107,7 @@
   content: attr(data-before);
 }
 
-.flipdown .rotor-group:nth-child(-n+2):before {
+.flipdown .rotor-group:nth-child(-n + 2):before {
   content: '';
   position: absolute;
   bottom: 20px;
@@ -117,7 +117,7 @@
   border-radius: 50%;
 }
 
-.flipdown .rotor-group:nth-child(-n+2):after {
+.flipdown .rotor-group:nth-child(-n + 2):after {
   content: '';
   position: absolute;
   bottom: 50px;
@@ -211,7 +211,6 @@
 }
 
 @media (max-width: 550px) {
-
   .flipdown {
     width: 312px;
     height: 70px;
@@ -246,18 +245,18 @@
     line-height: 20px;
   }
 
-  .flipdown .rotor-group:nth-child(-n+2):before,
-  .flipdown .rotor-group:nth-child(-n+2):after {
+  .flipdown .rotor-group:nth-child(-n + 2):before,
+  .flipdown .rotor-group:nth-child(-n + 2):after {
     left: 69px;
   }
 
-  .flipdown .rotor-group:nth-child(-n+2):before {
+  .flipdown .rotor-group:nth-child(-n + 2):before {
     bottom: 13px;
     height: 8px;
     width: 8px;
   }
 
-  .flipdown .rotor-group:nth-child(-n+2):after {
+  .flipdown .rotor-group:nth-child(-n + 2):after {
     bottom: 29px;
     height: 8px;
     width: 8px;
@@ -282,162 +281,246 @@
   }
 }
 
-
 /*CUSTOM*/
 
 section#samsungCountdown {
-    background: #2189FF;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: sticky;
-    min-height: 80px;
-    height: auto;
-    margin-bottom: 5px;
+  background: #2189ff;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  min-height: 56px;
+  height: auto;
+  margin-bottom: 5px;
 }
 
 .samsungCountdownContent {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+}
+.samsungCountdownTextContent {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
 }
 
 .samsungCountdownText {
-    font-size: 25px !important;
-    font-weight: 700;
-    color: #fff;
-    font-family: 'SamsungSharpSans';
-    margin-bottom: 0px;
+  font-size: 20px !important;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'SamsungSharpSans';
+  margin-bottom: 0px;
 }
 
 .samsungCountdownTimer {
-    display: flex;
-    align-items: self-end;
-    margin-left: 20px;
+  display: flex;
+  align-items: self-end;
+  margin-left: 20px;
 }
 
-p.samsungCountdownLegend {
-    color: #fff;
-    font-family: 'SamsungOne';
-    font-size: 16px;
-    font-weight: 700;
-    width: 100px;
-    text-align: right;
-    margin-right: 20px;
-    margin-bottom: 0px;
+.samsungCountdownLegend {
+  color: #fff;
+  font-family: SamsungOne;
+  font-size: 14px;
+  font-weight: 700;
+  display: block;
+  margin: 0;
+  min-width: 140px;
+  text-align: right;
 }
 
-.flipdown.flipdown__theme-dark .rotor-group:nth-child(-n+2):after,
-.flipdown.flipdown__theme-dark .rotor-group:nth-child(-n+2):before{
-    background: transparent
+.flipdown.flipdown__theme-dark .rotor-group:nth-child(-n + 2):after,
+.flipdown.flipdown__theme-dark .rotor-group:nth-child(-n + 2):before {
+  background: transparent;
 }
 
-.flipdown.flipdown__theme-dark .rotor, .flipdown.flipdown__theme-dark .rotor-top, .flipdown.flipdown__theme-dark .rotor-leaf-front {
-    background: #0039D6;
+.flipdown.flipdown__theme-dark .rotor,
+.flipdown.flipdown__theme-dark .rotor-top,
+.flipdown.flipdown__theme-dark .rotor-leaf-front {
+  background: #0039d6;
 }
 
-.flipdown.flipdown__theme-dark .rotor-bottom, .flipdown.flipdown__theme-dark .rotor-leaf-rear {
-    background: #0039D6;
+.flipdown.flipdown__theme-dark .rotor-bottom,
+.flipdown.flipdown__theme-dark .rotor-leaf-rear {
+  background: #0039d6;
 }
-.flipdown.flipdown__theme-dark .rotor-group-heading:before{
+.flipdown.flipdown__theme-dark .rotor-group-heading:before {
   color: #fff;
 }
-.flipdown{
+.flipdown {
   width: auto;
   height: auto;
-  top: -3px;
+  top: -5px;
   position: relative;
 }
 
 /*CUSTOM SIZE*/
 
 .flipdown .rotor-group {
-    padding-right: 15px;
+  padding-right: 15px;
 }
-.flipdown .rotor{
-    width: 20px;
-    height: 50px;
-    margin: 0;
-    border-radius: 0px;
-    font-size: 1.7rem;
+.flipdown .rotor {
+  width: 20px;
+  height: 40px;
+  margin: 0;
+  border-radius: 0px;
+  font-size: 1.7rem;
 }
 
 .flipdown .rotor-leaf {
-    width: 25px;
-    height: 50px;
+  width: 25px;
+  height: 40px;
 }
 
-
-
-.flipdown .rotor-leaf-front, .flipdown .rotor-leaf-rear {
-    width: 25px;
-    height: 25px;
+.flipdown .rotor-leaf-front,
+.flipdown .rotor-leaf-rear {
+  width: 25px;
+  height: 20px;
+  border-radius: 0px;
 }
 
 .flipdown .rotor-leaf-front {
-    line-height: 50px;
+  line-height: 40px;
+  border-radius: 0px;
 }
 
 .flipdown .rotor-top {
-    line-height: 50px;
+  line-height: 40px;
 }
-.flipdown .rotor-top, .flipdown .rotor-bottom {
-    width: 25px;
-    height: 25px;
+.flipdown .rotor-top,
+.flipdown .rotor-bottom {
+  width: 25px;
+  height: 20px;
+  border-radius: 0px;
 }
 
 .fliipdown .rotor-bottom {
-    line-height: 0px;
+  line-height: 0px;
 }
 
 .flipdown .rotor:after {
-    width: 25px;
-    height: 25px;
+  width: 25px;
+  height: 20px;
 }
 
 .flipdown.flipdown__theme-dark .rotor-group-heading:before {
-    font-size: .5rem;
-    line-height: 15px;
-    font-weight: 100;
-    letter-spacing: 1px;
-    display: block;
-    width: 45px;
+  font-size: 0.5rem;
+  line-height: 15px;
+  font-weight: 100;
+  letter-spacing: 1px;
+  display: block;
+  width: 45px;
 }
 
-@media only screen and (max-width:800px){
+.samsungCountdownText {
+  display: block;
+}
+
+@media only screen and (max-width: 800px) {
+  .samsungCountdownTextContent {
+    flex-direction: column;
+    width: auto;
+    margin-right: 30px;
+  }
 
   section#samsungCountdown {
     margin-bottom: 20px;
   }
-  
+
   .samsungCountdownContent {
-      flex-direction: column;
-      margin-top: 20px;
-      margin-bottom: 20px;
+    flex-direction: row;
   }
   .samsungCountdownText {
-    margin-bottom: 20px !important;
-    font-size: 22px !important;
-    text-align: center;
+    font-size: 15px !important;
+    text-align: right;
   }
   .samsungCountdownTimer {
     align-items: flex-end;
     margin-left: 0;
-    width: 100%;
+    width: auto;
     justify-content: center;
-}
-
-}
-
-@media only screen and (max-width:400px){
-  
-  .samsungCountdownText {
-    font-size: 18px !important;
   }
 
+  .flipdown .rotor-group {
+    padding-right: 10px;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .samsungCountdownTextContent {
+    margin-right: 15px;
+  }
+
+  .samsungCountdownText,
+  .samsungCountdownLegend {
+    font-size: 11px !important;
+    line-height: normal;
+    font-weight: normal;
+  }
+
+
+  .flipdown .rotor {
+    width: 20px;
+    height: 35px;
+    margin: 0;
+    border-radius: 0px;
+    font-size: 1.5rem;
+  }
+
+  .flipdown .rotor-leaf {
+    width: 25px;
+    height: 35px;
+  }
+
+  .flipdown .rotor-leaf-front,
+  .flipdown .rotor-leaf-rear {
+    width: 25px;
+    height: 17.5px;
+  }
+
+  .flipdown .rotor-leaf-front {
+    line-height: 35px;
+  }
+
+  .flipdown .rotor-top {
+    line-height: 35px;
+  }
+  .flipdown .rotor-top,
+  .flipdown .rotor-bottom {
+    width: 25px;
+    height: 17.5px;
+  }
+
+  .fliipdown .rotor-bottom {
+    line-height: 0px;
+  }
+
+  .flipdown .rotor:after {
+    width: 25px;
+    height: 17.5px;
+  }
+  .flipdown .rotor-group {
+    padding-right: 8px;
+  }
+}
+
+
+@media only screen and (max-width: 360px) {
+  .samsungCountdownText,
+  .samsungCountdownLegend {
+    font-size: 9px !important;
+    line-height: normal;
+    font-weight: normal;
+  }
+
+  .flipdown .rotor {
+    font-size: 1.2rem;
+  }
 }

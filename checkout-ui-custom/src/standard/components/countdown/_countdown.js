@@ -42,9 +42,11 @@ export default class CountDown {
       const countdownHTML = `
         <section class="samsungCountdown" id="samsungCountdown">
           <div class="samsungCountdownContent">
-            <p class="samsungCountdownText">${this.data.text}</p>
-            <div class="samsungCountdownTimer">
+            <div class="samsungCountdownTextContent">
+              <p class="samsungCountdownText">${this.data.text}</p>
               <p class="samsungCountdownLegend">Garanta agora em:</p>
+            </div>
+            <div class="samsungCountdownTimer">
               <div id="flipdown" class="flipdown"></div>
             </div>
           </div>

@@ -2066,6 +2066,9 @@ svg.vtex-omnishipping-1-x-svg {
 		color: #000;
 		font-size: 12px;
 		font-weight: bold;
+    &::after {
+      content: '*';
+    }
 	}
 
 	.AddressForm {
