@@ -1353,6 +1353,9 @@ couponInfo(response) {
   async update(orderForm) {
     fixProfileForm()
     const _this = this
+
+    this.payment.setNubankWarningMessage(orderForm)
+    this.payment.setNubankIFrameInstallments(orderForm)
     this.setItemsCount(orderForm?.items ?? [])
     this.checkEmpty(orderForm.items)
     this.addAssemblies(orderForm)

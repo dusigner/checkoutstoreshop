@@ -6,16 +6,15 @@ export default class Payment {
 
   constructor() {
     this.paymentGroups = []
+    this.nubank = {
+      maxInstallments: 12,
+      bins: ['550209', '516292', '520048', '512626', '516230', '522688'],
+    }
   }
 
   loading(state = false) {
-    const $context = $('.payment-group-list-btn')
-
-    if (state === true) {
-      return $context.removeClass('has-btn-installments')
-    } else {
-      return $context.addClass('has-btn-installments')
-    }
+    $('.payment-group-list-btn')
+      .toggleClass('has-btn-installments', !state)
   }
 
   async getPaymentGroups(orderForm) {
@@ -133,9 +132,95 @@ export default class Payment {
     }))
   }
 
+  setNubankIFrameInstallments(orderForm) {
+    try {
+      const NubankPaymentGroup = 
+        window?.paymentData?.paymentGroups?.NubankPaymentGroup
+
+      if (!NubankPaymentGroup) {
+        return
+      }
+
+      const creditCardPaymentGroup = 
+        window?.paymentData?.paymentGroups?.creditCardPaymentGroup
+
+      const { payments = [], installmentOptions = [] } = orderForm?.paymentData ?? {}
+
+      for (const payment of payments) {
+        const bin = payment?.bin?.substr(0, 6)
+
+        if (!this.nubank.bins.includes(bin)) {
+          continue
+        }
+
+        for (const installmentOption of installmentOptions) {
+          if (
+            payment.paymentSystem == installmentOption.paymentSystem &&
+            payment.bin === installmentOption.bin &&
+            payment.value == installmentOption.value
+          ) {
+            installmentOption.installments = installmentOption.installments?.filter(
+              (_, index) => index + 1 <= this.nubank.maxInstallments
+            )
+
+            creditCardPaymentGroup?.iFrameSendInstallmentsPreview?.(installmentOption)
+          }
+        }
+      }
+      
+    } catch (error) {
+      console.error('error ~ setNubankIFrameInstallments: ', error);
+    }
+  }
+
+  getNubankWarningTemplate() {
+    return `
+      <div class="nubankWarningTemplate" style="display: none;">
+        <p>
+          Para cartões Nubank com parcelamento a partir de <strong>${this.nubank.maxInstallments + 1}x</strong>, 
+          selecione o método de pagamento <strong>"Nubank"</strong>. Consulte condições.
+        </p>
+      </div>
+    `
+  }
+
+  setNubankWarningMessage(orderForm) {
+    try {
+      const NubankPaymentGroup = 
+        window?.paymentData?.paymentGroups?.NubankPaymentGroup
+
+      if (!NubankPaymentGroup) {
+        return
+      }
+
+      const $iframeContext = $('#iframe-placeholder-creditCardPaymentGroup')
+
+      const { paymentData } = orderForm ?? {}
+      const { payments = [] } = paymentData ?? {}
+
+      const isNubankCreditCard = payments.some(payment => (
+        this.nubank.bins.includes(payment.bin?.substr(0, 6))
+      ))
+
+      const $hasNubankWarningTemplate = $iframeContext
+        .toggleClass('nubankCreditCard', isNubankCreditCard)
+        .find('.nubankWarningTemplate').length > 0
+
+      if (isNubankCreditCard && !$hasNubankWarningTemplate) {
+        $iframeContext.prepend(
+          this.getNubankWarningTemplate()
+        )
+      }
+    } catch (error) {
+      console.error('error ~ setNubankWarningMessage: ', error);
+    }
+  }
+
   sync(orderForm) {
     try {
       this.addInstallmentsInPaymentGroups(orderForm)
+      this.setNubankWarningMessage(orderForm)
+      this.setNubankIFrameInstallments(orderForm)
     } catch (err) {
       console.error(`Error in class Payment: ${err}`);
       this.loading(false)
