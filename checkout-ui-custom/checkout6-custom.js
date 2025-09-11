@@ -1,4 +1,4 @@
-const version = '0.3.275';
+const version = '0.3.279';
 const buildState = 'published'; // 'linked' ou 'published'
 const assetVisibility = 'public'; // 'private' ou 'public'
 

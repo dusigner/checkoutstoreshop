@@ -1889,6 +1889,13 @@ svg.vtex-omnishipping-1-x-svg {
 	min-height: 100vh;
 	background: #FFF;
 
+  .card-flag{
+    opacity: .2;
+
+    &.card-selected {
+      opacity: 1;
+    }
+  }
 
 	input[type=text],
 	input[type=tel],
@@ -1954,6 +1961,9 @@ svg.vtex-omnishipping-1-x-svg {
 			height: 20px;
 			line-height: 17px;
 		}
+
+    
+
 	}
 
 	.FormFieldLabel {
@@ -1964,6 +1974,21 @@ svg.vtex-omnishipping-1-x-svg {
 		p {
       display: flex;
       flex-wrap: wrap;
+    }
+
+    .card-flags {
+      margin-top: 7px;
+      
+      .radio {
+        .card-flag-radio[type="radio"] {
+          display: none;
+        }
+      }
+    }
+
+    .card-flag-label {
+      pointer-events: none;
+      user-select: none;
     }
 
 		.card-flag-label[title="Visa"] { order: 1; }
