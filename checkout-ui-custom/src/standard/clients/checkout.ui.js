@@ -2010,6 +2010,7 @@ couponInfo(response) {
           _this.defaultPaymentMethod()
           _this.payment.orderPaymentMethod()
           _this.payment.setPendingPaymentInLocalStorage()
+          _this.payment.clearInputsChangeMethod()
           if (_this.orderForm) {
             _this.defaultGiftCard(_this.orderForm)
             _this.verifyCSP(_this.orderForm)
@@ -2226,6 +2227,7 @@ couponInfo(response) {
           _this.defaultPaymentMethod()
           _this.payment.orderPaymentMethod()
           _this.payment.setPendingPaymentInLocalStorage()
+          _this.payment.clearInputsChangeMethod()
         }
 
         // #shipping

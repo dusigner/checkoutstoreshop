@@ -63,6 +63,8 @@ export default class Payment {
       text = hasDicount
         ? `Desconto no pagamento à vista`
         : `Pagamento à vista`
+    } else if (groupName === 'NubankPaymentGroup') {
+      text = `Parcele em até 24x. Consulte condições`
     } else {
       text = 'Consulte as condições'
     }
@@ -261,5 +263,37 @@ export default class Payment {
   
     const summaryHeight = summary.offsetHeight
     paymentData.style.marginTop = `${summaryHeight + 34}px`
+  }
+
+  clearInputsChangeMethod() {
+
+    const PAYMENT_IFRAMES = {
+      'creditCardPaymentGroup': 'iframe-placeholder-creditCardPaymentGroup',
+      'customPrivate_501PaymentGroup': 'iframe-placeholder-customPrivate_501PaymentGroup',
+    };
+
+    function reloadIframe(wrapperId) {
+      const $iframe = $(`#${wrapperId} iframe`);
+      if ($iframe.length === 0) {
+        return;
+      }
+
+      const src = $iframe.attr('src');
+      const newSrc = src.replace(
+        /(&?_cleartime=\d+)?$/,
+        (src.includes('?') ? '&' : '?') + '_cleartime=' + Date.now()
+      );
+      $iframe.attr('src', newSrc);
+    }
+
+    $(document).on('click', '.payment-group-item', function () {
+      const id = $(this).attr('id');
+      const groupKey = id?.replace('payment-group-', '');
+
+      const wrapperId = PAYMENT_IFRAMES[groupKey];
+      if (wrapperId) {
+        setTimeout(() => reloadIframe(wrapperId), 100);
+      }
+    });
   }
 }
