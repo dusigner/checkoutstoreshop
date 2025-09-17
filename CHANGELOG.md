@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.282] - 2025-09-16 [EENGS-5120](https://jira.sdslasupport.com/jira/browse/EENGS-5120)
+
+### Fixed
+- Changed Samsung Pay icon for optimized image
+- Updated image storage server for payment icons
+
 ## [0.3.266] - 2025-08-12 [EENGS-4951](https://jira.sdslasupport.com/jira/browse/EENGS-4951)
 
 ### Added
