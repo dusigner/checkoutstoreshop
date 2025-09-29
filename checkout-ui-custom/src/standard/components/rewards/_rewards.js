@@ -178,10 +178,10 @@ import {
           giftRewards[0].value > 0
         ) {
           $('.switch-rewards input')[0].checked = true
-          $('.text-switch-rewards').text('Utilizar os pontos nesta compra')
+          $('.text-switch-rewards').text('Você está utilizando seus pontos nessa compra. Essa transição poderá utilizar todos os seus pontos.')
           $('#group-all-rewards').show()
         } else {
-          $('.text-switch-rewards').text('Não utilizar os meus pontos nessa compra')
+          $('.text-switch-rewards').text('Clique para utilizar seus pontos nessa compra. Essa transição poderá utilizar todos os seus pontos.')
         }
       }
   
@@ -191,11 +191,11 @@ import {
         $('.switch-rewards input').prop('disabled', true)
   
         if (inputChecked) {
-          $('.text-switch-rewards').text('Utilizar os pontos nesta compra')
+          $('.text-switch-rewards').text('Você está utilizando seus pontos nessa compra. Essa transição poderá utilizar todos os seus pontos.')
           this.setRewardsDiscount()
         } else {
           $('.text-switch-rewards').text(
-            'Não utilizar os meus pontos nessa compra'
+            'Clique para utilizar seus pontos nessa compra. Essa transição poderá utilizar todos os seus pontos.'
           )
           this.cancelRewardsDiscount()
         }

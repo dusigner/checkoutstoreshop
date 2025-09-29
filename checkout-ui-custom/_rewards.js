@@ -129,10 +129,55 @@ exports.createLayoutMessageObs = createLayoutMessageObs;
 exports.createLayoutRewardsTotalDiscount = createLayoutRewardsTotalDiscount;
 var _require = require('../_utils'),
   formatNumberBRL = _require.formatNumberBRL;
-function createLayoutGroupCalcRewards(_ref) {
-  var totalPointsUser = _ref.totalPointsUser;
-  return "\n  <div id=\"group-all-rewards\" style=\"display: none; grid-area: rewards-calc\">\n        <div\n          id=\"group-calc-rewards\"\n          style=\"width: auto; margin: 15px 0; padding: 25px 15px 10px 20px; background: #F5F7FE; font-family: SamsungOne; color: #000; font-size: 14px; font-weight: 400; border-radius: 12px;\"\n        >\n          <div\n            id=\"calc-header-rewards\"\n            style=\"display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #d6d6d6; padding-bottom: 15px\"\n          >\n            <span\n              id=\"calc-header-title\"\n              style=\"margin-right: 0.5vw; font-size: 20px; font-weight: 700\"\n            >\n              Samsung Rewards:\n            </span>\n            <span\n              id=\"calc-header-points\"\n              style=\" color: #006BEA; font-size: 20px; font-weight: 700;\"\n            >\n              Voc\xEA tem ".concat(formatNumberBRL(totalPointsUser), " pontos\n            </span>\n          </div>\n          <div\n            id=\"calc-content-rewards\"\n            style=\"margin-top: 10px\"\n          >\n            <div\n              id=\"calc-content-first-column\"\n              style=\"display: grid; grid-template-columns: 1fr;\"\n            >\n            <div class=\"container-switch-rewards\">\n              <label class=\"switch-rewards\">\n                <input type=\"checkbox\">\n                <span class=\"slider\"></span>\n              </label>\n              <span class=\"text-switch-rewards\"></span>\n            </div>\n            <p style=\"color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;\">\n              Troque seus pontos por at\xE9 50% de desconto. *Essa transa\xE7\xE3o poder\xE1 utilizar todos os seus pontos.\n            </p>\n            </div>\n          </div>\n        </div>\n      </div>\n    ");
+function createLayoutGroupCalcRewards({ totalPointsUser }) {
+  return `
+  <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">
+    <div
+      id="group-calc-rewards"
+      style="width: auto; margin: 15px 0; padding: 25px 15px 10px 20px; background: #F5F7FE; font-family: SamsungOne; color: #000; font-size: 14px; font-weight: 400; border-radius: 12px;"
+    >
+      <div
+        id="calc-header-rewards"
+        style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #d6d6d6; padding-bottom: 15px"
+      >
+        <span
+          id="calc-header-title"
+          style="margin-right: 0.5vw; font-size: 20px; font-weight: 700"
+        >
+          Samsung Rewards: troque seus pontos por até 50% de desconto.
+        </span>
+        <span
+          id="calc-header-points"
+          style="color: #006BEA; font-size: 20px; font-weight: 700;"
+        >
+          Você tem ${formatNumberBRL(totalPointsUser)} pontos
+        </span>
+      </div>
+      <div
+        id="calc-content-rewards"
+        style="margin-top: 10px"
+      >
+        <div
+          id="calc-content-first-column"
+          style="display: grid; grid-template-columns: 1fr;"
+        >
+          <div class="container-switch-rewards">
+            <label class="switch-rewards">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+            <span class="text-switch-rewards"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
+      O desconto de pagamento à vista não é cumulativo com vale-presente, voucher e pontos Samsung Rewards
+    </p>
+  </div>
+  `;
 }
+
 function createLayoutElementTotalPoints(_ref2) {
   var totalPointsCurrentOrder = _ref2.totalPointsCurrentOrder;
   var _component = "\n        <tbody id=\"total-details-rewards\" style=\"border-top: 1px solid #cbcbcb;\">\n          <tr style=\"display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;\">\n            <td id=\"td-text-rewards-total\" style=\"font-size: 14px; color: #000; font-weight: 400\">\n              Pontos Rewards gerados para sua pr\xF3xima compra*\n            </td>\n            <td id=\"total-points-value\" style=\"font-size: 14px; color: #2189FF; font-weight: 800; text-align: right !important\">".concat(formatNumberBRL(totalPointsCurrentOrder), " Pontos</td>\n          </tr>\n        </tbody>\n      ");
@@ -366,18 +411,18 @@ var Rewards = /*#__PURE__*/function () {
         }
       }
       if ($('.switch-rewards input')[0].checked) {
-        $('.text-switch-rewards').text('Utilizar os pontos nesta compra');
+        $('.text-switch-rewards').text('Você está utilizando seus pontos nessa compra. Essa transição poderá utilizar todos os seus pontos.');
       } else {
-        $('.text-switch-rewards').text('Não utilizar os meus pontos nessa compra');
+        $('.text-switch-rewards').text('Clique para utilizar seus pontos nessa compra. Essa transição poderá utilizar todos os seus pontos.');
       }
       $(document).on('change', '.switch-rewards input', function () {
         var inputChecked = $('.switch-rewards input')[0].checked;
         $('.switch-rewards input').prop('disabled', true);
         if (inputChecked) {
-          $('.text-switch-rewards').text('Utilizar os pontos nesta compra');
+          $('.text-switch-rewards').text('Você está utilizando seus pontos nessa compra. Essa transição poderá utilizar todos os seus pontos.');
           _this3.setRewardsDiscount();
         } else {
-          $('.text-switch-rewards').text('Não utilizar os meus pontos nessa compra');
+          $('.text-switch-rewards').text('Clique para utilizar seus pontos nessa compra. Essa transição poderá utilizar todos os seus pontos.');
           _this3.cancelRewardsDiscount();
         }
       });

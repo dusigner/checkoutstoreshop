@@ -6,49 +6,31 @@ function createLayoutGroupCalcRewards({ totalPointsUser }) {
   if (parseFloat(totalPointsUser) <= 0) return '<div />'
 
   return `
-  <div id="group-all-rewards" style="display: none; grid-area: rewards-calc">
-        <div
-          id="group-calc-rewards"
-          style="width: auto; margin: 15px 0; padding: 25px 15px 10px 20px; background: #F5F7FE; font-family: SamsungOne; color: #000; font-size: 14px; font-weight: 400; border-radius: 12px;"
-        >
-          <div
-            id="calc-header-rewards"
-            style="display: flex; justify-content: flex-start; align-items: center; flex-wrap: wrap; border-bottom: 1px solid #d6d6d6; padding-bottom: 15px"
-          >
-            <span
-              id="calc-header-title"
-              style="margin-right: 0.5vw; font-size: 20px; font-weight: 700"
-            >
-              Samsung Rewards:
+      <div id="group-all-rewards">
+        <div id="group-calc-rewards">
+          <div id="calc-header-rewards">
+            <span id="calc-header-title">
+              Samsung Rewards: troque seus pontos por até 50% de desconto.
             </span>
-            <span
-              id="calc-header-points"
-              style=" color: #006BEA; font-size: 20px; font-weight: 700;"
-            >
+            <span id="calc-header-points">
               Você tem ${formatNumberBRL(totalPointsUser)} pontos
             </span>
           </div>
-          <div
-            id="calc-content-rewards"
-            style="margin-top: 10px"
-          >
-            <div
-              id="calc-content-first-column"
-              style="display: grid; grid-template-columns: 1fr;"
-            >
-            <div class="container-switch-rewards">
-              <label class="switch-rewards">
-                <input type="checkbox">
-                <span class="slider"></span>
-              </label>
-              <span class="text-switch-rewards"></span>
-            </div>
-            <p style="color: #000000; font-size: 14px; font-weight: 400; padding-bottom: 10px; text-align: justify;">
-              Troque seus pontos por até 50% de desconto. *Essa transação poderá utilizar todos os seus pontos.
-            </p>
+          <div id="calc-content-rewards">
+            <div id="calc-content-first-column">
+              <div class="container-switch-rewards">
+                <label class="switch-rewards">
+                  <input type="checkbox">
+                  <span class="slider"></span>
+                </label>
+                <span class="text-switch-rewards"></span>
+              </div>
             </div>
           </div>
         </div>
+        <p class="text-small-rewards">
+          O desconto de pagamento à vista não é cumulativo com vale-presente, voucher e pontos Samsung Rewards
+        </p>
       </div>
     `
 }

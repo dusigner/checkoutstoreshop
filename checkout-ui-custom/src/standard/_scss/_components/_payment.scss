@@ -1812,8 +1812,8 @@ svg.vtex-omnishipping-1-x-svg {
 		grid-template-areas:
 			'gift rewards-btn'
 			'giftcard-content giftcard-content'
+			'rewards-calc rewards-calc'
 			'payment-group steps'
-			'rewards-calc rewards-calc';
 	}
 
 	@media screen and (max-width: 1200px) {
@@ -1835,9 +1835,9 @@ svg.vtex-omnishipping-1-x-svg {
 				'gift'
 				'rewards-btn'
 				'giftcard-content'
+				'rewards-calc'
 				'payment-group'
 				'steps'
-				'rewards-calc';
 		}
 
 		.alert.payment-discounts-alert::before {
@@ -1925,10 +1925,76 @@ svg.vtex-omnishipping-1-x-svg {
 }
 
 .text-switch-rewards {
-	font-weight: bold;
+	font-weight: 400;
 	margin-left: 8px;
+  font-size: 12px;
+  @media screen and (max-width: 768px) {
+   font-size: 10px;
+   line-height: 14px;
+  }
 }
 
+#calc-header-title {
+  margin-right: 0.5vw;
+  font-size: 16px;
+  font-weight: 700;
+  @media screen and (max-width: 768px) {
+   font-size: 10px;
+  }
+}
+
+#calc-header-points {
+  color: #006BEA;
+  font-size: 16px;
+  font-weight: 700;
+  @media screen and (max-width: 768px) {
+   font-size: 10px;
+  }
+}
+
+#calc-header-rewards {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  flex-wrap: wrap;
+}
+
+#group-calc-rewards {
+  width: auto; 
+  margin: 15px 0; 
+  padding: 15px 15px 10px 20px; 
+  background: #F5F7FE; 
+  font-family: SamsungOne; 
+  color: #000; 
+  font-size: 14px; 
+  font-weight: 400; 
+  border-radius: 12px;
+}
+
+#group-all-rewards {
+  display: none; 
+  grid-area: rewards-calc
+}
+
+#calc-content-rewards {
+  margin-top: 10px
+}
+
+#calc-content-first-column {
+  display: grid; 
+  grid-template-columns: 1fr;
+}
+
+.text-small-rewards {
+  color: #000000; 
+  font-size: 12px; 
+  font-weight: 400; 
+  padding-bottom: 10px; 
+  text-align: justify;
+  @media screen and (max-width: 768px) {
+   font-size: 8px;
+  }
+}
 //iframe
 
 .steps-view,
