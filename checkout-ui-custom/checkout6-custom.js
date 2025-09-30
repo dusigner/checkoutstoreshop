@@ -1,6 +1,6 @@
-const version = '0.3.282';
-const buildState = 'linked'; // 'linked' ou 'published'
-const assetVisibility = 'private'; // 'private' ou 'public'
+const version = '0.3.286';
+const buildState = 'published'; // 'linked' ou 'published'
+const assetVisibility = 'public'; // 'private' ou 'public'
 
 const hostname = window.location.hostname;
 const pathname = window.location.pathname;

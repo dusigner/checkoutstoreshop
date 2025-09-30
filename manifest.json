@@ -1,7 +1,7 @@
 {
   "name": "store-checkout",
   "vendor": "samsungbr",
-  "version": "0.3.285",
+  "version": "0.3.286",
   "title": "Shop BR Checkout",
   "description": "Shop BR Checkout",
   "builders": {
@@ -21,13 +21,40 @@
     "vtex.email-checkout-conflict": "0.x"
   },
   "settingsSchema": {
-    "automationEmails": {
-      "title": "E-mails de automação",
-      "type": "array",
-      "default": [],
-      "items": {
+    "title": "APP",
+    "type": "object",
+    "access": "public",
+    "properties": {
+      "bypassBankPaymentSlipActive": {
+        "title": "Ativar logica de bypass do Boleto",
+        "type": "boolean",
+        "description": "Define se a ocultação do boleto durante teste de estresse está ativa",
+        "default": true
+      },
+      "cookieKey": {
+        "title": "Chave do Cookie",
         "type": "string",
-        "default": ""
+        "description": "Nome da chave do cookie para bypass da ocultação do boleto",
+        "pattern": "^[a-zA-Z0-9_-]+$",
+        "minLength": 1,
+        "maxLength": 100
+      },
+      "cookieValue": {
+        "title": "Valor do Cookie",
+        "type": "string",
+        "description": "Valor do cookie que permite mostrar o boleto ao usuário",
+        "pattern": "^[a-zA-Z0-9_.-]+$",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "bankPaymentSlipCssSelector": {
+        "title": "Seletor CSS para ocultar o Boleto",
+        "type": "string",
+        "default": "#payment-group-custom202PaymentGroupPaymentGroup",
+        "description": "Seletor CSS do container do grupo de pagamento Boleto",
+        "pattern": "^[#.]?[a-zA-Z0-9_-][a-zA-Z0-9_-]*$",
+        "minLength": 1,
+        "maxLength": 200
       }
     }
   },

@@ -18,6 +18,7 @@ import CSP from '../components/_csp'
 import { rootPath } from '../components/utils/_rootPath'
 import SummaryGiftCard from '../components/_summaryGiftCard'
 import RenderLoaderFallback from '../components/_renderLoaderFallback'
+import BankPaymentSlip from '../components/_bankPaymentSlip'
 import fixProfileForm from '../components/_fixProfileData'
 
 
@@ -94,6 +95,7 @@ export class CheckoutCustom {
     this.payment = new Payment()
     this.toastMessages = new ToastMessages()
     this.renderLoaderFallback = new RenderLoaderFallback()
+    this.bankPaymentSlip = new BankPaymentSlip()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -408,6 +410,10 @@ export class CheckoutCustom {
         const shippingText = isInstallService || isSamsungCare ? 'Após a entrega do produto' : '';
 
         const tagList = window.samsungProductTags || [];
+        if (Array.isArray(tagList) && tagList.length === 0) {
+          return;
+        }
+
         const matchedTag = tagList.find(tag =>
           tag.productIdTag === String(productId) &&
           tag.activeTag === true &&
@@ -1887,7 +1893,7 @@ export class CheckoutCustom {
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
       })
-
+      this.bankPaymentSlip.init()
       _this.renderLoaderFallback.init()
       _this.verifyMobileScreen()
       _this.applyStepVisibilityConditions()

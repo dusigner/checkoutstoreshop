@@ -20,6 +20,7 @@ import SummaryGiftCard from '../components/_summaryGiftCard'
 import RenderLoaderFallback from '../components/_renderLoaderFallback'
 import CountDown from '../components/countdown/_countdown'
 import fixProfileForm from '../components/_fixProfileData'
+import BankPaymentSlip from '../components/_bankPaymentSlip'
 
 import {
   debounce,
@@ -94,6 +95,7 @@ export class CheckoutCustom {
     this.payment = new Payment()
     this.toastMessages = new ToastMessages()
     this.renderLoaderFallback = new RenderLoaderFallback()
+    this.bankPaymentSlip = new BankPaymentSlip()
     this.countDown = new CountDown()
 
     if (deliveryDateFormat) {
@@ -411,6 +413,11 @@ couponInfo(response) {
           const shippingText = isInstallService || isSamsungCare ? 'Após a entrega do produto' : '';
  
           const tagList = window.samsungProductTags || [];
+  if (Array.isArray(tagList) && tagList.length === 0) {
+            return;
+          }
+
+
           const matchedTag = tagList.find(tag =>
             tag.productIdTag === String(productId) &&
             tag.activeTag === true &&
@@ -1881,6 +1888,7 @@ couponInfo(response) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       })
 
+      this.bankPaymentSlip.init()
       _this.renderLoaderFallback.init()
       _this.verifyMobileScreen()
       _this.init()
