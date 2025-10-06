@@ -8,7 +8,7 @@ export default class Payment {
     this.paymentGroups = []
     this.nubank = {
       maxInstallments: 12,
-      bins: ['550209', '516292', '520048', '512626', '516230', '522688'],
+      bins: ['550209', '516292', '520048', '512626', '516230', '522688', '516220'],
     }
   }
 
