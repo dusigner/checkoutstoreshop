@@ -175,6 +175,12 @@
     }
   }
 
+  div.step.shipping-data.active div.box-step {
+    @media (min-width: 768px) {
+      max-width: 95%;
+    }
+  }
+
   .vtex-omnishipping-1-x-addressForm {
     margin-top: 16px;
     margin-bottom: 32px;
@@ -183,12 +189,24 @@
       margin-top: 16px;
     }
 
+    @media (min-width: 768px) {
+      width: 65%;
+      max-width: 100%;
+    }
+
     // Fields
     p.input {
       @extend %field;
 
       &.ship-reference {
         display: block !important;
+      }
+
+      @media (min-width: 768px) {
+        &.ship-reference,
+        &.ship-receiverName {
+          width: 47%;
+        }
       }
 
       &.ship-state {
@@ -302,6 +320,10 @@
   .vtex-omnishipping-1-x-address {
     margin-top: 16px;
     margin-bottom: 0;
+        
+    @media (min-width: 768px) {
+      max-width: 100%
+    }
 
     > div {
       display: flex;

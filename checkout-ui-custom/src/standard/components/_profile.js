@@ -379,7 +379,7 @@ export default class CustomProfileData {
     const hasSolution = solution1 || solution2 || solution3 || solution4
 
     if (!hasSolution) {
-      return $('.newsletter-optin').before($field)
+      return $('.newsletter-optin').after($field)
     }
 
     let version = null
@@ -482,7 +482,7 @@ export default class CustomProfileData {
       </label>
     </div>`
 
-    $('.newsletter-optin').after($field)
+    $('.whatsapp-optin').before($field)
   }
 
   checkTerms() {
@@ -922,7 +922,7 @@ export default class CustomProfileData {
   addMsgPhone() {
     if ($('small.textMsgPhone').length) return
 
-    const $textMsgPhone = `<small class="textMsgPhone">O número correto garante que possamos entrar em contato em caso de algum problema na entrega.</small>`
+    const $textMsgPhone = `<small class="textMsgPhone">O número correto garante o contato em caso de problemas na entrega.</small>`
 
     $('p.client-phone').first().after($textMsgPhone)
   }

@@ -28,7 +28,12 @@
   }
 
   .box-client-info {
-    max-width: 448px;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+    @media (max-width: 1203px) {
+      max-width: 100%;
+    }
   }
 
   .form-step.box-info {
@@ -62,33 +67,135 @@
 
   p.text {
     &.client-email {
-      width: 100%;
+      width: 30%;
+      @media (min-width: 1204px) {
+        max-width: 201px;
+      }
+
+      @media (min-width: 1242px) {
+        margin-right: calc(10px + 1%);
+      }
+
+      @media (max-width: 1203px) {
+        margin-right: 0;
+        width: 100%;
+      }
     }
   }
 
   p.input {
     @extend %field;
-    margin-right: 0;
+    margin-right: 10px;
+    @media (min-width: 1242px) {
+      margin-right: calc(10px + 1%);
+    }
 
-    width: calc(50% - 12px);
-
+    width: 30%;
+    @media (min-width: 1204px) {
+      max-width: 201px;
+    }
+    
     &.client-email {
-      width: 100%;
+      width: 30%;
+      @media (min-width: 1204px) {
+        max-width: 201px;
+      }
       + p {
+        width: 100%;
+      }
+      @media (max-width: 1203px) {
         width: 100%;
       }
     }
 
-    &.client-last-name,
-    &.client-date-birth {
-      margin-left: 24px !important;
-    }
-
     &.client-document + div {
+      width: 40%;
       display: flex;
       flex-wrap: wrap;
+      @media (max-width: 1203px) {
+        width: 100%;
+        margin-top: 10px;
+      }
+      @media (min-width: 1440px) {
+        width: 49%;
+        .textMsgPhone {
+          align-self: center;
+        }
+      }
+    }
+
+    &.client-phone {
+      @media (min-width: 1204px) {
+        width: 45%;
+      }
+      @media (max-width: 1203px) {
+        margin-right: 5px !important;
+      }
+    }
+
+    @media (max-width: 1203px) {
+      margin-right: 0;
+      width: calc(50% - 12px);
+      &.client-last-name,
+      &.client-date-birth {
+        margin-left: 24px !important;
+      }
+    }
+
+    @media (min-width: 1204px) {
+      &.client-last-name {
+        width: 40%;
+        max-width: none;
+      }
+    }
+
+    @media (min-width: 1440px) {
+      &.client-last-name {
+        width: 47%;
+      }
     }
   }
+
+  @media (min-width: 1204px) {
+    .whatsapp-optin {
+      width: 47%;
+      margin-right: 30px;
+    }
+  
+    .newsletter-optin {
+      width: 47%;
+      margin-right: 20px;
+    }
+  
+    .terms-and-policies {
+      width: 47%;
+    }
+  }
+
+  .textMsgPhone {
+    font-size: 12px;
+    line-height: normal;
+    background-color: #EEE;
+    border-radius: 5px;
+    padding: 7px 10px;
+    position: relative;
+    height: fit-content;
+    &::before {
+      content: "";
+      left: -10px;
+      top: 10px;
+      position: absolute;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 10px solid #EEE; 
+    }
+    @media (min-width: 768px) {
+      width: 43%;
+    }
+    @media (max-width: 767px) {
+      width: 45%;
+    }
+  } 
 
   .pj-information {
     margin-bottom: 32px;
