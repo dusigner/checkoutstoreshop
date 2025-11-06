@@ -9,9 +9,13 @@ export default class Discounts {
     this.discounts = []
   }
 
-  _getDiscountValue(items, { rateAndBenefitsIdentifierId, skuId } = {}) {
+  _getDiscountValue(items = [], { rateAndBenefitsIdentifierId, skuId } = {}) {
     if (rateAndBenefitsIdentifierId) {
-      return items.reduce((acc, currentItem) => {
+      const availableItems = items.filter(
+        item => item.availability !== "withoutStock"
+      )
+
+      return availableItems.reduce((acc, currentItem) => {
         const { priceTags } = currentItem
   
         priceTags.forEach((priceTag) => {
