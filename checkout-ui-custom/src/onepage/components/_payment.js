@@ -64,7 +64,7 @@ export default class Payment {
         ? `Desconto no pagamento à vista`
         : `Pagamento à vista`
     } else if (groupName === 'NubankPaymentGroup') {
-      text = `Parcele em até 24x. Consulte condições`
+      text = `Parcele em até 18x Sem Juros.`
     } else {
       text = 'Consulte as condições'
     }

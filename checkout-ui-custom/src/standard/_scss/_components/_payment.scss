@@ -2465,7 +2465,7 @@ svg.vtex-omnishipping-1-x-svg {
 		$PaymentGroups: (
 	// PIX
 			'#payment-group-instantPaymentPaymentGroup',
-      '.payment-method-order-1',
+      '.payment-method-order-4',
 			// Normal Credit Card
 			'#payment-group-creditCardPaymentGroup',
       '.payment-method-order-2',
@@ -2474,10 +2474,10 @@ svg.vtex-omnishipping-1-x-svg {
       '.payment-method-order-5',
 			// Nubank
 			'#payment-group-NubankPaymentGroup',
-      '.payment-method-order-3',
+      '.payment-method-order-1',
 			// SSG Itaucard
 			'#payment-group-customPrivate_501PaymentGroup',
-      '.payment-method-order-4',
+      '.payment-method-order-3',
 			// Boleto
 			'#payment-group-bankInvoicePaymentGroup',
 			// SSG pay

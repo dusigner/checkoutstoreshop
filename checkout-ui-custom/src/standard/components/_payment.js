@@ -7,7 +7,7 @@ export default class Payment {
   constructor() {
     this.paymentGroups = []
     this.nubank = {
-      maxInstallments: 12,
+      maxInstallments: 17,
       bins: ['550209', '516292', '520048', '512626', '516230', '522688', '516220'],
     }
   }
@@ -64,7 +64,7 @@ export default class Payment {
         ? `Desconto no pagamento à vista`
         : `Pagamento à vista`
     } else if (groupName === 'NubankPaymentGroup') {
-      text = `Parcele em até 24x. Consulte condições`
+      text = `Parcele em até 18x Sem Juros.`
     } else {
       text = 'Consulte as condições'
     }
@@ -179,8 +179,8 @@ export default class Payment {
     return `
       <div class="nubankWarningTemplate" style="display: none;">
         <p>
-          Para cartões Nubank com parcelamento a partir de <strong>${this.nubank.maxInstallments + 1}x</strong>, 
-          selecione o método de pagamento <strong>"Nubank"</strong>. Consulte condições.
+          Para cartões Nubank com parcelamento até <strong>${this.nubank.maxInstallments + 1}x</strong> Sem Juros, 
+          selecione o método de pagamento <strong>"Nubank"</strong>.
         </p>
       </div>
     `
