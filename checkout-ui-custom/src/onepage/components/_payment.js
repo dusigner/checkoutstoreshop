@@ -1,52 +1,19 @@
-import { getMaxInstallmentByPaymentSystem } from "./_utils"
+import { hasSelectedPaymentMethod } from "./utils/_hasSelectedPaymentMethod"
 
 export default class Payment {
   static shouldUpdate = false
 
   constructor() {
     this.paymentGroups = []
+    this.nubank = {
+      maxInstallments: 17,
+      bins: ['550209', '516292', '520048', '512626', '516230', '522688', '516220'],
+    }
   }
 
   loading(state = false) {
-    const $context = $('.payment-group-list-btn')
-
-    if (state === true) {
-      return $context.removeClass('has-btn-installments')
-    } else {
-      return $context.addClass('has-btn-installments')
-    }
-  }
-
-  async getPaymentGroups(orderForm) {
-    try {
-      if (this.paymentGroups.length) {
-        return
-      }
-
-      this.loading(true)
-
-      const allPaymentSystems = orderForm?.paymentData?.paymentSystems ?? []
-
-      const uniquePaymentGroups = [...new Map(
-        allPaymentSystems.map((item) => [item["groupName"], item])
-      ).values()]
-
-      const paymentGroups = await Promise.all(
-        uniquePaymentGroups.map(async (paymentGroup) => {
-          const stringId = paymentGroup.stringId
-          const maxInstallment = await getMaxInstallmentByPaymentSystem(stringId)
-
-          return {
-            ...paymentGroup,
-            maxInstallment
-          }
-        })
-      )
-
-      return paymentGroups
-    } catch (error) {
-      console.error(`Error in getPaymentGroups: ${error}`)
-    }
+    $('.payment-group-list-btn')
+      .toggleClass('has-btn-installments', !state)
   }
 
   installmentTemplate({ groupName, maxInstallment }) {
@@ -88,61 +55,106 @@ export default class Payment {
     }
   }
 
-  async addInstallmentsInPaymentGroups(orderForm) {
-    try {
-      const _this = this
-
-      const paymentGroups = !this.paymentGroups.length || Payment.shouldUpdate
-        ? (await this.getPaymentGroups(orderForm))
-        : this.paymentGroups
-
-      this.loading(false)
-
-      this.paymentGroups = paymentGroups ?? []
-      Payment.shouldUpdate = false
-
-      this.paymentGroups.forEach(paymentGroup => {
-        const { groupName, maxInstallment } = paymentGroup ?? {}
-
-        const $context = $(`#payment-group-${groupName}`)
-        const $paymentGroupText = $context.find('.payment-group-item-text')
-        const $isWrapped = $paymentGroupText.closest('.payment-group-information').length
-
-        if ($isWrapped) {
-          return
-        }
-
-        const installmentTemplate = _this.installmentTemplate({ 
-          groupName, 
-          maxInstallment 
-        })
-
-        $paymentGroupText
-          .wrap('<div class="payment-group-information" />')
-          .parent()
-          .append(installmentTemplate)
-      })
-    } catch (err) {
-      console.error(`Error in addInstallmentsInPaymentGroups: ${err}`);
-      this.loading(false)
-    }
-  }
-
   setPendingPaymentInLocalStorage() {
     localStorage.setItem('pendingPayment', JSON.stringify({
       timestamp: Date.now()
     }))
   }
 
+  setNubankIFrameInstallments(orderForm) {
+    try {
+      const NubankPaymentGroup = 
+        window?.paymentData?.paymentGroups?.NubankPaymentGroup
+
+      if (!NubankPaymentGroup) {
+        return
+      }
+
+      const creditCardPaymentGroup = 
+        window?.paymentData?.paymentGroups?.creditCardPaymentGroup
+
+      const { payments = [], installmentOptions = [] } = orderForm?.paymentData ?? {}
+
+      for (const payment of payments) {
+        const bin = payment?.bin?.substr(0, 6)
+
+        if (!this.nubank.bins.includes(bin)) {
+          continue
+        }
+
+        for (const installmentOption of installmentOptions) {
+          if (
+            payment.paymentSystem == installmentOption.paymentSystem &&
+            payment.bin === installmentOption.bin &&
+            payment.value == installmentOption.value
+          ) {
+            installmentOption.installments = installmentOption.installments?.filter(
+              (_, index) => index + 1 <= this.nubank.maxInstallments
+            )
+
+            creditCardPaymentGroup?.iFrameSendInstallmentsPreview?.(installmentOption)
+          }
+        }
+      }
+      
+    } catch (error) {
+      console.error('error ~ setNubankIFrameInstallments: ', error);
+    }
+  }
+
+  getNubankWarningTemplate() {
+    return `
+      <div class="nubankWarningTemplate" style="display: none;">
+        <p>
+          Para cartões Nubank com parcelamento até <strong>${this.nubank.maxInstallments + 1}x</strong> Sem Juros, 
+          selecione o método de pagamento <strong>"Nubank"</strong>.
+        </p>
+      </div>
+    `
+  }
+
+  setNubankWarningMessage(orderForm) {
+    try {
+      const NubankPaymentGroup = 
+        window?.paymentData?.paymentGroups?.NubankPaymentGroup
+
+      if (!NubankPaymentGroup) {
+        return
+      }
+
+      const $iframeContext = $('#iframe-placeholder-creditCardPaymentGroup')
+
+      const { paymentData } = orderForm ?? {}
+      const { payments = [] } = paymentData ?? {}
+
+      const isNubankCreditCard = payments.some(payment => (
+        this.nubank.bins.includes(payment.bin?.substr(0, 6))
+      ))
+
+      const $hasNubankWarningTemplate = $iframeContext
+        .toggleClass('nubankCreditCard', isNubankCreditCard)
+        .find('.nubankWarningTemplate').length > 0
+
+      if (isNubankCreditCard && !$hasNubankWarningTemplate) {
+        $iframeContext.prepend(
+          this.getNubankWarningTemplate()
+        )
+      }
+    } catch (error) {
+      console.error('error ~ setNubankWarningMessage: ', error);
+    }
+  }
+
   sync(orderForm) {
     try {
-      this.addInstallmentsInPaymentGroups(orderForm)
+      this.setNubankWarningMessage(orderForm)
+      this.setNubankIFrameInstallments(orderForm)
     } catch (err) {
       console.error(`Error in class Payment: ${err}`);
       this.loading(false)
     }
   }
-  
+
   /**
    * @returns {void}
    */
@@ -157,7 +169,7 @@ export default class Payment {
       payment => payment.paymentSystem === String(paymentSystemId)
     )
 
-    if (!availableInstallments.length || this.hasSelectedPaymentMethod()) return
+    if (!availableInstallments.length || hasSelectedPaymentMethod()) return
 
     const paymentAttachment = {
       payments: [
@@ -172,18 +184,8 @@ export default class Payment {
     vtexjs.checkout.sendAttachment('paymentData', paymentAttachment)
   }
 
-  /**
-   * @returns {boolean} 
-   */
-  hasSelectedPaymentMethod() {
-    const selectedPayment = window.vtexjs.checkout.orderForm.paymentData?.payments?.find(
-      payment => typeof payment.paymentSystem === 'string'
-    )
-    return Boolean(selectedPayment) 
-  }
-
   orderPaymentMethodScroll(paymentMethod) {
-    let headerHeight = $("#header-onepage .main-header").outerHeight() || 0;
+    let headerHeight = $("#header-standard .main-header").outerHeight() || 0;
   
     requestAnimationFrame(() => {
       const offsetTop = paymentMethod.offset().top;
@@ -195,6 +197,8 @@ export default class Payment {
   }
 
   orderPaymentMethod() {
+		if (window.innerWidth > 769) return;
+
 		let lastIndex = null;
 
 		const observer = new MutationObserver((mutations, obs) => {
@@ -207,7 +211,6 @@ export default class Payment {
 					let paymentMethod = $('.payment-method').eq(index);
 					$(this).after(paymentMethod);
 					paymentMethod.addClass(`payment-method-order-${index + 1}`);
-          _this.movePaymentConfirmationWrap()
 				});
 
 				$('.payment-group-item').on('click', function () {
@@ -218,52 +221,16 @@ export default class Payment {
 						paymentMethod.slideToggle();
 						lastIndex = paymentMethod.is(':visible') ? index : null;
 					} else {
-						paymentMethod.slideDown(() => {
-              _this.movePaymentConfirmationWrap();
-            });
+						paymentMethod.slideDown();
 						lastIndex = index;
 					}
-
-          if (window.innerWidth < 769) _this.orderPaymentMethodScroll(paymentMethod);
-					
+					_this.orderPaymentMethodScroll(paymentMethod);
 				});
 			}
 		});
 
 		observer.observe(document.body, { childList: true, subtree: true });
 	}
-
-  movePaymentConfirmationWrap() {
-
-    const confirmation = document.querySelector('.payment-confirmation-wrap')
-    if (!confirmation) {
-      location.reload()
-      return
-    }
-  
-    const paymentMethods = Array.from(document.querySelectorAll('[class^="payment-method payment-method-order-"]'))
-
-    const openedMethod = paymentMethods.find(method => {
-      const style = window.getComputedStyle(method)
-      return style.display !== 'none' && style.visibility !== 'hidden' && method.offsetHeight > 0
-    })
-  
-    if (openedMethod && !openedMethod.contains(confirmation)) {
-      openedMethod.appendChild(confirmation)
-    }
-    if (window.innerWidth > 769) this.adjustPaymentDataMargin()
-    
-  }
-
-  adjustPaymentDataMargin() {
-    const summary = document.querySelector('.cart-template.mini-cart.span4')
-    const paymentData = document.querySelector('#payment-data')
-  
-    if (!summary || !paymentData) return
-  
-    const summaryHeight = summary.offsetHeight
-    paymentData.style.marginTop = `${summaryHeight + 34}px`
-  }
 
   clearInputsChangeMethod() {
 

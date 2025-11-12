@@ -1,4 +1,3 @@
-import { getMaxInstallmentByPaymentSystem } from "./_utils"
 import { hasSelectedPaymentMethod } from "./utils/_hasSelectedPaymentMethod"
 
 export default class Payment {
@@ -15,38 +14,6 @@ export default class Payment {
   loading(state = false) {
     $('.payment-group-list-btn')
       .toggleClass('has-btn-installments', !state)
-  }
-
-  async getPaymentGroups(orderForm) {
-    try {
-      if (this.paymentGroups.length) {
-        return
-      }
-
-      this.loading(true)
-
-      const allPaymentSystems = orderForm?.paymentData?.paymentSystems ?? []
-
-      const uniquePaymentGroups = [...new Map(
-        allPaymentSystems.map((item) => [item["groupName"], item])
-      ).values()]
-
-      const paymentGroups = await Promise.all(
-        uniquePaymentGroups.map(async (paymentGroup) => {
-          const stringId = paymentGroup.stringId
-          const maxInstallment = await getMaxInstallmentByPaymentSystem(stringId)
-
-          return {
-            ...paymentGroup,
-            maxInstallment
-          }
-        })
-      )
-
-      return paymentGroups
-    } catch (error) {
-      console.error(`Error in getPaymentGroups: ${error}`)
-    }
   }
 
   installmentTemplate({ groupName, maxInstallment }) {
@@ -85,46 +52,6 @@ export default class Payment {
       }
     } catch (error) {
       console.error(`Error in updateInstallmentsInPaymentGroups: ${error}`);
-    }
-  }
-
-  async addInstallmentsInPaymentGroups(orderForm) {
-    try {
-      const _this = this
-
-      const paymentGroups = !this.paymentGroups.length || Payment.shouldUpdate
-        ? (await this.getPaymentGroups(orderForm))
-        : this.paymentGroups
-
-      this.loading(false)
-
-      this.paymentGroups = paymentGroups ?? []
-      Payment.shouldUpdate = false
-
-      this.paymentGroups.forEach(paymentGroup => {
-        const { groupName, maxInstallment } = paymentGroup ?? {}
-
-        const $context = $(`#payment-group-${groupName}`)
-        const $paymentGroupText = $context.find('.payment-group-item-text')
-        const $isWrapped = $paymentGroupText.closest('.payment-group-information').length
-
-        if ($isWrapped) {
-          return
-        }
-
-        const installmentTemplate = _this.installmentTemplate({ 
-          groupName, 
-          maxInstallment 
-        })
-
-        $paymentGroupText
-          .wrap('<div class="payment-group-information" />')
-          .parent()
-          .append(installmentTemplate)
-      })
-    } catch (err) {
-      console.error(`Error in addInstallmentsInPaymentGroups: ${err}`);
-      this.loading(false)
     }
   }
 
@@ -220,7 +147,6 @@ export default class Payment {
 
   sync(orderForm) {
     try {
-      this.addInstallmentsInPaymentGroups(orderForm)
       this.setNubankWarningMessage(orderForm)
       this.setNubankIFrameInstallments(orderForm)
     } catch (err) {

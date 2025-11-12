@@ -8,20 +8,6 @@
   margin-bottom: 8px;
 }
 
-%loading_placeholder {
-  overflow: hidden;
-  pointer-events: none;
-  width: 100%;
-  background-color: #F0F0F0;
-  animation: pulse_placeholder 1s cubic-bezier(.4, 0, .6, 1) infinite;
-}
-
-@keyframes pulse_placeholder {
-  50% {
-    opacity: .5;
-  }
-}
-
 // loadin shhimer
 
 
@@ -2401,18 +2387,7 @@ svg.vtex-omnishipping-1-x-svg {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-	
-    &:not(.has-btn-installments) .payment-group-item::before  {
-      content: "";
-      @extend %loading_placeholder;
-      position: absolute;
-      left: 60px;
-      bottom: 9px;
-      max-width: calc(80% - 60px);
-      height: 11px;
-      border-radius: 2px;
-    }
-	
+
 		// To sort the PaymentGroup positions, just change the order
 	// 	$PaymentGroups: (
 	//     // PIX

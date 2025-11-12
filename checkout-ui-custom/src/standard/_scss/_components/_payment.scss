@@ -6,20 +6,6 @@
 	color: #8F8F8F;
 }
 
-%loading_placeholder {
-  overflow: hidden;
-  pointer-events: none;
-  width: 100%;
-  background-color: #F0F0F0;
-  animation: pulse_placeholder 1s cubic-bezier(.4, 0, .6, 1) infinite;
-}
-
-@keyframes pulse_placeholder {
-  50% {
-    opacity: .5;
-  }
-}
-
 // loadin shhimer
 
 
@@ -156,6 +142,7 @@ svg.vtex-omnishipping-1-x-svg {
       span.payment-group-item-text {
         min-height: 50px;
         font-size: 0 !important;
+		line-height: 5px;
       
         &::before {
           content: "Pagar com 1 ou 2 cartões de crédito";
@@ -188,30 +175,12 @@ svg.vtex-omnishipping-1-x-svg {
 		}
 
 		#payment-group-customPrivate_501PaymentGroup {
-			.payment-group-item-text {
-				padding-left: 0px;
-				font-size: 0;
-
-				&::before {
-					content: "";
-		          	align-self: center;
-					margin-right: 18px;
-					width: 30px;
-					height: 24px;
-					background-image: url(https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/88793a4b-b6f3-4c74-ad77-391572ff10cd___b1326d919c5a78517e4c7d80e94144ed.jpg) !important;
-					display: block;
-					background-position: inherit;
-					background-repeat: no-repeat;
-					background-size: cover;
-				}
-
-				&::after {
-					content: "Cartão Samsung";
-					font-size: 12px;
-				}
-			}
+			background: url("https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/88793a4b-b6f3-4c74-ad77-391572ff10cd___b1326d919c5a78517e4c7d80e94144ed.jpg") !important;
+			background-repeat: no-repeat !important;
+			background-size: 24px !important;
+			background-position: 4% 50% !important;
 		}
-
+		
 		p.link.link-gift-card,
 		fieldset.payment-group {
 			width: 100%;
@@ -305,15 +274,16 @@ svg.vtex-omnishipping-1-x-svg {
 		span.payment-group-item-text {
 			line-height: 17px;
 			display: flex;
+			flex-direction: column;
 			background-size: 24px;
 			background-position-x: left;
-      padding: 0;
+      		padding: 0;
 			padding-left: 48px;
 			min-height: 34px;
-
-      color: #000;
-      font-weight: 700;
-      font-size: 12px;
+			justify-content: center;
+			color: #000;
+			font-weight: 700;
+			font-size: 12px;
 		}
 
     span.payment-group-installments {
@@ -2450,55 +2420,67 @@ svg.vtex-omnishipping-1-x-svg {
 		flex-direction: column;
 		  gap: 8px;
 	
-	&:not(.has-btn-installments) .payment-group-item::before  {
-	content: "";
-	@extend %loading_placeholder;
-	position: absolute;
-	left: 60px;
-	bottom: 9px;
-	max-width: calc(80% - 60px);
-	height: 11px;
-	border-radius: 2px;
-	}
-	
+		.payment-group-item .payment-group-item-text::after {
+			content: "Consulte as condições";
+			font-size: 10px;
+			color: #000;
+			display: block;
+			font-weight: normal;
+		}
+
+		#payment-group-creditCardPaymentGroup.payment-group-item .payment-group-item-text::after,
+		#payment-group-NubankPaymentGroup.payment-group-item .payment-group-item-text::after,
+		#payment-group-customPrivate_501PaymentGroup.payment-group-item .payment-group-item-text::after,
+		#payment-group-AmeDigitalPaymentGroup.payment-group-item .payment-group-item-text::after {
+			content: "Parcele em até 18x Sem Juros.";
+		}
+
+		#payment-group-customPrivate_501PaymentGroup.payment-group-item .payment-group-item-text::after {
+			content: "Parcele em até 24x Sem Juros.";
+		}
+
+		#payment-group-instantPaymentPaymentGroup.payment-group-item .payment-group-item-text::after {
+			content: "Desconto no pagamento à vista"
+		}
+		
 		// To sort the PaymentGroup positions, just change the order
 		$PaymentGroups: (
-	// PIX
+			// PIX
 			'#payment-group-instantPaymentPaymentGroup',
-      '.payment-method-order-4',
+			'.payment-method-order-4',
 			// Normal Credit Card
 			'#payment-group-creditCardPaymentGroup',
-      '.payment-method-order-2',
+			'.payment-method-order-2',
 			// MERCADO PAGO
 			'#payment-group-MercadoPagoProPaymentGroup',
-      '.payment-method-order-5',
+			'.payment-method-order-5',
 			// Nubank
 			'#payment-group-NubankPaymentGroup',
-      '.payment-method-order-1',
+			'.payment-method-order-1',
 			// SSG Itaucard
 			'#payment-group-customPrivate_501PaymentGroup',
-      '.payment-method-order-3',
+			'.payment-method-order-3',
 			// Boleto
 			'#payment-group-bankInvoicePaymentGroup',
 			// SSG pay
 			'#payment-group-SamsungPayPaymentGroup',
 			// Ame
 			'#payment-group-AmeDigitalPaymentGroup',
-	  // PicPay
+			// PicPay
 			'#payment-group-picPayPaymentGroup'
 		);
 	
-	@for $i from 1 through length($PaymentGroups) {
-		$button: nth($PaymentGroups, $i);
-	
-		#{$button}, .payment-method-order-#{$i} {
-			order: $i;
+		@for $i from 1 through length($PaymentGroups) {
+			$button: nth($PaymentGroups, $i);
+		
+			#{$button}, .payment-method-order-#{$i} {
+				order: $i;
+			}
 		}
-	}
-	
-	a {
-		order: 20;
-	}
+		
+		a {
+			order: 20;
+		}
 	}
 }
 
