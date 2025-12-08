@@ -3,7 +3,8 @@ import { formatCurrencyBRL } from './_utils'
 export default class SendAttachment {
   // Método para verificar se um item pertence à categoria de instalação
   isInstallation(item) {
-    return item.productCategoryIds.includes('2027')
+    const account = window?.__RUNTIME__?.account
+    return account?.includes("brtests") ? item.productCategoryIds.includes('2027') : item.productCategoryIds.includes('2017')
   }
 
   // Método principal para enviar texto para o campo openTextField
@@ -16,7 +17,7 @@ export default class SendAttachment {
     this.processInStoreInfo(obsToOpenTextField)
 
     const finalText = this.createFinalText(obsToOpenTextField)
-    this.sendFinalTextToOpenTextField(finalText)
+    if(obsToOpenTextField.length) this.sendFinalTextToOpenTextField(finalText)
 
     window.vtexjs.checkout.getOrderForm()
   }

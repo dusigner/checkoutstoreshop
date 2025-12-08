@@ -174,6 +174,8 @@ svg.vtex-omnishipping-1-x-svg {
 			}
 		}
 
+		#payment-group-customPrivate_502PaymentGroup,
+		#payment-group-customPrivate_506PaymentGroup,
 		#payment-group-customPrivate_501PaymentGroup {
 			background: url("https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/88793a4b-b6f3-4c74-ad77-391572ff10cd___b1326d919c5a78517e4c7d80e94144ed.jpg") !important;
 			background-repeat: no-repeat !important;
@@ -181,6 +183,31 @@ svg.vtex-omnishipping-1-x-svg {
 			background-position: 4% 50% !important;
 		}
 		
+		#payment-group-customPrivate_501PaymentGroup {
+			.payment-group-item-text {
+				font-size: 0;
+				line-height: 9px;
+				&::before {
+					content: "Samsung Itaucard Visa";
+					font-size: 12px;
+					font-weight: bold;
+				}
+			}
+		}
+
+		#payment-group-customPrivate_502PaymentGroup,
+		#payment-group-customPrivate_506PaymentGroup {
+			.payment-group-item-text {
+				font-size: 0;
+				line-height: 9px;
+				&::before {
+					content: "Samsung Itaucard Mastercard";
+					font-size: 12px;
+					font-weight: bold;
+				}
+			}
+		}
+
 		p.link.link-gift-card,
 		fieldset.payment-group {
 			width: 100%;
@@ -2439,6 +2466,10 @@ svg.vtex-omnishipping-1-x-svg {
 			content: "Parcele em até 24x Sem Juros.";
 		}
 
+		#payment-group-customPrivate_506PaymentGroup.payment-group-item .payment-group-item-text::after { 
+			content: "Parcele em até 21x Sem Juros.";
+		}
+
 		#payment-group-instantPaymentPaymentGroup.payment-group-item .payment-group-item-text::after {
 			content: "Desconto no pagamento à vista"
 		}
@@ -2460,6 +2491,10 @@ svg.vtex-omnishipping-1-x-svg {
 			// SSG Itaucard
 			'#payment-group-customPrivate_501PaymentGroup',
 			'.payment-method-order-3',
+
+			'#payment-group-customPrivate_506PaymentGroup',
+			'.payment-method-order-4'
+			
 			// Boleto
 			'#payment-group-bankInvoicePaymentGroup',
 			// SSG pay

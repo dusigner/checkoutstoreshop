@@ -1471,17 +1471,24 @@ export class CheckoutCustom {
   itauCardMessage(orderForm) {
     if (orderForm && $('.itauCardMessage').length === 0) {
       if (orderForm.paymentData) {
-        let itauCardMessageHtml = `<div class="itauCardMessage">
+        let itauCardMessagMastereHtml = `<div class="itauCardMessage">
           <h2 class="itauCardMessage__title">Importante</h2>
-          <p class="itauCardMessage__visaFlag">Bandeira Visa: até <b>24x</b> sem juros</p>
           <p class="itauCardMessage__mastercardFlag">Bandeira Mastercard: até <b>21x</b> sem juros</p>
-          <span class="itauCardMessage__text">Caso selecione um parcelamento acima de 21x, seu pedido será cancelado.</span
         </div>`
 
-        let itauCardSelectElement = $(".steps-view .pg-samsung-itaucard")
+        let itauCardMessagVisaeHtml = `<div class="itauCardMessage">
+          <h2 class="itauCardMessage__title">Importante</h2>
+          <p class="itauCardMessage__visaFlag">Bandeira Visa: até <b>24x</b> sem juros</p>
+        </div>`
 
-        if (itauCardSelectElement) {
-          itauCardSelectElement.before(itauCardMessageHtml)
+        let itauCardSelectMasterCardElement = $(".steps-view .pg-samsung-itaucard-master")
+        let itauCardSelectVisaElement = $(".steps-view .pg-samsung-itaucard-visa")
+
+        if (itauCardSelectMasterCardElement) {
+          itauCardSelectMasterCardElement.before(itauCardMessagMastereHtml)
+        }
+        if(itauCardSelectVisaElement) {
+          itauCardSelectVisaElement.before(itauCardMessagVisaeHtml)
         }
       }
     }
