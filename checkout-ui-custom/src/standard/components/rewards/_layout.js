@@ -1,9 +1,13 @@
 import { formatNumberBRL } from '../_utils'
 
 const isFidelidadeAccount = (window.vtex && (window.vtex.accountName == 'samsungbrtestsfidelidade' || window.vtex.accountName == 'samsungbrshopfidelidade'));
+const isNubankAccount = (window.vtex && (window.vtex.accountName == 'samsungbrtestsnubank' || window.vtex.accountName == 'samsungbrshopeppnubank'));
+const orderForm = window?.vtexjs?.checkout?.orderForm;
+const saleschannel = window?.vtexjs?.checkout?.orderForm?.salesChannel;
+const isEndlessOrderForm = orderForm && orderForm.customData?.customApps?.some(customApp => customApp.id === 'endlessaisle');
 
 function createLayoutGroupCalcRewards({ totalPointsUser }) {
-  if (parseFloat(totalPointsUser) <= 0 || isFidelidadeAccount) return '<div />'
+  if (parseFloat(totalPointsUser) <= 0 || isEndlessOrderForm || isNubankAccount || (isFidelidadeAccount && saleschannel === '72')) return '<div />'
 
   return `
       <div id="group-all-rewards">
@@ -61,7 +65,7 @@ function createLayoutElementTotalPoints({ totalPointsCurrentOrder }) {
         </tr>
       </tbody>
       `
-    return isFidelidadeAccount ? {} : { _component, _componentVtexId };
+    return isFidelidadeAccount || isNubankAccount || isEndlessOrderForm ? {} : { _component, _componentVtexId };
 }
 
 function createLayoutMessageObs(saguid) {
@@ -69,7 +73,7 @@ function createLayoutMessageObs(saguid) {
   
   let _component = ''
 
-  if (saguid && !isFidelidadeAccount) {
+  if (saguid) {
     _component = `
       <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
         <p>
@@ -79,7 +83,7 @@ function createLayoutMessageObs(saguid) {
     `
   } 
   
-  if (!saguid && !isFidelidadeAccount) {
+  if (!saguid) {
     _component = `
     <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
       <p>
@@ -90,9 +94,7 @@ function createLayoutMessageObs(saguid) {
   `
   }
 
-  return {
-    _component,
-  }
+  return isNubankAccount || isEndlessOrderForm || (isFidelidadeAccount && saleschannel === '72') ? {} : { _component };
 }
 
 function createLayoutRewardsTotalDiscount({ discount }) {

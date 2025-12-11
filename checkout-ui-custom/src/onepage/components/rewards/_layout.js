@@ -1,43 +1,47 @@
 import { formatNumberBRL } from '../_utils'
 
 const isFidelidadeAccount = (window.vtex && (window.vtex.accountName == 'samsungbrtestsfidelidade' || window.vtex.accountName == 'samsungbrshopfidelidade'));
+const isNubankAccount = (window.vtex && (window.vtex.accountName == 'samsungbrtestsnubank' || window.vtex.accountName == 'samsungbrshopeppnubank'));
+const orderForm = window?.vtexjs?.checkout?.orderForm;
+const saleschannel = window?.vtexjs?.checkout?.orderForm?.salesChannel;
+const isEndlessOrderForm = orderForm && orderForm.customData?.customApps?.some(customApp => customApp.id === 'endlessaisle');
 
 function createLayoutGroupCalcRewards({ totalPointsUser }) {
-  if (parseFloat(totalPointsUser) <= 0 || isFidelidadeAccount) return '<div />'
+  if (parseFloat(totalPointsUser) <= 0 || isEndlessOrderForm || isNubankAccount || (isFidelidadeAccount && saleschannel === '72')) return '<div />'
 
   return `
-        <div id="group-all-rewards">
-          <div id="group-calc-rewards">
-            <div id="calc-header-rewards">
-              <span id="calc-header-title">
-                Samsung Rewards: troque seus pontos por até 50% de desconto.
-              </span>
-              <span id="calc-header-points">
-                Você tem ${formatNumberBRL(totalPointsUser)} pontos
-              </span>
-            </div>
-            <div id="calc-content-rewards">
-              <div id="calc-content-first-column">
-                <div class="container-switch-rewards">
-                  <label class="switch-rewards">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                  </label>
-                  <span class="text-switch-rewards"></span>
-                </div>
+      <div id="group-all-rewards">
+        <div id="group-calc-rewards">
+          <div id="calc-header-rewards">
+            <span id="calc-header-title">
+              Samsung Rewards: troque seus pontos por até 50% de desconto.
+            </span>
+            <span id="calc-header-points">
+              Você tem ${formatNumberBRL(totalPointsUser)} pontos
+            </span>
+          </div>
+          <div id="calc-content-rewards">
+            <div id="calc-content-first-column">
+              <div class="container-switch-rewards">
+                <label class="switch-rewards">
+                  <input type="checkbox">
+                  <span class="slider"></span>
+                </label>
+                <span class="text-switch-rewards"></span>
               </div>
             </div>
           </div>
-          <p class="text-small-rewards">
-            O desconto de pagamento à vista não é cumulativo com vale-presente, voucher e pontos Samsung Rewards
-          </p>
         </div>
+        <p class="text-small-rewards">
+          O desconto de pagamento à vista não é cumulativo com vale-presente, voucher e pontos Samsung Rewards
+        </p>
+      </div>
     `
 }
 
 function createLayoutElementTotalPoints({ totalPointsCurrentOrder }) {
   const _component = `
-        <tbody id="total-details-rewards">
+        <tbody id="total-details-rewards" style="border-top: 1px solid #cbcbcb;">
           <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
             <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
               Pontos Rewards gerados para sua próxima compra*
@@ -50,7 +54,7 @@ function createLayoutElementTotalPoints({ totalPointsCurrentOrder }) {
       `
 
   const _componentVtexId = `
-      <tbody id="total-details-rewards">
+      <tbody id="total-details-rewards" style="border-top: 1px solid #cbcbcb;">
         <tr style="display: flex; justify-content: space-between; font-family: 'SamsungOne'; gap: 10%;">
           <td id="td-text-rewards-total" style="font-size: 14px; color: #000; font-weight: 400">
             *Pontos Rewards (Gerados apenas quando utilizado Samsung Account)
@@ -61,7 +65,7 @@ function createLayoutElementTotalPoints({ totalPointsCurrentOrder }) {
         </tr>
       </tbody>
       `
-    return isFidelidadeAccount ? {} : { _component, _componentVtexId };
+    return isFidelidadeAccount || isNubankAccount || isEndlessOrderForm ? {} : { _component, _componentVtexId };
 }
 
 function createLayoutMessageObs(saguid) {
@@ -69,7 +73,7 @@ function createLayoutMessageObs(saguid) {
   
   let _component = ''
 
-  if (saguid && !isFidelidadeAccount) {
+  if (saguid) {
     _component = `
       <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
         <p>
@@ -79,7 +83,7 @@ function createLayoutMessageObs(saguid) {
     `
   } 
   
-  if (!saguid && !isFidelidadeAccount) {
+  if (!saguid) {
     _component = `
     <div id="text-details-rewards" style="max-width: 376px; width: 100%; margin-top: 15px; color: #000; font-size: 12px; font-family: 'SamsungOne'; float: right; text-align: justify;">
       <p>
@@ -90,9 +94,7 @@ function createLayoutMessageObs(saguid) {
   `
   }
 
-  return {
-    _component,
-  }
+  return isNubankAccount || isEndlessOrderForm || (isFidelidadeAccount && saleschannel === '72') ? {} : { _component };
 }
 
 function createLayoutRewardsTotalDiscount({ discount }) {
