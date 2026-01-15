@@ -46,7 +46,7 @@ export default class Payment {
   updateInstallmentsInPaymentGroups(event, request) {
     try {
       const isUpdateItemRequest = request.url.includes('/items/update/')
-  
+
       if (isUpdateItemRequest) {
         Payment.shouldUpdate = true
       }
@@ -63,14 +63,14 @@ export default class Payment {
 
   setNubankIFrameInstallments(orderForm) {
     try {
-      const NubankPaymentGroup = 
+      const NubankPaymentGroup =
         window?.paymentData?.paymentGroups?.NubankPaymentGroup
 
       if (!NubankPaymentGroup) {
         return
       }
 
-      const creditCardPaymentGroup = 
+      const creditCardPaymentGroup =
         window?.paymentData?.paymentGroups?.creditCardPaymentGroup
 
       const { payments = [], installmentOptions = [] } = orderForm?.paymentData ?? {}
@@ -96,7 +96,7 @@ export default class Payment {
           }
         }
       }
-      
+
     } catch (error) {
       console.error('error ~ setNubankIFrameInstallments: ', error);
     }
@@ -115,7 +115,7 @@ export default class Payment {
 
   setNubankWarningMessage(orderForm) {
     try {
-      const NubankPaymentGroup = 
+      const NubankPaymentGroup =
         window?.paymentData?.paymentGroups?.NubankPaymentGroup
 
       if (!NubankPaymentGroup) {
@@ -149,6 +149,7 @@ export default class Payment {
     try {
       this.setNubankWarningMessage(orderForm)
       this.setNubankIFrameInstallments(orderForm)
+      this.addPaymentMethodsIcons()
     } catch (err) {
       console.error(`Error in class Payment: ${err}`);
       this.loading(false)
@@ -161,7 +162,7 @@ export default class Payment {
   setPixAsDefaultPaymentMethod() {
     const account = window?.__RUNTIME__.account
     const defaultPaymentSystemByAccount = {
-      samsungbrshopeppnubank: 178, 
+      samsungbrshopeppnubank: 178,
       default: 125, // pix 
     }
     const paymentSystemId = defaultPaymentSystemByAccount[account] || defaultPaymentSystemByAccount.default
@@ -186,10 +187,10 @@ export default class Payment {
 
   orderPaymentMethodScroll(paymentMethod) {
     let headerHeight = $("#header-standard .main-header").outerHeight() || 0;
-  
+
     requestAnimationFrame(() => {
       const offsetTop = paymentMethod.offset().top;
-  
+
       $("html, body").animate({
         scrollTop: offsetTop - (headerHeight + 65)
       }, 500);
@@ -197,40 +198,40 @@ export default class Payment {
   }
 
   orderPaymentMethod() {
-		if (window.innerWidth > 769) return;
+    if (window.innerWidth > 769) return;
 
-		let lastIndex = null;
+    let lastIndex = null;
 
-		const observer = new MutationObserver((mutations, obs) => {
-			if ($('.payment-group-item').length > 0 && $('.payment-method').length > 0) {
-				obs.disconnect();
+    const observer = new MutationObserver((mutations, obs) => {
+      if ($('.payment-group-item').length > 0 && $('.payment-method').length > 0) {
+        obs.disconnect();
 
-				const _this = this;
+        const _this = this;
 
-				$('.payment-group-item').each(function (index) {
-					let paymentMethod = $('.payment-method').eq(index);
-					$(this).after(paymentMethod);
-					paymentMethod.addClass(`payment-method-order-${index + 1}`);
-				});
+        $('.payment-group-item').each(function (index) {
+          let paymentMethod = $('.payment-method').eq(index);
+          $(this).after(paymentMethod);
+          paymentMethod.addClass(`payment-method-order-${index + 1}`);
+        });
 
-				$('.payment-group-item').on('click', function () {
-					let index = $('.payment-group-item').index(this);
-					let paymentMethod = $('.payment-method').eq(index);
+        $('.payment-group-item').on('click', function () {
+          let index = $('.payment-group-item').index(this);
+          let paymentMethod = $('.payment-method').eq(index);
 
-					if (lastIndex === index) {
-						paymentMethod.slideToggle();
-						lastIndex = paymentMethod.is(':visible') ? index : null;
-					} else {
-						paymentMethod.slideDown();
-						lastIndex = index;
-					}
-					_this.orderPaymentMethodScroll(paymentMethod);
-				});
-			}
-		});
+          if (lastIndex === index) {
+            paymentMethod.slideToggle();
+            lastIndex = paymentMethod.is(':visible') ? index : null;
+          } else {
+            paymentMethod.slideDown();
+            lastIndex = index;
+          }
+          _this.orderPaymentMethodScroll(paymentMethod);
+        });
+      }
+    });
 
-		observer.observe(document.body, { childList: true, subtree: true });
-	}
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
 
   clearInputsChangeMethod() {
 
@@ -262,5 +263,39 @@ export default class Payment {
         setTimeout(() => reloadIframe(wrapperId), 100);
       }
     });
+  }
+
+  addPaymentMethodsIcons() {
+    if ($('.payment-methods-container').length > 0) return
+
+    const iconsElement = `
+      <div class="payment-methods-container">
+        <div class="payment-methods-infos">
+          <p>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/932a300b-6877-474d-981b-0c3b68a1deaa___321926fdd56aecf4dd63c6d4309bb5e3.svg" alt="" />
+            Pagamento <b>100%</b> seguro
+          </p>
+          <p>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/f2e2ec70-a9a2-4287-9498-b3ac6e183eb1___9513c65f5de67d014f4a9fc03cac5a73.svg" alt="" />
+            Parcele em até <b>24x</b> no cartão
+          </p>
+        </div>
+        <div class="payment-methods-icons">
+          <p>Formas de Pagamento:</p>
+          <div>
+            <img src="https://samsungbr.vtexassets.com/arquivos/icons-payments_icon-ssg-itaucard.png" alt=""/>
+            <img src="https://samsungbr.vtexassets.com/arquivos/icons-payments_icon-pix.png" alt=""/>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/4492c33b-98b2-4b67-ad68-cea51bb04a31___a7c7056738c180722240a31eb7a9cdb6.svg" alt=""/>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/4d88cc67-151d-4b7b-bd45-766100275cc7___8b205ac44367b37ba1ed43276ce84b29.svg" alt=""/>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/bfd271b5-246f-4ae9-b817-0ef059f58693___b0f2948fe225dcfa67fcae4c78c8440a.svg" alt=""/>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/5224f5d0-25a8-44d1-b0bb-4f2ec57127e5___4b665a249b4fa8eed0ef9a20559d154f.svg" alt=""/>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/7b6948ee-4e18-4dae-9207-49c09dffd648___6624accec46562be51b767255675eaf3.svg" alt=""/>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/7557f348-6ce6-4077-8337-16a0924b4a21___43933cc7997768334a376a9d68479a79.svg" alt=""/>
+            <img src="https://samsungbrshop.vtexassets.com/assets/vtex.file-manager-graphql/images/2036dba3-8a3a-4ac6-acf0-f9f861ff431b___9c246f035d98955fc8b3d0822c915a72.svg" alt=""/>
+            </div>
+        </div>
+      </div>
+    `
+    $('#payments-title').append(iconsElement)
   }
 }
