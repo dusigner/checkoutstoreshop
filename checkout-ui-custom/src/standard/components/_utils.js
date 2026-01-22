@@ -44,7 +44,7 @@ export async function getSessionCookie() {
         return result;
       });
 
-    return cookieSessao; 
+    return cookieSessao;
   } catch (error) {
     console.error("Erro getSessionCookie:", error);
     throw error;
@@ -77,7 +77,7 @@ export async function insertClientPartial(body) {
     accept: 'application/vnd.vtex.ds.v10+json',
     contentType: 'application/json; charset=utf-8',
     headers: {
-          "vtex-session": vtexSession
+      "vtex-session": vtexSession
     },
     data: JSON.stringify(
       body,
@@ -113,7 +113,7 @@ export async function setCustomData({ app, fields }) {
   Object.entries(fields || {}).map(([key, value]) => {
     fields[key] = JSON.stringify(value)
   })
-  
+
   return $.ajax({
     type: 'PUT',
     url: `${rootPath()}/v1/pub/putCheckoutCustomData/${orderFormId}/${app}`,
@@ -126,7 +126,7 @@ export async function deleteCustomData({ app, fields }) {
   const orderFormId = vtexjs?.checkout?.orderFormId
 
   if (!orderFormId) return
-  
+
   return Promise.all(
     Object.keys(fields ?? {}).map((field) => {
       return $.ajax({
@@ -137,14 +137,33 @@ export async function deleteCustomData({ app, fields }) {
   )
 }
 
-export async function getMaxInstallmentByPaymentSystem(paymentSystemId = '2') {    
+export async function getMaxInstallmentByPaymentSystem(paymentSystemId = '2') {
   try {
-      const data = await paymentData.getInstallmentsByPaymentSystem(paymentSystemId)
+    const data = await paymentData.getInstallmentsByPaymentSystem(paymentSystemId)
 
-      return data.installments.reduce((acc, installment) => {
-          return installment.count < (acc.count ?? 0) ? acc : installment
-      }, {})
+    return data.installments.reduce((acc, installment) => {
+      return installment.count < (acc.count ?? 0) ? acc : installment
+    }, {})
   } catch (error) {
-      console.error(error)
+    console.error(error)
   }
+}
+
+export const getEnv = () => {
+  if (!window.vtex || !window.vtex.accountName) {
+    return 'Outro'
+  }
+
+  const account = window.vtex.accountName
+
+  if (['samsungbrtestseppnubank', 'samsungbrshopeppnubank'].includes(account)) {
+    return 'Nubank'
+  }
+
+  return 'Outro'
+}
+
+export const ENVIRONMENTS = {
+  NUBANK: 'Nubank',
+  OUTROS: 'Outro',
 }

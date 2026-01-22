@@ -21,6 +21,7 @@ import RenderLoaderFallback from '../components/_renderLoaderFallback'
 import CountDown from '../components/countdown/_countdown'
 import fixProfileForm from '../components/_fixProfileData'
 import BankPaymentSlip from '../components/_bankPaymentSlip'
+import VerifyAuthentication from '../components/_verifyAuthentication'
 
 import {
   debounce,
@@ -69,7 +70,7 @@ export class CheckoutCustom {
     this.hideEmailStep = hideEmailStep
     this.lastOrderFormTotalPrice = 0
     this.maxInstallment = undefined
-    this.maxInstallmentSamsungCard  = undefined
+    this.maxInstallmentSamsungCard = undefined
     this.subTotalValueFinal = null
     this.discountPrices = null
 
@@ -97,6 +98,7 @@ export class CheckoutCustom {
     this.renderLoaderFallback = new RenderLoaderFallback()
     this.bankPaymentSlip = new BankPaymentSlip()
     this.countDown = new CountDown()
+    this.verifyAuthentication = new VerifyAuthentication()
 
     if (deliveryDateFormat) {
       this.shippingEstimateCustom = new ShippingEstimateCustom()
@@ -223,133 +225,133 @@ export class CheckoutCustom {
   }
 
   showCustomToast(message, type = 'info') {
-  const toast = document.createElement('div');
-  toast.className = `vtex-toast${type}`;
-  toast.innerHTML = `
+    const toast = document.createElement('div');
+    toast.className = `vtex-toast${type}`;
+    toast.innerHTML = `
     <div class="vtex-toast-content">
       <span class="vtex-toast-icon">${type === 'warning' ? '⚠️' : 'ℹ️'}</span>
       <span class="vtex-toast-message">${message}</span>
     </div>
   `;
-  Object.assign(toast.style, {
-    position: 'fixed',
-    top: '20px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    background: '#f2f4f5',
-    color: '#3f3f40',
-    padding: '12px 16px',
-    borderLeft: type === 'warning' ? '4px solid #f71963' : '4px solid #368df7',
-    borderRadius: '4px',
-    zIndex: 9999,
-    boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
-    fontSize: '14px',
-    maxWidth: '320px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    opacity: '0.95',
-  });
+    Object.assign(toast.style, {
+      position: 'fixed',
+      top: '20px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      background: '#f2f4f5',
+      color: '#3f3f40',
+      padding: '12px 16px',
+      borderLeft: type === 'warning' ? '4px solid #f71963' : '4px solid #368df7',
+      borderRadius: '4px',
+      zIndex: 9999,
+      boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.16)',
+      fontSize: '14px',
+      maxWidth: '320px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      opacity: '0.95',
+    });
 
-  document.body.appendChild(toast);
+    document.body.appendChild(toast);
 
-  setTimeout(() => {
-    toast.style.transition = 'opacity 0.4s';
-    toast.style.opacity = '0';
-    setTimeout(() => toast.remove(), 400);
-  }, 6000);
-}
+    setTimeout(() => {
+      toast.style.transition = 'opacity 0.4s';
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 400);
+    }, 6000);
+  }
 
-couponInfo(response) {
-  const { marketingData, messages, ratesAndBenefitsData } = response;
+  couponInfo(response) {
+    const { marketingData, messages, ratesAndBenefitsData } = response;
 
-  const _trElem = $('.summary-template-holder');
-  const couponFields = _trElem.find('.coupon-fieldset');
-  const messagesElem = $('.vtex-front-messages-placeholder-opened');
-  const inputCoupon = $('.coupon-value.input-small');
+    const _trElem = $('.summary-template-holder');
+    const couponFields = _trElem.find('.coupon-fieldset');
+    const messagesElem = $('.vtex-front-messages-placeholder-opened');
+    const inputCoupon = $('.coupon-value.input-small');
 
-  couponFields.find('.div-coupon-info').remove();
+    couponFields.find('.div-coupon-info').remove();
 
-  const couponExists = ratesAndBenefitsData.rateAndBenefitsIdentifiers.some(item => {
-    return item.matchedParameters && item.matchedParameters['couponCode@Marketing'] === marketingData?.coupon;
-  });
+    const couponExists = ratesAndBenefitsData.rateAndBenefitsIdentifiers.some(item => {
+      return item.matchedParameters && item.matchedParameters['couponCode@Marketing'] === marketingData?.coupon;
+    });
 
-  try {
-    const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
+    try {
+      const couponInfoElement = $('<div class="div-coupon-info"><p style="font-size: 12px; color: #000;"></p></div>');
 
-    if (marketingData && marketingData.coupon) {
-      if (couponExists) {
-        inputCoupon.each(function () { $(this).prop('disabled', true); });
-        couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
-        couponFields.append(couponInfoElement); 
-        return;
-      }
-
-      couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
-      vtexjs.checkout.removeDiscountCoupon().then((res, code) => {
-        if (code === 'success') {
-          window.location.reload();
-        }
-      });
-    } else {
-      if (messages && messages.length > 0) {
-        const warningMessage = messages.find(message => message.status === 'warning');
-        const errorMessage = messages.find(message => message.status === 'error');
-
-        if (["giftCardCommunicationError", "invalidGiftCard"].includes(errorMessage?.code)) {
-          messagesElem.css('display', 'block');
-          return;
-        }
-
-        if (warningMessage) {
-          const text = warningMessage.text?.trim();
-
-          if (text === 'O valor do frete foi alterado') {
-            this.showCustomToast(text, 'warning');
-            messagesElem.empty(); 
-            return; 
-          }
-
-          if (text === 'O valor dos itens foi alterado') {
-            messagesElem.css('display', 'none');
-            couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
-            couponFields.append(couponInfoElement);
-            return;
-          }
-
-          // Cupom expirado
-          messagesElem.css('display', 'none');
-          const couponCodeMatch = text.match(/Cupom (.+?) (?:inválido|expirado)/);
-          const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
-          const isRewardsCoupon = couponCode?.toLowerCase().includes('rewards');
-          const isReward = window.vtex.accountName === 'samsungbrshopfidelidade' || window.vtex.accountName === 'samsungbrtestsfidelidade';
-
-          if (!isReward && isRewardsCoupon) {
-            couponInfoElement.find('p').text('Esse cupom é para uso exclusivo do Portal Rewards! Acesse agora para finalizar sua compra').css('color', 'red');
-            couponInfoElement.addClass('isReward');
-            $('.coupon-fields button').addClass('isButtonReward');
-          } else {
-            couponInfoElement.find('p').text(text).css('color', 'red');
-          }
-
-          inputCoupon.each(function () {
-            $(this).css('border-bottom', 'solid 1px red').val(couponCode);
-          });
-
+      if (marketingData && marketingData.coupon) {
+        if (couponExists) {
+          inputCoupon.each(function () { $(this).prop('disabled', true); });
+          couponInfoElement.find('p').text('Cupom de desconto aplicado').css('color', '#006BEA');
           couponFields.append(couponInfoElement);
           return;
         }
+
+        couponInfoElement.find('p').text('Cupom inválido para compra').css('color', 'red');
+        vtexjs.checkout.removeDiscountCoupon().then((res, code) => {
+          if (code === 'success') {
+            window.location.reload();
+          }
+        });
+      } else {
+        if (messages && messages.length > 0) {
+          const warningMessage = messages.find(message => message.status === 'warning');
+          const errorMessage = messages.find(message => message.status === 'error');
+
+          if (["giftCardCommunicationError", "invalidGiftCard"].includes(errorMessage?.code)) {
+            messagesElem.css('display', 'block');
+            return;
+          }
+
+          if (warningMessage) {
+            const text = warningMessage.text?.trim();
+
+            if (text === 'O valor do frete foi alterado') {
+              this.showCustomToast(text, 'warning');
+              messagesElem.empty();
+              return;
+            }
+
+            if (text === 'O valor dos itens foi alterado') {
+              messagesElem.css('display', 'none');
+              couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
+              couponFields.append(couponInfoElement);
+              return;
+            }
+
+            // Cupom expirado
+            messagesElem.css('display', 'none');
+            const couponCodeMatch = text.match(/Cupom (.+?) (?:inválido|expirado)/);
+            const couponCode = couponCodeMatch ? couponCodeMatch[1] : null;
+            const isRewardsCoupon = couponCode?.toLowerCase().includes('rewards');
+            const isReward = window.vtex.accountName === 'samsungbrshopfidelidade' || window.vtex.accountName === 'samsungbrtestsfidelidade';
+
+            if (!isReward && isRewardsCoupon) {
+              couponInfoElement.find('p').text('Esse cupom é para uso exclusivo do Portal Rewards! Acesse agora para finalizar sua compra').css('color', 'red');
+              couponInfoElement.addClass('isReward');
+              $('.coupon-fields button').addClass('isButtonReward');
+            } else {
+              couponInfoElement.find('p').text(text).css('color', 'red');
+            }
+
+            inputCoupon.each(function () {
+              $(this).css('border-bottom', 'solid 1px red').val(couponCode);
+            });
+
+            couponFields.append(couponInfoElement);
+            return;
+          }
+        }
+
+        // Nenhum cupom aplicado
+        couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
       }
 
-      // Nenhum cupom aplicado
-      couponInfoElement.find('p').text('Digite o cupom de desconto').css('color', '#000');
+      couponFields.append(couponInfoElement);
+    } catch (e) {
+      console.error('couponInfo error:', e);
     }
-
-    couponFields.append(couponInfoElement);
-  } catch (e) {
-    console.error('couponInfo error:', e);
   }
-}
 
 
   buildVertical() {
@@ -395,43 +397,42 @@ couponInfo(response) {
 
         const logisticsInfoData =
           orderForm.shippingData.logisticsInfo[i].selectedDeliveryChannel === 'delivery' &&
-          orderForm.shippingData.logisticsInfo[i].selectedSla !== null
+            orderForm.shippingData.logisticsInfo[i].selectedSla !== null
             ? `Opção de entrega selecionada: <span>${orderForm.shippingData.logisticsInfo[i].selectedSla}</span><br />`
             : orderForm.shippingData.logisticsInfo[i].selectedSla === null
               ? ''
-              : `Retirada em: <span>${
-                  orderForm.shippingData.logisticsInfo[i].slas.find(
-                    pickup =>
-                      pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla
-                  ).pickupStoreInfo.friendlyName
-                }</span><br /> Retirada após confirmação via e-mail`;
-          const productId = String(orderForm.items[i].productId);
-          const refId = orderForm.items[i].refId || '';
-          const { detailUrl } = orderForm.items[i];
-          const isInstallService = detailUrl.includes('/install-service/p');
-          const isSamsungCare = detailUrl.includes('/samsung-care-');
-          const shippingText = isInstallService || isSamsungCare ? 'Após a entrega do produto' : '';
- 
-          const tagList = window.samsungProductTags || [];
-  if (Array.isArray(tagList) && tagList.length === 0) {
-            return;
-          }
+              : `Retirada em: <span>${orderForm.shippingData.logisticsInfo[i].slas.find(
+                pickup =>
+                  pickup.name === orderForm.shippingData.logisticsInfo[i].selectedSla
+              ).pickupStoreInfo.friendlyName
+              }</span><br /> Retirada após confirmação via e-mail`;
+        const productId = String(orderForm.items[i].productId);
+        const refId = orderForm.items[i].refId || '';
+        const { detailUrl } = orderForm.items[i];
+        const isInstallService = detailUrl.includes('/install-service/p');
+        const isSamsungCare = detailUrl.includes('/samsung-care-');
+        const shippingText = isInstallService || isSamsungCare ? 'Após a entrega do produto' : '';
+
+        const tagList = window.samsungProductTags || [];
+        if (Array.isArray(tagList) && tagList.length === 0) {
+          return;
+        }
 
 
-          const matchedTag = tagList.find(tag =>
-            tag.productIdTag === String(productId) &&
-            tag.activeTag === true &&
-            tag.tagCheckoutVisible === true
-          );
- 
-          const installedHtml = matchedTag
+        const matchedTag = tagList.find(tag =>
+          tag.productIdTag === String(productId) &&
+          tag.activeTag === true &&
+          tag.tagCheckoutVisible === true
+        );
+
+        const installedHtml = matchedTag
           ? `<p class="samsung-tag" style="
                 background-color: ${matchedTag.colorTag};
                 color: ${matchedTag.colorTextTag};
             ">Instalado pela Samsung</p>`
           : '';
- 
-          const moreInfoHtml = `
+
+        const moreInfoHtml = `
             <div class="more-info ${isInstallService || isSamsungCare ? 'isServices' : ''}">
               ${installedHtml}
               <p class="ref-id" style="font-size: 12px" data-refid="${refId}">${refId}</p>
@@ -439,8 +440,8 @@ couponInfo(response) {
               <p class="estimate-shipping">${shippingText}</p>
             </div>
           `;
- 
-          _trElem.find('td.product-name').append(moreInfoHtml);
+
+        _trElem.find('td.product-name').append(moreInfoHtml);
       });
     } catch (e) {
       console.error('enchancementProductName error:', e);
@@ -713,20 +714,20 @@ couponInfo(response) {
   }
 
   wrapSummary() {
-	  try {
-		  const _trElem = $(`.cart-template.full-cart`);
-		  const summaryHolder = _trElem.find('> .summary-template-holder');
+    try {
+      const _trElem = $(`.cart-template.full-cart`);
+      const summaryHolder = _trElem.find('> .summary-template-holder');
 
-		  if (summaryHolder.parent().hasClass('summary-to-new-components')) {
-			  $('.cart-links-bottom').appendTo(summaryHolder);
-			  return;
-		  }
+      if (summaryHolder.parent().hasClass('summary-to-new-components')) {
+        $('.cart-links-bottom').appendTo(summaryHolder);
+        return;
+      }
 
-		  summaryHolder.wrap(`<div class="summary-to-new-components"></div>`);
-		  $('.cart-links-bottom').appendTo(summaryHolder);
-	  } catch (e) {
-		  console.error('WrapSummary error:', e);
-	  }
+      summaryHolder.wrap(`<div class="summary-to-new-components"></div>`);
+      $('.cart-links-bottom').appendTo(summaryHolder);
+    } catch (e) {
+      console.error('WrapSummary error:', e);
+    }
   }
 
   addMedalliaScript() {
@@ -992,7 +993,7 @@ couponInfo(response) {
   }
 
   verifyMobileScreen() {
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) this.isMobile = true;
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) this.isMobile = true;
   }
 
   buttonCheckoutOrder(orderForm) {
@@ -1002,7 +1003,7 @@ couponInfo(response) {
       const pixPayment = orderForm.paymentData.payments.find(
         item => item.paymentSystem === '125'
       )
-      if(pixPayment){
+      if (pixPayment) {
         setTimeout(function () {
           let count = 0
           const interval = setInterval(function () {
@@ -1011,7 +1012,7 @@ couponInfo(response) {
               clearInterval(interval)
             } else {
               count++
-              if(count === 20) {
+              if (count === 20) {
                 clearInterval(interval)
               }
             }
@@ -1019,11 +1020,11 @@ couponInfo(response) {
         }, 5000)
       }
     }
-    if(buttons){
+    if (buttons) {
       buttons.forEach(button => {
         button.addEventListener('click', verifyPixMessage);
       });
-    } 
+    }
   }
 
   showMessagePix(orderForm) {
@@ -1036,7 +1037,7 @@ couponInfo(response) {
       const _containerPixValueFooter = $('.body-order-form .container-order-form .transactions-container .VTEX-PIX__modal-background .VTEX-PIX__footer .VTEX-PIX_footer-value')
       const _containerPixElementValue = _containerPixValueFooter.find('.VTEX-PIX_footer-value-samsung')
       const _containerPixElement = _containerPixHeaderDescription.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescription.find('.VTEX-PIX__container-info-head-samsung') && _containerPixDescriptionInfos.find('.VTEX-PIX_description-footer-samsung')
-      
+
       const headerDescriptionPixText = `
         <div class="VTEX-PIX__container-info-head-samsung">Instruções para Pagamento</div>
       `;
@@ -1055,8 +1056,8 @@ couponInfo(response) {
       const valueFooterPix = `
         <span class="VTEX-PIX_footer-value">${formatCurrencyBRL(orderForm.value)}</span>
       `;
-      
-      if(_containerQRCode.length > 0){
+
+      if (_containerQRCode.length > 0) {
         if (_containerPixElement.length === 0) {
           _containerPixHeaderDescription.empty()
           _containerPixDescription.empty()
@@ -1169,7 +1170,7 @@ couponInfo(response) {
       if (_containerNubankExtraElement.length === 0) {
         _containerTotalizersNubankExtra.empty()
       }
-        
+
       _containerTotalizersNubankExtra.html(descriptionNubankExtraText);
     } catch (e) {
       console.error("showMessageNubankPayment", e)
@@ -1314,16 +1315,16 @@ couponInfo(response) {
                 <p style="margin-bottom: 0;">
                   <strong>${formatCurrencyBRL(_this.maxInstallment.total)}</strong> em até <strong>${_this.maxInstallment.count}x sem juros</strong>
                   ${!_this.maxInstallmentSamsungCard?.total ? (
-                  `<span class="custom-tooltip">i</span>`
-                ) : ''}
+              `<span class="custom-tooltip">i</span>`
+            ) : ''}
                 </p>
 
                 ${(_this.maxInstallmentSamsungCard?.count > 1) ? (
-                  `<p>
+              `<p>
                       ou <strong>${_this.maxInstallmentSamsungCard.count}x sem juros</strong> com o <strong>Cartão Samsung</strong> 
                       <span class="custom-tooltip">i</span>
                     </p>`
-                ) : ''}
+            ) : ''}
               </div>
             </div>`
           ) : '<div style="margin-top: 10px; height: 54px" />'}`
@@ -1460,7 +1461,7 @@ couponInfo(response) {
         if (itauCardSelectMasterCardElement) {
           itauCardSelectMasterCardElement.before(itauCardMessagMastereHtml)
         }
-        if(itauCardSelectVisaElement) {
+        if (itauCardSelectVisaElement) {
           itauCardSelectVisaElement.before(itauCardMessagVisaeHtml)
         }
       }
@@ -1685,10 +1686,10 @@ couponInfo(response) {
 
       const notMyvtex = window?.location?.href?.indexOf('myvtex') === -1;
       const orderFormId = window?.vtexjs?.checkout?.orderForm?.orderFormId
-      
+
       if (notMyvtex && orderFormId) {
         const returnUrl = `${window.vtex.endpointAPI.split('/api')[0]}/checkout/changeToAnonymousUser/${window.vtexjs.checkout.orderForm.orderFormId}`
-  
+
         window.location.assign(
           `${window.vtex.endpointAPI}/pub/logout?scope=${window.vtex.accountName}&returnUrl=${returnUrl}`
         )
@@ -2077,7 +2078,7 @@ couponInfo(response) {
         }
       })
 
-      if(!_this.sessionPolicy) {
+      if (!_this.sessionPolicy) {
         getSessionCookie().then(session => {
           const policy = session?.namespaces?.store?.channel?.value
           _this.sessionPolicy = policy
@@ -2087,6 +2088,7 @@ couponInfo(response) {
       $(window).on('orderFormUpdated.vtex', async function (evt, orderForm) {
         _this.update(orderForm)
         _this.showEmptyCart(orderForm)
+        _this.verifyAuthentication.init()
         // addEventListener('hashchange', async event => {
         const showHeader = ['#/payment', '#/shipping', '#/profile']
         // const { hash } = event.target.location
@@ -2097,7 +2099,7 @@ couponInfo(response) {
         // })
 
         // VERIFY IF SOME FIDELITY PARTNER DOESNT ACCEPT REWARDS, THEN DONT SHOW REWARDS INFOS
-        const doesntAcceptRewards = _this.sessionPolicy && _this.sessionPolicy === '72' 
+        const doesntAcceptRewards = _this.sessionPolicy && _this.sessionPolicy === '72'
         if (!doesntAcceptRewards) {
           _this.Rewards = new Rewards()
         }
@@ -2276,7 +2278,7 @@ couponInfo(response) {
    * Serve para tratar os casos em que o vendedor testa o link de store+ antes de enviar
    * para o cliente.
    */
-  
+
   handleOrderFromEndless(hash, orderForm) {
     if (hash !== '#/cart') return
     const _this = this
@@ -2309,7 +2311,7 @@ couponInfo(response) {
     }
   }
   showPersonalDataEndless(orderForm) {
-    
+
     try {
       const isEndlessOrderForm = orderForm.customData?.customApps?.some(
         customApp => customApp.id === 'endlessaisle'
@@ -2317,13 +2319,13 @@ couponInfo(response) {
 
       if (isEndlessOrderForm) {
         if (!document.querySelector(`#show-personal-data-from-storeplus`)) {
-              document.querySelector(`body`).insertAdjacentHTML("afterbegin", `
+          document.querySelector(`body`).insertAdjacentHTML("afterbegin", `
                 <style id="show-personal-data-from-storeplus">
                   #client-profile-data .box-info {
                     display: block !important;
                   }
                 </style>`)
-          }
+        }
       }
     } catch (e) {
       console.error(e)
