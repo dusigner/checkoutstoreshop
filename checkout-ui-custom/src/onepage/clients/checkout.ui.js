@@ -69,7 +69,6 @@ export class CheckoutCustom {
     this.hideEmailStep = hideEmailStep
     this.lastOrderFormTotalPrice = 0
     this.maxInstallment = undefined
-    this.maxInstallmentSamsungCard = undefined
     this.subTotalValueFinal = null
     this.discountPrices = null
 
@@ -1289,12 +1288,7 @@ export class CheckoutCustom {
           paymentSystem => paymentSystem?.groupName === 'creditCardPaymentGroup'
         )
 
-        const customPrivate_501PaymentGroup = orderForm?.paymentData?.paymentSystems?.find(
-          paymentSystem => paymentSystem?.groupName === 'customPrivate_501PaymentGroup'
-        )
-
         const creditCardPaymentSystemId = creditCardPaymentGroup?.stringId
-        const samsungCardPaymentSystemId = customPrivate_501PaymentGroup?.stringId
 
         if (!installmentPix.length) return
         const inCashPrice = installmentPix[0].total
@@ -1307,27 +1301,10 @@ export class CheckoutCustom {
         if (_this.lastOrderFormTotalPrice !== orderForm.value) {
           _this.lastOrderFormTotalPrice = orderForm.value
 
-          const installmentsPromises = []
-
           if (creditCardPaymentSystemId) {
-            installmentsPromises.push(
-              getMaxInstallmentByPaymentSystem(creditCardPaymentSystemId)
-            );
+            const creditCardInstallments = await getMaxInstallmentByPaymentSystem(creditCardPaymentSystemId);
+            _this.maxInstallment = creditCardInstallments
           }
-
-          if (samsungCardPaymentSystemId) {
-            installmentsPromises.push(
-              getMaxInstallmentByPaymentSystem(samsungCardPaymentSystemId)
-            );
-          }
-
-          const [
-            creditCardInstallments,
-            samsungCardInstallments
-          ] = await Promise.allSettled(installmentsPromises);
-
-          _this.maxInstallment = creditCardInstallments?.value
-          _this.maxInstallmentSamsungCard = samsungCardInstallments?.value
         }
 
         const _component =
@@ -1344,16 +1321,16 @@ export class CheckoutCustom {
                 <p style="margin-bottom: 0;">
                   <strong>${formatCurrencyBRL(_this.maxInstallment.total)}</strong> em até <strong>${_this.maxInstallment.count}x sem juros</strong>
                   ${!_this.maxInstallmentSamsungCard?.total ? (
-                  `<span class="custom-tooltip">i</span>`
-                ) : ''}
+              `<span class="custom-tooltip">i</span>`
+            ) : ''}
                 </p>
 
                 ${(_this.maxInstallmentSamsungCard?.count > 1) ? (
-                  `<p>
+              `<p>
                       ou <strong>${_this.maxInstallmentSamsungCard.count}x sem juros</strong> com o <strong>Cartão Samsung</strong> 
                       <span class="custom-tooltip">i</span>
                     </p>`
-                ) : ''}
+            ) : ''}
               </div>
             </div>`
           ) : '<div style="margin-top: 10px; height: 54px" />'}`
@@ -1487,7 +1464,7 @@ export class CheckoutCustom {
         if (itauCardSelectMasterCardElement) {
           itauCardSelectMasterCardElement.before(itauCardMessagMastereHtml)
         }
-        if(itauCardSelectVisaElement) {
+        if (itauCardSelectVisaElement) {
           itauCardSelectVisaElement.before(itauCardMessagVisaeHtml)
         }
       }

@@ -358,12 +358,54 @@ class AdobeLaunchPixel {
 
       return result
     } catch (err) {
-      // console.error("[SAMSUNG AA DTM] Codes cache are corrupted:\n", typeof _this.codesCache, "\n", err);
       if (typeof _this.codesCache === 'string') {
         _this.codesCache = JSON.parse(_this.codesCache)
       }
-      // return _this._findCachedInfo(type, value, breakSku);
     }
+  }
+
+  populateItemQuantity() {
+    const _this = this
+
+    document.querySelectorAll('.product-item').forEach((node) => {
+      if (!node) return;
+
+      if (window.location.hash === '#/cart') {
+        if (node.querySelector('td.product-name a') !== null) {
+          const addItemButton = node.querySelector(
+            'td.quantity a.item-quantity-change.item-quantity-change-increment'
+          )
+          const skuId = node.getAttribute('data-sku')
+          if (addItemButton && skuId) {
+            _this.setElementOmni(addItemButton, 'data-omni-buynow', {
+              base: _this._mountDataBuyNow('base', skuId),
+              variant: _this._mountDataBuyNow('variant', skuId),
+              imageurl: _this._mountDataBuyNow('imageUrl', skuId),
+              name: _this._mountDataBuyNow('displayName', skuId),
+            })
+
+            $(
+              `.product-item[data-sku="${skuId}"] #item-quantity-change-increment-${skuId}`
+            ).on('click', function () {
+              _this._populateDataLayer()
+              _this.waitForDataSend()
+              _this._pageTrack()
+            })
+          }
+        }
+      }
+
+      const removeItemButton = node.querySelector('.item-link-remove')
+
+      if (node.querySelector('td.product-name a') !== null) {
+        _this.setElementOmni(removeItemButton, 'data-omni-remove', null, {
+          type: 'url',
+          value: _this._getLocation(
+            node.querySelector('td.product-name a').href
+          ),
+        })
+      }
+    })
   }
 
   /* The call back of the fetch and also call the custom callback passed as parameter */
@@ -398,43 +440,7 @@ class AdobeLaunchPixel {
   cart(classes, node) {
     const _this = this
 
-    if (node.className.indexOf('product-item') > -1) {
-      if (window.location.hash === '#/cart') {
-        if (node.querySelector('td.product-name a') !== null) {
-          const addItemButton = node.querySelector(
-            'td.quantity a.item-quantity-change.item-quantity-change-increment'
-          )
-          const skuId = node.getAttribute('data-sku')
-          if (addItemButton && skuId) {
-            _this.setElementOmni(addItemButton, 'data-omni-buynow', {
-              base: _this._mountDataBuyNow('base', skuId),
-              variant: _this._mountDataBuyNow('variant', skuId),
-              imageurl: _this._mountDataBuyNow('imageUrl', skuId),
-              name: _this._mountDataBuyNow('displayName', skuId),
-            })
-            
-            $(
-              `.product-item[data-sku="${skuId}"] #item-quantity-change-increment-${skuId}`
-            ).on('click', function () {
-              _this._populateDataLayer()
-              _this.waitForDataSend()
-              _this._pageTrack()
-            })
-          }
-        }
-      }
-
-      const removeItemButton = node.querySelector('.item-link-remove')
-
-      if (node.querySelector('td.product-name a') !== null) {
-        _this.setElementOmni(removeItemButton, 'data-omni-remove', null, {
-          type: 'url',
-          value: _this._getLocation(
-            node.querySelector('td.product-name a').href
-          ),
-        })
-      }
-    }
+    _this.populateItemQuantity()
 
     const proceedCheckoutBtn = document.querySelector('#cart-to-orderform')
 
@@ -1025,14 +1031,13 @@ class AdobeLaunchPixel {
   _mountDataBuyNow(dataOmni, skuId) {
     const _this = this
     let data = ''
-
     const findItem = window.vtexjs.checkout.orderForm.items.find(function (
       item
     ) {
       return item.id === skuId
     })
 
-    if (!findItem) return ''
+    if (!findItem || !_this?.cacheProducts?.length) return ''
 
     try {
       const findItemCacheApi = _this.cacheProducts.find(function (objItem) {
