@@ -238,7 +238,7 @@ export default class TradeIn {
         arrayPromise.push(request)
       })
 
-      Promise.all(arrayPromise).then(values => {
+      Promise.all(arrayPromise).then(async values => {
         transport.forEach(mainProduct => {
           mainProduct.evaluatedProducts.forEach(item => {
             const resultTrocafone = values.find(v => v.id === item.idProduct)
@@ -265,7 +265,9 @@ export default class TradeIn {
           })
         })
 
-        const transportString = JSON.stringify(transport)
+        const newTransport = await this.validateTradeinBoostLimit(transport)
+
+        const transportString = JSON.stringify(newTransport)
 
         if (
           transportString !==
@@ -277,6 +279,42 @@ export default class TradeIn {
         }
       })
     }
+  }
+
+  async validateTradeinBoostLimit(transport) {
+    const query = `
+      query getBoostLimit {
+        getBoostLimit {
+          limit
+          usedBudget
+        }
+      }
+    `;
+
+    const listBoost = []
+
+    const {data: budgetLimit} = await fetch(`${rootPath()}/_v/public/graphql/v1`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query }),
+    }).then(res => res.json()).catch(e => console.error)
+
+    const limit = budgetLimit?.getBoostLimit?.limit
+    transport.forEach(tradein => {
+      const boostSSG = parseFloat(tradein.boostSSG)
+      if (boostSSG) {
+        listBoost.push(boostSSG)
+        const sumBoost = listBoost.reduce((acumulador, vlr) => acumulador + vlr, 0)
+        const total = sumBoost + parseFloat(budgetLimit?.getBoostLimit?.usedBudget)
+        if (limit && total && limit < total) {
+          tradein.boostSSG = "0"
+          tradein.boosted = false
+          listBoost.pop()
+        }
+      }
+    })
+    
+    return transport
   }
 
   async removeCustomDataTradeIn() {

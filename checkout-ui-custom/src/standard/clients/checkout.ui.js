@@ -22,6 +22,7 @@ import CountDown from '../components/countdown/_countdown'
 import fixProfileForm from '../components/_fixProfileData'
 import BankPaymentSlip from '../components/_bankPaymentSlip'
 import VerifyAuthentication from '../components/_verifyAuthentication'
+import { dispatchSsgCartEvent } from '../components/_analyticsCart'
 
 import {
   debounce,
@@ -949,7 +950,7 @@ export class CheckoutCustom {
                 .find('.Items')
                 .after(
                   `<tr class="discount-subtotal-container" style="order: 2;">
-                <td style="font-size: 12px; margin-left: 10px;">Oferta Especial Samsung.com</td>
+                <td style="font-size: 12px; margin-left: 6px;">Oferta Especial Samsung.com</td>
                 <td>
                   <span class="value-discount-subtotal">${discountFinalFormatted}</span>
                 </td>
@@ -969,7 +970,7 @@ export class CheckoutCustom {
                 .find('.Items')
                 .after(
                   `<tr class="new-discount-value-container" style="height: 23px; order: 2;">
-                <td style="margin-left: 10px;">Oferta Especial Samsung.com</td>
+                <td style="margin-left: 6px;">Oferta Especial Samsung.com</td>
                 <td>
                   <span class="new-value-discount-total">${discountFinalFormatted}</span>
                 </td>
@@ -1808,6 +1809,63 @@ export class CheckoutCustom {
         $this.closest('span').removeClass('has-value')
       }
     })
+
+    $('body').on('click', '.item-link-remove', function () {
+      const sku = $(this).closest('tr').attr('data-sku')
+      const orderForm = window.vtexjs.checkout.orderForm
+      const item = orderForm.items.find(i => i.id === sku)
+
+      if (!item) return
+
+      dispatchSsgCartEvent({
+        item,
+        type: 'remove',
+        quantity: item.quantity,
+        selectButton: 'checkout_remove_button',
+      })
+    })
+
+    $('body').on('click', '.item-quantity-change-increment', function () {
+      const orderForm = window.vtexjs.checkout.orderForm
+      const idAttr = $(this).attr('id') // item-quantity-change-increment-6448
+
+      if (!idAttr) return
+
+      const sku = idAttr.split('-').pop()
+      const item = orderForm.items.find(i => i.id === sku)
+
+      if (!item) return
+
+      dispatchSsgCartEvent({
+        item,
+        type: 'add',
+        quantity: 1,
+        selectButton: 'checkout_quantity_increment_button',
+      })
+    })
+
+    $('body').on('click', '.item-quantity-change-decrement', function () {
+      const orderForm = window.vtexjs.checkout.orderForm
+      const idAttr = $(this).attr('id')
+
+      if (!idAttr) return
+
+      const sku = idAttr.split('-').pop()
+      const item = orderForm.items.find(i => i.id === sku)
+
+      if (!item || item.quantity <= 1) return
+
+      if (item.quantity > 1) {
+        dispatchSsgCartEvent({
+          item,
+          type: 'remove',
+          quantity: 1,
+          selectButton: 'checkout_quantity_decrement_button',
+        })
+      }
+    })
+
+
 
     $("body")
       .off("click", ".js-checkEmailAuthConflict__modal--button")

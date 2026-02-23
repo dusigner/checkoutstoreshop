@@ -1388,6 +1388,9 @@ h1#cart-title {
         font-weight: 700;
         color: #000;
       }
+      @media (max-width: 375px) {
+        font-size: 12px;
+      }
     }
 
     .new-discount-total {
@@ -1537,7 +1540,7 @@ h1#cart-title {
       width: 566px;
 
       @media (max-width: $mobileWidth) {
-        width: 100%;
+        width: 92%;
       }
 
       .srp-shipping-current-single__sla {

@@ -389,7 +389,6 @@ class AdobeLaunchPixel {
             ).on('click', function () {
               _this._populateDataLayer()
               _this.waitForDataSend()
-              _this._pageTrack()
             })
           }
         }

@@ -219,6 +219,10 @@ svg.vtex-omnishipping-1-x-svg {
 					color: rgb(0, 0, 0);
 					font-size: 12px !important;
 					padding: 8px 5px 8px 0px;
+					@media screen and (max-width: 360px) {
+						padding: 0px 5px 8px 0;
+						line-height: 14px;
+					}
 				}
 
 				@media screen and (max-width: 360px) {
@@ -2553,6 +2557,7 @@ svg.vtex-omnishipping-1-x-svg {
 		#payment-group-customPrivate_501PaymentGroup.payment-group-item .payment-group-item-text::after,
 		#payment-group-AmeDigitalPaymentGroup.payment-group-item .payment-group-item-text::after {
 			content: "Parcele em até 18x Sem Juros.";
+			margin-top: -5px;
 		}
 
 		#payment-group-customPrivate_501PaymentGroup.payment-group-item .payment-group-item-text::after {
