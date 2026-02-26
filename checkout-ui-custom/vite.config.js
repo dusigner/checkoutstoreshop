@@ -134,7 +134,7 @@ export default defineConfig(({}) => {
           }
         }]
       },
-      watch: {
+      watch: process.env.CI ? null : {
         exclude: 'node_modules/**',
         include: ['/src/**/*.{js,scss}','checkout-template.js']
       },
