@@ -1,0 +1,3 @@
+{
+  "extends": ["@sdsla/biome-config/base"]
+}
