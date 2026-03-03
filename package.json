@@ -3,12 +3,17 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "lint": "eslint --ext js,jsx,ts,tsx .",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
+    "lint": "biome lint .",
+    "format": "biome format .",
     "cy-r": "cd cy-runner && node cy-runner",
     "install:checkout": "cd checkout-ui-custom && yarn && cd ../",
     "start:checkout": "cd checkout-ui-custom && yarn watch",
-    "build:checkout": "cd checkout-ui-custom && yarn build && cd ../"
+    "build:checkout": "cd checkout-ui-custom && yarn build && cd ../",
+    "lint:fix": "biome lint --fix .",
+    "format:fix": "biome format --write .",
+    "check": "biome check .",
+    "check:fix": "biome check --fix .",
+    "biome:ci": "biome ci ."
   },
   "lint-staged": {
     "*.{ts,js,tsx,jsx}": [
@@ -20,13 +25,10 @@
     ]
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.5",
+    "@sdsla/biome-config": "git+ssh://git@bitbucket.org/sdsla/sdsla-biome-config.git#master",
     "@types/node": "^12.12.21",
-    "@vtex/prettier-config": "^0.1.3",
-    "eslint": "^6.8.0",
-    "eslint-config-vtex": "^12.2.1",
-    "eslint-config-vtex-react": "^6.2.1",
     "lint-staged": "^10.0.2",
-    "prettier": "detect",
     "typescript": "^3.7.5"
   }
 }
