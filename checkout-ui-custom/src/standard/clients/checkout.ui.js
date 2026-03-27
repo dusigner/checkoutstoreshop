@@ -2154,6 +2154,7 @@ export class CheckoutCustom {
           _this.Rewards?.showPointsSimulation()
           _this.verifyCSP(orderForm)
           _this.TradeIn.validateTradeinCustomData(orderForm)
+          _this.payment.addClassForSalesChannel(orderForm)
         }
 
         _this.TradeIn.clearAllTradeInDataTradeInCSP(orderForm)

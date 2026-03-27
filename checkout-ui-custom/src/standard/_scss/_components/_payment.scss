@@ -2538,6 +2538,9 @@ svg.vtex-omnishipping-1-x-svg {
 }
 
 .payment-group {
+
+	
+
 	.payment-group-list-btn {
 		width: 100%;
 		display: flex;
@@ -2545,32 +2548,45 @@ svg.vtex-omnishipping-1-x-svg {
 		gap: 8px;
 
 		.payment-group-item .payment-group-item-text::after {
-			content: "Consulte as condições";
-			font-size: 10px;
-			color: #000;
-			display: block;
-			font-weight: normal;
+      content: "";
+      visibility: hidden;
+    }
+
+		&.sc-custom.sc-ready {
+			#payment-group-creditCardPaymentGroup.payment-group-item .payment-group-item-text::after {
+				content: "Parcele em até 12x Sem Juros.";
+			}
 		}
 
-		#payment-group-creditCardPaymentGroup.payment-group-item .payment-group-item-text::after,
-		#payment-group-NubankPaymentGroup.payment-group-item .payment-group-item-text::after,
-		#payment-group-customPrivate_501PaymentGroup.payment-group-item .payment-group-item-text::after,
-		#payment-group-AmeDigitalPaymentGroup.payment-group-item .payment-group-item-text::after {
-			content: "Parcele em até 18x Sem Juros.";
-			margin-top: -5px;
-		}
+		&.sc-ready {
+      .payment-group-item .payment-group-item-text::after {
+				font-size: 10px;
+				color: #000;
+				display: block;
+				font-weight: normal;
+        visibility: visible;
+        content: "Consulte as condições";
+      }
 
-		#payment-group-customPrivate_501PaymentGroup.payment-group-item .payment-group-item-text::after {
-			content: "Parcele em até 24x Sem Juros.";
-		}
+      #payment-group-creditCardPaymentGroup.payment-group-item .payment-group-item-text::after,
+      #payment-group-NubankPaymentGroup.payment-group-item .payment-group-item-text::after,
+      #payment-group-AmeDigitalPaymentGroup.payment-group-item .payment-group-item-text::after {
+        content: "Parcele em até 18x Sem Juros.";
+        margin-top: -5px;
+      }
 
-		#payment-group-customPrivate_506PaymentGroup.payment-group-item .payment-group-item-text::after {
-			content: "Parcele em até 21x Sem Juros.";
-		}
+      #payment-group-customPrivate_501PaymentGroup.payment-group-item .payment-group-item-text::after {
+        content: "Parcele em até 24x Sem Juros.";
+      }
 
-		#payment-group-instantPaymentPaymentGroup.payment-group-item .payment-group-item-text::after {
-			content: "Desconto no pagamento à vista"
-		}
+      #payment-group-customPrivate_506PaymentGroup.payment-group-item .payment-group-item-text::after {
+        content: "Parcele em até 21x Sem Juros.";
+      }
+
+      #payment-group-instantPaymentPaymentGroup.payment-group-item .payment-group-item-text::after {
+        content: "Desconto no pagamento à vista";
+      }
+    }
 
 		// To sort the PaymentGroup positions, just change the order
 		$PaymentGroups: (
