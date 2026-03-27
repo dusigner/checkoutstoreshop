@@ -332,18 +332,28 @@ export default class Payment {
 		$("#payments-title").append(iconsElement);
 	}
 
-  addClassForSalesChannel(orderForm) {
-		if (!window.vtexjs || !window.vtexjs.checkout) return
+	addClassForSalesChannel(orderForm) {
+		if (!window.vtexjs || !window.vtexjs.checkout) return;
 
-		const SALES_CHANNELS = ['19', '62', '63', '64', '65', '68', '73', '78', '79']
-		const sc = String(orderForm?.salesChannel || '')
-		const isValid = SALES_CHANNELS.includes(sc)
+		const SALES_CHANNELS = [
+			"19",
+			"62",
+			"63",
+			"64",
+			"65",
+			"68",
+			"73",
+			"78",
+			"79",
+		];
+		const sc = String(orderForm?.salesChannel || "");
+		const isValid = SALES_CHANNELS.includes(sc);
 
-		const paymentGroups = document.querySelectorAll('.payment-group-list-btn')
+		const paymentGroups = document.querySelectorAll(".payment-group-list-btn");
 
-		paymentGroups.forEach(el => {
-			el.classList.toggle('sc-custom', isValid)
-			el.classList.add('sc-ready')
-		})
+		paymentGroups.forEach((el) => {
+			el.classList.toggle("sc-custom", isValid);
+			el.classList.add("sc-ready");
+		});
 	}
 }
