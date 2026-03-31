@@ -79,7 +79,7 @@
 
 "@sdsla/biome-config@git+ssh://git@bitbucket.org/sdsla/sdsla-biome-config.git#master":
   version "0.1.2"
-  resolved "git+ssh://git@bitbucket.org/sdsla/sdsla-biome-config.git#adb52590d361fdd90179cc11448839334987293c"
+  resolved "git+ssh://git@bitbucket.org/sdsla/sdsla-biome-config.git#b840097a7a43017c722e9aaaa1fb91215e2bd818"
 
 "@types/node@^12.12.21":
   version "12.20.55"
