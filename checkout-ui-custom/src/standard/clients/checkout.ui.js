@@ -1,6 +1,5 @@
 import { adobeLaunchInit } from "../components/_adobeLaunchPixel";
 import { dispatchSsgCartEvent } from "../components/_analyticsCart";
-import BankPaymentSlip from "../components/_bankPaymentSlip";
 import BespokeRefrigerator from "../components/_bespokeRefrigerator";
 import CheckoutLimit from "../components/_checkoutLimit";
 import CSP from "../components/_csp";
@@ -93,7 +92,6 @@ export class CheckoutCustom {
 		this.payment = new Payment();
 		this.toastMessages = new ToastMessages();
 		this.renderLoaderFallback = new RenderLoaderFallback();
-		this.bankPaymentSlip = new BankPaymentSlip();
 		this.countDown = new CountDown();
 		this.verifyAuthentication = new VerifyAuthentication();
 
@@ -2019,7 +2017,6 @@ export class CheckoutCustom {
 				window.scrollTo({ top: 0, behavior: "smooth" });
 			});
 
-			this.bankPaymentSlip.init();
 			_this.renderLoaderFallback.init();
 			_this.verifyMobileScreen();
 			_this.init();
