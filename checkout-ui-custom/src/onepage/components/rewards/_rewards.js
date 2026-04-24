@@ -17,6 +17,90 @@ import {
       this.totalCurrencyUser = 0
       this.pricePerPoint = 0
       this.chosenDiscount = 0
+      this.isApplyingRewards = false
+      this.orderFormId = ''
+      this.isOrderFormListenerBound = false
+    }
+
+    bindOrderFormSync() {
+      if (this.isOrderFormListenerBound) return
+
+      $(window).on('orderFormUpdated.vtex', (_, orderForm) => {
+        if (!orderForm) return
+
+        this.orderFormId = orderForm.orderFormId || ''
+      })
+
+      this.isOrderFormListenerBound = true
+    }
+
+    waitOrderFormUpdate(previousOrderFormId = '') {
+      return new Promise((resolve, reject) => {
+        let timeout = null
+
+        const cleanup = () => {
+          $(window).off('orderFormUpdated.vtex.rewardsSync', handler)
+          if (timeout) {
+            clearTimeout(timeout)
+          }
+        }
+
+        const handler = (_, orderForm) => {
+          if (!orderForm) return
+
+          const hasNewForm =
+            !previousOrderFormId || orderForm.orderFormId !== previousOrderFormId
+          const hasRewardsGiftCard = orderForm.paymentData?.giftCards?.some(
+            giftCard => giftCard.provider === 'SSG_REWARDS'
+          )
+
+          if (hasNewForm || hasRewardsGiftCard || orderForm.orderFormId) {
+            this.orderFormId = orderForm.orderFormId || ''
+            cleanup()
+            resolve(orderForm)
+          }
+        }
+
+        $(window).on('orderFormUpdated.vtex.rewardsSync', handler)
+
+        timeout = setTimeout(() => {
+          cleanup()
+          reject(new Error('Timeout waiting orderFormUpdated.vtex'))
+        }, 10000)
+      })
+    }
+
+    isRewardsGiftCardApplied(orderForm) {
+      if (!orderForm?.paymentData?.giftCards) return false
+
+      return orderForm.paymentData.giftCards.some(
+        giftCard =>
+          giftCard.provider === 'SSG_REWARDS' &&
+          giftCard.inUse &&
+          Number(giftCard.value) > 0
+      )
+    }
+
+    async updatePaymentDataGiftCards(giftCards = []) {
+      const { checkout } = window.vtexjs || {}
+      const orderForm = checkout?.orderForm
+
+      if (!checkout || !orderForm) return null
+
+      const paymentData = orderForm.paymentData || {}
+      const expectedOrderFormId = orderForm.orderFormId || this.orderFormId || ''
+
+      const updatedPaymentData = {
+        ...paymentData,
+        giftCards,
+      }
+
+      const updatePromise = this.waitOrderFormUpdate(expectedOrderFormId)
+
+      await checkout.sendAttachment('paymentData', updatedPaymentData)
+      const updatedOrderForm = await updatePromise
+
+      return updatedOrderForm
     }
   
     getRewardsData(docId) {
@@ -187,7 +271,7 @@ import {
   
       $(document).on('change', '.switch-rewards input', () => {
         const inputChecked = $('.switch-rewards input')[0].checked
-  
+
         $('.switch-rewards input').prop('disabled', true)
   
         if (inputChecked) {
@@ -250,83 +334,123 @@ import {
       }
     }
   
-    setRewardsDiscount() {
-      const element = document.querySelector(
-        '.gift-card-provider-group-ssg_rewards .input-prepend input'
-      )
-  
-      const evt = new KeyboardEvent('keydown', { key: 'a' })
-  
-      element.value = this.chosenDiscount.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      })
-      element.focus()
-      element.dispatchEvent(evt)
-  
-      $('#show-rewards-parent').addClass('disabled')
-    }
-  
-    cancelRewardsDiscount(verify = false) {
-      if (window.vtexjs.checkout.orderForm.paymentData.giftCards) {
-        const rewardsDiscount =
-          window.vtexjs.checkout.orderForm.paymentData.giftCards.filter(
-            g => g.provider === 'SSG_REWARDS'
-          )
-  
-        if (!rewardsDiscount) return
-        if (!rewardsDiscount[0]) return
-        if (rewardsDiscount[0].value === 0) return
+    async setRewardsDiscount() {
+      if (this.isApplyingRewards) return
+
+      const { checkout } = window.vtexjs || {}
+      const orderForm = checkout?.orderForm
+
+      if (!checkout || !orderForm || this.chosenDiscount <= 0) {
+        $('.switch-rewards input').prop('disabled', false)
+        return
       }
-  
-      const element = document.querySelector(
-        '.gift-card-provider-group-ssg_rewards .action a'
-      )
-  
+
+      if (this.isRewardsGiftCardApplied(orderForm)) {
+        $('#show-rewards-parent').addClass('disabled')
+        $('.switch-rewards input').prop('disabled', false)
+        return
+      }
+
+      this.isApplyingRewards = true
+
+      try {
+        const rewardsGiftCard = {
+          redemptionCode: 'SSG_REWARDS',
+          provider: 'SSG_REWARDS',
+          value: Math.round(this.chosenDiscount * 100),
+          inUse: true,
+        }
+
+        const nonRewardsGiftCards = (orderForm.paymentData?.giftCards || []).filter(
+          giftCard => giftCard.provider !== 'SSG_REWARDS'
+        )
+
+        await this.updatePaymentDataGiftCards([
+          ...nonRewardsGiftCards,
+          rewardsGiftCard,
+        ])
+
+        $('#show-rewards-parent').addClass('disabled')
+      } catch (error) {
+        console.error('setRewardsDiscount error:', error)
+      } finally {
+        this.isApplyingRewards = false
+        $('.switch-rewards input').prop('disabled', false)
+      }
+    }
+
+    async cancelRewardsDiscount(verify = false) {
+      if (this.isApplyingRewards) return
+
+      const { checkout } = window.vtexjs || {}
+      const orderForm = checkout?.orderForm
+
+      if (!checkout || !orderForm) return
+
+      const rewardsDiscount =
+        orderForm.paymentData?.giftCards?.find(g => g.provider === 'SSG_REWARDS') ||
+        null
+
+      if (!rewardsDiscount || Number(rewardsDiscount.value) === 0) {
+        if ($('.switch-rewards input').length > 0) {
+          $('.switch-rewards input')[0].checked = false
+        }
+        $('.switch-rewards input').prop('disabled', false)
+        return
+      }
+
       let TotalShipping = 0
-  
+
       if (
-        window.vtexjs.checkout.orderForm.totalizers.find(item => {
+        orderForm.totalizers.find(item => {
           return item.id === 'Shipping'
         })
       ) {
-        TotalShipping = window.vtexjs.checkout.orderForm.totalizers.find(item => {
+        TotalShipping = orderForm.totalizers.find(item => {
           return item.id === 'Shipping'
         }).value
       }
-  
+
       if (!verify) {
-        if ($('.switch-rewards input').length > 0) {
-          $('.switch-rewards input')[0].checked = false
-        }
-  
-        if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
-          element.click()
-        }
-  
-        return
+        return this.removeRewardsGiftCard(orderForm)
       }
-  
-      const rewardsOrder =
-        window.vtexjs.checkout.orderForm.paymentData?.giftCards?.[0].value
-  
-      const totalOrder = window.vtexjs.checkout.orderForm.value
-  
+
+      const rewardsOrder = Number(rewardsDiscount.value)
+
+      const totalOrder = orderForm.value
+
       // verify if value of rewards is more than 50% of order's total
       if (verify && (totalOrder - TotalShipping) / 2 < rewardsOrder) {
+        await this.removeRewardsGiftCard(orderForm)
+      }
+    }
+
+    async removeRewardsGiftCard(orderFormParam) {
+      const orderForm = orderFormParam || window.vtexjs?.checkout?.orderForm
+      if (!orderForm) return
+
+      this.isApplyingRewards = true
+
+      try {
+        const nonRewardsGiftCards = (orderForm.paymentData?.giftCards || []).filter(
+          giftCard => giftCard.provider !== 'SSG_REWARDS'
+        )
+
+        await this.updatePaymentDataGiftCards(nonRewardsGiftCards)
+      } catch (error) {
+        console.error('cancelRewardsDiscount error:', error)
+      } finally {
+        this.isApplyingRewards = false
         if ($('.switch-rewards input').length > 0) {
           $('.switch-rewards input')[0].checked = false
         }
-  
-        if ($('.gift-card-provider-group-ssg_rewards .action a').length) {
-          element.click()
-        }
+        $('.switch-rewards input').prop('disabled', false)
       }
     }
   
     showPointsSimulation() {
       const { orderForm } = window.vtexjs.checkout
-  
+
       if (orderForm.loggedIn) {
         this.getRewardsData(orderForm.clientProfileData.email)
       }
