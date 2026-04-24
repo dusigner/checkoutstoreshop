@@ -1504,6 +1504,13 @@ export class CheckoutCustom {
 		this.changeShippingTimeInfoInit();
 		this.servicesLinks.init(orderForm);
 		this.SummaryGiftCard.init(orderForm);
+		if (this.Rewards && orderForm) {
+			const email = orderForm?.clientProfileData?.email;
+			if (email) {
+				this.Rewards.getRewardsData(email);
+			}
+			this.Rewards.showPointsSimulation();
+		}
 
 		this.TradeIn.init(orderForm);
 		await this.imgEmptyCart();
@@ -2177,7 +2184,10 @@ export class CheckoutCustom {
 				const doesntAcceptRewards =
 					_this.sessionPolicy && _this.sessionPolicy === "72";
 				if (!doesntAcceptRewards) {
-					_this.Rewards = new Rewards();
+					if (!_this.Rewards) {
+						_this.Rewards = new Rewards();
+						_this.Rewards.bindOrderFormSync();
+					}
 				}
 
 				_this.Rewards?.showObsRewards();
